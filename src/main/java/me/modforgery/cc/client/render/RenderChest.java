@@ -1,5 +1,6 @@
 package me.modforgery.cc.client.render;
 
+import com.google.common.primitives.SignedBytes;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -9,7 +10,10 @@ import me.modforgery.cc.tileentity.TileEntityChest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.client.model.ModelChest;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -20,6 +24,8 @@ public class RenderChest extends TileEntitySpecialRenderer
 {
     private ResourceLocation chest;
     private ModelChest model = new ModelChest();
+
+    public RenderItem itemRenderer;
 
     public RenderChest(String texture)
     {

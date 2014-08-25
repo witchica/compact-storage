@@ -79,7 +79,7 @@ public class ContainerQuintupleChest extends ContainerChest
         {
             for(int y = 0; y < 9; y++)
             {
-                Slot slot = new Slot(inventory, 9 * 9 + 18 + 6 + 2 + (x + y * 2), 217 + (x * 18), 13 + (y * 18));
+                Slot slot = new Slot(inventory, 9 * 9 + 18 + 6 + 2 + 1 + (x + y * 2), 217 + (x * 18), 13 + (y * 18));
                 addSlotToContainer(slot);
             }
         }
@@ -88,14 +88,14 @@ public class ContainerQuintupleChest extends ContainerChest
         {
             for(int y = 0; y < 3; y++)
             {
-                Slot slot = new Slot(inventory, 9 * 9 + 18 + 6 + 2 + 18 + (x + y * 2), 217 + (x * 18), 177 + (y * 18));
+                Slot slot = new Slot(inventory, 9 * 9 + 18 + 6 + 2 + 18 + 1 + (x + y * 2), 217 + (x * 18), 177 + (y * 18));
                 addSlotToContainer(slot);
             }
         }
 
         for(int x = 0; x < 2; x++)
         {
-            Slot slot = new Slot(inventory, 9 * 9 + 18 + 6 + 2 + 18 + 6 + (x * 2), 217 + (x * 18), 235);
+            Slot slot = new Slot(inventory, 9 * 9 + 18 + 6 + 2 + 18 + 6 + 1 + (x * 2), 217 + (x * 18), 235);
             addSlotToContainer(slot);
         }
     }

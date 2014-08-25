@@ -1,27 +1,29 @@
 package me.modforgery.cc;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import me.modforgery.cc.client.GuiHandler;
+import me.modforgery.cc.client.render.ChestItemRenderer;
 import me.modforgery.cc.client.render.RenderChest;
-import me.modforgery.cc.client.render.RenderItemChest;
+import me.modforgery.cc.creativetabs.CreativeTabChest;
 import me.modforgery.cc.init.ChestBlocks;
 import me.modforgery.cc.init.ChestReferences;
 import me.modforgery.cc.network.ChestHandler;
 import me.modforgery.cc.network.ChestPacket;
-import me.modforgery.cc.tileentity.TileEntityDoubleChest;
-import me.modforgery.cc.tileentity.TileEntityQuadrupleChest;
-import me.modforgery.cc.tileentity.TileEntityQuintupleChest;
-import me.modforgery.cc.tileentity.TileEntityTripleChest;
-import net.minecraft.client.renderer.tileentity.TileEntityChestRenderer;
+import me.modforgery.cc.proxy.IProxy;
+import me.modforgery.cc.tileentity.*;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererChestHelper;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.MinecraftForgeClient;
 
 /**
@@ -30,6 +32,9 @@ import net.minecraftforge.client.MinecraftForgeClient;
 @Mod(modid = ChestReferences.ID, name = ChestReferences.NAME, version = ChestReferences.VERSION)
 public class CompactChests
 {
+    @SidedProxy(serverSide = "me.modforgery.cc.proxy.Server", clientSide = "me.modforgery.cc.proxy.Client", modId = ChestReferences.ID)
+    public static IProxy proxy;
+
     @Mod.Instance(ChestReferences.ID)
     private static CompactChests instance;
 
@@ -44,6 +49,7 @@ public class CompactChests
     @Mod.EventHandler
     public void initialization(FMLInitializationEvent fmlInitializationEvent)
     {
+        CreativeTabChest.tab = new CreativeTabChest();
         ChestBlocks.init();
     }
 
@@ -55,12 +61,12 @@ public class CompactChests
 
         networkWrapper.registerMessage(ChestHandler.class, ChestPacket.class, 0, Side.CLIENT);
 
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityDoubleChest.class, new RenderChest("double"));
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTripleChest.class, new RenderChest("triple"));
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityQuadrupleChest.class, new RenderChest("quadruple"));
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityQuintupleChest.class, new RenderChest("quintuple"));
+        proxy.registerRenderers();
 
-        MinecraftForgeClient.registerItemRenderer(ItemBlock.getItemFromBlock(ChestBlocks.doubleChest), new RenderItemChest("double"));
+        GameRegistry.addRecipe(new ItemStack(ChestBlocks.doubleChest, 1), "WWW", "WCW", "WWW", 'W', new ItemStack(Blocks.planks, 1), 'C', new ItemStack(Blocks.chest, 1));
+        GameRegistry.addRecipe(new ItemStack(ChestBlocks.tripleChest, 1), "WWW", "WCW", "WWW", 'W', new ItemStack(Blocks.planks, 1), 'C', new ItemStack(ChestBlocks.doubleChest, 1));
+        GameRegistry.addRecipe(new ItemStack(ChestBlocks.quadrupleChest, 1), "WWW", "WCW", "WWW", 'W', new ItemStack(Blocks.planks, 1), 'C', new ItemStack(ChestBlocks.tripleChest, 1));
+        GameRegistry.addRecipe(new ItemStack(ChestBlocks.quintupleChest, 1), "WWW", "WCW", "WWW", 'W', new ItemStack(Blocks.planks, 1), 'C', new ItemStack(ChestBlocks.quadrupleChest, 1));
     }
 
     /**

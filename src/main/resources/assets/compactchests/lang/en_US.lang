@@ -1,10 +1,8 @@
-## GUI
-gui.largeChest=Double Chest
-gui.tripleChest=Triple Chest
-gui.quadrupleChest=Quadruple Chest
-gui.quintupleChest=Quintuple Chest
-gui.expandableChest=Expandable Chest
-
-## Items
+## Tabs
+itemGroup.chest=CompactChests
 
 ## Blocks
+tile.doublechest.name=Double Chest
+tile.triplechest.name=Triple Chest
+tile.quadruplechest.name=Quadruple Chest
+tile.quintuplechest.name=Quintuple Chest

@@ -1,6 +1,7 @@
 package me.modforgery.cc.block;
 
 import me.modforgery.cc.CompactChests;
+import me.modforgery.cc.creativetabs.CreativeTabChest;
 import me.modforgery.cc.tileentity.TileEntityTripleChest;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -26,7 +27,7 @@ public class BlockTripleChest extends BlockChest
         setHardness(1f);
         setResistance(1f);
 
-        setCreativeTab(CreativeTabs.tabDecorations);
+        setCreativeTab(CreativeTabChest.tab);
     }
 
     @Override

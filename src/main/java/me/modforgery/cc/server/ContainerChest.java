@@ -22,6 +22,9 @@ public abstract class ContainerChest extends Container
     public int y;
     public int z;
 
+    public ArrayList<Slot> playerSlots;
+    public ArrayList<Slot> chestSlots;
+
     public ContainerChest(EntityPlayer player, World world, int x, int y, int z)
     {
         this.player = player;
@@ -30,6 +33,9 @@ public abstract class ContainerChest extends Container
         this.x = x;
         this.y = y;
         this.z = z;
+
+        playerSlots = new ArrayList<Slot>();
+        chestSlots = new ArrayList<Slot>();
 
         ((TileEntityChest) world.getTileEntity(x, y, z)).openInventory();
 
