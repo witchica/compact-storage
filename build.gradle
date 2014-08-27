@@ -1,0 +1,54 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+		fileTree(dir: 'libs/', include: '*.jar')
+    }
+}
+
+apply plugin: 'forge'
+
+minecraft {
+    version = "1.7.10-10.13.0.1160"
+    assetDir = "src/main/resources"
+}
+
+group = 'Zaet'
+version = "beta2"
+
+jar {
+    appendix = 'universal'
+}
+
+task deleteOldArtifacts(type: Delete) {
+    delete 'build/libs'
+}
+
+classes.dependsOn deleteOldArtifacts
+
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    appendix = 'src'
+}
+
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    appendix = 'dev'
+}
+
+artifacts {
+    archives sourceJar
+    archives deobfJar
+}

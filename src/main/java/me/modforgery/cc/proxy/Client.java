@@ -1,6 +1,7 @@
 package me.modforgery.cc.proxy;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import me.modforgery.cc.client.render.ChestItemRenderer;
 import me.modforgery.cc.client.render.RenderChest;
 import me.modforgery.cc.init.ChestBlocks;
