@@ -23,8 +23,13 @@ minecraft {
     assetDir = "src/main/resources"
 }
 
-group = 'Zaet'
-version = "beta2"
+group = 'CompactChests'
+def ENV = System.getenv()
+if (ENV.BUILD_NUMBER) {
+    version = "beta" + "${System.getenv().BUILD_NUMBER}"
+} else {
+    version = "betaBUILD"
+}
 
 jar {
     appendix = 'universal'
