@@ -18,9 +18,9 @@ import java.util.ArrayList;
  */
 public class ContainerDoubleChest extends ContainerChest
 {
-    public ContainerDoubleChest(EntityPlayer player, World world, int x, int y, int z)
+    public ContainerDoubleChest(EntityPlayer player, World world, int x, int y, int z, boolean item)
     {
-        super(player, world, x, y, z);
+        super(player, world, x, y, z, item);
     }
 
     public void initializeContainer(EntityPlayer player, IInventory inventory)

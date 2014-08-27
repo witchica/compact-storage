@@ -18,6 +18,7 @@ import me.modforgery.cc.client.render.ChestItemRenderer;
 import me.modforgery.cc.client.render.RenderChest;
 import me.modforgery.cc.creativetabs.CreativeTabChest;
 import me.modforgery.cc.init.ChestBlocks;
+import me.modforgery.cc.init.ChestItems;
 import me.modforgery.cc.init.ChestReferences;
 import me.modforgery.cc.network.ChestHandler;
 import me.modforgery.cc.network.ChestPacket;
@@ -54,6 +55,7 @@ public class CompactChests
     {
         CreativeTabChest.tab = new CreativeTabChest();
         ChestBlocks.init();
+        ChestItems.init();
     }
 
     @Mod.EventHandler

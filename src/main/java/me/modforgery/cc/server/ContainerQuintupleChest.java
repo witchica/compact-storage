@@ -10,9 +10,9 @@ import net.minecraft.world.World;
  */
 public class ContainerQuintupleChest extends ContainerChest
 {
-    public ContainerQuintupleChest(EntityPlayer player, World world, int x, int y, int z)
+    public ContainerQuintupleChest(EntityPlayer player, World world, int x, int y, int z, boolean item)
     {
-        super(player, world, x, y, z);
+        super(player, world, x, y, z, item);
     }
 
     @Override

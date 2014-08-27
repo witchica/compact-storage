@@ -1,6 +1,6 @@
 package me.modforgery.cc.server;
 
-import me.modforgery.cc.tileentity.TileEntityChest;
+import me.modforgery.cc.itementity.ItemEntityChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -22,12 +22,12 @@ public abstract class ContainerChest extends Container
     public int y;
     public int z;
 
-    public TileEntityChest chest;
+    public IInventory chest;
 
     public ArrayList<Slot> playerSlots;
     public ArrayList<Slot> chestSlots;
 
-    public ContainerChest(EntityPlayer player, World world, int x, int y, int z)
+    public ContainerChest(EntityPlayer player, World world, int x, int y, int z, boolean item)
     {
         this.player = player;
         this.world = world;
@@ -39,11 +39,21 @@ public abstract class ContainerChest extends Container
         playerSlots = new ArrayList<Slot>();
         chestSlots = new ArrayList<Slot>();
 
-        ((TileEntityChest) world.getTileEntity(x, y, z)).openInventory();
+        if(!item)
+        {
+            ((IInventory) world.getTileEntity(x, y, z)).openInventory();
 
-        chest = (TileEntityChest) world.getTileEntity(x, y, z);
+            chest = (IInventory) world.getTileEntity(x, y, z);
 
-        initializeContainer(player, (IInventory) world.getTileEntity(x, y, z));
+            initializeContainer(player, (IInventory) world.getTileEntity(x, y, z));
+        }
+        else
+        {
+            ItemStack stack = player.getHeldItem();
+            
+            chest = (IInventory) new ItemEntityChest(8, stack);
+            chest.openInventory();
+        }
     }
 
     @Override
@@ -74,7 +84,7 @@ public abstract class ContainerChest extends Container
     public void onContainerClosed(EntityPlayer player)
     {
         super.onContainerClosed(player);
-        ((TileEntityChest) world.getTileEntity(x, y, z)).closeInventory();
+        chest.closeInventory();
     }
 
     @Override

@@ -16,9 +16,9 @@ import java.util.ArrayList;
 /**
  * Created by Toby on 19/08/2014.
  */
-public class ContainerTripleChest extends ContainerChest
+public class ContainerSingleChest extends ContainerChest
 {
-    public ContainerTripleChest(EntityPlayer player, World world, int x, int y, int z, boolean item)
+    public ContainerSingleChest(EntityPlayer player, World world, int x, int y, int z, boolean item)
     {
         super(player, world, x, y, z, item);
     }
@@ -27,7 +27,8 @@ public class ContainerTripleChest extends ContainerChest
     {
         for(int slot = 0; slot < 9; slot++)
         {
-            Slot s = new Slot(player.inventory, slot, 48 + (slot * 18), 235);
+            Slot s = new Slot(player.inventory, slot, 8 + (slot * 18), 145);
+
             addSlotToContainer(s);
         }
 
@@ -35,16 +36,16 @@ public class ContainerTripleChest extends ContainerChest
         {
             for(int y = 0; y < 3; y++)
             {
-                Slot s = new Slot(player.inventory, x + y * 9 + 9, 48 + (x * 18), 177 + (y * 18));
+                Slot s = new Slot(player.inventory, x + y * 9 + 9, 8 + (x * 18), 87 + (y * 18));
                 addSlotToContainer(s);
             }
         }
 
         for(int x = 0; x < 9; x++)
         {
-            for(int y = 0; y < 9; y++)
+            for(int y = 0; y < 3; y++)
             {
-                Slot slot = new Slot(inventory, x + y * 9, 48 + (x * 18), 13 + (y * 18));
+                Slot slot = new Slot(chest, x + y * 9, 8 + (x * 18), 18 + (y * 18));
 
                 addSlotToContainer(slot);
             }

@@ -1,10 +1,7 @@
 package me.modforgery.cc.client;
 
 import cpw.mods.fml.common.network.IGuiHandler;
-import me.modforgery.cc.server.ContainerDoubleChest;
-import me.modforgery.cc.server.ContainerQuadrupleChest;
-import me.modforgery.cc.server.ContainerQuintupleChest;
-import me.modforgery.cc.server.ContainerTripleChest;
+import me.modforgery.cc.server.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
@@ -19,10 +16,11 @@ public class GuiHandler implements IGuiHandler
     {
         switch(ID)
         {
-            case 0: return new ContainerDoubleChest(player, world, x, y, z);
-            case 1: return new ContainerTripleChest(player, world, x, y, z);
-            case 2: return new ContainerQuadrupleChest(player, world, x, y, z);
-            case 3: return new ContainerQuintupleChest(player, world, x, y, z);
+            case 0: return new ContainerDoubleChest(player, world, x, y, z, false);
+            case 1: return new ContainerTripleChest(player, world, x, y, z, false);
+            case 2: return new ContainerQuadrupleChest(player, world, x, y, z, false);
+            case 3: return new ContainerQuintupleChest(player, world, x, y, z, false);
+            case 100: return new ContainerSingleChest(player, world, x, y, z, true);
             default: return null;
         }
     }
@@ -36,6 +34,7 @@ public class GuiHandler implements IGuiHandler
             case 1: return new GuiTripleChest((Container) getServerGuiElement(ID, player, world, x, y, z), player, world, x, y, z);
             case 2: return new GuiQuadrupleChest((Container) getServerGuiElement(ID, player, world, x, y, z), player, world, x, y, z);
             case 3: return new GuiQuintupleChest((Container) getServerGuiElement(ID, player, world, x, y, z), player, world, x, y, z);
+            case 100: return new GuiSingleChest((Container) getServerGuiElement(ID, player, world, x, y, z), player, world, x, y, z);
             default: return null;
         }
     }
