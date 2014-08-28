@@ -6,3 +6,10 @@ tile.doublechest.name=Double Chest
 tile.triplechest.name=Triple Chest
 tile.quadruplechest.name=Quadruple Chest
 tile.quintuplechest.name=Quintuple Chest
+
+## Items
+item.backpack_0.name=Single Backpack
+item.backpack_1.name=Double Backpack
+item.backpack_2.name=Triple Backpack
+item.backpack_3.name=Quadruple Backpack
+item.backpack_4.name=Quintuple Backpack

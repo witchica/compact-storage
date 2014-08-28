@@ -12,19 +12,22 @@ import net.minecraft.world.World;
  */
 public class ItemBackpack extends Item
 {
-    public ItemBackpack()
+    public int guiID;
+
+    public ItemBackpack(int guiID)
     {
         super();
 
-        setUnlocalizedName("backpack");
-        setTextureName("compactchests:backpack");
+        this.guiID = guiID;
+        setUnlocalizedName("backpack_" + guiID);
+        setTextureName("compactchests:backpack_" + guiID);
         setCreativeTab(CreativeTabChest.tab);
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
-        player.openGui(CompactChests.instance(), 100, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+        player.openGui(CompactChests.instance(), 100 + guiID, world, (int) player.posX, (int) player.posY, (int) player.posZ);
         return stack;
     }
 

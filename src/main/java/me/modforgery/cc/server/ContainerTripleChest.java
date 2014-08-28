@@ -27,7 +27,7 @@ public class ContainerTripleChest extends ContainerChest
     {
         for(int slot = 0; slot < 9; slot++)
         {
-            Slot s = new Slot(player.inventory, slot, 48 + (slot * 18), 235);
+            Slot s = new Slot(player.inventory, slot, 8 + (slot * 18), 232);
             addSlotToContainer(s);
         }
 
@@ -35,7 +35,7 @@ public class ContainerTripleChest extends ContainerChest
         {
             for(int y = 0; y < 3; y++)
             {
-                Slot s = new Slot(player.inventory, x + y * 9 + 9, 48 + (x * 18), 177 + (y * 18));
+                Slot s = new Slot(player.inventory, x + y * 9 + 9, 8 + (x * 18), 174 + (y * 18));
                 addSlotToContainer(s);
             }
         }
@@ -44,7 +44,7 @@ public class ContainerTripleChest extends ContainerChest
         {
             for(int y = 0; y < 9; y++)
             {
-                Slot slot = new Slot(inventory, x + y * 9, 48 + (x * 18), 13 + (y * 18));
+                Slot slot = new Slot(inventory, x + y * 9, 8 + (x * 18), 7 + (y * 18));
 
                 addSlotToContainer(slot);
             }

@@ -53,6 +53,8 @@ public abstract class ContainerChest extends Container
             
             chest = (IInventory) new ItemEntityChest(8, stack);
             chest.openInventory();
+
+            initializeContainer(player, chest);
         }
     }
 
