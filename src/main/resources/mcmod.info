@@ -1,0 +1,17 @@
+[
+{
+  "modid": "compactchests",
+  "name": "CompactChests",
+  "description": "Compacting Chests",
+  "version": "beta10",
+  "mcversion": "1.7.10 and 1.7.2",
+  "logoFile": "/compactchests.png",
+  "url": "http:/github.com/tattyseal/CompactChests/",
+  "updateUrl": "",
+  "authors": ["tattyseal"],
+  "credits": "Made by the ModForgery team",
+  "parent": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
