@@ -1,0 +1,8 @@
+## Tabs
+itemGroup.chest=CompactChests
+
+## Blocks
+tile.doublechest.name=Двойной сундук
+tile.triplechest.name=Тройной сундук
+tile.quadruplechest.name=Четверной сундук
+tile.quintuplechest.name=Пятикратный сундук
