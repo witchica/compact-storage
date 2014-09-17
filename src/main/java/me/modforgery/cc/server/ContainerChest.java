@@ -27,7 +27,7 @@ public abstract class ContainerChest extends Container
     public ArrayList<Slot> playerSlots;
     public ArrayList<Slot> chestSlots;
 
-    public ContainerChest(EntityPlayer player, World world, int x, int y, int z, boolean item)
+    public ContainerChest(EntityPlayer player, World world, int x, int y, int z, boolean item, int xSize, int zSize, int xStart, int zStart, int xInvStart, int zInvStart, int xHotStart, int zHotStart)
     {
         this.player = player;
         this.world = world;
@@ -45,7 +45,7 @@ public abstract class ContainerChest extends Container
 
             chest = (IInventory) world.getTileEntity(x, y, z);
 
-            initializeContainer(player, (IInventory) world.getTileEntity(x, y, z));
+            initializeContainer(player, (IInventory) world.getTileEntity(x, y, z), xSize, zSize, xStart, zStart, xInvStart, zInvStart, xHotStart, zHotStart);
         }
         else
         {
@@ -54,7 +54,7 @@ public abstract class ContainerChest extends Container
             chest = (IInventory) new ItemEntityChest(8, stack);
             chest.openInventory();
 
-            initializeContainer(player, chest);
+            initializeContainer(player, chest, xSize, zSize, xStart, zStart, xInvStart, zInvStart, xHotStart, zHotStart);
         }
     }
 
@@ -95,5 +95,35 @@ public abstract class ContainerChest extends Container
         return true;
     }
 
-    public abstract void initializeContainer(EntityPlayer player, IInventory inventory);
+    public void initializeContainer(EntityPlayer player, IInventory inventory, int xSize, int zSize, int xStart, int zStart, int xInvStart, int zInvStart, int xHotStart, int zHotStart)
+    {
+        for(int slot = 0; slot < 9; slot++)
+        {
+            Slot s = new Slot(player.inventory, slot, xHotStart + (slot * 18), zHotStart);
+
+            addSlotToContainer(s);
+        }
+
+        for(int x = 0; x < 9; x++)
+        {
+            for(int y = 0; y < 3; y++)
+            {
+                Slot s = new Slot(player.inventory, x + y * 9 + 9, xInvStart + (x * 18), zInvStart + (y * 18));
+                addSlotToContainer(s);
+            }
+        }
+
+        int id = 0;
+
+        for(int x = 0; x < xSize; x++)
+        {
+            for(int y = 0; y < zSize; y++)
+            {
+                Slot slot = new Slot(chest, id, xStart + (x * 18), zStart + (y * 18));
+                addSlotToContainer(slot);
+
+                id++;
+            }
+        }
+    }
 }

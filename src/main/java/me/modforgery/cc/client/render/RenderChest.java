@@ -9,18 +9,24 @@ import java.util.Calendar;
 import me.modforgery.cc.tileentity.TileEntityChest;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelChest;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+import org.lwjgl.util.vector.Vector3f;
 
 @SideOnly(Side.CLIENT)
-public class RenderChest extends TileEntitySpecialRenderer
+public class RenderChest extends TileEntityBaseRenderer
 {
     private ResourceLocation chest;
     private ModelChest model = new ModelChest();
@@ -70,24 +76,30 @@ public class RenderChest extends TileEntitySpecialRenderer
             GL11.glTranslatef(0.5F, 0.5F, 0.5F);
             short short1 = 0;
 
+            ForgeDirection direction = ForgeDirection.NORTH;
+
             if (i == 2)
             {
                 short1 = 180;
+                direction = ForgeDirection.NORTH;
             }
 
             if (i == 3)
             {
                 short1 = 0;
+                direction = ForgeDirection.SOUTH;
             }
 
             if (i == 4)
             {
                 short1 = 90;
+                direction = ForgeDirection.WEST;
             }
 
             if (i == 5)
             {
                 short1 = -90;
+                direction = ForgeDirection.EAST;
             }
 
             GL11.glRotatef((float)short1, 0.0F, 1.0F, 0.0F);
@@ -98,9 +110,14 @@ public class RenderChest extends TileEntitySpecialRenderer
             chest.prevLidAngle = chest.lidAngle;
 
             model.renderAll();
+
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
             GL11.glPopMatrix();
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+            if(model.chestLid.rotateAngleX < 0 || model.chestLid.rotateAngleX > 0); else this.renderStackOnBlock(new ItemStack(Blocks.chest, 1), ForgeDirection.UP, direction, new Vector3f((float) x, (float) y - 0.1f, (float) z), 8.0F, 65.0F, 64.0F);
+
+            this.renderStackOnBlock(new ItemStack(Blocks.chest, 1), ForgeDirection.DOWN, direction, new Vector3f((float) x, (float) y - 0f, (float) z), 8.0F, 65.0F, 64.0F);
         }
     }
 

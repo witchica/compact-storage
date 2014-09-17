@@ -11,6 +11,6 @@ public class GuiQuadrupleChest extends GuiChest
 {
     public GuiQuadrupleChest(Container serverGuiElement, EntityPlayer player, World world, int x, int y, int z)
     {
-        super("quadruple", 256, 256, serverGuiElement, player, world, x, y, z);
+        super("quadruple", 320, 256, serverGuiElement, player, world, x, y, z, true);
     }
 }

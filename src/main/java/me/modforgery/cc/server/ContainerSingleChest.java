@@ -20,35 +20,6 @@ public class ContainerSingleChest extends ContainerChest
 {
     public ContainerSingleChest(EntityPlayer player, World world, int x, int y, int z, boolean item)
     {
-        super(player, world, x, y, z, item);
-    }
-
-    public void initializeContainer(EntityPlayer player, IInventory inventory)
-    {
-        for(int slot = 0; slot < 9; slot++)
-        {
-            Slot s = new Slot(player.inventory, slot, 8 + (slot * 18), 145);
-
-            addSlotToContainer(s);
-        }
-
-        for(int x = 0; x < 9; x++)
-        {
-            for(int y = 0; y < 3; y++)
-            {
-                Slot s = new Slot(player.inventory, x + y * 9 + 9, 8 + (x * 18), 87 + (y * 18));
-                addSlotToContainer(s);
-            }
-        }
-
-        for(int x = 0; x < 9; x++)
-        {
-            for(int y = 0; y < 3; y++)
-            {
-                Slot slot = new Slot(chest, x + y * 9, 8 + (x * 18), 18 + (y * 18));
-
-                addSlotToContainer(slot);
-            }
-        }
+        super(player, world, x, y, z, item, 9, 3, 8, 18, 8, 87, 8, 145);
     }
 }

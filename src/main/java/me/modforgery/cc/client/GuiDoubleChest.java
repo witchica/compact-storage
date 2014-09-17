@@ -17,6 +17,6 @@ public class GuiDoubleChest extends GuiChest
 {
     public GuiDoubleChest(Container serverGuiElement, EntityPlayer player, World world, int x, int y, int z)
     {
-        super("double", 176, 256, serverGuiElement, player, world, x, y, z);
+        super("double", 176, 206, serverGuiElement, player, world, x, y, z, false);
     }
 }

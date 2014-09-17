@@ -20,35 +20,6 @@ public class ContainerDoubleChest extends ContainerChest
 {
     public ContainerDoubleChest(EntityPlayer player, World world, int x, int y, int z, boolean item)
     {
-        super(player, world, x, y, z, item);
-    }
-
-    public void initializeContainer(EntityPlayer player, IInventory inventory)
-    {
-       for(int slot = 0; slot < 9; slot++)
-        {
-            Slot s = new Slot(player.inventory, slot, 8 + (slot * 18), 182);
-
-            addSlotToContainer(s);
-        }
-
-        for(int x = 0; x < 9; x++)
-        {
-            for(int y = 0; y < 3; y++)
-            {
-                Slot s = new Slot(player.inventory, x + y * 9 + 9, 8 + (x * 18), 124 + (y * 18));
-                addSlotToContainer(s);
-            }
-        }
-
-        for(int x = 0; x < 9; x++)
-        {
-            for(int y = 0; y < 6; y++)
-            {
-                Slot slot = new Slot(inventory, x + y * 9, 8 + (x * 18), 13 + (y * 18));
-
-                addSlotToContainer(slot);
-            }
-        }
+        super(player, world, x, y, z, item, 9, 6, 8, 13, 8, 124, 8, 182);
     }
 }
