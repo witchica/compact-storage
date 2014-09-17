@@ -70,6 +70,7 @@ public class RenderChest extends TileEntityBaseRenderer
 
             GL11.glPushMatrix();
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+            GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GL11.glTranslatef((float)x, (float)y + 1.0F, (float)z + 1.0F);
             GL11.glScalef(1.0F, -1.0F, -1.0F);
@@ -115,9 +116,18 @@ public class RenderChest extends TileEntityBaseRenderer
             GL11.glPopMatrix();
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-            if(model.chestLid.rotateAngleX < 0 || model.chestLid.rotateAngleX > 0); else this.renderStackOnBlock(new ItemStack(Blocks.chest, 1), ForgeDirection.UP, direction, new Vector3f((float) x, (float) y - 0.1f, (float) z), 8.0F, 65.0F, 64.0F);
+            ItemStack stack = chest.getStackInSlot(0);
 
-            this.renderStackOnBlock(new ItemStack(Blocks.chest, 1), ForgeDirection.DOWN, direction, new Vector3f((float) x, (float) y - 0f, (float) z), 8.0F, 65.0F, 64.0F);
+            if(stack != null)
+            {
+                if(model.chestLid.rotateAngleX < 0 || model.chestLid.rotateAngleX > 0); else this.renderStackOnBlock(stack.copy(), ForgeDirection.UP, direction, new Vector3f((float) x, (float) y - 0.1f, (float) z), 8.0F, 65.0F, 64.0F);
+
+                this.renderStackOnBlock(stack.copy(), ForgeDirection.DOWN, direction, new Vector3f((float) x, (float) y - 0f, (float) z), 8.0F, 65.0F, 64.0F);
+
+                if(model.chestLid.rotateAngleX < 0 || model.chestLid.rotateAngleX > 0); else this.renderTextOnBlock(stack.getDisplayName(), ForgeDirection.UP, direction, new Vector3f((float) x, (float) y - 0.1f, (float) z), 2.0F, 128.0F, 50.0F, 255, 255, 255, 255, this.ALIGNCENTER);
+
+                this.renderTextOnBlock(stack.getDisplayName(), ForgeDirection.DOWN, direction, new Vector3f((float) x, (float) y - 0f, (float) z), 2.0F, 128.0F, 50.0F, 255, 255, 255, 255, this.ALIGNCENTER);
+            }
         }
     }
 

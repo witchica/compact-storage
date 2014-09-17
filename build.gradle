@@ -26,7 +26,7 @@ minecraft {
 group = 'CompactChests'
 def ENV = System.getenv()
 if (ENV.BUILD_NUMBER) {
-    version = "1.7.10-beta-1.1." + "${System.getenv().BUILD_NUMBER}"
+    version = "1.7.10-beta-1.2." + "${System.getenv().BUILD_NUMBER}"
 } else {
     version = "1.7.10-unofficial"
 }

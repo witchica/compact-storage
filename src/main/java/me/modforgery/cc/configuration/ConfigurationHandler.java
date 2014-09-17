@@ -42,67 +42,6 @@ public class ConfigurationHandler
 
     private static void loadConfiguration()
     {
-        String recipe = configuration.getString("doubleChestRecipe", "Crafting", "1=WWW;2=WCW;3=WWW;W=tile.planks.name;C=tile.chest.name", "Format");
 
-        if(configuration.hasChanged())
-        {
-            configuration.save();
-        }
-    }
-
-    public static HashMap<String, Item> getItemList()
-    {
-        HashMap map = Maps.newHashMap();
-
-        for(Object o : Item.itemRegistry)
-        {
-            Item i = (Item) o;
-            map.put(i.getUnlocalizedName(), i);
-        }
-
-        for(Object o : Block.blockRegistry)
-        {
-            Block block = (Block) o;
-            map.put(block.getUnlocalizedName(), (Item.getItemFromBlock(block)));
-        }
-
-        return map;
-    }
-
-    public static boolean parseRecipeString(String string, ItemStack output)
-    {
-        HashMap itemList = getItemList();
-
-        String[] elements = string.split(";");
-
-        String line1, line2, line3;
-        Map<String, String> map = Maps.newHashMap();
-
-        for(String sub : elements)
-        {
-            String key = sub.split("=")[0];
-            String value = sub.split("=")[1];
-
-            if(key.equals("1"))
-            {
-                line1 = value;
-            }
-            else if(key.equals("2"))
-            {
-                line2 = value;
-            }
-            else if(key.equals("3"))
-            {
-                line3 = value;
-            }
-            else
-            {
-                map.put(key, value);
-            }
-        }
-
-        //GameRegistry.addRecipe(output,);
-
-        return true;
     }
 }

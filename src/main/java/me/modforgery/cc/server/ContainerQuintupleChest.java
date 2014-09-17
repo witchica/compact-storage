@@ -12,6 +12,6 @@ public class ContainerQuintupleChest extends ContainerChest
 {
     public ContainerQuintupleChest(EntityPlayer player, World world, int x, int y, int z, boolean item)
     {
-        super(player, world, x, y, z, item, 15, 9, 26, 5, 80, 177, 80, 235);
+        super(player, world, x, y, z, item, 15, 9, 27, 5, 80, 177, 80, 235);
     }
 }
