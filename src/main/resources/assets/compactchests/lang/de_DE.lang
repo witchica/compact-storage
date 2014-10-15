@@ -1,0 +1,15 @@
+## Tabs
+itemGroup.chest=CompactChests
+## Blocks
+tile.doublechest.name=Doppeltruhe
+tile.triplechest.name=Dreifachtruhe
+tile.quadruplechest.name=Vierfachtruhe
+tile.quintuplechest.name=Fünffachtruhe
+tile.sextuplechest.name=Sechsfachtruhe
+## Items
+item.backpack_0.name=Einfacher Rucksack
+item.backpack_1.name=Doppelrucksack
+item.backpack_2.name=Dreifachrucksack
+item.backpack_3.name=Vierfachrucksack
+item.backpack_4.name=Fünffachrucksack
+item.backpack_5.name=Sechsfachrucksack
