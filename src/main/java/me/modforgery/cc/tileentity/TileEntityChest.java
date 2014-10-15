@@ -44,7 +44,7 @@ public class TileEntityChest extends TileEntity implements IInventory
     @Override
     public int getSizeInventory()
     {
-        return 27 * size;
+        return 27 * size + 1;
     }
 
     @Override

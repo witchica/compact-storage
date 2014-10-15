@@ -27,9 +27,6 @@ public abstract class ContainerChest extends Container
 
     public int lastID = 0;
 
-    public ArrayList<Slot> playerSlots;
-    public ArrayList<Slot> chestSlots;
-
     public int xSize;
     public int zSize;
 
@@ -44,9 +41,6 @@ public abstract class ContainerChest extends Container
 
         this.zSize = zSize;
         this.xSize = xSize;
-
-        playerSlots = new ArrayList<Slot>();
-        chestSlots = new ArrayList<Slot>();
 
         if(!item)
         {
@@ -69,13 +63,41 @@ public abstract class ContainerChest extends Container
 
 
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int sourceSlot)
+    public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int p_82846_2_)
     {
-        ChatComponentText chat = new ChatComponentText("\u00a7cShift Clicking is not implemented yet.");
-        player.addChatComponentMessage(chat);
+        ItemStack itemstack = null;
+        Slot slot = (Slot)this.inventorySlots.get(p_82846_2_);
 
-        return null;
+        if (slot != null && slot.getHasStack())
+        {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+
+            if (p_82846_2_ < this.zSize * this.xSize)
+            {
+                if (!this.mergeItemStack(itemstack1, this.zSize * this.xSize, this.inventorySlots.size(), true))
+                {
+                    return null;
+                }
+            }
+            else if (!this.mergeItemStack(itemstack1, 0, this.zSize * this.xSize, false))
+            {
+                return null;
+            }
+
+            if (itemstack1.stackSize == 0)
+            {
+                slot.putStack((ItemStack)null);
+            }
+            else
+            {
+                slot.onSlotChanged();
+            }
+        }
+
+        return itemstack;
     }
+
 
     @Override
     public void onContainerClosed(EntityPlayer player)
@@ -110,14 +132,33 @@ public abstract class ContainerChest extends Container
 
         int id = 0;
 
-        for(int x = 0; x < xSize; x++)
+        for(int z = 0; z < zSize; z++)
         {
-            for(int y = 0; y < zSize; y++)
+            for(int x = 0; x < xSize; x++)
             {
-                Slot slot = new Slot(chest, id, xStart + (x * 18), zStart + (y * 18));
-                addSlotToContainer(slot);
+                Slot slot = null;
 
-                System.out.println("Adding slot at: " + id + " and x: " + x + " y: " + y);
+                boolean problem = false;
+
+                if(x >= 7 && xSize == 15)
+                {
+                    slot = new Slot(chest, id, xStart + (x * 18) - 1, zStart + (z * 18));
+                    problem = true;
+                }
+                else if(x >= 4 && xSize == 12)
+                {
+                    slot = new Slot(chest, id, xStart + (x * 18) - 1, zStart + (z * 18));
+                    problem = true;
+                }
+                else if(x >= 10 && xSize == 18)
+                {
+                    slot = new Slot(chest, id, xStart + (x * 18) - 1, zStart + (z * 18));
+                    problem = true;
+                }
+
+                if(!problem) slot = new Slot(chest, id, xStart + (x * 18), zStart + (z * 18));
+
+                if(slot != null) addSlotToContainer(slot);
 
                 id++;
             }

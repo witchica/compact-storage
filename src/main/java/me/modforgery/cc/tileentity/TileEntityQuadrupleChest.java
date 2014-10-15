@@ -7,6 +7,6 @@ public class TileEntityQuadrupleChest extends TileEntityChest
 {
     public TileEntityQuadrupleChest()
     {
-        super(6);
+        super(4);
     }
 }

@@ -116,7 +116,7 @@ public class RenderChest extends TileEntityBaseRenderer
             GL11.glPopMatrix();
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-            ItemStack stack = chest.getStackInSlot(0);
+            ItemStack stack = chest.getStackInSlot(0);//chest.getSizeInventory() - 1);
 
             if(stack != null)
             {

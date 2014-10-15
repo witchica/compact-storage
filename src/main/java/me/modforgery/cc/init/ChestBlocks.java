@@ -1,14 +1,8 @@
 package me.modforgery.cc.init;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import me.modforgery.cc.block.BlockDoubleChest;
-import me.modforgery.cc.block.BlockQuadrupleChest;
-import me.modforgery.cc.block.BlockQuintupleChest;
-import me.modforgery.cc.block.BlockTripleChest;
-import me.modforgery.cc.tileentity.TileEntityDoubleChest;
-import me.modforgery.cc.tileentity.TileEntityQuadrupleChest;
-import me.modforgery.cc.tileentity.TileEntityQuintupleChest;
-import me.modforgery.cc.tileentity.TileEntityTripleChest;
+import me.modforgery.cc.block.*;
+import me.modforgery.cc.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 
@@ -21,6 +15,7 @@ public class ChestBlocks
     public static Block tripleChest;
     public static Block quadrupleChest;
     public static Block quintupleChest;
+    public static Block sextupleChest;
 
     public static void init()
     {
@@ -39,5 +34,9 @@ public class ChestBlocks
         quintupleChest = new BlockQuintupleChest();
         GameRegistry.registerBlock(quintupleChest, "quintupleChest");
         GameRegistry.registerTileEntity(TileEntityQuintupleChest.class, "quintupleChest");
+
+        sextupleChest = new BlockSextupleChest();
+        GameRegistry.registerBlock(sextupleChest, "sextupleChest");
+        GameRegistry.registerTileEntity(TileEntitySextupleChest.class, "sextupleChest");
     }
 }

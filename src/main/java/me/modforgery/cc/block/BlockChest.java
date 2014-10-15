@@ -1,6 +1,7 @@
 package me.modforgery.cc.block;
 
 import me.modforgery.cc.CompactChests;
+import me.modforgery.cc.tileentity.TileEntityChest;
 import me.modforgery.cc.tileentity.TileEntityDoubleChest;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -12,6 +13,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -54,8 +57,13 @@ public abstract class BlockChest extends Block implements ITileEntityProvider
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int i, float j, float k, float l)
     {
-        player.openGui(CompactChests.instance(), guiID, world, x, y, z);
-        return true;
+        if(!player.isSneaking())
+        {
+            player.openGui(CompactChests.instance(), guiID, world, x, y, z);
+            return true;
+        }
+
+        return false;
     }
 
     /**

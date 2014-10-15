@@ -14,6 +14,8 @@ public class ChestItems
     public static Item triple_backpack;
     public static Item quadruple_backpack;
     public static Item quintuple_backpack;
+    public static Item sextuple_backpack;
+
 
     public static void init()
     {
@@ -31,5 +33,8 @@ public class ChestItems
 
         quintuple_backpack = new ItemQuintupleBackpack();
         GameRegistry.registerItem(quintuple_backpack, "quintuple_backpack");
+
+        sextuple_backpack = new ItemSextupleBackpack();
+        GameRegistry.registerItem(sextuple_backpack, "sextuple_backpack");
     }
 }

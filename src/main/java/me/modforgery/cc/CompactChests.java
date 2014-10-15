@@ -19,6 +19,7 @@ import me.modforgery.cc.client.render.ChestItemRenderer;
 import me.modforgery.cc.client.render.RenderChest;
 import me.modforgery.cc.configuration.ConfigurationHandler;
 import me.modforgery.cc.creativetabs.CreativeTabChest;
+import me.modforgery.cc.event.CCHandler;
 import me.modforgery.cc.init.ChestBlocks;
 import me.modforgery.cc.init.ChestItems;
 import me.modforgery.cc.init.ChestReferences;
@@ -32,6 +33,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.common.MinecraftForge;
 
 /**
  * Created by Toby on 19/08/2014.
@@ -75,6 +77,8 @@ public class CompactChests
         networkWrapper.registerMessage(ChestHandler.class, ChestPacket.class, 0, Side.CLIENT);
 
         proxy.registerRenderers();
+
+        MinecraftForge.EVENT_BUS.register(new CCHandler());
 
         switch(difficulty)
         {
