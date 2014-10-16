@@ -83,6 +83,7 @@ public class TileEntityChest extends TileEntity implements IInventory
     public void setInventorySlotContents(int slot, ItemStack stack)
     {
         items[slot] = stack;
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override
