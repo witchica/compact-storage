@@ -1,0 +1,17 @@
+## Tabs
+itemGroup.chest=致密箱子
+
+## Blocks
+tile.doublechest.name=2级箱子
+tile.triplechest.name=3级箱子
+tile.quadruplechest.name=4级箱子
+tile.quintuplechest.name=5级箱子
+tile.sextuplechest.name=6级箱子
+
+## Items
+item.backpack_0.name=1级背包
+item.backpack_1.name=2级背包
+item.backpack_2.name=3级背包
+item.backpack_3.name=4级背包
+item.backpack_4.name=5级背包
+item.backpack_5.name=6级背包
