@@ -1,0 +1,17 @@
+## Tabs
+itemGroup.chest=CompactChests
+
+## Blocks
+tile.doublechest.name=Baule doppio
+tile.triplechest.name=Baule triplo
+tile.quadruplechest.name=Baule quadruplo
+tile.quintuplechest.name=Baule quintuplo
+tile.sextuplechest.name=Baule sestuplo
+
+## Items
+item.backpack_0.name=Zaino singolo
+item.backpack_1.name=Zaino doppio
+item.backpack_2.name=Zaino triplo
+item.backpack_3.name=Zaino quadruplo
+item.backpack_4.name=Zaino quintuplo
+item.backpack_5.name=Zaino sestuplo
