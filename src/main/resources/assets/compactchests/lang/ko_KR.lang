@@ -1,0 +1,17 @@
+## Tabs
+itemGroup.chest=컴팩트 체스트[CompactChests]
+
+## Blocks
+tile.doublechest.name=더블 체스트
+tile.triplechest.name=트리플 체스트
+tile.quadruplechest.name=쿼드라 체스트
+tile.quintuplechest.name=펜타 체스트
+tile.sextuplechest.name=섹스투플 체스트
+
+## Items
+item.backpack_0.name=싱글 백팩
+item.backpack_1.name=더블 백팩
+item.backpack_2.name=트리플 백팩
+item.backpack_3.name=쿼드라 백팩
+item.backpack_4.name=펜타 백팩
+item.backpack_5.name=섹스투플 백팩
