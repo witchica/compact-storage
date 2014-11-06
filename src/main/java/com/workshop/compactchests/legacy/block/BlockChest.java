@@ -1,5 +1,6 @@
 package com.workshop.compactchests.legacy.block;
 
+import com.workshop.compactchests.essential.CompactStorage;
 import com.workshop.compactchests.legacy.CompactChests;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -53,7 +54,7 @@ public abstract class BlockChest extends Block implements ITileEntityProvider
     {
         if(!player.isSneaking())
         {
-            player.openGui(CompactChests.instance(), guiID, world, x, y, z);
+            player.openGui(CompactStorage.instance, guiID, world, x, y, z);
             return true;
         }
 

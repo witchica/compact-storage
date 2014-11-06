@@ -1,5 +1,6 @@
 package com.workshop.compactchests.legacy.item;
 
+import com.workshop.compactchests.essential.CompactStorage;
 import com.workshop.compactchests.legacy.CompactChests;
 import com.workshop.compactchests.legacy.creativetabs.CreativeTabChest;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +28,7 @@ public class ItemBackpack extends Item
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
-        player.openGui(CompactChests.instance(), 100 + guiID, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+        player.openGui(CompactStorage.instance, 100 + guiID, world, (int) player.posX, (int) player.posY, (int) player.posZ);
         return stack;
     }
 
