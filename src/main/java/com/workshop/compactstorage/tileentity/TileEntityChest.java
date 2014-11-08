@@ -1,6 +1,8 @@
 package com.workshop.compactstorage.tileentity;
 
 import com.workshop.compactstorage.block.ChestType;
+import com.workshop.compactstorage.essential.handler.ConfigurationHandler;
+import com.workshop.compactstorage.util.ColorUtil;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -8,12 +10,16 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.awt.*;
+
 /**
  * Created by Toby on 06/11/2014.
  */
 public class TileEntityChest extends TileEntity
 {
     public ForgeDirection direction;
+
+    public boolean init;
 
     public TileEntityChest()
     {
@@ -52,5 +58,23 @@ public class TileEntityChest extends TileEntity
     {
         super.onDataPacket(net, pkt);
         readFromNBT(pkt.func_148857_g());
+    }
+
+    public void setDirection(ForgeDirection direction)
+    {
+        this.direction = direction;
+        updateBlock();
+    }
+
+    @Deprecated
+    public void setDirection(int direction)
+    {
+        this.direction = ForgeDirection.getOrientation(direction);
+        updateBlock();
+    }
+
+    public void updateBlock()
+    {
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 }

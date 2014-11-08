@@ -1,7 +1,9 @@
 package com.workshop.compactstorage.client.render;
 
 import com.workshop.compactstorage.block.ChestType;
+import com.workshop.compactstorage.essential.handler.ConfigurationHandler;
 import com.workshop.compactstorage.tileentity.TileEntityChest;
+import com.workshop.compactstorage.util.ColorUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -54,7 +56,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
 
         try
         {
-            color = ChestType.values()[tile.getBlockMetadata()].defaultColor;
+            color = ConfigurationHandler.chestColors.get(ChestType.values()[tile.getBlockMetadata()]);
         }
         catch(Exception exception)
         {
@@ -64,7 +66,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
         float r = (float)(color >> 16 & 255) / 255.0F;
         float g = (float)(color >> 8 & 255) / 255.0F;
         float b = (float)(color & 255) / 255.0F;
-        GL11.glColor4f(r, g, b, 1.0F);
+        GL11.glColor4f(r, g, b, 0.5F);
 
         model.chestBelow.render(0.0625f);
         model.chestLid.render(0.0625f);
