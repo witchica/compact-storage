@@ -8,6 +8,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -68,6 +69,18 @@ public class BlockChest extends Block implements ITileEntityProvider
         super.onBlockPlacedBy(world, x, y, z, entity, stack);
 
         ((TileEntityChest) world.getTileEntity(x, y, z)).direction = EntityUtil.get2dOrientation(entity);
+    }
+
+    @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int i, float j, float k, float l)
+    {
+        if(!player.isSneaking())
+        {
+            player.openGui(CompactStorage.instance, 0, world, x, y, z);
+            return true;
+        }
+
+        return false;
     }
 
     public TileEntity createNewTileEntity(World world, int dim)
