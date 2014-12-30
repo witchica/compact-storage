@@ -1,16 +1,13 @@
 package com.workshop.compactchests;
 
-import com.workshop.compactchests.client.GuiHandler;
-import com.workshop.compactstorage.essential.CompactStorage;
+import com.workshop.compactchests.configuration.ConfigurationHandler;
+import com.workshop.compactchests.event.CCHandler;
+import com.workshop.compactchests.proxy.IProxy;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import com.workshop.compactchests.configuration.ConfigurationHandler;
-import com.workshop.compactchests.event.CCHandler;
-import com.workshop.compactchests.proxy.IProxy;
 import net.minecraftforge.common.MinecraftForge;
 
 /**

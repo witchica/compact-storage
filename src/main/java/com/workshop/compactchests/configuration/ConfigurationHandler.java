@@ -1,8 +1,8 @@
 package com.workshop.compactchests.configuration;
 
+import com.workshop.compactchests.init.ChestReferences;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import com.workshop.compactchests.init.ChestReferences;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;

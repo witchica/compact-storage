@@ -1,5 +1,8 @@
 package com.workshop.compactstorage.essential;
 
+import com.workshop.compactchests.CompactChests;
+import com.workshop.compactchests.init.ChestBlocks;
+import com.workshop.compactchests.init.ChestItems;
 import com.workshop.compactstorage.creativetabs.CreativeTabCompactStorage;
 import com.workshop.compactstorage.essential.handler.ConfigurationHandler;
 import com.workshop.compactstorage.essential.handler.GuiHandler;
@@ -7,21 +10,21 @@ import com.workshop.compactstorage.essential.init.StorageBlocks;
 import com.workshop.compactstorage.essential.init.StorageInfo;
 import com.workshop.compactstorage.essential.init.StorageItems;
 import com.workshop.compactstorage.essential.proxy.IProxy;
-import com.workshop.compactchests.CompactChests;
-import com.workshop.compactchests.creativetabs.CreativeTabChest;
-import com.workshop.compactchests.init.ChestBlocks;
-import com.workshop.compactchests.init.ChestItems;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -51,10 +54,22 @@ public class CompactStorage
     public static CreativeTabs tabCS;
 
     public static final Logger logger = LogManager.getLogger("CompactStorage");
+    public static boolean deobf;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        try
+        {
+            deobf = Class.forName("net.minecraft.world.World") == null ? false : true;
+        }
+        catch(Exception ex)
+        {
+            logger.warn("Could not set deobf variable. Assuming normal game.");
+        }
+
+        logger.info("Are we in deofb? " + (deobf ? "Yep!" : "Nope, going retro!"));
+
         legacy_instance = new CompactChests();
 
         switch(FMLCommonHandler.instance().getEffectiveSide())
@@ -81,7 +96,22 @@ public class CompactStorage
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
+        if(deobf)
+        {
+            NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
+        }
+        else
+        {
+            NetworkRegistry.INSTANCE.registerGuiHandler(instance, new com.workshop.compactchests.client.GuiHandler());
+
+
+            GameRegistry.addShapedRecipe(new ItemStack(ChestBlocks.doubleChest), "SIS", "ICI", "SIS", 'S', new ItemStack(Items.stick, 1), 'I', new ItemStack(Items.iron_ingot, 1), 'C', new ItemStack(Blocks.chest, 1));
+            GameRegistry.addShapedRecipe(new ItemStack(ChestBlocks.tripleChest), "SIS", "ICI", "SIS", 'S', new ItemStack(Blocks.cobblestone_wall, 1), 'I', new ItemStack(Items.iron_ingot, 1), 'C', new ItemStack(ChestBlocks.doubleChest, 1));
+            GameRegistry.addShapedRecipe(new ItemStack(ChestBlocks.quadrupleChest), "SIS", "ICI", "SIS", 'S', new ItemStack(Blocks.cobblestone_wall, 1), 'I', new ItemStack(Items.gold_ingot, 1), 'C', new ItemStack(ChestBlocks.tripleChest, 1));
+            GameRegistry.addShapedRecipe(new ItemStack(ChestBlocks.quintupleChest), "SIS", "ICI", "SIS", 'S', new ItemStack(Blocks.glass_pane, 1), 'I', new ItemStack(Items.gold_ingot, 1), 'C', new ItemStack(ChestBlocks.quadrupleChest, 1));
+            GameRegistry.addShapedRecipe(new ItemStack(ChestBlocks.sextupleChest), "SIS", "ICI", "SIS", 'S', new ItemStack(Blocks.glass_pane, 1), 'I', new ItemStack(Items.diamond, 1), 'C', new ItemStack(ChestBlocks.quintupleChest, 1));
+        }
+
         Side side = FMLCommonHandler.instance().getEffectiveSide();
 
         proxy.registerRenderers();

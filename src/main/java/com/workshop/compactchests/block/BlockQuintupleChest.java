@@ -1,6 +1,5 @@
 package com.workshop.compactchests.block;
 
-import com.workshop.compactchests.creativetabs.CreativeTabChest;
 import com.workshop.compactchests.tileentity.TileEntityQuintupleChest;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

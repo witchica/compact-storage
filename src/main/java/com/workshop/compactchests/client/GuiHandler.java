@@ -1,7 +1,7 @@
 package com.workshop.compactchests.client;
 
-import cpw.mods.fml.common.network.IGuiHandler;
 import com.workshop.compactchests.server.*;
+import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.world.World;

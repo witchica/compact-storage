@@ -1,9 +1,9 @@
 package com.workshop.compactchests.event;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import com.workshop.compactchests.block.BlockChest;
 import com.workshop.compactchests.init.ChestBlocks;
 import com.workshop.compactchests.tileentity.TileEntityChest;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.init.Blocks;

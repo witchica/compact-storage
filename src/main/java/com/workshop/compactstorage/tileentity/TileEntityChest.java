@@ -1,8 +1,5 @@
 package com.workshop.compactstorage.tileentity;
 
-import com.workshop.compactstorage.block.ChestType;
-import com.workshop.compactstorage.essential.handler.ConfigurationHandler;
-import com.workshop.compactstorage.util.ColorUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -12,8 +9,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import java.awt.*;
 
 /**
  * Created by Toby on 06/11/2014.

@@ -25,6 +25,7 @@ public abstract class BlockChest extends Block implements ITileEntityProvider
     {
         super(Material.wood);
         setBlockTextureName("planks_oak");
+        setCreativeTab(CompactStorage.tabCS);
         this.setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 0.875F, 0.9375F);
 
         this.guiID = guiID;

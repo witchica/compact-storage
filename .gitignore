@@ -8,6 +8,7 @@
 !/README
 !/*.MD
 !/build.gradle
+!/settings.gradle
 !/LICENSE
 
 ## Folders

@@ -1,9 +1,7 @@
 package com.workshop.compactstorage.client.render;
 
-import com.workshop.compactstorage.block.ChestType;
 import com.workshop.compactstorage.essential.handler.ConfigurationHandler;
 import com.workshop.compactstorage.tileentity.TileEntityChest;
-import com.workshop.compactstorage.util.ColorUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -56,7 +54,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
 
         try
         {
-            color = ConfigurationHandler.chestColors.get(ChestType.values()[tile.getBlockMetadata()]);
+            color = 0xFFFFFF; //TODO ConfigurationHandler.chestColors.get(ChestType.values()[tile.getBlockMetadata()]);
         }
         catch(Exception exception)
         {

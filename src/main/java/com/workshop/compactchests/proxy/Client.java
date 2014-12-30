@@ -1,10 +1,10 @@
 package com.workshop.compactchests.proxy;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
 import com.workshop.compactchests.client.render.ChestItemRenderer;
 import com.workshop.compactchests.client.render.RenderChest;
 import com.workshop.compactchests.init.ChestBlocks;
 import com.workshop.compactchests.tileentity.*;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.MinecraftForgeClient;
 

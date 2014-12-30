@@ -1,7 +1,6 @@
 package com.workshop.compactchests.item;
 
 import com.workshop.compactstorage.essential.CompactStorage;
-import com.workshop.compactchests.creativetabs.CreativeTabChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
