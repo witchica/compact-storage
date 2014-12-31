@@ -54,7 +54,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
 
         try
         {
-            color = 0xFFFFFF; //TODO ConfigurationHandler.chestColors.get(ChestType.values()[tile.getBlockMetadata()]);
+            color = ((TileEntityChest) tile).color;
         }
         catch(Exception exception)
         {

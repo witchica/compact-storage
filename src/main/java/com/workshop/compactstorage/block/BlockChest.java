@@ -56,6 +56,8 @@ public class BlockChest extends Block implements ITileEntityProvider
         super.onBlockPlacedBy(world, x, y, z, entity, stack);
 
         ((TileEntityChest) world.getTileEntity(x, y, z)).direction = EntityUtil.get2dOrientation(entity);
+        ((TileEntityChest) world.getTileEntity(x, y, z)).invX = 9;
+        ((TileEntityChest) world.getTileEntity(x, y, z)).invY = 6;
     }
 
     @Override
@@ -65,6 +67,10 @@ public class BlockChest extends Block implements ITileEntityProvider
         {
             player.openGui(CompactStorage.instance, 0, world, x, y, z);
             return true;
+        }
+        else
+        {
+            ((TileEntityChest) world.getTileEntity(x, y, z)).color = world.rand.nextInt(0xFFFFFF);
         }
 
         return false;
