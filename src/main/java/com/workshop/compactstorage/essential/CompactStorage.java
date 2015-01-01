@@ -1,5 +1,8 @@
 package com.workshop.compactstorage.essential;
 
+import cofh.CoFHCore;
+import cofh.lib.CoFHLibProps;
+
 import com.workshop.compactchests.CompactChests;
 import com.workshop.compactchests.init.ChestBlocks;
 import com.workshop.compactchests.init.ChestItems;
@@ -10,6 +13,7 @@ import com.workshop.compactstorage.essential.init.StorageBlocks;
 import com.workshop.compactstorage.essential.init.StorageInfo;
 import com.workshop.compactstorage.essential.init.StorageItems;
 import com.workshop.compactstorage.essential.proxy.IProxy;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -28,6 +32,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -61,7 +66,7 @@ public class CompactStorage
     {
         try
         {
-            deobf = Class.forName("net.minecraft.world.World") == null ? false : true;
+            deobf = false; //FORCE THIS ON BUILD! SORRY!!! Class.forName("net.minecraft.world.World") == null ? false : true;
         }
         catch(Exception ex)
         {

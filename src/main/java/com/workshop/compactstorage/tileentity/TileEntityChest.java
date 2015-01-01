@@ -9,11 +9,13 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+import cpw.mods.fml.common.Optional;
 
 /**
  * Created by Toby on 06/11/2014.
  */
-public class TileEntityChest extends TileEntity implements IInventory
+@Optional.Interface(iface = "cofh.api.tileentity.ISecurable", modid = "CoFHCore")
+public class TileEntityChest extends TileEntity implements IInventory, cofh.api.tileentity.ISecurable
 {
     public ForgeDirection direction;
 
@@ -146,4 +148,39 @@ public class TileEntityChest extends TileEntity implements IInventory
     public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
         return false;
     }
+
+    @Optional.Method(modid = "CoFHCore")
+	@Override
+	public boolean canPlayerAccess(String string) 
+	{
+		return true;
+	}
+
+    @Optional.Method(modid = "CoFHCore")
+    @Override
+	public AccessMode getAccess() 
+	{
+		return AccessMode.RESTRICTED;
+	}
+
+    @Optional.Method(modid = "CoFHCore")
+    @Override
+	public String getOwnerName() 
+	{
+		return "tattyseal";
+	}
+
+    @Optional.Method(modid = "CoFHCore")
+    @Override
+	public boolean setAccess(AccessMode mode) 
+	{
+		return true;
+	}
+
+    @Optional.Method(modid = "CoFHCore")
+    @Override
+	public boolean setOwnerName(String name) 
+	{
+		return false;
+	}
 }

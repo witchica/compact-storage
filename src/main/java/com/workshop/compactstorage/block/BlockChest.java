@@ -1,15 +1,22 @@
 package com.workshop.compactstorage.block;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import com.google.gson.JsonParseException;
 import com.workshop.compactstorage.essential.CompactStorage;
 import com.workshop.compactstorage.tileentity.TileEntityChest;
 import com.workshop.compactstorage.util.EntityUtil;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.command.SyntaxErrorException;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -63,14 +70,22 @@ public class BlockChest extends Block implements ITileEntityProvider
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int i, float j, float k, float l)
     {
-        if(!player.isSneaking())
+        if(CompactStorage.deobf)
         {
-            player.openGui(CompactStorage.instance, 0, world, x, y, z);
-            return true;
+        	if(!player.isSneaking())
+            {
+                player.openGui(CompactStorage.instance, 0, world, x, y, z);
+                return true;
+            }
+            else
+            {
+            	((TileEntityChest) world.getTileEntity(x, y, z)).color = world.rand.nextInt(0xFFFFFF);
+            }
         }
         else
         {
-            ((TileEntityChest) world.getTileEntity(x, y, z)).color = world.rand.nextInt(0xFFFFFF);
+        	player.addChatMessage(new ChatComponentText("Nope! WIP!"));
+        	((TileEntityChest) world.getTileEntity(x, y, z)).color = 0xFF0000;
         }
 
         return false;

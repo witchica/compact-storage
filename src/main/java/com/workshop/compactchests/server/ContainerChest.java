@@ -58,41 +58,52 @@ public abstract class ContainerChest extends Container
         }
     }
 
-
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer p_82846_1_, int p_82846_2_)
+    public void putStackInSlot(int slot, ItemStack p_75141_2_) {
+    	super.putStackInSlot(slot, p_75141_2_);
+    	System.out.println(slot);
+    }
+    
+    @Override
+    public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
     {
-        ItemStack itemstack = null;
-        Slot slot = (Slot)this.inventorySlots.get(p_82846_2_);
-
-        if (slot != null && slot.getHasStack())
-        {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-
-            if (p_82846_2_ < this.zSize * this.xSize)
-            {
-                if (!this.mergeItemStack(itemstack1, this.zSize * this.xSize, this.inventorySlots.size(), true))
-                {
-                    return null;
-                }
-            }
-            else if (!this.mergeItemStack(itemstack1, 0, this.zSize * this.xSize, false))
-            {
-                return null;
-            }
-
-            if (itemstack1.stackSize == 0)
-            {
-                slot.putStack((ItemStack)null);
-            }
-            else
-            {
-                slot.onSlotChanged();
-            }
-        }
-
-        return itemstack;
+    	try
+    	{
+    		Slot slot = (Slot) inventorySlots.get(slotIndex);
+    		
+    		if (slot != null && slot.getHasStack())
+    		{
+    			ItemStack itemStack = slot.getStack().copy();
+    			
+    			if (slotIndex < 36)
+    			{
+    				if (!this.mergeItemStack(itemStack, 36, xSize * zSize + 36, false))
+    				{
+    					return null;
+    				}
+    			}
+    			else if (!this.mergeItemStack(itemStack, 0, 36, false))
+    			{
+    				return null;
+    			}
+    			
+    			if (itemStack.stackSize == 0)
+    			{
+    				slot.putStack(null);
+    			}
+    			else
+    			{
+    				slot.onSlotChanged();
+    			}
+    		}
+    		
+    		return null;
+    	}
+    	catch(Exception e)
+    	{
+    		e.printStackTrace();
+    		return null;
+    	}
     }
 
 

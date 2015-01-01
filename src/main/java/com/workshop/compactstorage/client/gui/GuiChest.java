@@ -8,11 +8,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import cofh.api.tileentity.ISecurable;
 import cofh.core.gui.GuiBaseAdv;
 import cofh.core.gui.element.TabInfo;
+import cofh.core.gui.element.TabSecurity;
 import cofh.lib.gui.element.TabBase;
 
-import com.sun.naming.internal.ResourceManager;
 import com.workshop.compactstorage.tileentity.TileEntityChest;
 import com.workshop.compactstorage.util.BlockPos;
 
@@ -28,8 +29,11 @@ public class GuiChest extends GuiBaseAdv
     public int invX;
     public int invY;
     
-    public TabInfo tab;
+    public TabInfo tabInfo;
+    public TabSecurity tabSecurity;
 
+    public static final ResourceLocation realTexture = new ResourceLocation("compactstorage", "textures/gui/chest.png");
+    
     public GuiChest(Container container, World world, EntityPlayer player, BlockPos pos)
     {
         super(container);
@@ -42,9 +46,9 @@ public class GuiChest extends GuiBaseAdv
         this.invY = ((TileEntityChest) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ())).invY;
 
         this.xSize = 7 + (invX * 18) + 7;
-        this.ySize = 7 + (invY * 18) + 5 + 54 + 4 + 18 + 7;
+        this.ySize = 7 + (invY * 18) + 13 + 54 + 4 + 18 + 7;
     }
-
+    
     @Override
     public void initGui()
     {
@@ -52,9 +56,11 @@ public class GuiChest extends GuiBaseAdv
         
         this.texture = new ResourceLocation("compactstorage", "textures/empty.png");
         
-        tab = new TabInfo(this, 1, "Hello World!");
-        tab.setPosition(guiLeft + xSize, guiTop);
-        addTab(tab);
+        tabInfo = new TabInfo(this, 1, "Amount of Slots: "  + invX * invY + "\nEmpty Slots: " + invX * invY + "\nMode: Player + Pipe");
+        addTab(tabInfo);
+        
+        tabSecurity = new TabSecurity(this, (ISecurable) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ()), player.getCommandSenderName());
+        addTab(tabSecurity);
     }
     
     @Override
@@ -66,10 +72,9 @@ public class GuiChest extends GuiBaseAdv
     @Override
     public void drawGuiContainerBackgroundLayer(float i, int j, int k)
     {    	
-        
         super.drawGuiContainerBackgroundLayer(i, j, k);
 
-        Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("compactstorage", "textures/gui/chest.png"));
+        Minecraft.getMinecraft().renderEngine.bindTexture(realTexture);
         
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, 7, 7);
 
@@ -118,7 +123,7 @@ public class GuiChest extends GuiBaseAdv
             }
         }
 
-        slotY = slotY + (invY * 18) + 5;
+        slotY = slotY + (invY * 18) + 13;
 
         for(int x = 0; x < 9; x++)
         {
