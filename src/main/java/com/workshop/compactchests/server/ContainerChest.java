@@ -21,6 +21,7 @@ public abstract class ContainerChest extends Container
     public int z;
 
     public IInventory chest;
+    public boolean item;
 
     public int lastID = 0;
 
@@ -38,6 +39,8 @@ public abstract class ContainerChest extends Container
 
         this.zSize = zSize;
         this.xSize = xSize;
+        
+        this.item = item;
 
         if(!item)
         {
@@ -178,9 +181,12 @@ public abstract class ContainerChest extends Container
     @Override
     public ItemStack slotClick(int slot, int button, int flag, EntityPlayer player) 
     {
-	    if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItem()) 
+	    if(item)
 	    {
-	    	return null;
+	    	if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItem()) 
+		    {
+		    	return null;
+		    }
 	    }
 	    
 	    return super.slotClick(slot, button, flag, player);
