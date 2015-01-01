@@ -32,6 +32,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.oredict.OreDictionary;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -66,7 +67,7 @@ public class CompactStorage
     {
         try
         {
-            deobf = false; //FORCE THIS ON BUILD! SORRY!!! Class.forName("net.minecraft.world.World") == null ? false : true;
+            deobf = false; //Class.forName("net.minecraft.world.World") == null ? false : true;
         }
         catch(Exception ex)
         {
@@ -115,6 +116,13 @@ public class CompactStorage
             GameRegistry.addShapedRecipe(new ItemStack(ChestBlocks.quadrupleChest), "SIS", "ICI", "SIS", 'S', new ItemStack(Blocks.cobblestone_wall, 1), 'I', new ItemStack(Items.gold_ingot, 1), 'C', new ItemStack(ChestBlocks.tripleChest, 1));
             GameRegistry.addShapedRecipe(new ItemStack(ChestBlocks.quintupleChest), "SIS", "ICI", "SIS", 'S', new ItemStack(Blocks.glass_pane, 1), 'I', new ItemStack(Items.gold_ingot, 1), 'C', new ItemStack(ChestBlocks.quadrupleChest, 1));
             GameRegistry.addShapedRecipe(new ItemStack(ChestBlocks.sextupleChest), "SIS", "ICI", "SIS", 'S', new ItemStack(Blocks.glass_pane, 1), 'I', new ItemStack(Items.diamond, 1), 'C', new ItemStack(ChestBlocks.quintupleChest, 1));
+        
+            GameRegistry.addShapedRecipe(new ItemStack(ChestItems.single_backpack), "WSW", "SCS", "WSW", 'C', new ItemStack(Blocks.chest, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'S', new ItemStack(Items.string, 1));
+            GameRegistry.addShapedRecipe(new ItemStack(ChestItems.double_backpack), "WSW", "SCS", "WSW", 'C', new ItemStack(ChestBlocks.doubleChest, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'S', new ItemStack(Items.string, 1));
+            GameRegistry.addShapedRecipe(new ItemStack(ChestItems.triple_backpack), "WSW", "SCS", "WSW", 'C', new ItemStack(ChestBlocks.tripleChest, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'S', new ItemStack(Items.string, 1));
+            GameRegistry.addShapedRecipe(new ItemStack(ChestItems.quadruple_backpack), "WSW", "SCS", "WSW", 'C', new ItemStack(ChestBlocks.quadrupleChest, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'S', new ItemStack(Items.string, 1));
+            GameRegistry.addShapedRecipe(new ItemStack(ChestItems.quintuple_backpack), "WSW", "SCS", "WSW", 'C', new ItemStack(ChestBlocks.quintupleChest, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'S', new ItemStack(Items.string, 1));
+            GameRegistry.addShapedRecipe(new ItemStack(ChestItems.sextuple_backpack), "WSW", "SCS", "WSW", 'C', new ItemStack(ChestBlocks.sextupleChest, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'S', new ItemStack(Items.string, 1));
         }
 
         Side side = FMLCommonHandler.instance().getEffectiveSide();

@@ -20,6 +20,8 @@ public class ItemBackpack extends Item
         this.guiID = guiID;
         setUnlocalizedName("backpack_" + guiID);
         setTextureName("compactchests:backpack_" + guiID);
+        setCreativeTab(CompactStorage.tabCS);
+        setMaxStackSize(1);
     }
 
     @Override
