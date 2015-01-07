@@ -2,28 +2,28 @@ package com.workshop.compactstorage.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import com.workshop.compactstorage.tileentity.TileEntityChest;
+import com.workshop.compactstorage.tileentity.TileEntityChestBuilder;
 import com.workshop.compactstorage.util.BlockPos;
+import com.workshop.compactstorage.util.StorageInfo;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Created by Toby on 11/11/2014.
  */
-public class ContainerChest extends Container
+public class ContainerChestBuilder extends Container
 {
     public World world;
     public EntityPlayer player;
     public BlockPos pos;
 
-    public TileEntityChest chest;
-    
-    public int invX;
-    public int invY;
-    
-    public int lastId;
+    public TileEntityChestBuilder chest;
     
     /***
      * This is carried over from the GUI for slot placement issues
@@ -31,19 +31,17 @@ public class ContainerChest extends Container
     public int xSize;
     public int ySize;
     
-    public ContainerChest(World world, EntityPlayer player, BlockPos pos)
+    public ContainerChestBuilder(World world, EntityPlayer player, BlockPos pos)
     {
         super();
 
         this.world = world;
         this.player = player;
         this.pos = pos;
-        this.chest = ((TileEntityChest) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ()));
+        this.chest = ((TileEntityChestBuilder) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ()));
         
-        this.invX = chest.invX;
-        this.invY = chest.invY;
-        this.xSize = 7 + (invX * 18) + 7;
-        this.ySize = 7 + (invY * 18) + 13 + 54 + 4 + 18 + 7;
+        this.xSize = 7 + 162 + 7;
+        this.ySize = 7 + 54 + 13 + 54 + 4 + 18 + 7;
         
         setupSlots();
     }
@@ -56,25 +54,11 @@ public class ContainerChest extends Container
     
     public void setupSlots()
     {
-    	int slotX = (xSize / 2) - ((invX * 18) / 2) + 1;
+    	int slotX = (xSize / 2) - (162 / 2) + 1;
         int slotY = 8; //(ySize / 2) - ((invY * 18) / 2);
 
-        int lastId = 0;
-        
-        for(int y = 0; y < invY; y++)
-        {
-        	for(int x = 0; x < invX; x++)
-            {
-                Slot slot = new Slot(chest, lastId, slotX + (x * 18), slotY + (y * 18));
-                addSlotToContainer(slot);
-                lastId++;
-            }
-        }
-        
-        this.lastId = lastId;
-
         slotX = (xSize / 2) - ((9 * 18) / 2) + 1;
-        slotY = slotY + (invY * 18) + 13;
+        slotY = slotY + 54 + 13;
 
         for(int x = 0; x < 9; x++)
         {
@@ -136,9 +120,43 @@ public class ContainerChest extends Container
     		slot.onSlotChanged();
     	}
     	
-    	chest.markDirty();
+    	//chest.markDirty();
     	player.inventory.inventoryChanged = true;
     	
     	return null;
+    }
+    
+    @Override
+    public void addCraftingToCrafters(ICrafting crafter) 
+    {
+    	super.addCraftingToCrafters(crafter);
+    	crafter.sendProgressBarUpdate(this, 0, 9);
+    	crafter.sendProgressBarUpdate(this, 1, 3);
+    }
+    
+    @Override
+    public void detectAndSendChanges()
+    {
+        super.detectAndSendChanges();
+
+        for (int i = 0; i < this.crafters.size(); ++i)
+        {
+            ICrafting crafter = (ICrafting)this.crafters.get(i);
+            if(chest != null && chest.info != null) crafter.sendProgressBarUpdate(this, 0, chest.info.getSizeX());
+            if(chest != null && chest.info != null) crafter.sendProgressBarUpdate(this, 1, chest.info.getSizeY());
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void updateProgressBar(int id, int value)
+    {
+    	if(chest.info == null) chest.info = new StorageInfo(9, 3);
+    	
+        switch(id)
+        {
+        	case 0: chest.info.setSizeX(value); break;
+        	case 1: chest.info.setSizeY(value); break;
+        }
     }
 }

@@ -60,12 +60,6 @@ public abstract class ContainerChest extends Container
             initializeContainer(player, chest, xSize, zSize, xStart, zStart, xInvStart, zInvStart, xHotStart, zHotStart);
         }
     }
-
-    @Override
-    public void putStackInSlot(int slot, ItemStack p_75141_2_) {
-    	super.putStackInSlot(slot, p_75141_2_);
-    	System.out.println(slot);
-    }
     
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)

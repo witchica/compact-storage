@@ -13,6 +13,8 @@ import com.workshop.compactstorage.essential.init.StorageBlocks;
 import com.workshop.compactstorage.essential.init.StorageInfo;
 import com.workshop.compactstorage.essential.init.StorageItems;
 import com.workshop.compactstorage.essential.proxy.IProxy;
+import com.workshop.compactstorage.network.handler.C01HandlerUpdateBuilder;
+import com.workshop.compactstorage.network.packet.C01PacketUpdateBuilder;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -23,6 +25,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.creativetab.CreativeTabs;
@@ -62,12 +65,14 @@ public class CompactStorage
     public static final Logger logger = LogManager.getLogger("CompactStorage");
     public static boolean deobf;
 
+    public SimpleNetworkWrapper wrapper;
+    
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         try
         {
-            deobf = false; //Class.forName("net.minecraft.world.World") == null ? false : true;
+            deobf = Class.forName("net.minecraft.world.World") == null ? false : true;
         }
         catch(Exception ex)
         {
@@ -77,7 +82,10 @@ public class CompactStorage
         logger.info("Are we in deofb? " + (deobf ? "Yep!" : "Nope, going retro!"));
 
         legacy_instance = new CompactChests();
-
+        
+        wrapper = NetworkRegistry.INSTANCE.newSimpleChannel(StorageInfo.ID);
+        wrapper.registerMessage(C01HandlerUpdateBuilder.class, C01PacketUpdateBuilder.class, 0, Side.SERVER);
+        
         switch(FMLCommonHandler.instance().getEffectiveSide())
         {
             case CLIENT: legacy_instance.proxy = new com.workshop.compactchests.proxy.Client(); break;

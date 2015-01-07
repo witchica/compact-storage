@@ -2,6 +2,8 @@ package com.workshop.compactstorage.block;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
+import cofh.api.tileentity.ISecurable.AccessMode;
+
 import com.google.gson.JsonParseException;
 import com.workshop.compactstorage.essential.CompactStorage;
 import com.workshop.compactstorage.tileentity.TileEntityChest;
@@ -63,8 +65,19 @@ public class BlockChest extends Block implements ITileEntityProvider
         super.onBlockPlacedBy(world, x, y, z, entity, stack);
 
         ((TileEntityChest) world.getTileEntity(x, y, z)).direction = EntityUtil.get2dOrientation(entity);
-        ((TileEntityChest) world.getTileEntity(x, y, z)).invX = 9;
-        ((TileEntityChest) world.getTileEntity(x, y, z)).invY = 6;
+        ((TileEntityChest) world.getTileEntity(x, y, z)).player = entity.getCommandSenderName();
+        ((TileEntityChest) world.getTileEntity(x, y, z)).mode = AccessMode.PUBLIC;
+        
+        if(stack.hasTagCompound())
+        {
+        	((TileEntityChest) world.getTileEntity(x, y, z)).invX = 24; //stack.getTagCompound().getIntArray("size")[0];
+            ((TileEntityChest) world.getTileEntity(x, y, z)).invY = 12; //stack.getTagCompound().getIntArray("size")[1];
+        }
+        else
+        {
+        	((TileEntityChest) world.getTileEntity(x, y, z)).invX = 0;
+            ((TileEntityChest) world.getTileEntity(x, y, z)).invY = 0;
+        }
     }
 
     @Override

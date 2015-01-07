@@ -29,7 +29,6 @@ public class TileEntityChest extends TileEntity implements IInventory
         super();
 
         this.size = size;
-
         items = new ItemStack[getSizeInventory()];
     }
 
@@ -54,17 +53,21 @@ public class TileEntityChest extends TileEntity implements IInventory
     @Override
     public ItemStack decrStackSize(int slot, int amount)
     {
-        ItemStack stack = getStackInSlot(slot);
+    	ItemStack stack = getStackInSlot(slot);
 
         if(stack != null)
         {
             if(stack.stackSize <= amount)
             {
                 setInventorySlotContents(slot, null);
+                markDirty();
             }
             else
             {
                 ItemStack stack2 = stack.splitStack(amount);
+                markDirty();
+                
+                return stack2;
             }
         }
 

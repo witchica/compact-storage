@@ -1,5 +1,7 @@
 package com.workshop.compactstorage.client.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.ResourceIndex;
@@ -29,6 +31,8 @@ public class GuiChest extends GuiBaseAdv
     public int invX;
     public int invY;
     
+    public int list;
+    
     public TabInfo tabInfo;
     public TabSecurity tabSecurity;
 
@@ -56,11 +60,82 @@ public class GuiChest extends GuiBaseAdv
         
         this.texture = new ResourceLocation("compactstorage", "textures/empty.png");
         
-        tabInfo = new TabInfo(this, 1, "Amount of Slots: "  + invX * invY + "\nEmpty Slots: " + invX * invY + "\nMode: Player + Pipe");
+        tabInfo = new TabInfo(this, 1, "Amount of Slots: "  + invX * invY + "\nMaximum Items: " + (invX * invY) * 64 + "\nMode: Player + Pipe");
         addTab(tabInfo);
         
         tabSecurity = new TabSecurity(this, (ISecurable) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ()), player.getCommandSenderName());
         addTab(tabSecurity);
+        
+        list = GL11.glGenLists(1);
+        
+        GL11.glNewList(list, GL11.GL_COMPILE);
+        {
+        	drawTexturedModalRect(guiLeft, guiTop, 0, 0, 7, 7);
+
+            for(int xx = 0; xx < invX * 18; xx++)
+            {
+                drawTexturedModalRect(guiLeft + 7 + xx, guiTop, 8, 0, 1, 7);
+            }
+
+            drawTexturedModalRect(guiLeft + 7 + invX * 18, guiTop, 10, 0, 7, 7);
+
+            for(int yy = 0; yy < ySize - 14; yy++)
+            {
+                drawTexturedModalRect(guiLeft, guiTop + 7 + yy, 0, 8, 7, 1);
+            }
+
+            drawTexturedModalRect(guiLeft, guiTop + 7 + ySize - 14, 0, 10, 7, 7);
+
+            for(int xx = 0; xx < xSize - 14; xx++)
+            {
+                drawTexturedModalRect(guiLeft + 7 + xx, guiTop + 7 + (ySize - 14), 8, 10, 1, 7);
+            }
+
+            drawTexturedModalRect(guiLeft + xSize - 7, guiTop + 7 + (ySize - 14), 10, 10, 7, 7);
+
+            for(int yy = 0; yy < ySize - 14; yy++)
+            {
+                drawTexturedModalRect(guiLeft + xSize - 7, guiTop + 7 + yy, 10, 8, 7, 1);
+            }
+
+            for(int xx = 0; xx < xSize - 14; xx++)
+            {
+                for(int yy = 0; yy < ySize - 14; yy++)
+                {
+                    drawTexturedModalRect(guiLeft + 7 + xx, guiTop + 7 + yy, 8, 8, 1, 1);
+                }
+            }
+
+            int slotX = (xSize / 2) - ((invX * 18) / 2);
+            int slotY = 7; //(ySize / 2) - ((invY * 18) / 2);
+
+            for(int x = 0; x < invX; x++)
+            {
+                for(int y = 0; y < invY; y++)
+                {
+                    drawTexturedModalRect(guiLeft + slotX + (x * 18), guiTop + slotY + (y * 18), 18, 0, 18, 18);
+                }
+            }
+
+            slotX = (xSize / 2) - ((9 * 18) / 2);
+            slotY = slotY + (invY * 18) + 13;
+
+            for(int x = 0; x < 9; x++)
+            {
+                for(int y = 0; y < 3; y++)
+                {
+                    drawTexturedModalRect(guiLeft + slotX + (x * 18), guiTop + slotY + (y * 18), 18, 0, 18, 18);
+                }
+            }
+
+            slotY = slotY + (3 * 18) + 4;
+
+            for(int x = 0; x < 9; x++)
+            {
+                drawTexturedModalRect(guiLeft + slotX + (x * 18), guiTop + slotY, 18, 0, 18, 18);
+            }
+        }
+        GL11.glEndList();
     }
     
     @Override
@@ -75,70 +150,7 @@ public class GuiChest extends GuiBaseAdv
         super.drawGuiContainerBackgroundLayer(i, j, k);
 
         Minecraft.getMinecraft().renderEngine.bindTexture(realTexture);
-        
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, 7, 7);
-
-        for(int xx = 0; xx < invX * 18; xx++)
-        {
-            drawTexturedModalRect(guiLeft + 7 + xx, guiTop, 8, 0, 1, 7);
-        }
-
-        drawTexturedModalRect(guiLeft + 7 + invX * 18, guiTop, 10, 0, 7, 7);
-
-        for(int yy = 0; yy < ySize - 14; yy++)
-        {
-            drawTexturedModalRect(guiLeft, guiTop + 7 + yy, 0, 8, 7, 1);
-        }
-
-        drawTexturedModalRect(guiLeft, guiTop + 7 + ySize - 14, 0, 10, 7, 7);
-
-        for(int xx = 0; xx < xSize - 14; xx++)
-        {
-            drawTexturedModalRect(guiLeft + 7 + xx, guiTop + 7 + (ySize - 14), 8, 10, 1, 7);
-        }
-
-        drawTexturedModalRect(guiLeft + xSize - 7, guiTop + 7 + (ySize - 14), 10, 10, 7, 7);
-
-        for(int yy = 0; yy < ySize - 14; yy++)
-        {
-            drawTexturedModalRect(guiLeft + xSize - 7, guiTop + 7 + yy, 10, 8, 7, 1);
-        }
-
-        for(int xx = 0; xx < xSize - 14; xx++)
-        {
-            for(int yy = 0; yy < ySize - 14; yy++)
-            {
-                drawTexturedModalRect(guiLeft + 7 + xx, guiTop + 7 + yy, 8, 8, 1, 1);
-            }
-        }
-
-        int slotX = (xSize / 2) - ((invX * 18) / 2);
-        int slotY = 7; //(ySize / 2) - ((invY * 18) / 2);
-
-        for(int x = 0; x < invX; x++)
-        {
-            for(int y = 0; y < invY; y++)
-            {
-                drawTexturedModalRect(guiLeft + slotX + (x * 18), guiTop + slotY + (y * 18), 18, 0, 18, 18);
-            }
-        }
-
-        slotY = slotY + (invY * 18) + 13;
-
-        for(int x = 0; x < 9; x++)
-        {
-            for(int y = 0; y < 3; y++)
-            {
-                drawTexturedModalRect(guiLeft + slotX + (x * 18), guiTop + slotY + (y * 18), 18, 0, 18, 18);
-            }
-        }
-
-        slotY = slotY + (3 * 18) + 4;
-
-        for(int x = 0; x < 9; x++)
-        {
-            drawTexturedModalRect(guiLeft + slotX + (x * 18), guiTop + slotY, 18, 0, 18, 18);
-        }
+        GL11.glCallList(list);
     }
 
     public static void drawTexturedQuadFit(double x, double y, double width, double height, double zLevel)
