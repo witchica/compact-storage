@@ -7,6 +7,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import com.workshop.compactstorage.inventory.slot.SlotChestBuilder;
 import com.workshop.compactstorage.tileentity.TileEntityChestBuilder;
 import com.workshop.compactstorage.util.BlockPos;
 import com.workshop.compactstorage.util.StorageInfo;
@@ -57,6 +58,12 @@ public class ContainerChestBuilder extends Container
     	int slotX = (xSize / 2) - (162 / 2) + 1;
         int slotY = 8; //(ySize / 2) - ((invY * 18) / 2);
 
+        for(int x = 0; x < 4; x++)
+        {
+        	SlotChestBuilder slot = new SlotChestBuilder(chest, x, 7 + (x * 18) + 1, 7 + (18 * 2) + 1);
+            addSlotToContainer(slot);
+        }
+        
         slotX = (xSize / 2) - ((9 * 18) / 2) + 1;
         slotY = slotY + 54 + 13;
 

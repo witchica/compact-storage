@@ -1,7 +1,22 @@
 package com.workshop.compactstorage.essential;
 
-import cofh.CoFHCore;
-import cofh.lib.CoFHLibProps;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.oredict.OreDictionary;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.workshop.compactchests.CompactChests;
 import com.workshop.compactchests.init.ChestBlocks;
@@ -14,7 +29,9 @@ import com.workshop.compactstorage.essential.init.StorageInfo;
 import com.workshop.compactstorage.essential.init.StorageItems;
 import com.workshop.compactstorage.essential.proxy.IProxy;
 import com.workshop.compactstorage.network.handler.C01HandlerUpdateBuilder;
+import com.workshop.compactstorage.network.handler.C02HandlerCraftChest;
 import com.workshop.compactstorage.network.packet.C01PacketUpdateBuilder;
+import com.workshop.compactstorage.network.packet.C02PacketCraftChest;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -28,23 +45,6 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraftforge.oredict.OreDictionary;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Toby on 06/11/2014.
@@ -72,7 +72,7 @@ public class CompactStorage
     {
         try
         {
-            deobf = Class.forName("net.minecraft.world.World") == null ? false : true;
+            deobf = true; //Class.forName("net.minecraft.world.World") == null ? false : true;
         }
         catch(Exception ex)
         {
@@ -85,6 +85,7 @@ public class CompactStorage
         
         wrapper = NetworkRegistry.INSTANCE.newSimpleChannel(StorageInfo.ID);
         wrapper.registerMessage(C01HandlerUpdateBuilder.class, C01PacketUpdateBuilder.class, 0, Side.SERVER);
+        wrapper.registerMessage(C02HandlerCraftChest.class, C02PacketCraftChest.class, 1, Side.SERVER);
         
         switch(FMLCommonHandler.instance().getEffectiveSide())
         {

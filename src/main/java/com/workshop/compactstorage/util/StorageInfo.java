@@ -68,10 +68,13 @@ public class StorageInfo
 		int primaryIndex = (sizeX / 3 * sizeY / 3) / 4;
 		int secondaryIndex = ((sizeX / 3 * sizeY / 3) / 4);
 		
-		list.add(new ItemStack(Blocks.chest, (sizeX * sizeY) / 6));
+		int chestAmount = (sizeX * sizeY) / 27 == 0 ? 1 : (sizeX * sizeY) / 27;
+		int clayAmount = (sizeX * sizeY) / 3 == 0 ? 1 : (sizeX * sizeY) / 3;
+		
+		list.add(new ItemStack(Blocks.chest, chestAmount));
 		list.add(new ItemStack(primary[primaryIndex > 3 ? 3 : primaryIndex], primaryIndex + 1 * 2, OreDictionary.WILDCARD_VALUE));
 		list.add(new ItemStack(secondary[secondaryIndex > 3 ? 3 : primaryIndex], secondaryIndex + 1 * 2, (Block.getBlockFromItem(secondary[secondaryIndex > 3 ? 3 : primaryIndex]).equals(Blocks.quartz_block) ? 2 : 0)));
-		list.add(new ItemStack(Items.clay_ball, (sizeX * sizeY) / 3));
+		list.add(new ItemStack(Items.clay_ball, clayAmount));
 		
 		return list;
 	}
@@ -93,6 +96,11 @@ public class StorageInfo
 	
 	public static StorageInfo readFromNBT(NBTTagCompound tag)
 	{
+		if(tag == null)
+		{
+			return new StorageInfo(9, 3);
+		}
+		
 		StorageInfo info = new StorageInfo(tag.getInteger("sizeX"), tag.getInteger("sizeY"));
 		return info;
 	}

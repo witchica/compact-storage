@@ -62,6 +62,8 @@ public class TileEntityChest extends TileEntity implements IInventory, cofh.api.
             {
                 setInventorySlotContents(slot, null);
                 markDirty();
+                
+                return stack;
             }
             else
             {
@@ -84,7 +86,7 @@ public class TileEntityChest extends TileEntity implements IInventory, cofh.api.
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) 
     {
-    	if(items != null && stack != null)
+    	if(items != null)
     	{
     		items[slot] = stack;
     	}

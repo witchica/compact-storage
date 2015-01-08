@@ -22,6 +22,7 @@ import cofh.core.gui.element.TabSecurity;
 
 import com.workshop.compactstorage.essential.CompactStorage;
 import com.workshop.compactstorage.network.packet.C01PacketUpdateBuilder;
+import com.workshop.compactstorage.network.packet.C02PacketCraftChest;
 import com.workshop.compactstorage.tileentity.TileEntityChestBuilder;
 import com.workshop.compactstorage.util.BlockPos;
 import com.workshop.compactstorage.util.StorageInfo;
@@ -45,6 +46,8 @@ public class GuiChestBuilder extends GuiBaseAdv
 
     public GuiButton buttonAddY;
     public GuiButton buttonMinusY;
+    
+    public GuiButton buttonSubmit;
     
     public TileEntityChestBuilder builder;
 
@@ -156,6 +159,9 @@ public class GuiChestBuilder extends GuiBaseAdv
         
         buttonMinusY = new GuiButton(3, guiLeft + 162 / 2 + getFontRenderer().getStringWidth("Size Y: 12 ") + 20, guiTop + 30, 20, 20, "-");
         buttonList.add(buttonMinusY);
+        
+        buttonSubmit = new GuiButton(4, guiLeft + 162 / 2 + getFontRenderer().getStringWidth("Size Y: 12 ") + 20, guiTop + 50, 20, 20, "-");
+        buttonList.add(buttonSubmit);
     }
     
     @Override
@@ -272,7 +278,7 @@ public class GuiChestBuilder extends GuiBaseAdv
         
         if(info == null)
         {
-        	info = new StorageInfo(9, 3);
+        	return;
         }
 
         for(int x = 0; x < 4; x++)
@@ -336,6 +342,12 @@ public class GuiChestBuilder extends GuiBaseAdv
     			info.setSizeY(info.getSizeY() - 1);
     			CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(pos, builder.dimension, info));
 
+    			break;
+    		}
+    		case 4:
+    		{
+    			CompactStorage.instance.wrapper.sendToServer(new C02PacketCraftChest(pos, builder.dimension, info));
+    			
     			break;
     		}
     	}

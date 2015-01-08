@@ -42,7 +42,7 @@ public class ContainerChest extends Container
         
         this.invX = chest.invX;
         this.invY = chest.invY;
-        this.xSize = 7 + (invX * 18) + 7;
+        this.xSize = 7 + (invX < 9 ? (9 * 18) : (invX * 18)) + 7;
         this.ySize = 7 + (invY * 18) + 13 + 54 + 4 + 18 + 7;
         
         setupSlots();
@@ -56,7 +56,7 @@ public class ContainerChest extends Container
     
     public void setupSlots()
     {
-    	int slotX = (xSize / 2) - ((invX * 18) / 2) + 1;
+    	int slotX = (xSize / 2) - (invX * 18 / 2) + 1; 
         int slotY = 8; //(ySize / 2) - ((invY * 18) / 2);
 
         int lastId = 0;

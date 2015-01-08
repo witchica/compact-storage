@@ -70,8 +70,8 @@ public class BlockChest extends Block implements ITileEntityProvider
         
         if(stack.hasTagCompound())
         {
-        	((TileEntityChest) world.getTileEntity(x, y, z)).invX = 24; //stack.getTagCompound().getIntArray("size")[0];
-            ((TileEntityChest) world.getTileEntity(x, y, z)).invY = 12; //stack.getTagCompound().getIntArray("size")[1];
+        	((TileEntityChest) world.getTileEntity(x, y, z)).invX = stack.getTagCompound().getIntArray("size")[0];
+            ((TileEntityChest) world.getTileEntity(x, y, z)).invY = stack.getTagCompound().getIntArray("size")[1];
         }
         else
         {

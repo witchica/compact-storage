@@ -49,7 +49,7 @@ public class GuiChest extends GuiBaseAdv
         this.invX = ((TileEntityChest) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ())).invX;
         this.invY = ((TileEntityChest) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ())).invY;
 
-        this.xSize = 7 + (invX * 18) + 7;
+        this.xSize = 7 + ((invX) < 9 ? (9 * 18) : (invX * 18)) + 7;
         this.ySize = 7 + (invY * 18) + 13 + 54 + 4 + 18 + 7;
     }
     
@@ -72,12 +72,12 @@ public class GuiChest extends GuiBaseAdv
         {
         	drawTexturedModalRect(guiLeft, guiTop, 0, 0, 7, 7);
 
-            for(int xx = 0; xx < invX * 18; xx++)
+            for(int xx = 0; xx < ((invX < 9) ? 9 * 18 : invX * 18); xx++)
             {
                 drawTexturedModalRect(guiLeft + 7 + xx, guiTop, 8, 0, 1, 7);
             }
 
-            drawTexturedModalRect(guiLeft + 7 + invX * 18, guiTop, 10, 0, 7, 7);
+            drawTexturedModalRect(guiLeft + 7 + ((invX < 9) ? 9 * 18 : invX * 18), guiTop, 10, 0, 7, 7);
 
             for(int yy = 0; yy < ySize - 14; yy++)
             {
