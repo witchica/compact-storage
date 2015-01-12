@@ -1,0 +1,19 @@
+## Tabs
+itemGroup.chest=Kompakte Kister
+
+## Blocks
+tile.doublechest.name=Dobbel Kiste
+tile.triplechest.name=Tripel Kiste
+tile.quadruplechest.name=Firedobbel Kiste
+tile.quintuplechest.name=Femdobbel Kiste
+tile.sextuplechest.name=Seksdobbel Kiste
+
+## Items
+item.backpack_0.name=Enkel Ryggsekk
+item.backpack_1.name=Dobbel Ryggsekk
+item.backpack_2.name=Trippel Ryggsekk
+item.backpack_3.name=Firedobbel Ryggsekk
+item.backpack_4.name=Femdobbel Ryggsekk
+item.backpack_5.name=Seksdobbel Ryggsekk
+
+#Translation av EwyBoy
