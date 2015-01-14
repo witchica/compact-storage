@@ -14,9 +14,7 @@ public class ConfigurationHandler
     public static Configuration configuration;
     private static boolean initialized = false;
 
-    public static boolean checkAllDirectoriesServer;
-    public static boolean changeNBTForWorldsClient;
-
+    public static boolean firstTimeRun;
     public static String directoryToCheckServer;
 
     public static void init(File configFile)
@@ -27,10 +25,8 @@ public class ConfigurationHandler
         {
             configuration = new Configuration(configFile);
 
-
-            checkAllDirectoriesServer = configuration.getBoolean("checkAllDirectories", "NBT", true, "Recurse through all server directories checking for a level.dat and changing the mod-id so blocks are not lost.");
-            directoryToCheckServer = configuration.getString("directoryToCheckServer", "NBT", "disabled", "The directory to check for level.dat on server side. Disabled if 'checkAllDirectories' is set to true.");
-            changeNBTForWorldsClient = configuration.getBoolean("changeNBTForSavesClient", "NBT", true, "Should we recurse through all of your saves and change the mod-id so CompactChests blocks are not lost?");
+            firstTimeRun = true; //configuration.get("internal", "firstTime", true).getBoolean();
+            //configuration.get("internal", "firstTime", true).set(false);
         }
         catch(Exception e)
         {

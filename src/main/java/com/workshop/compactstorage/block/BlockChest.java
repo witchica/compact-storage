@@ -1,26 +1,19 @@
 package com.workshop.compactstorage.block;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
-import cofh.api.tileentity.ISecurable.AccessMode;
-
-import com.google.gson.JsonParseException;
-import com.workshop.compactstorage.essential.CompactStorage;
-import com.workshop.compactstorage.tileentity.TileEntityChest;
-import com.workshop.compactstorage.util.EntityUtil;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.command.SyntaxErrorException;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import com.workshop.compactstorage.essential.CompactStorage;
+import com.workshop.compactstorage.tileentity.TileEntityChest;
+import com.workshop.compactstorage.util.EntityUtil;
 
 /**
  * Created by Toby on 06/11/2014.
@@ -66,7 +59,7 @@ public class BlockChest extends Block implements ITileEntityProvider
 
         ((TileEntityChest) world.getTileEntity(x, y, z)).direction = EntityUtil.get2dOrientation(entity);
         ((TileEntityChest) world.getTileEntity(x, y, z)).player = entity.getCommandSenderName();
-        ((TileEntityChest) world.getTileEntity(x, y, z)).mode = AccessMode.PUBLIC;
+        ((TileEntityChest) world.getTileEntity(x, y, z)).mode = 0;
         
         if(stack.hasTagCompound())
         {

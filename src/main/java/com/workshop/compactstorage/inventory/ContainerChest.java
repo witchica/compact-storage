@@ -97,17 +97,17 @@ public class ContainerChest extends Container
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
     {
-    	Slot slot = (Slot) inventorySlots.get(slotIndex);
-    	
     	try
     	{
+    		Slot slot = (Slot) inventorySlots.get(slotIndex);
+    		
     		if (slot != null && slot.getHasStack())
     		{
     			ItemStack itemStack = slot.getStack().copy();
     			
-    			if (slotIndex < 36)
+    			if (slotIndex < 27)
     			{
-    				if (!this.mergeItemStack(itemStack, 36, xSize * ySize + 36, false))
+    				if (!this.mergeItemStack(itemStack, 27, inventorySlots.size(), false))
     				{
     					return null;
     				}
@@ -127,18 +127,12 @@ public class ContainerChest extends Container
     			}
     		}
     		
-    		slot.onSlotChanged();
-    		
     		return null;
     	}
     	catch(Exception e)
     	{
-    		slot.onSlotChanged();
+    		e.printStackTrace();
+    		return null;
     	}
-    	
-    	chest.markDirty();
-    	player.inventory.inventoryChanged = true;
-    	
-    	return null;
     }
 }

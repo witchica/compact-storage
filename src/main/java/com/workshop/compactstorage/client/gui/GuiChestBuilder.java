@@ -3,7 +3,9 @@ package com.workshop.compactstorage.client.gui;
 import java.util.ArrayList;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,11 +17,6 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import cofh.api.tileentity.ISecurable;
-import cofh.core.gui.GuiBaseAdv;
-import cofh.core.gui.element.TabInfo;
-import cofh.core.gui.element.TabSecurity;
-
 import com.workshop.compactstorage.essential.CompactStorage;
 import com.workshop.compactstorage.network.packet.C01PacketUpdateBuilder;
 import com.workshop.compactstorage.network.packet.C02PacketCraftChest;
@@ -30,16 +27,13 @@ import com.workshop.compactstorage.util.StorageInfo;
 /**
  * Created by Toby on 09/11/2014.
  */
-public class GuiChestBuilder extends GuiBaseAdv
+public class GuiChestBuilder extends GuiContainer
 {
     public World world;
     public EntityPlayer player;
     public BlockPos pos;
     
     public int list;
-    
-    public TabInfo tabInfo;
-    public TabSecurity tabSecurity;
     
     public GuiButton buttonAddX;
     public GuiButton buttonMinusX;
@@ -71,11 +65,6 @@ public class GuiChestBuilder extends GuiBaseAdv
     public void initGui()
     {
         super.initGui();
-        
-        this.texture = new ResourceLocation("compactstorage", "textures/empty.png");
-        
-        tabSecurity = new TabSecurity(this, (ISecurable) builder, player.getCommandSenderName());
-        addTab(tabSecurity);
         
         list = GL11.glGenLists(1);
         
@@ -258,7 +247,6 @@ public class GuiChestBuilder extends GuiBaseAdv
     @Override
     public void drawGuiContainerBackgroundLayer(float i, int j, int k)
     {    	
-        super.drawGuiContainerBackgroundLayer(i, j, k);
         super.drawGuiContainerForegroundLayer(j, k);
         
         RenderHelper.disableStandardItemLighting();
@@ -362,5 +350,10 @@ public class GuiChestBuilder extends GuiBaseAdv
         tessellator.addVertexWithUV(x + width, y + 0, zLevel, 1,0);
         tessellator.addVertexWithUV(x + 0, y + 0, zLevel, 0, 0);
         tessellator.draw();
+    }
+    
+    public FontRenderer getFontRenderer()
+    {
+    	return fontRendererObj;
     }
 }

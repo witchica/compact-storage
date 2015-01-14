@@ -1,6 +1,7 @@
 package com.workshop.compactchests.block;
 
-import com.workshop.compactstorage.essential.CompactStorage;
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -9,10 +10,13 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-import java.util.Random;
+import com.workshop.compactchests.CompactChests;
+import com.workshop.compactstorage.essential.CompactStorage;
 
 /**
  * Created by Toby on 19/08/2014.
@@ -52,13 +56,22 @@ public abstract class BlockChest extends Block implements ITileEntityProvider
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int i, float j, float k, float l)
     {
-        if(!player.isSneaking())
-        {
-            player.openGui(CompactStorage.instance, guiID, world, x, y, z);
-            return true;
-        }
+    	if(CompactStorage.deobf)
+    	{
+        	player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.AQUA + "This will be fixed soon, but for now. No Access!"));
 
-        return false;
+            return false;
+    	}
+    	else
+    	{
+    		if(!player.isSneaking())
+            {
+                player.openGui(CompactStorage.instance, guiID, world, x, y, z);
+                return true;
+            }
+
+            return false;
+    	}
     }
 
     /**

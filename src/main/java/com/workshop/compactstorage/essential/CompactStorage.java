@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +24,7 @@ import com.workshop.compactchests.init.ChestBlocks;
 import com.workshop.compactchests.init.ChestItems;
 import com.workshop.compactstorage.creativetabs.CreativeTabCompactStorage;
 import com.workshop.compactstorage.essential.handler.ConfigurationHandler;
+import com.workshop.compactstorage.essential.handler.FirstTimeRunHandler;
 import com.workshop.compactstorage.essential.handler.GuiHandler;
 import com.workshop.compactstorage.essential.init.StorageBlocks;
 import com.workshop.compactstorage.essential.init.StorageInfo;
@@ -134,108 +136,10 @@ public class CompactStorage
             GameRegistry.addShapedRecipe(new ItemStack(ChestItems.sextuple_backpack), "WSW", "SCS", "WSW", 'C', new ItemStack(ChestBlocks.sextupleChest, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'S', new ItemStack(Items.string, 1));
         }
 
-        Side side = FMLCommonHandler.instance().getEffectiveSide();
-
         proxy.registerRenderers();
-
-        if(side.equals(Side.CLIENT))
-        {
-            if(!ConfigurationHandler.changeNBTForWorldsClient)
-            {
-                logger.info("Changing NBT is disabled. Will not check. Things may be lost...");
-                return;
-            }
-
-            for (File file : new File("./saves/").listFiles())
-            {
-                if (file.isDirectory())
-                {
-                    changeModidForLevelData(new File("./saves/" + file.getName() + "/level.dat"));
-                }
-            }
-        }
-        else
-        {
-            if(ConfigurationHandler.checkAllDirectoriesServer)
-            {
-                List<File> directories = new ArrayList<File>();
-
-                for(File dir : new File("./").listFiles())
-                {
-                    if(dir.isDirectory()) directories.add(dir);
-                }
-
-                Object[] fileObjArray = directories.toArray();
-
-                for(Object fileObj : fileObjArray)
-                {
-                    File dir = (File) fileObj;
-
-                    for(File file : dir.listFiles())
-                    {
-                        if(file.isDirectory()) continue;
-
-                        logger.info("Searching file " + file.getName() + " in directory " + file.getParentFile().getName() + " to see if it contains NBT data...");
-
-                        if(file.getName().equals("level.dat"))
-                        {
-                            logger.info("Found file " + file.getName() + " in directory " + file.getParentFile().getName() + " appending the new mod-id to your items so nothing is lost...");
-                            changeModidForLevelData(file);
-                        }
-                    }
-                }
-            }
-            else if(!ConfigurationHandler.directoryToCheckServer.equals("disabled"))
-            {
-                changeModidForLevelData(new File("./" + ConfigurationHandler.directoryToCheckServer + "/level.dat"));
-            }
-            else
-            {
-                logger.error("All server side checking is disabled. CompactChests legacy support has not been implemented. This may not go well...");
-            }
-
-        }
-
         legacy_instance.postInitialization(event);
-    }
-
-    private void changeModidForLevelData(File file)
-    {
-        try
-        {
-            NBTTagCompound tagCompound = CompressedStreamTools.readCompressed(new FileInputStream(file));
-
-            NBTTagCompound fml = tagCompound.getCompoundTag("FML");
-
-            NBTTagList list = fml.getTagList("ItemData", 10);
-
-            boolean legacy_save = false;
-
-            for (int id = 0; id < list.tagCount(); id++)
-            {
-                NBTTagCompound tag = list.getCompoundTagAt(id);
-
-                if (tag.getString("K").contains("compactchests:"))
-                {
-                    legacy_save = true;
-                    logger.info("Replacing " + tag.getString("K") + " in save " + file.getName());
-                    tag.setString("K", tag.getString("K").replace("compactchests:", "compactstorage:"));
-                }
-
-                list.func_150304_a(id, tag);
-            }
-
-            if(!legacy_save) logger.info("Save " + file.getName() + " has already been updated from CompactChests to CompactStorage. :)");
-
-            fml.setTag("ItemData", list);
-            tagCompound.setTag("FML", fml);
-
-            CompressedStreamTools.writeCompressed(tagCompound, new FileOutputStream(file));
-        }
-        catch (Exception exception)
-        {
-            logger.error("Error when appending new data to level.dat in directory " + file.getParentFile().getName());
-            exception.printStackTrace();
-        }
+        
+        MinecraftForge.EVENT_BUS.register(new FirstTimeRunHandler());
+        FMLCommonHandler.instance().bus().register(new FirstTimeRunHandler());
     }
 }

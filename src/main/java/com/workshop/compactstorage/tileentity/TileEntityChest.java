@@ -1,26 +1,28 @@
 package com.workshop.compactstorage.tileentity;
 
+import java.nio.file.AccessMode;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
-import cofh.core.util.SocialRegistry;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Optional;
 
 /**
  * Created by Toby on 06/11/2014.
  */
-@Optional.Interface(iface = "cofh.api.tileentity.ISecurable", modid = "CoFHCore")
-public class TileEntityChest extends TileEntity implements IInventory, cofh.api.tileentity.ISecurable
+public class TileEntityChest extends TileEntity implements IInventory
 {
     public ForgeDirection direction;
-    public AccessMode mode;
+    public int mode;
     public String player;
 
     public int color;
@@ -36,6 +38,7 @@ public class TileEntityChest extends TileEntity implements IInventory, cofh.api.
         super();
 
         this.direction = ForgeDirection.NORTH;
+        this.items = new ItemStack[getSizeInventory()];
     }
 
     /* INVENTORY START */
@@ -63,14 +66,14 @@ public class TileEntityChest extends TileEntity implements IInventory, cofh.api.
                 setInventorySlotContents(slot, null);
                 markDirty();
                 
-                return stack;
+                return stack.copy();
             }
             else
             {
                 ItemStack stack2 = stack.splitStack(amount);
                 markDirty();
                 
-                return stack2;
+                return stack2.copy();
             }
         }
 
@@ -90,6 +93,8 @@ public class TileEntityChest extends TileEntity implements IInventory, cofh.api.
     	{
     		items[slot] = stack;
     	}
+    	
+    	markDirty();
     }
 
     @Override
@@ -146,10 +151,23 @@ public class TileEntityChest extends TileEntity implements IInventory, cofh.api.
         this.invX = tag.getInteger("invX");
         this.invY = tag.getInteger("invY");
         
-        this.mode = AccessMode.values()[tag.getInteger("mode")];
+        this.mode = tag.getInteger("mode");
         this.player = tag.getString("player");
         
-        this.items = new ItemStack[getSizeInventory()];
+        NBTTagList nbtTagList = tag.getTagList("Items", Constants.NBT.TAG_COMPOUND);
+        items = new ItemStack[getSizeInventory()];
+
+        for(int slot = 0; slot < nbtTagList.tagCount(); slot++)
+        {
+            NBTTagCompound item = nbtTagList.getCompoundTagAt(slot);
+
+            int i = item.getInteger("Slot");
+
+            if(i >= 0 && i < getSizeInventory())
+            {
+                items[i] = ItemStack.loadItemStackFromNBT(item);
+            }
+        }
     }
 
     @Override
@@ -162,8 +180,22 @@ public class TileEntityChest extends TileEntity implements IInventory, cofh.api.
         tag.setInteger("invX", invX);
         tag.setInteger("invY", invY);
         
-        tag.setInteger("mode", mode.ordinal());
+        tag.setInteger("mode", mode);
         tag.setString("player", player);
+        
+        NBTTagList nbtTagList = new NBTTagList();
+        for(int slot = 0; slot < getSizeInventory(); slot++)
+        {
+            if(items.length < slot && items[slot] != null)
+            {
+                NBTTagCompound item = new NBTTagCompound();
+                item.setInteger("Slot", slot);
+                items[slot].writeToNBT(item);
+                nbtTagList.appendTag(item);
+            }
+        }
+
+        tag.setTag("Items", nbtTagList);
     }
 
     @Override
@@ -173,6 +205,13 @@ public class TileEntityChest extends TileEntity implements IInventory, cofh.api.
         writeToNBT(tag);
 
         return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, getBlockMetadata(), tag);
+    }
+    
+    @Override
+    public void updateEntity()
+    {
+    	super.updateEntity();
+    	
     }
 
     @Override
@@ -199,46 +238,36 @@ public class TileEntityChest extends TileEntity implements IInventory, cofh.api.
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
-    /* COFH CORE START */
+    /* SEAL/COFH CORE START */
 
-    @Optional.Method(modid = "CoFHCore")
-	@Override
-	public boolean canPlayerAccess(String name) 
+    public boolean canPlayerAccess(String name) 
 	{
 		switch(mode)
 		{
-			case PUBLIC: return true;
-			case PRIVATE: return name.equals(player);
-			case RESTRICTED: return SocialRegistry.playerHasAccess(name, player);
+			case 0: return true;
+			case 1: return name.equals(player);
+			case 2: return name.equals(player); //SocialRegistry.playerHasAccess(name, player);
 			default: return false;
 		}
 	}
 
-    @Optional.Method(modid = "CoFHCore")
-    @Override
-	public AccessMode getAccess() 
+	public int getAccess() 
 	{
 		return mode;
 	}
 
-    @Optional.Method(modid = "CoFHCore")
-    @Override
 	public String getOwnerName() 
 	{
 		return player;
 	}
 
-    @Optional.Method(modid = "CoFHCore")
-    @Override
-	public boolean setAccess(AccessMode mode) 
+    public boolean setAccess(int mode) 
 	{
     	this.mode = mode;
 		return true;
 	}
 
-    @Optional.Method(modid = "CoFHCore")
-    @Override
-	public boolean setOwnerName(String name) 
+    public boolean setOwnerName(String name) 
 	{
     	this.player = name;
 		return true;

@@ -10,15 +10,12 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
-import cofh.core.util.SocialRegistry;
 
 import com.workshop.compactstorage.util.StorageInfo;
 
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Optional;
 
-@Optional.Interface(iface = "cofh.api.tileentity.ISecurable", modid = "CoFHCore")
-public class TileEntityChestBuilder extends TileEntity implements cofh.api.tileentity.ISecurable, IInventory
+public class TileEntityChestBuilder extends TileEntity implements IInventory
 {
 	public StorageInfo info;
 	public int dimension;
@@ -213,44 +210,34 @@ public class TileEntityChestBuilder extends TileEntity implements cofh.api.tilee
 	
     /* COFH CORE START */
 
-    @Optional.Method(modid = "CoFHCore")
-	@Override
-	public boolean canPlayerAccess(String name) 
+    public boolean canPlayerAccess(String name) 
 	{    	
-		switch(AccessMode.values()[mode])
+		switch(mode)
 		{
-			case PUBLIC: return true;
-			case PRIVATE: return name.equals(player);
-			case RESTRICTED: return SocialRegistry.playerHasAccess(name, player);
+			case 0: return true;
+			case 1: return name.equals(player);
+			case 2: return name.equals(player); //SocialRegistry.playerHasAccess(name, player);
 			default: return false;
 		}
 	}
 
-    @Optional.Method(modid = "CoFHCore")
-    @Override
-	public AccessMode getAccess() 
+    public int getAccess() 
 	{
-		return AccessMode.values()[mode];
+		return mode;
 	}
 
-    @Optional.Method(modid = "CoFHCore")
-    @Override
-	public String getOwnerName() 
+    public String getOwnerName() 
 	{
 		return player;
 	}
 
-    @Optional.Method(modid = "CoFHCore")
-    @Override
-	public boolean setAccess(AccessMode mode) 
+    public boolean setAccess(int mode) 
 	{
-    	this.mode = mode.ordinal();
+    	this.mode = mode;
 		return true;
 	}
 
-    @Optional.Method(modid = "CoFHCore")
-    @Override
-	public boolean setOwnerName(String name) 
+    public boolean setOwnerName(String name) 
 	{
     	this.player = name;
 		return true;

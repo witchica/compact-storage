@@ -1,20 +1,14 @@
 package com.workshop.compactstorage.client.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.resources.ResourceIndex;
-import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import cofh.api.tileentity.ISecurable;
-import cofh.core.gui.GuiBaseAdv;
-import cofh.core.gui.element.TabInfo;
-import cofh.core.gui.element.TabSecurity;
-import cofh.lib.gui.element.TabBase;
+
+import org.lwjgl.opengl.GL11;
 
 import com.workshop.compactstorage.tileentity.TileEntityChest;
 import com.workshop.compactstorage.util.BlockPos;
@@ -22,7 +16,7 @@ import com.workshop.compactstorage.util.BlockPos;
 /**
  * Created by Toby on 09/11/2014.
  */
-public class GuiChest extends GuiBaseAdv
+public class GuiChest extends GuiContainer
 {
     public World world;
     public EntityPlayer player;
@@ -32,9 +26,6 @@ public class GuiChest extends GuiBaseAdv
     public int invY;
     
     public int list;
-    
-    public TabInfo tabInfo;
-    public TabSecurity tabSecurity;
 
     public static final ResourceLocation realTexture = new ResourceLocation("compactstorage", "textures/gui/chest.png");
     
@@ -57,14 +48,6 @@ public class GuiChest extends GuiBaseAdv
     public void initGui()
     {
         super.initGui();
-        
-        this.texture = new ResourceLocation("compactstorage", "textures/empty.png");
-        
-        tabInfo = new TabInfo(this, 1, "Amount of Slots: "  + invX * invY + "\nMaximum Items: " + (invX * invY) * 64 + "\nMode: Player + Pipe");
-        addTab(tabInfo);
-        
-        tabSecurity = new TabSecurity(this, (ISecurable) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ()), player.getCommandSenderName());
-        addTab(tabSecurity);
         
         list = GL11.glGenLists(1);
         
@@ -147,8 +130,6 @@ public class GuiChest extends GuiBaseAdv
     @Override
     public void drawGuiContainerBackgroundLayer(float i, int j, int k)
     {    	
-        super.drawGuiContainerBackgroundLayer(i, j, k);
-
         Minecraft.getMinecraft().renderEngine.bindTexture(realTexture);
         GL11.glCallList(list);
     }
