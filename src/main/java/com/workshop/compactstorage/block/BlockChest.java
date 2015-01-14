@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.IBlockAccess;
@@ -57,14 +58,17 @@ public class BlockChest extends Block implements ITileEntityProvider
     {
         super.onBlockPlacedBy(world, x, y, z, entity, stack);
 
-        ((TileEntityChest) world.getTileEntity(x, y, z)).direction = EntityUtil.get2dOrientation(entity);
-        ((TileEntityChest) world.getTileEntity(x, y, z)).player = entity.getCommandSenderName();
-        ((TileEntityChest) world.getTileEntity(x, y, z)).mode = 0;
+        TileEntityChest chest = ((TileEntityChest) world.getTileEntity(x, y, z));
+
+        chest.direction = EntityUtil.get2dOrientation(entity);
+        chest.player = entity.getCommandSenderName();
+        chest.mode = 0;
         
         if(stack.hasTagCompound())
         {
-        	((TileEntityChest) world.getTileEntity(x, y, z)).invX = stack.getTagCompound().getIntArray("size")[0];
-            ((TileEntityChest) world.getTileEntity(x, y, z)).invY = stack.getTagCompound().getIntArray("size")[1];
+            chest.invX = stack.getTagCompound().getIntArray("size")[0];
+            chest.invY = stack.getTagCompound().getIntArray("size")[1];
+            chest.items = new ItemStack[chest.invX * chest.invY];
         }
         else
         {
@@ -100,5 +104,13 @@ public class BlockChest extends Block implements ITileEntityProvider
     public TileEntity createNewTileEntity(World world, int dim)
     {
         return new TileEntityChest();
+    }
+
+    @Override
+    public void dropBlockAsItem(World world, int x, int y, int z, ItemStack stack)
+    {
+        TileEntityChest chest = (TileEntityChest) world.getTileEntity(x, y, z);
+        stack.setTagCompound(new NBTTagCompound());
+        stack.getTagCompound().setIntArray("size", new int[] {chest.invX, chest.invY});
     }
 }

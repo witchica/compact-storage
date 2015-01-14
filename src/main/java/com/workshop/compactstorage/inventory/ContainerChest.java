@@ -105,14 +105,14 @@ public class ContainerChest extends Container
     		{
     			ItemStack itemStack = slot.getStack().copy();
     			
-    			if (slotIndex < 27)
+    			if (slotIndex < lastId)
     			{
-    				if (!this.mergeItemStack(itemStack, 27, inventorySlots.size(), false))
+    				if (!this.mergeItemStack(itemStack, lastId, lastId + 36, false))
     				{
     					return null;
     				}
     			}
-    			else if (!this.mergeItemStack(itemStack, 0, 36, false))
+    			else if (!this.mergeItemStack(itemStack, 0, lastId, false))
     			{
     				return null;
     			}

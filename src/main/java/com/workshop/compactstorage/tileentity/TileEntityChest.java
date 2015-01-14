@@ -186,7 +186,7 @@ public class TileEntityChest extends TileEntity implements IInventory
         NBTTagList nbtTagList = new NBTTagList();
         for(int slot = 0; slot < getSizeInventory(); slot++)
         {
-            if(items.length < slot && items[slot] != null)
+            if(slot < items.length && items[slot] != null)
             {
                 NBTTagCompound item = new NBTTagCompound();
                 item.setInteger("Slot", slot);
