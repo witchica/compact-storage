@@ -1,10 +1,13 @@
 package com.workshop.compactstorage.block;
 
+import com.workshop.compactstorage.essential.init.StorageBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -15,6 +18,8 @@ import net.minecraft.world.World;
 import com.workshop.compactstorage.essential.CompactStorage;
 import com.workshop.compactstorage.tileentity.TileEntityChest;
 import com.workshop.compactstorage.util.EntityUtil;
+
+import java.util.Random;
 
 /**
  * Created by Toby on 06/11/2014.
@@ -107,10 +112,28 @@ public class BlockChest extends Block implements ITileEntityProvider
     }
 
     @Override
-    public void dropBlockAsItem(World world, int x, int y, int z, ItemStack stack)
+    public void breakBlock(World world, int x, int y, int z, Block block, int meta)
     {
         TileEntityChest chest = (TileEntityChest) world.getTileEntity(x, y, z);
+        ItemStack stack = new ItemStack(StorageBlocks.chest, 1);
+
         stack.setTagCompound(new NBTTagCompound());
-        stack.getTagCompound().setIntArray("size", new int[] {chest.invX, chest.invY});
+
+        int invX = chest.invX;
+        int invY = chest.invY;
+        int color = chest.color;
+
+        stack.getTagCompound().setIntArray("size", new int[]{invX, invY});
+        stack.getTagCompound().setInteger("color", color);
+
+        world.spawnEntityInWorld(new EntityItem(world, x, y + 0.5f, z, stack));
+
+        super.breakBlock(world, x, y, z, block, meta);
+    }
+
+    @Override
+    public Item getItemDropped(int meta, Random rand, int fortune)
+    {
+        return null;
     }
 }

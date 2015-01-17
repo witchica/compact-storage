@@ -1,3 +1,5 @@
+import groovy.json.*
+
 def commonManifest = {
     if (project.hasProperty('extra_fmlat')) {
         attributes 'FMLAT': project.extra_fmlat
@@ -21,7 +23,18 @@ task sourceJar(dependsOn: 'classes', type: Jar) {
     manifest commonManifest
 }
 
+task jsonFile(dependsOn: 'classes') {
+	def map = [version: "${project.modversion}", minecraft: "${project.version_minecraft}", release: "${project.extra_curseforge_releasetype}"]
+	String jsonString = new JsonBuilder(map).toPrettyString()
+	
+	File jsonFile = new File('build/libs/build.json')
+	jsonFile.withWriter('UTF-8') {it << jsonString}
+	
+	return jsonFile
+}
+
 artifacts {
     archives devJar
     archives sourceJar
+	jsonFile
 }
