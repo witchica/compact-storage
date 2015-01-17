@@ -28,7 +28,9 @@ task jsonFile(dependsOn: 'classes') {
 	String jsonString = new JsonBuilder(map).toPrettyString()
 	
 	File jsonFile = new File('build/libs/build.json')
-	jsonFile.withWriter('UTF-8') {it << jsonString}
+	jsonFile.delete()
+
+	jsonFile << jsonString
 	
 	return jsonFile
 }
