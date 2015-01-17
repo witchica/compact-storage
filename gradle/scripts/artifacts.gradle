@@ -29,6 +29,7 @@ task jsonFile(dependsOn: 'classes') {
 	
 	File jsonFile = new File('build/libs/build.json')
 	jsonFile.delete()
+	jsonFile.mkdirs()
 	jsonFile.createNewFile()
 
 	jsonFile << jsonString
