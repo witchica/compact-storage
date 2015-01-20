@@ -1,7 +1,7 @@
 package com.workshop.compactstorage.creativetabs;
 
-import com.workshop.compactstorage.essential.init.StorageBlocks;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -18,6 +18,6 @@ public class CreativeTabCompactStorage extends CreativeTabs
     @Override
     public Item getTabIconItem()
     {
-        return new ItemStack(StorageBlocks.chest, 1, 0).getItem();
+        return new ItemStack(Blocks.chest, 1, 0).getItem();
     }
 }

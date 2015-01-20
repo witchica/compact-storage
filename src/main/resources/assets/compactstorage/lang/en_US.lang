@@ -1,1 +1,2 @@
-block.configChest=[WIP] Configurable Chest
+block.compactChest.name=[WIP] Configurable Chest
+itemGroup.compactStorage=CompactStorage
