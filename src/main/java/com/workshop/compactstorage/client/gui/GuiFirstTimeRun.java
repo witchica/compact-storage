@@ -3,6 +3,7 @@ package com.workshop.compactstorage.client.gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -43,6 +44,8 @@ public class GuiFirstTimeRun extends GuiScreen
 		
 		GL11.glPopMatrix();
 		
+		GL11.glPushMatrix();
+		
 		String drawString = "Are you upgrading from CompactChests?";
 		fontRendererObj.drawString(drawString, width / 2 - fontRendererObj.getStringWidth(drawString) / 2, height / 8 + 20, 0xFFFFFF);
 	
@@ -55,6 +58,8 @@ public class GuiFirstTimeRun extends GuiScreen
 		drawString = "This message won't appear again.";
 		fontRendererObj.drawString(drawString, width / 2 - fontRendererObj.getStringWidth(drawString) / 2, height / 8 + 56, 0xFFFFFF);
 	
+		GL11.glPopMatrix();
+		
 		super.drawScreen(i, j, k);
 	}
 	
