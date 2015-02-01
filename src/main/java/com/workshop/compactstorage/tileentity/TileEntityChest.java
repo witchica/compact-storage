@@ -51,7 +51,7 @@ public class TileEntityChest extends TileEntity implements IInventory
     @Override
     public ItemStack getStackInSlot(int slot) 
     {
-        if(slot < items.length && items[slot] != null)
+    	if(slot < items.length && items[slot] != null)
         {
         	return items[slot];
         }
