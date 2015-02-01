@@ -25,8 +25,8 @@ public class ConfigurationHandler
         {
             configuration = new Configuration(configFile);
 
-            firstTimeRun = true; //configuration.get("internal", "firstTime", true).getBoolean();
-            //configuration.get("internal", "firstTime", true).set(false);
+            firstTimeRun = configuration.get("internal", "firstTime", true).getBoolean();
+            configuration.get("internal", "firstTime", true).set(false);
         }
         catch(Exception e)
         {

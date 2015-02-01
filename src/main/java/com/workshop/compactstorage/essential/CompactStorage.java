@@ -1,27 +1,27 @@
 package com.workshop.compactstorage.essential;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
+import java.lang.reflect.Field;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.base.Throwables;
+import com.google.common.collect.Lists;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.workshop.compactchests.CompactChests;
 import com.workshop.compactchests.init.ChestBlocks;
 import com.workshop.compactchests.init.ChestItems;
+import com.workshop.compactstorage.compat.ICompat;
+import com.workshop.compactstorage.compat.JabbaCompat;
 import com.workshop.compactstorage.creativetabs.CreativeTabCompactStorage;
 import com.workshop.compactstorage.essential.handler.ConfigurationHandler;
 import com.workshop.compactstorage.essential.handler.FirstTimeRunHandler;
@@ -30,12 +30,15 @@ import com.workshop.compactstorage.essential.init.StorageBlocks;
 import com.workshop.compactstorage.essential.init.StorageInfo;
 import com.workshop.compactstorage.essential.init.StorageItems;
 import com.workshop.compactstorage.essential.proxy.IProxy;
+import com.workshop.compactstorage.event.CSRegisterCompatEvent;
 import com.workshop.compactstorage.network.handler.C01HandlerUpdateBuilder;
 import com.workshop.compactstorage.network.handler.C02HandlerCraftChest;
 import com.workshop.compactstorage.network.packet.C01PacketUpdateBuilder;
 import com.workshop.compactstorage.network.packet.C02PacketCraftChest;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.LoadController;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -56,6 +59,8 @@ public class CompactStorage
 {
     @Instance(StorageInfo.ID)
     public static CompactStorage instance;
+    
+    public static List<ICompat> compat;
 
     public static CompactChests legacy_instance;
 
@@ -72,6 +77,9 @@ public class CompactStorage
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+    	compat = Lists.newArrayList();
+    	compat.add(new JabbaCompat());
+    	
         try
         {
             deobf = true; //Class.forName("net.minecraft.world.World") == null ? false : true;
@@ -101,6 +109,32 @@ public class CompactStorage
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
+    	for(ICompat compat : compat)
+    	{
+    		String modid = compat.modid();
+    		
+    		logger.info("Found compatibility for " + modid + " attempting load!");
+    		
+    		if(Loader.isModLoaded(modid))
+    		{
+    			try
+    			{
+    				compat.registerCompat();
+    			}
+    			catch(Exception e)
+    			{
+    				logger.error("Exception " + e.getClass().getName() + " while loading compatibility for " + modid + ".");
+    				continue;
+    			}
+    			
+        		logger.info("Loaded compatability for " + modid + ".");
+    		}
+    		else
+    		{
+    			logger.warn("Compatability for " + modid + " cannot be loaded as it depends on the mod being installed.");
+    		}
+    	}
+    	
         tabCS = new CreativeTabCompactStorage();
 
         ChestBlocks.init();

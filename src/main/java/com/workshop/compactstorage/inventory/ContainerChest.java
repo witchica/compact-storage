@@ -1,5 +1,9 @@
 package com.workshop.compactstorage.inventory;
 
+import invtweaks.api.container.ChestContainer;
+
+import java.lang.annotation.Annotation;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -9,9 +13,12 @@ import net.minecraft.world.World;
 import com.workshop.compactstorage.tileentity.TileEntityChest;
 import com.workshop.compactstorage.util.BlockPos;
 
+import cpw.mods.fml.common.Optional;
+
 /**
  * Created by Toby on 11/11/2014.
  */
+@ChestContainer(showButtons = true, isLargeChest = false)
 public class ContainerChest extends Container
 {
     public World world;
@@ -43,7 +50,7 @@ public class ContainerChest extends Container
         this.invX = chest.invX;
         this.invY = chest.invY;
         this.xSize = 7 + (invX < 9 ? (9 * 18) : (invX * 18)) + 7;
-        this.ySize = 7 + (invY * 18) + 13 + 54 + 4 + 18 + 7;
+        this.ySize = 15 + (invY * 18) + 13 + 54 + 4 + 18 + 7;
         
         setupSlots();
     }
@@ -57,7 +64,7 @@ public class ContainerChest extends Container
     public void setupSlots()
     {
     	int slotX = (xSize / 2) - (invX * 18 / 2) + 1; 
-        int slotY = 8; //(ySize / 2) - ((invY * 18) / 2);
+        int slotY = 18; //(ySize / 2) - ((invY * 18) / 2);
 
         int lastId = 0;
         
@@ -134,5 +141,16 @@ public class ContainerChest extends Container
     		e.printStackTrace();
     		return null;
     	}
+    }
+    
+    @ChestContainer.RowSizeCallback
+    public int getInvX()
+    {
+    	return invX;
+    }
+    
+    public int getInvY()
+    {
+    	return invY;
     }
 }

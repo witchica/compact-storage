@@ -89,6 +89,16 @@ public class BlockChest extends Block implements ITileEntityProvider
         {
         	if(!player.isSneaking())
             {
+        		if(player.getHeldItem() != null)
+        		{
+        			String name = player.getHeldItem().getUnlocalizedName();
+        			
+        			if(name.startsWith("item.dolly.normal.empty") || name.startsWith("item.dolly.diamond.empty"))
+        			{
+        				return true;
+        			}
+        		}
+        		
                 player.openGui(CompactStorage.instance, 0, world, x, y, z);
                 return true;
             }

@@ -3,6 +3,7 @@ package com.workshop.compactstorage.client.gui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
@@ -41,7 +42,7 @@ public class GuiChest extends GuiContainer
         this.invY = ((TileEntityChest) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ())).invY;
 
         this.xSize = 7 + ((invX) < 9 ? (9 * 18) : (invX * 18)) + 7;
-        this.ySize = 7 + (invY * 18) + 13 + 54 + 4 + 18 + 7;
+        this.ySize = 15 + (invY * 18) + 13 + 54 + 4 + 18 + 7;
     }
     
     @Override
@@ -90,7 +91,7 @@ public class GuiChest extends GuiContainer
             }
 
             int slotX = (xSize / 2) - ((invX * 18) / 2);
-            int slotY = 7; //(ySize / 2) - ((invY * 18) / 2);
+            int slotY = 17; //(ySize / 2) - ((invY * 18) / 2);
 
             for(int x = 0; x < invX; x++)
             {
@@ -125,6 +126,9 @@ public class GuiChest extends GuiContainer
     public void drawGuiContainerForegroundLayer(int arg0, int arg1) 
     {
     	super.drawGuiContainerForegroundLayer(arg0, arg1);
+    	
+        this.fontRendererObj.drawString("Chest (" + invX + "x" + invY + ")", 8, 6, 4210752);
+        this.fontRendererObj.drawString("Inventory", 8, 15 + (invY * 18) + 5, 4210752);
     }
 
     @Override

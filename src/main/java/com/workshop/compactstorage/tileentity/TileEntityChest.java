@@ -51,7 +51,7 @@ public class TileEntityChest extends TileEntity implements IInventory
     @Override
     public ItemStack getStackInSlot(int slot) 
     {
-        if(items.length < slot && items[slot] != null)
+        if(slot < items.length && items[slot] != null)
         {
         	return items[slot];
         }
@@ -96,10 +96,10 @@ public class TileEntityChest extends TileEntity implements IInventory
     {
     	if(items != null)
     	{
+    		System.out.println("SETTING " + stack);
     		items[slot] = stack;
+    		markDirty();
     	}
-    	
-    	markDirty();
     }
 
     @Override
@@ -150,7 +150,7 @@ public class TileEntityChest extends TileEntity implements IInventory
     {
         super.readFromNBT(tag);
 
-        this.direction = ForgeDirection.getOrientation(tag.getInteger("facing"));
+        if(tag.hasKey("facing")) this.direction = ForgeDirection.getOrientation(tag.getInteger("facing"));
 
         this.color = tag.getInteger("color");
         this.invX = tag.getInteger("invX");
@@ -180,7 +180,7 @@ public class TileEntityChest extends TileEntity implements IInventory
     {
         super.writeToNBT(tag);
 
-        tag.setInteger("facing", direction.ordinal());
+        if(direction != null) tag.setInteger("facing", direction.ordinal());
         tag.setInteger("color", color);
         tag.setInteger("invX", invX);
         tag.setInteger("invY", invY);
