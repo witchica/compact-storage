@@ -72,7 +72,8 @@ public class CompactStorage
     public void preInit(FMLPreInitializationEvent event)
     {
     	compat = Lists.newArrayList();
-    	compat.add(new JabbaCompat());
+    	
+    	if(Loader.isModLoaded("JABBA")) compat.add(new JabbaCompat());
     	
         try
         {
