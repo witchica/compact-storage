@@ -1,6 +1,7 @@
 package com.workshop.compactstorage.client.gui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -171,7 +172,9 @@ public class GuiChestBuilder extends GuiContainer
     	{
     		for(int x = 0; x < 4; x++)
             {
-                ItemStack stack = builder.info.getMaterialCost().get(x);
+    			List<ItemStack> stackList = builder.info.getMaterialCost().get(x);
+    			
+                ItemStack stack = stackList.get(0);
             	int startX = guiLeft + 7 + x * 18 + 1;
                 int startY = guiTop + 18;
                 
@@ -281,7 +284,7 @@ public class GuiChestBuilder extends GuiContainer
         {
             drawTexturedModalRect(guiLeft + 7 + (x * 18), guiTop + 17, 18, 0, 18, 18);
             
-            ItemStack stack = info.getMaterialCost().get(x);
+            ItemStack stack = info.getMaterialCost().get(x).get(0);
             
             RenderHelper.enableGUIStandardItemLighting();
             itemRender.renderItemIntoGUI(fontRendererObj, mc.renderEngine, stack, guiLeft + 7 + x * 18 + 1, guiTop + 18);

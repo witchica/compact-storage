@@ -1,7 +1,5 @@
 package com.workshop.compactstorage.tileentity;
 
-import java.nio.file.AccessMode;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -14,7 +12,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Optional;
 
 /**
  * Created by Toby on 06/11/2014.

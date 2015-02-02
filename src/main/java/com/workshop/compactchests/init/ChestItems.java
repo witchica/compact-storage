@@ -1,8 +1,15 @@
 package com.workshop.compactchests.init;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import com.workshop.compactchests.item.*;
 import net.minecraft.item.Item;
+
+import com.workshop.compactchests.item.ItemDoubleBackpack;
+import com.workshop.compactchests.item.ItemQuadrupleBackpack;
+import com.workshop.compactchests.item.ItemQuintupleBackpack;
+import com.workshop.compactchests.item.ItemSextupleBackpack;
+import com.workshop.compactchests.item.ItemSingleBackpack;
+import com.workshop.compactchests.item.ItemTripleBackpack;
+
+import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * Created by Toby on 27/08/2014.

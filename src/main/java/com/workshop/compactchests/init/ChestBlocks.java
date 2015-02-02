@@ -1,9 +1,19 @@
 package com.workshop.compactchests.init;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import com.workshop.compactchests.block.*;
-import com.workshop.compactchests.tileentity.*;
 import net.minecraft.block.Block;
+
+import com.workshop.compactchests.block.BlockDoubleChest;
+import com.workshop.compactchests.block.BlockQuadrupleChest;
+import com.workshop.compactchests.block.BlockQuintupleChest;
+import com.workshop.compactchests.block.BlockSextupleChest;
+import com.workshop.compactchests.block.BlockTripleChest;
+import com.workshop.compactchests.tileentity.TileEntityDoubleChest;
+import com.workshop.compactchests.tileentity.TileEntityQuadrupleChest;
+import com.workshop.compactchests.tileentity.TileEntityQuintupleChest;
+import com.workshop.compactchests.tileentity.TileEntitySextupleChest;
+import com.workshop.compactchests.tileentity.TileEntityTripleChest;
+
+import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * Created by Toby on 19/08/2014.

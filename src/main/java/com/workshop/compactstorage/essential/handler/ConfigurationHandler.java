@@ -1,10 +1,10 @@
 package com.workshop.compactstorage.essential.handler;
 
-import com.google.common.collect.Maps;
-import com.workshop.compactstorage.essential.CompactStorage;
+import java.io.File;
+
 import net.minecraftforge.common.config.Configuration;
 
-import java.io.File;
+import com.workshop.compactstorage.essential.CompactStorage;
 
 /**
  * Created by Toby on 07/11/2014.

@@ -1,10 +1,10 @@
 package com.workshop.compactstorage.essential.handler;
 
-import com.workshop.compactstorage.client.gui.GuiFirstTimeRun;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraftforge.client.event.GuiOpenEvent;
+
+import com.workshop.compactstorage.client.gui.GuiFirstTimeRun;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 

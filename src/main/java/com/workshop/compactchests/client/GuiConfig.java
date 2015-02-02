@@ -1,9 +1,10 @@
 package com.workshop.compactchests.client;
 
-import com.workshop.compactchests.configuration.ConfigurationHandler;
-import com.workshop.compactchests.init.ChestReferences;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.common.config.ConfigElement;
+
+import com.workshop.compactchests.configuration.ConfigurationHandler;
+import com.workshop.compactchests.init.ChestReferences;
 
 /**
  * Created by Toby on 29/08/2014.

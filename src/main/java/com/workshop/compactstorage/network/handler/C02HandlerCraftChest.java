@@ -1,12 +1,15 @@
 package com.workshop.compactstorage.network.handler;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.oredict.OreDictionary;
 
 import com.workshop.compactstorage.essential.init.StorageBlocks;
-import com.workshop.compactstorage.network.packet.C01PacketUpdateBuilder;
 import com.workshop.compactstorage.network.packet.C02PacketCraftChest;
 import com.workshop.compactstorage.tileentity.TileEntityChestBuilder;
 import com.workshop.compactstorage.util.StorageInfo;
@@ -21,16 +24,63 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 	public IMessage onMessage(C02PacketCraftChest message, MessageContext ctx) 
 	{
 		TileEntityChestBuilder builder = (TileEntityChestBuilder) MinecraftServer.getServer().worldServerForDimension(message.dimension).getTileEntity(message.x, message.y, message.z);
-		if(builder != null) builder.info = new StorageInfo(9, 3);
 		
-		ItemStack stack = new ItemStack(StorageBlocks.chest, 1);
+		List<ItemStack> items = Arrays.asList(builder.items);
+		List<List<ItemStack>> requiredItems = builder.info.getMaterialCost();
 		
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setIntArray("size", new int[] {message.info.getSizeX(), message.info.getSizeY()});
-		stack.setTagCompound(tag);
+		boolean hasRequiredMaterials = true;
 		
-		EntityItem item = new EntityItem(MinecraftServer.getServer().worldServerForDimension(message.dimension), message.x, message.y + 1, message.z, stack);
-		item.worldObj.spawnEntityInWorld(item);
+		for(ItemStack stack : items)
+		{
+			if(stack != null)
+			{
+				boolean breakbool = false;
+				
+				for(List<ItemStack> lists : requiredItems)
+				{
+					for(ItemStack listStack : lists)
+					{
+						if(listStack.getItem().equals(stack.getItem()))
+						{
+							hasRequiredMaterials = true;
+						}
+						else
+						{
+							hasRequiredMaterials = false;
+							breakbool = true;
+							break;
+						}
+					}
+				}
+				
+				if(breakbool)
+				{
+					break;
+				}
+			}
+			else
+			{
+				hasRequiredMaterials = false;
+				break;
+			}
+		}
+		
+		if(hasRequiredMaterials)
+		{
+			ItemStack stack = new ItemStack(StorageBlocks.chest, 1);
+			
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setIntArray("size", new int[] {message.info.getSizeX(), message.info.getSizeY()});
+			stack.setTagCompound(tag);
+			
+			EntityItem item = new EntityItem(MinecraftServer.getServer().worldServerForDimension(message.dimension), message.x, message.y + 1, message.z, stack);
+			item.worldObj.spawnEntityInWorld(item);
+			
+			for(int x = 0; x < 4; x++)
+			{
+				builder.decrStackSize(x, requiredItems.get(x).get(0).stackSize);
+			}
+		}
 		
 		return null;
 	}

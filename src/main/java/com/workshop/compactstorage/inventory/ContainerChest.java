@@ -1,9 +1,6 @@
 package com.workshop.compactstorage.inventory;
 
 import invtweaks.api.container.ChestContainer;
-
-import java.lang.annotation.Annotation;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -12,8 +9,6 @@ import net.minecraft.world.World;
 
 import com.workshop.compactstorage.tileentity.TileEntityChest;
 import com.workshop.compactstorage.util.BlockPos;
-
-import cpw.mods.fml.common.Optional;
 
 /**
  * Created by Toby on 11/11/2014.

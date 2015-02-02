@@ -1,8 +1,9 @@
 package com.workshop.compactchests.creativetabs;
 
-import com.workshop.compactchests.init.ChestBlocks;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+
+import com.workshop.compactchests.init.ChestBlocks;
 
 /**
  * Created by Toby on 24/08/2014.

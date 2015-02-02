@@ -1,6 +1,7 @@
 package com.workshop.compactstorage.block;
 
-import com.workshop.compactstorage.essential.init.StorageBlocks;
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -16,10 +17,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.workshop.compactstorage.essential.CompactStorage;
+import com.workshop.compactstorage.essential.init.StorageBlocks;
 import com.workshop.compactstorage.tileentity.TileEntityChest;
 import com.workshop.compactstorage.util.EntityUtil;
-
-import java.util.Random;
 
 /**
  * Created by Toby on 06/11/2014.

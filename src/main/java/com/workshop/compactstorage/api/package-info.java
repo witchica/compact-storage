@@ -6,4 +6,6 @@
 package com.workshop.compactstorage.api;
 
 import com.workshop.compactstorage.essential.init.StorageInfo;
+
 import cpw.mods.fml.common.API;
+

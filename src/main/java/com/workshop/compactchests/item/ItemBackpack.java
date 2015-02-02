@@ -1,10 +1,11 @@
 package com.workshop.compactchests.item;
 
-import com.workshop.compactstorage.essential.CompactStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import com.workshop.compactstorage.essential.CompactStorage;
 
 /**
  * Created by Toby on 27/08/2014.

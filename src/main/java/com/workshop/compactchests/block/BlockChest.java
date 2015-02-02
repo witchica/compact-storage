@@ -15,7 +15,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-import com.workshop.compactchests.CompactChests;
 import com.workshop.compactstorage.essential.CompactStorage;
 
 /**

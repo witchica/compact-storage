@@ -1,7 +1,7 @@
 package com.workshop.compactchests.network;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 
 /**
  * Created by Toby on 22/08/2014.

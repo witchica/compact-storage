@@ -2,6 +2,7 @@ package com.workshop.compactstorage.essential.proxy;
 
 import com.workshop.compactstorage.client.render.TileEntityChestRenderer;
 import com.workshop.compactstorage.tileentity.TileEntityChest;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
 
 /**

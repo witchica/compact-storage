@@ -1,10 +1,17 @@
 package com.workshop.compactchests.client;
 
-import com.workshop.compactchests.server.*;
-import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
+
+import com.workshop.compactchests.server.ContainerDoubleChest;
+import com.workshop.compactchests.server.ContainerQuadrupleChest;
+import com.workshop.compactchests.server.ContainerQuintupleChest;
+import com.workshop.compactchests.server.ContainerSextupleChest;
+import com.workshop.compactchests.server.ContainerSingleChest;
+import com.workshop.compactchests.server.ContainerTripleChest;
+
+import cpw.mods.fml.common.network.IGuiHandler;
 
 /**
  * Created by Toby on 19/08/2014.

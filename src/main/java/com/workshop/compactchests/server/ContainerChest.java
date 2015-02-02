@@ -1,12 +1,13 @@
 package com.workshop.compactchests.server;
 
-import com.workshop.compactchests.itementity.ItemEntityChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import com.workshop.compactchests.itementity.ItemEntityChest;
 
 /**
  * Created by Toby on 19/08/2014.

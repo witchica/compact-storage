@@ -16,5 +16,5 @@ def addDependency(depFilename, depName, depPath) {
     }
 }
 
-addDependency('CoFHCore.jar', 'CoFHCore', 'cofh/core')
-addDependency('CoFHLib.jar', 'CoFHLib', 'cofh/lib')
+addDependency('InventoryTweaksAPI.jar', 'Inventory Tweaks', 'invtweaks/api')
+addDependency('Jabba.jar', 'Jabba', 'mcp/mobius/betterbarrels')

@@ -1,10 +1,10 @@
 package com.workshop.compactchests.client;
 
-import cpw.mods.fml.client.IModGuiFactory;
+import java.util.Set;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-
-import java.util.Set;
+import cpw.mods.fml.client.IModGuiFactory;
 
 /**
  * Created by Toby on 29/08/2014.

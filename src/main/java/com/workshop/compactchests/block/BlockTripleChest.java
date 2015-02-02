@@ -1,8 +1,9 @@
 package com.workshop.compactchests.block;
 
-import com.workshop.compactchests.tileentity.TileEntityTripleChest;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import com.workshop.compactchests.tileentity.TileEntityTripleChest;
 
 /**
  * Created by Toby on 19/08/2014.

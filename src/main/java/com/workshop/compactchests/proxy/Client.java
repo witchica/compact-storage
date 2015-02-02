@@ -1,12 +1,18 @@
 package com.workshop.compactchests.proxy;
 
+import net.minecraft.item.ItemBlock;
+import net.minecraftforge.client.MinecraftForgeClient;
+
 import com.workshop.compactchests.client.render.ChestItemRenderer;
 import com.workshop.compactchests.client.render.RenderChest;
 import com.workshop.compactchests.init.ChestBlocks;
-import com.workshop.compactchests.tileentity.*;
+import com.workshop.compactchests.tileentity.TileEntityDoubleChest;
+import com.workshop.compactchests.tileentity.TileEntityQuadrupleChest;
+import com.workshop.compactchests.tileentity.TileEntityQuintupleChest;
+import com.workshop.compactchests.tileentity.TileEntitySextupleChest;
+import com.workshop.compactchests.tileentity.TileEntityTripleChest;
+
 import cpw.mods.fml.client.registry.ClientRegistry;
-import net.minecraft.item.ItemBlock;
-import net.minecraftforge.client.MinecraftForgeClient;
 
 /**
  * Created by Toby on 25/08/2014.

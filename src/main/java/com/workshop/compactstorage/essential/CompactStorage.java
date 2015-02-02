@@ -1,6 +1,5 @@
 package com.workshop.compactstorage.essential;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -13,10 +12,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
 import com.workshop.compactchests.CompactChests;
 import com.workshop.compactchests.init.ChestBlocks;
 import com.workshop.compactchests.init.ChestItems;
@@ -30,14 +26,12 @@ import com.workshop.compactstorage.essential.init.StorageBlocks;
 import com.workshop.compactstorage.essential.init.StorageInfo;
 import com.workshop.compactstorage.essential.init.StorageItems;
 import com.workshop.compactstorage.essential.proxy.IProxy;
-import com.workshop.compactstorage.event.CSRegisterCompatEvent;
 import com.workshop.compactstorage.network.handler.C01HandlerUpdateBuilder;
 import com.workshop.compactstorage.network.handler.C02HandlerCraftChest;
 import com.workshop.compactstorage.network.packet.C01PacketUpdateBuilder;
 import com.workshop.compactstorage.network.packet.C02PacketCraftChest;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.LoadController;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -88,6 +82,10 @@ public class CompactStorage
         {
             logger.warn("Could not set deobf variable. Assuming normal game.");
         }
+        
+        OreDictionary.registerOre("barsIron", Blocks.iron_bars);
+        OreDictionary.registerOre("blockChest", Blocks.chest);
+        OreDictionary.registerOre("itemClay", Items.clay_ball);
 
         logger.info("Are we in deofb? " + (deobf ? "Yep!" : "Nope, going retro!"));
 
@@ -109,9 +107,9 @@ public class CompactStorage
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-    	for(ICompat compat : compat)
+    	for(ICompat icompat : compat)
     	{
-    		String modid = compat.modid();
+    		String modid = icompat.modid();
     		
     		logger.info("Found compatibility for " + modid + " attempting load!");
     		
@@ -119,7 +117,7 @@ public class CompactStorage
     		{
     			try
     			{
-    				compat.registerCompat();
+    				icompat.registerCompat();
     			}
     			catch(Exception e)
     			{

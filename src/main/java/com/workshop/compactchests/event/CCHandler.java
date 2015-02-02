@@ -1,14 +1,16 @@
 package com.workshop.compactchests.event;
 
-import com.workshop.compactchests.block.BlockChest;
-import com.workshop.compactchests.init.ChestBlocks;
-import com.workshop.compactchests.tileentity.TileEntityChest;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+
+import com.workshop.compactchests.block.BlockChest;
+import com.workshop.compactchests.init.ChestBlocks;
+import com.workshop.compactchests.tileentity.TileEntityChest;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * Created by Toby on 18/09/2014.
