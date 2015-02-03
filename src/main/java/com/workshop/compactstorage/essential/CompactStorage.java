@@ -18,6 +18,7 @@ import com.workshop.compactchests.init.ChestBlocks;
 import com.workshop.compactchests.init.ChestItems;
 import com.workshop.compactstorage.compat.ICompat;
 import com.workshop.compactstorage.compat.JabbaCompat;
+import com.workshop.compactstorage.compat.WailaCompat;
 import com.workshop.compactstorage.creativetabs.CreativeTabCompactStorage;
 import com.workshop.compactstorage.essential.handler.ConfigurationHandler;
 import com.workshop.compactstorage.essential.handler.FirstTimeRunHandler;
@@ -74,6 +75,7 @@ public class CompactStorage
     	compat = Lists.newArrayList();
     	
     	if(Loader.isModLoaded("JABBA")) compat.add(new JabbaCompat());
+    	if(Loader.isModLoaded("Waila")) compat.add(new WailaCompat());
     	
         try
         {

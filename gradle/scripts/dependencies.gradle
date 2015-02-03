@@ -18,3 +18,4 @@ def addDependency(depFilename, depName, depPath) {
 
 addDependency('InventoryTweaksAPI.jar', 'Inventory Tweaks', 'invtweaks/api')
 addDependency('Jabba.jar', 'Jabba', 'mcp/mobius/betterbarrels')
+addDependency('Waila.jar', 'Waila', 'mcp/mobius/waila')
