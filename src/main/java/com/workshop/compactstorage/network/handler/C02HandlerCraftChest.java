@@ -34,28 +34,21 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 		{
 			if(stack != null)
 			{
-				boolean breakbool = false;
-				
 				for(List<ItemStack> lists : requiredItems)
 				{
 					for(ItemStack listStack : lists)
 					{
-						if(listStack.getItem().equals(stack.getItem()))
+						if(listStack.getItem().equals(stack.getItem())  && stack.stackSize >= listStack.stackSize)
 						{
 							hasRequiredMaterials = true;
+							break;
 						}
 						else
 						{
 							hasRequiredMaterials = false;
-							breakbool = true;
 							break;
 						}
 					}
-				}
-				
-				if(breakbool)
-				{
-					break;
 				}
 			}
 			else
