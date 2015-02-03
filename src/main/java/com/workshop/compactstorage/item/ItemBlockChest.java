@@ -38,7 +38,7 @@ public class ItemBlockChest extends ItemBlock
     {
     	if(stack.hasTagCompound())
     	{
-    		int size = stack.getTagCompound().getIntArray("size")[0] * stack.getTagCompound().getIntArray("size")[1];
+    		int size = (int) (stack.getTagCompound().getIntArray("size")[0] * stack.getTagCompound().getIntArray("size")[1]);
     		list.add(EnumChatFormatting.GREEN + "Slots: " + size);
     	}
     	else
