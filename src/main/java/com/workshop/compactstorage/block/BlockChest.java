@@ -11,13 +11,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.workshop.compactstorage.essential.CompactStorage;
 import com.workshop.compactstorage.essential.init.StorageBlocks;
+import com.workshop.compactstorage.exception.InvalidSizeException;
 import com.workshop.compactstorage.tileentity.TileEntityChest;
 import com.workshop.compactstorage.util.EntityUtil;
 
@@ -71,9 +74,26 @@ public class BlockChest extends Block implements ITileEntityProvider
         
         if(stack.hasTagCompound())
         {
-            chest.invX = stack.getTagCompound().getIntArray("size")[0];
-            chest.invY = stack.getTagCompound().getIntArray("size")[1];
-            chest.items = new ItemStack[chest.invX * chest.invY];
+        	if(stack.getTagCompound().getTag("size") instanceof NBTTagIntArray)
+        	{
+                chest.invX = stack.getTagCompound().getIntArray("size")[0];
+                chest.invY = stack.getTagCompound().getIntArray("size")[1];
+                chest.items = new ItemStack[chest.invX * chest.invY];
+        	}
+        	else
+        	{
+        		if(entity instanceof EntityPlayer)
+        		{
+        			((EntityPlayer) entity).addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "You attempted something bad! :("));
+
+                    chest.invX = 9;
+                    chest.invY = 3;
+                    chest.items = new ItemStack[chest.invX * chest.invY];
+
+        			InvalidSizeException exception = new InvalidSizeException("You tried to pass off a " + stack.getTagCompound().getTag("size").getClass().getName() + " as a Integer Array. Do not report this or you will be ignored. This is a user based error.");
+        			exception.printStackTrace();
+        		}
+        	}
         }
         else
         {

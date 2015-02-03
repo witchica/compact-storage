@@ -2,6 +2,8 @@ package com.workshop.compactstorage.item;
 
 import java.util.List;
 
+import com.workshop.compactstorage.exception.InvalidSizeException;
+
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.util.EnumChatFormatting;
 
 /**
@@ -38,8 +41,22 @@ public class ItemBlockChest extends ItemBlock
     {
     	if(stack.hasTagCompound())
     	{
-    		int size = (int) (stack.getTagCompound().getIntArray("size")[0] * stack.getTagCompound().getIntArray("size")[1]);
-    		list.add(EnumChatFormatting.GREEN + "Slots: " + size);
+    		if(stack.getTagCompound().getTag("size") instanceof NBTTagIntArray)
+    		{
+        		int size = (int) (stack.getTagCompound().getIntArray("size")[0] * stack.getTagCompound().getIntArray("size")[1]);
+        		list.add(EnumChatFormatting.GREEN + "Slots: " + size);
+    		}
+    		else
+    		{
+    			int size = 27;
+    			list.add(EnumChatFormatting.GREEN + "Slots: " + size);
+    			list.add(EnumChatFormatting.RED + "Yep. You broke it.");
+
+                stack.getTagCompound().setIntArray("size", new int[] {9, 3});
+    			
+    			InvalidSizeException exception = new InvalidSizeException("You tried to pass off a " + stack.getTagCompound().getTag("size").getClass().getName() + " as a Integer Array. Do not report this or you will be ignored. This is a user based error.");
+    			exception.printStackTrace();
+    		}
     	}
     	else
     	{
