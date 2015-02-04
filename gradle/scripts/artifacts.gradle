@@ -19,7 +19,7 @@ task devJar(dependsOn: 'classes', type: Jar) {
 
 task sourceJar(dependsOn: 'classes', type: Jar) {
     from sourceSets.main.allSource
-    classifier = 'sources'
+    classifier = 'src'
     manifest commonManifest
 }
 
@@ -41,4 +41,34 @@ artifacts {
     archives devJar
     archives sourceJar
 	jsonFile
+}
+
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+			from components.java
+			classifier = "universal"
+			
+			artifact sourceJar {
+				
+			}
+			
+			artifact devJar {
+				
+			}
+        }
+    }
+}
+publishing {
+    repositories {
+        maven {
+			if(System.getenv().containsKey("BUILD_NUMBER")) {
+				url "/var/lib/jenkins/maven/maven"
+			} else {
+				url "$buildDir/tempMaven"
+			}
+        }
+    }
 }
