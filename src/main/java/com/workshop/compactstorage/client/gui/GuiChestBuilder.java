@@ -1,21 +1,28 @@
 package com.workshop.compactstorage.client.gui;
 
+import java.security.Key;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import com.workshop.compactstorage.essential.init.StorageBlocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import com.workshop.compactstorage.essential.CompactStorage;
@@ -43,8 +50,34 @@ public class GuiChestBuilder extends GuiContainer
     public GuiButton buttonMinusY;
     
     public GuiButton buttonSubmit;
+    public GuiButton buttonChangeType;
+
+    public GuiTextField colorField;
     
     public TileEntityChestBuilder builder;
+
+    public static final int[] allowed = new int[]
+    {
+        Keyboard.KEY_0,
+        Keyboard.KEY_1,
+        Keyboard.KEY_2,
+        Keyboard.KEY_3,
+        Keyboard.KEY_4,
+        Keyboard.KEY_5,
+        Keyboard.KEY_6,
+        Keyboard.KEY_7,
+        Keyboard.KEY_8,
+        Keyboard.KEY_9,
+        Keyboard.KEY_A,
+        Keyboard.KEY_B,
+        Keyboard.KEY_C,
+        Keyboard.KEY_D,
+        Keyboard.KEY_E,
+        Keyboard.KEY_F,
+        Keyboard.KEY_BACK,
+        Keyboard.KEY_LEFT,
+        Keyboard.KEY_RIGHT
+    };
 
     public static final ResourceLocation realTexture = new ResourceLocation("compactstorage", "textures/gui/chest.png");
     
@@ -59,7 +92,7 @@ public class GuiChestBuilder extends GuiContainer
         this.builder = ((TileEntityChestBuilder) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ()));
 
         this.xSize = 7 + 162 + 7;
-        this.ySize = 7 + 54 + 13 + 54 + 4 + 18 + 7;
+        this.ySize = 7 + 108 + 13 + 54 + 4 + 18 + 7;
     }
     
     @Override
@@ -119,7 +152,7 @@ public class GuiChestBuilder extends GuiContainer
             }*/
 
             slotX = (xSize / 2) - ((9 * 18) / 2);
-            slotY = slotY + 54 + 13;
+            slotY = slotY + 108 + 13;
 
             for(int x = 0; x < 9; x++)
             {
@@ -138,22 +171,94 @@ public class GuiChestBuilder extends GuiContainer
         }
         GL11.glEndList();
         
-        buttonAddX = new GuiButton(0, guiLeft + 162 / 2 + getFontRenderer().getStringWidth("Size X: 12 "), guiTop + 10, 20, 20, "+");
+        buttonAddX = new GuiButton(0, guiLeft + 7 + getFontRenderer().getStringWidth("XX Rows --"), guiTop + 62, 20, 20, "+");
         buttonList.add(buttonAddX);
         
-        buttonMinusX = new GuiButton(1, guiLeft + 162 / 2 + getFontRenderer().getStringWidth("Size X: 12 ") + 20, guiTop + 10, 20, 20, "-");
+        buttonMinusX = new GuiButton(1, guiLeft + 7 + getFontRenderer().getStringWidth("XX Rows --") + 21, guiTop + 62, 20, 20, "-");
         buttonList.add(buttonMinusX);
         
-        buttonAddY = new GuiButton(2, guiLeft + 162 / 2 + getFontRenderer().getStringWidth("Size Y: 12 "), guiTop + 30, 20, 20, "+");
+        buttonAddY = new GuiButton(2, guiLeft + 7 + getFontRenderer().getStringWidth("XX Columns ") - 3, guiTop + 62 + 21, 20, 20, "+");
         buttonList.add(buttonAddY);
         
-        buttonMinusY = new GuiButton(3, guiLeft + 162 / 2 + getFontRenderer().getStringWidth("Size Y: 12 ") + 20, guiTop + 30, 20, 20, "-");
+        buttonMinusY = new GuiButton(3, guiLeft + 7 + getFontRenderer().getStringWidth("XX Columns ") - 3 + 21, guiTop + 62 + 21, 20, 20, "-");
         buttonList.add(buttonMinusY);
         
-        buttonSubmit = new GuiButton(4, guiLeft + 162 / 2 + getFontRenderer().getStringWidth("Size Y: 12 ") + 20, guiTop + 50, 20, 20, "-");
+        buttonSubmit = new GuiButton(4, guiLeft + 162 - 93, guiTop + 8 + 108 - 10, 100, 20, "Build Chest");
         buttonList.add(buttonSubmit);
+
+        buttonChangeType = new GuiButton(5, guiLeft + xSize - 7 - 60, guiTop + 8 + 108 - 10 - 21, 60, 20, builder.type.name());
+        buttonList.add(buttonChangeType);
+
+        colorField = new GuiTextField(getFontRenderer(), guiLeft + xSize - 7 - 52, guiTop + 7 + 35, 50, 20);
+        colorField.setText("FFFFFF");
+        colorField.setMaxStringLength(6);
     }
-    
+
+    public List<Integer> getAllowed()
+    {
+        List<Integer> intList = new ArrayList<Integer>(allowed.length);
+
+        for (int i = 0; i< allowed.length; i++)
+        {
+            intList.add(allowed[i]);
+        }
+
+        return intList;
+    }
+
+    @Override
+    protected void keyTyped(char key, int keyid)
+    {
+        if(colorField.isFocused() && getAllowed().contains(keyid))
+        {
+            colorField.textboxKeyTyped(key, keyid);
+        }
+
+        if(!colorField.isFocused())
+        {
+            super.keyTyped(key, keyid);
+        }
+    }
+
+    @Override
+    public void mouseClicked(int x, int y, int b)
+    {
+        super.mouseClicked(x, y, b);
+        colorField.mouseClicked(x, y, b);
+
+        if(x > guiLeft + xSize - 7 - 34 - 9 && x < guiLeft + xSize - 7 - 9)
+        {
+            if(y >  guiTop + 7 && y <  guiTop + 7 + 34)
+            {
+                int mouseX = x - (guiLeft + xSize - 7 - 34 - 9);
+                int mouseY = y - (guiTop + 7);
+
+                System.out.println(mouseX + ":" + mouseY);
+
+                if(mouseX < 16 && mouseY < 16)
+                {
+                    //RED
+                    colorField.setText("993431");
+                }
+                else if(mouseX < 16 && mouseY > 16)
+                {
+                    //GREEN
+                    colorField.setText("49BD3D");
+                }
+                else if(mouseX > 16 && mouseY < 16)
+                {
+                    //BLUE
+                    colorField.setText("323E9A");
+                }
+                else if(mouseX > 16 && mouseY > 16)
+                {
+                    //PINK
+                    colorField.setText("D898A9");
+                }
+            }
+        }
+    }
+
     @Override
     public void drawGuiContainerForegroundLayer(int arg0, int arg1) 
     {
@@ -172,7 +277,7 @@ public class GuiChestBuilder extends GuiContainer
     	{
     		for(int x = 0; x < 4; x++)
             {
-    			List<ItemStack> stackList = builder.info.getMaterialCost().get(x);
+    			List<ItemStack> stackList = builder.info.getMaterialCost(builder.type).get(x);
     			
                 ItemStack stack = stackList.get(0);
             	int startX = guiLeft + 7 + x * 18 + 1;
@@ -208,7 +313,7 @@ public class GuiChestBuilder extends GuiContainer
     		if(builder.info.getSizeX() >= 24)
         	{
         		buttonAddX.enabled = false;
-        		if(builder.info.getSizeX() > 24) builder.info.setSizeX(12);
+        		if(builder.info.getSizeX() > 24) builder.info.setSizeX(24);
         	}
         	else
         	{
@@ -280,11 +385,11 @@ public class GuiChestBuilder extends GuiContainer
             drawTexturedModalRect(guiLeft + 7 + (x * 18), guiTop + 7 + (18 * 2), 18, 0, 18, 18);
         }
         
-        for(int x = 0; x < info.getMaterialCost().size(); x++)
+        for(int x = 0; x < info.getMaterialCost(builder.type).size(); x++)
         {
             drawTexturedModalRect(guiLeft + 7 + (x * 18), guiTop + 17, 18, 0, 18, 18);
             
-            ItemStack stack = info.getMaterialCost().get(x).get(0);
+            ItemStack stack = info.getMaterialCost(builder.type).get(x).get(0);
             
             RenderHelper.enableGUIStandardItemLighting();
             itemRender.renderItemIntoGUI(fontRendererObj, mc.renderEngine, stack, guiLeft + 7 + x * 18 + 1, guiTop + 18);
@@ -292,11 +397,30 @@ public class GuiChestBuilder extends GuiContainer
             Minecraft.getMinecraft().renderEngine.bindTexture(realTexture);
             RenderHelper.disableStandardItemLighting();
         }
-        
-        
-        
-        getFontRenderer().drawString("Size X: " + info.getSizeX(), guiLeft + 162 / 2, guiTop + 15, 0x404040);
-        getFontRenderer().drawString("Size Y: " + info.getSizeY(), guiLeft + 162 / 2, guiTop + 35, 0x404040);
+
+        RenderHelper.enableGUIStandardItemLighting();
+
+        itemRender.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, new ItemStack(Blocks.wool, 1, 14), guiLeft + xSize - 7 - 34 - 9, guiTop + 7);
+        itemRender.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, new ItemStack(Blocks.wool, 1, 11), guiLeft + xSize - 7 - 17 - 9, guiTop + 7);
+
+        itemRender.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, new ItemStack(Blocks.wool, 1, 5), guiLeft + xSize - 7 - 34 - 9, guiTop + 7 + 17);
+        itemRender.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, new ItemStack(Blocks.wool, 1, 6), guiLeft + xSize - 7 - 17 - 9, guiTop + 7 + 17);
+
+        RenderHelper.disableStandardItemLighting();
+
+        getFontRenderer().drawString(info.getSizeX() + " Rows", guiLeft + 7, guiTop + 68, 0x404040);
+        getFontRenderer().drawString(info.getSizeY() + " Columns", guiLeft + 7, guiTop + 88, 0x404040);
+
+        int color = 0xFFFFFF;
+
+        if(!colorField.getText().isEmpty())
+        {
+            color = Integer.decode("0x" + colorField.getText());
+        }
+
+        colorField.setTextColor(color);
+
+        colorField.drawTextBox();
     }
 
     @Override
@@ -337,10 +461,26 @@ public class GuiChestBuilder extends GuiContainer
     		}
     		case 4:
     		{
-    			CompactStorage.instance.wrapper.sendToServer(new C02PacketCraftChest(pos, builder.dimension, info));
+    			CompactStorage.instance.wrapper.sendToServer(new C02PacketCraftChest(pos, builder.dimension, info, builder.type, "0x" + (colorField.getText().isEmpty() ? "FFFFFF" : colorField.getText())));
     			
     			break;
     		}
+            case 5:
+            {
+                int currentType = builder.type.ordinal();
+
+                System.out.println(currentType);
+
+                int newType = currentType + 1;
+
+                if(newType == StorageInfo.Type.values().length) newType = 0;
+
+                builder.type = StorageInfo.Type.values()[newType];
+                buttonChangeType.displayString = builder.type.name();
+                buttonSubmit.displayString = "Build " + builder.type.name();
+
+                break;
+            }
     	}
     }
     

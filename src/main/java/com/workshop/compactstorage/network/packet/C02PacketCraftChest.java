@@ -1,5 +1,6 @@
 package com.workshop.compactstorage.network.packet;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 
 import com.workshop.compactstorage.util.BlockPos;
@@ -16,7 +17,10 @@ public class C02PacketCraftChest implements IMessage
 	public int dimension;
 	
 	public StorageInfo info;
-	
+	public StorageInfo.Type type;
+
+	public String color;
+
 	public C02PacketCraftChest() 
 	{
 		this.x = 0;
@@ -25,18 +29,22 @@ public class C02PacketCraftChest implements IMessage
 		
 		this.dimension = 0;
 		this.info = new StorageInfo(0, 0);
+		this.type = StorageInfo.Type.CHEST;
+		this.color = "0xFFFFFF";
 	}
 	
-	public C02PacketCraftChest(int x, int y, int z, int dim, StorageInfo info)
+	public C02PacketCraftChest(int x, int y, int z, int dim, StorageInfo info, StorageInfo.Type type, String color)
 	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.dimension = dim;
 		this.info = info;
+		this.type = type;
+		this.color = color;
 	}
 	
-	public C02PacketCraftChest(BlockPos pos, int dim, StorageInfo info)
+	public C02PacketCraftChest(BlockPos pos, int dim, StorageInfo info, StorageInfo.Type type, String color)
 	{
 		this.x = pos.getX();
 		this.y = pos.getY();
@@ -44,6 +52,8 @@ public class C02PacketCraftChest implements IMessage
 		
 		this.dimension = dim;
 		this.info = info;
+		this.type = type;
+		this.color = color;
 	}
 	
 	@Override
@@ -56,6 +66,9 @@ public class C02PacketCraftChest implements IMessage
 		dimension = buf.readInt();
 		
 		info = new StorageInfo(buf.readInt(), buf.readInt());
+		type = StorageInfo.Type.values()[buf.readInt()];
+
+		color = ByteBufUtils.readUTF8String(buf);
 	}
 
 	@Override
@@ -69,5 +82,9 @@ public class C02PacketCraftChest implements IMessage
 		
 		buf.writeInt(info.getSizeX());
 		buf.writeInt(info.getSizeY());
+
+		buf.writeInt(type.ordinal());
+
+		ByteBufUtils.writeUTF8String(buf, color);
 	}
 }

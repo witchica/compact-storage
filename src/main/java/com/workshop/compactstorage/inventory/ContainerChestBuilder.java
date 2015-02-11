@@ -42,7 +42,7 @@ public class ContainerChestBuilder extends Container
         this.chest = ((TileEntityChestBuilder) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ()));
         
         this.xSize = 7 + 162 + 7;
-        this.ySize = 7 + 54 + 13 + 54 + 4 + 18 + 7;
+        this.ySize = 7 + 108 + 13 + 54 + 4 + 18 + 7;
         
         setupSlots();
     }
@@ -65,7 +65,7 @@ public class ContainerChestBuilder extends Container
         }
         
         slotX = (xSize / 2) - ((9 * 18) / 2) + 1;
-        slotY = slotY + 54 + 13;
+        slotY = slotY + 108 + 13;
 
         for(int x = 0; x < 9; x++)
         {

@@ -22,6 +22,12 @@ public class StorageInfo
 		this.sizeY = sizeY;
 	}
 
+	public static enum Type
+	{
+		CHEST,
+		BACKPACK;
+	}
+
 	public int getSizeX() 
 	{
 		return sizeX;
@@ -42,7 +48,7 @@ public class StorageInfo
 		this.sizeY = sizeY;
 	}
 	
-	public ArrayList<List<ItemStack>> getMaterialCost()
+	public ArrayList<List<ItemStack>> getMaterialCost(Type type)
 	{
 		ArrayList<List<ItemStack>> list = new ArrayList<List<ItemStack>>();
 		
@@ -67,13 +73,25 @@ public class StorageInfo
 		int primaryIndex = (sizeX / 3 * sizeY / 3) / 4;
 		int secondaryIndex = ((sizeX / 3 * sizeY / 3) / 4);
 		
-		int chestAmount = (sizeX * sizeY) / 27 == 0 ? 1 : (sizeX * sizeY) / 27;
-		int clayAmount = (int) ((int) (sizeX * sizeY) / 3 == 0 ? 1 : (sizeX * sizeY) / 4.5f);
+		int storageAmount = (sizeX * sizeY) / 27 == 0 ? 1 : (sizeX * sizeY) / 27;
+		int binderAmount = (int) ((int) (sizeX * sizeY) / 3 == 0 ? 1 : (sizeX * sizeY) / 4.5f);
+
+		String storageName = "blockChest";
+		String binderName = "itemClay";
+
+		if(type.equals(Type.BACKPACK))
+		{
+			storageAmount = (int) (storageAmount * 1.5f);
+			binderAmount = (int) (binderAmount / 1.5f);
+
+			storageName = "wool";
+			binderName=  "string";
+		}
 		
-		list.add(changeAmounts(OreDictionary.getOres("blockChest"), chestAmount));
+		list.add(changeAmounts(OreDictionary.getOres(storageName), storageAmount));
 		list.add(changeAmounts(OreDictionary.getOres(primary[primaryIndex > 3 ? 3 : primaryIndex]), primaryIndex + 1 * 2));
 		list.add(changeAmounts(OreDictionary.getOres(secondary[secondaryIndex > 3 ? 3 : primaryIndex]), secondaryIndex + 1 * 2));
-		list.add(changeAmounts(OreDictionary.getOres("itemClay"), clayAmount));
+		list.add(changeAmounts(OreDictionary.getOres(binderName), binderAmount));
 		
 		return list;
 	}

@@ -26,7 +26,7 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 		TileEntityChestBuilder builder = (TileEntityChestBuilder) MinecraftServer.getServer().worldServerForDimension(message.dimension).getTileEntity(message.x, message.y, message.z);
 		
 		List<ItemStack> items = Arrays.asList(builder.items);
-		List<List<ItemStack>> requiredItems = builder.info.getMaterialCost();
+		List<List<ItemStack>> requiredItems = builder.info.getMaterialCost(message.type);
 		
 		boolean hasRequiredMaterials = true;
 		
@@ -64,6 +64,7 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 			
 			NBTTagCompound tag = new NBTTagCompound();
 			tag.setIntArray("size", new int[] {message.info.getSizeX(), message.info.getSizeY()});
+			tag.setString("color", message.color);
 			stack.setTagCompound(tag);
 			
 			EntityItem item = new EntityItem(MinecraftServer.getServer().worldServerForDimension(message.dimension), message.x, message.y + 1, message.z, stack);

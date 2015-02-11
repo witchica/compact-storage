@@ -90,6 +90,9 @@ public class CompactStorage
         OreDictionary.registerOre("blockChest", Blocks.chest);
         OreDictionary.registerOre("itemClay", Items.clay_ball);
 
+        OreDictionary.registerOre("string", Items.string);
+        OreDictionary.registerOre("wool", Blocks.wool);
+
         logger.info("Are we in deofb? " + (deobf ? "Yep!" : "Nope, going retro!"));
 
         legacy_instance = new CompactChests();

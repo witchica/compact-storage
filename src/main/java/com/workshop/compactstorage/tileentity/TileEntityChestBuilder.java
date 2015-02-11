@@ -29,11 +29,14 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory
 	public int mode;
 	public String player;
 
+	public StorageInfo.Type type;
+
 	public TileEntityChestBuilder()
 	{
 		init = false;
 		info = new StorageInfo(9, 3);
 		items = new ItemStack[getSizeInventory()];
+		type = StorageInfo.Type.CHEST;
 	}
 	
 	@Override
@@ -78,7 +81,7 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory
         for(int slot = 0; slot < getSizeInventory(); slot++)
         {
             NBTTagCompound item = nbtTagList.getCompoundTagAt(slot);
-            items[item.getByte("Slot")] = ItemStack.loadItemStackFromNBT(item);
+            items[slot] = ItemStack.loadItemStackFromNBT(item);
         }
         
         markDirty();
@@ -203,7 +206,7 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory
 	{
 		if(info != null)
 		{
-			List<ItemStack> stack2 = info.getMaterialCost().get(slot);
+			List<ItemStack> stack2 = info.getMaterialCost(type).get(slot);
 			
 			for(ItemStack stack3 : stack2)
 			{

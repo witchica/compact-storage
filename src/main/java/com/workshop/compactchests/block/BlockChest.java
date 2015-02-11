@@ -2,6 +2,8 @@ package com.workshop.compactchests.block;
 
 import java.util.Random;
 
+import com.workshop.compactstorage.essential.init.StorageBlocks;
+import com.workshop.compactstorage.tileentity.TileEntityChest;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -10,19 +12,36 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 import com.workshop.compactstorage.essential.CompactStorage;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * Created by Toby on 19/08/2014.
  */
-public abstract class BlockChest extends Block implements ITileEntityProvider
-{
+public abstract class BlockChest extends Block implements ITileEntityProvider {
     public int guiID;
+
+    public static final int[][] size = new int[][]{
+            new int[]{9, 6},
+            new int[]{9, 9},
+            new int[]{12, 9},
+            new int[]{15, 9},
+            new int[]{18, 9}
+    };
+
+    public static final int[] colors = new int[] {
+            0x267DC3,
+            0x2B8736,
+            0xF6C500,
+            0xE7362F,
+            0xC431F0
+    };
 
     public BlockChest(int guiID)
     {
@@ -56,8 +75,24 @@ public abstract class BlockChest extends Block implements ITileEntityProvider
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int i, float j, float k, float l)
     {
     	if(CompactStorage.deobf)
-    	{
-        	player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.AQUA + "This will be fixed soon, but for now. No Access!"));
+        {
+            if(!world.isRemote)
+            {
+                int direction = world.getBlockMetadata(x, y, z);
+                NBTTagCompound old = new NBTTagCompound();
+                world.getTileEntity(x, y, z).writeToNBT(old);
+
+                player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Converted from old system. Good to go!"));
+
+                world.setBlock(x, y, z, StorageBlocks.chest);
+                world.getTileEntity(x, y, z).readFromNBT(old);
+
+                TileEntityChest chest = (TileEntityChest) world.getTileEntity(x, y, z);
+                chest.invX = size[guiID][0];
+                chest.invY = size[guiID][1];
+                chest.direction = ForgeDirection.values()[direction].getOpposite();
+                chest.color = colors[guiID];
+            }
 
             return false;
     	}

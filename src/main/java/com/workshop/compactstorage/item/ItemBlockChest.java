@@ -31,6 +31,7 @@ public class ItemBlockChest extends ItemBlock
     	
     	NBTTagCompound tag = new NBTTagCompound();
     	tag.setIntArray("size", new int[] {9, 3});
+		tag.setString("color", "0xFFFFFF");
     	
     	stack.setTagCompound(tag);
     	list.add(stack);

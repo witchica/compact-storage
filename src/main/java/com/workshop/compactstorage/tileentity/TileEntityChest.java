@@ -19,8 +19,6 @@ import cpw.mods.fml.common.Loader;
 public class TileEntityChest extends TileEntity implements IInventory
 {
     public ForgeDirection direction;
-    public int mode;
-    public String player;
 
     public int color;
     public int invX;
@@ -93,7 +91,6 @@ public class TileEntityChest extends TileEntity implements IInventory
     {
     	if(items != null)
     	{
-    		System.out.println("SETTING " + stack);
     		items[slot] = stack;
     		markDirty();
     	}
@@ -120,11 +117,6 @@ public class TileEntityChest extends TileEntity implements IInventory
     @Override
     public boolean isUseableByPlayer(EntityPlayer player) 
     {
-        if(Loader.isModLoaded("CoFHCore"))
-        {
-        	return canPlayerAccess(player.getCommandSenderName());
-        }
-        
         return true;
     }
 
@@ -153,9 +145,6 @@ public class TileEntityChest extends TileEntity implements IInventory
         this.invX = tag.getInteger("invX");
         this.invY = tag.getInteger("invY");
         
-        this.mode = tag.getInteger("mode");
-        this.player = tag.getString("player");
-        
         NBTTagList nbtTagList = tag.getTagList("Items", Constants.NBT.TAG_COMPOUND);
         items = new ItemStack[getSizeInventory()];
 
@@ -181,9 +170,6 @@ public class TileEntityChest extends TileEntity implements IInventory
         tag.setInteger("color", color);
         tag.setInteger("invX", invX);
         tag.setInteger("invY", invY);
-        
-        tag.setInteger("mode", mode);
-        tag.setString("player", player);
         
         NBTTagList nbtTagList = new NBTTagList();
         for(int slot = 0; slot < getSizeInventory(); slot++)
@@ -237,41 +223,6 @@ public class TileEntityChest extends TileEntity implements IInventory
 
     public void updateBlock()
     {
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
-
-    /* SEAL/COFH CORE START */
-
-    public boolean canPlayerAccess(String name) 
-	{
-		switch(mode)
-		{
-			case 0: return true;
-			case 1: return name.equals(player);
-			case 2: return name.equals(player); //SocialRegistry.playerHasAccess(name, player);
-			default: return false;
-		}
-	}
-
-	public int getAccess() 
-	{
-		return mode;
-	}
-
-	public String getOwnerName() 
-	{
-		return player;
-	}
-
-    public boolean setAccess(int mode) 
-	{
-    	this.mode = mode;
-		return true;
-	}
-
-    public boolean setOwnerName(String name) 
-	{
-    	this.player = name;
-		return true;
-	}
 }

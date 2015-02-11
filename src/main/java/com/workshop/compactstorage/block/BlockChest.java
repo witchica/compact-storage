@@ -15,6 +15,7 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -69,8 +70,6 @@ public class BlockChest extends Block implements ITileEntityProvider
         TileEntityChest chest = ((TileEntityChest) world.getTileEntity(x, y, z));
 
         chest.direction = EntityUtil.get2dOrientation(entity);
-        chest.player = entity.getCommandSenderName();
-        chest.mode = 0;
         
         if(stack.hasTagCompound())
         {
@@ -78,6 +77,16 @@ public class BlockChest extends Block implements ITileEntityProvider
         	{
                 chest.invX = stack.getTagCompound().getIntArray("size")[0];
                 chest.invY = stack.getTagCompound().getIntArray("size")[1];
+
+                if(stack.getTagCompound().hasKey("color"))
+                {
+                    chest.color = Integer.decode(stack.getTagCompound().getString("color"));
+                }
+                else
+                {
+                    chest.color = 0xffffff;
+                }
+
                 chest.items = new ItemStack[chest.invX * chest.invY];
         	}
         	else
@@ -146,6 +155,7 @@ public class BlockChest extends Block implements ITileEntityProvider
     {
         TileEntityChest chest = (TileEntityChest) world.getTileEntity(x, y, z);
         ItemStack stack = new ItemStack(StorageBlocks.chest, 1);
+        Random rand = new Random();
 
         stack.setTagCompound(new NBTTagCompound());
 
@@ -158,7 +168,33 @@ public class BlockChest extends Block implements ITileEntityProvider
 
         world.spawnEntityInWorld(new EntityItem(world, x, y + 0.5f, z, stack));
 
+        for(int slot = 0; slot < chest.items.length; slot++)
+        {
+            float randX = rand.nextFloat();
+            float randZ = rand.nextFloat();
+
+            if(chest.items != null && chest.items[slot] != null) world.spawnEntityInWorld(new EntityItem(world, x + randX, y + 0.5f, z + randZ, chest.items[slot]));
+        }
+
         super.breakBlock(world, x, y, z, block, meta);
+    }
+
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z, EntityPlayer player)
+    {
+        return getPickBlock(target, world, x, y, z);
+    }
+
+    @Override
+    public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+    {
+        ItemStack stack = new ItemStack(StorageBlocks.chest, 1);
+        TileEntityChest chest = (TileEntityChest) world.getTileEntity(x, y, z);
+
+        stack.setTagCompound(new NBTTagCompound());
+        stack.getTagCompound().setIntArray("size", new int[] {chest.invX, chest.invY});
+
+        return stack;
     }
 
     @Override
