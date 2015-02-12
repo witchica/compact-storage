@@ -2,6 +2,8 @@ package com.workshop.compactstorage.essential;
 
 import java.util.List;
 
+import com.workshop.compactstorage.command.CommandCompactStorage;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -163,5 +165,11 @@ public class CompactStorage
         GameRegistry.addRecipe(new ItemStack(StorageBlocks.chestBuilder, 1), "ILI", "ICI", "ILI", 'I', new ItemStack(Items.iron_ingot, 1), 'C', new ItemStack(Blocks.chest, 1), 'L', new ItemStack(Blocks.lever, 1));
 
         ConfigurationHandler.init();
+    }
+
+    @EventHandler
+    public void serverStarting(FMLServerStartingEvent event)
+    {
+        event.registerServerCommand(new CommandCompactStorage());
     }
 }
