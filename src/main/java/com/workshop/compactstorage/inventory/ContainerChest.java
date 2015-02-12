@@ -1,14 +1,13 @@
 package com.workshop.compactstorage.inventory;
 
+import com.workshop.compactstorage.api.IChest;
+import com.workshop.compactstorage.util.BlockPos;
 import invtweaks.api.container.ChestContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-
-import com.workshop.compactstorage.tileentity.TileEntityChest;
-import com.workshop.compactstorage.util.BlockPos;
 
 /**
  * Created by Toby on 11/11/2014.
@@ -20,7 +19,7 @@ public class ContainerChest extends Container
     public EntityPlayer player;
     public BlockPos pos;
 
-    public TileEntityChest chest;
+    public IChest chest;
     
     public int invX;
     public int invY;
@@ -33,17 +32,17 @@ public class ContainerChest extends Container
     public int xSize;
     public int ySize;
     
-    public ContainerChest(World world, EntityPlayer player, BlockPos pos)
+    public ContainerChest(World world, IChest chest, EntityPlayer player, BlockPos pos)
     {
         super();
 
         this.world = world;
         this.player = player;
         this.pos = pos;
-        this.chest = ((TileEntityChest) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ()));
+        this.chest = chest;
         
-        this.invX = chest.invX;
-        this.invY = chest.invY;
+        this.invX = chest.getInvX();
+        this.invY = chest.getInvY();
         this.xSize = 7 + (invX < 9 ? (9 * 18) : (invX * 18)) + 7;
         this.ySize = 15 + (invY * 18) + 13 + 54 + 4 + 18 + 7;
         
@@ -147,5 +146,12 @@ public class ContainerChest extends Container
     public int getInvY()
     {
     	return invY;
+    }
+
+    @Override
+    public void onContainerClosed(EntityPlayer player)
+    {
+        chest.closeInventory();
+        super.onContainerClosed(player);
     }
 }

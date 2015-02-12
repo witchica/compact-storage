@@ -1,14 +1,12 @@
 package com.workshop.compactstorage.essential.init;
 
-import net.minecraft.block.Block;
-
 import com.workshop.compactstorage.block.BlockChest;
 import com.workshop.compactstorage.block.BlockChestBuilder;
 import com.workshop.compactstorage.item.ItemBlockChest;
 import com.workshop.compactstorage.tileentity.TileEntityChest;
 import com.workshop.compactstorage.tileentity.TileEntityChestBuilder;
-
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
 
 /**
  * Created by Toby on 06/11/2014.

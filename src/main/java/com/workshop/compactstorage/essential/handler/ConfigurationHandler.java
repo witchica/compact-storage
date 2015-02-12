@@ -1,10 +1,15 @@
 package com.workshop.compactstorage.essential.handler;
 
-import java.io.File;
-
+import com.google.common.collect.Lists;
+import com.workshop.compactstorage.exception.InvalidConfigurationException;
+import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 
-import com.workshop.compactstorage.essential.CompactStorage;
+import java.io.File;
+import java.util.List;
 
 /**
  * Created by Toby on 07/11/2014.
@@ -12,31 +17,121 @@ import com.workshop.compactstorage.essential.CompactStorage;
 public class ConfigurationHandler
 {
     public static Configuration configuration;
-    private static boolean initialized = false;
+    public static File configFile;
 
     public static boolean firstTimeRun;
-    public static String directoryToCheckServer;
 
-    public static void init(File configFile)
+    public static ItemStack storage;
+    public static ItemStack storageBackpack;
+
+    public static ItemStack[] primary;
+    public static ItemStack[] secondary;
+
+    public static ItemStack binder;
+    public static ItemStack binderBackpack;
+
+    public static float storageModifier;
+    public static float primaryModifier;
+    public static float secondaryModifier;
+    public static float binderModifier;
+
+    public static void init()
     {
-        if(initialized) return;
+        configuration = new Configuration(configFile);
 
-        try
-        {
-            configuration = new Configuration(configFile);
+        firstTimeRun = configuration.getBoolean("firstTimeRun", "internal", false, "This is used internally for the GUI shown when you first start the game.");
 
-            firstTimeRun = configuration.get("internal", "firstTime", true).getBoolean();
-            configuration.get("internal", "firstTime", true).set(false);
-        }
-        catch(Exception e)
-        {
-            CompactStorage.logger.error("Error when loading configuration file " + e.getClass().getSimpleName());
-        }
-        finally
+        storage = getItemFromConfig(configuration, "chestStorage", "builder", "minecraft:chest", "This is used as the first component in the Builder when building a CHEST.");
+        storageBackpack = getItemFromConfig(configuration, "backpackStorage", "builder", "minecraft:wool", "This is used as the first component in the Builder when building a BACKPACK.");
+
+        primary = getItemsFromConfig(configuration, "primaryItem", "builder", new String[]{"minecraft:iron_ingot"}, "These values are used for the first material cost in the chest builder, you can add as many values as you like, it will configure itself to use all of them.");
+        secondary = getItemsFromConfig(configuration, "secondaryItem", "builder", new String[]{"minecraft:iron_bars"}, "These values are used for the second material cost in the chest builder, you can add as many values as you like, it will configure itself to use all of them.");
+
+        binder = getItemFromConfig(configuration, "chestBinder", "builder", "minecraft:clay_ball", "This is used as the binder material when making a CHEST.");
+        binderBackpack = getItemFromConfig(configuration, "backpackBinder", "builder", "minecraft:string", "This is used as the binder material when making a BACKPACK.");
+
+        storageModifier = configuration.getFloat("storageModifier", "builder", 1F, 0F, 1F, "This determines how much of the item is required.");
+        primaryModifier = configuration.getFloat("primaryModifier", "builder", 1F, 0F, 1F, "This determines how much of the item is required.");
+        secondaryModifier = configuration.getFloat("secondaryModifier", "builder", 1F, 0F, 1F, "This determines how much of the item is required.");
+        binderModifier = configuration.getFloat("binderModifier", "builder", 1F, 0F, 1F, "This determines how much of the item is required.");
+
+        configuration.setCategoryComment("builder", "Format for item names is modid:name@meta or leave @meta for all possible metadata of that item. These are not unlocalized names. If you do something wrong or it uses the defaut values check your log!!! Look for an InvalidConfigurationException and it will tell you why!");
+
+        if(firstTimeRun) configuration.get("internal", "firstTimeRun", false).set(false);
+
+        if(configuration.hasChanged())
         {
             configuration.save();
         }
+    }
 
-        initialized = true;
+    public static ItemStack getItemFromConfig(Configuration config, String name, String category, String defaultString, String comment)
+    {
+        String itemName = config.getString(name, category, defaultString, comment);
+
+        String modId = itemName.contains(":") ? itemName.split(":", 2)[0] : "minecraft";
+        String itemId = itemName.contains(":") ? itemName.split(":", 2)[1] : itemName;
+        int meta = (itemName.contains("@") ? Integer.parseInt(itemName.split("@")[1]) : OreDictionary.WILDCARD_VALUE);
+
+        Item item = GameRegistry.findItem(modId, itemId);
+
+        if(item == null)
+        {
+            new InvalidConfigurationException("Could not find item " + itemName + " for value " + name + " in the CompactStorage config! Reverting to default.").printStackTrace();
+
+
+            modId = defaultString.contains(":") ? defaultString.split(":", 2)[0] : "minecraft";
+            itemId = defaultString.contains(":") ? defaultString.split(":", 2)[1] : defaultString;
+            meta = (defaultString.contains("@") ? Integer.parseInt(defaultString.split("@")[1]) : OreDictionary.WILDCARD_VALUE);
+
+            item = GameRegistry.findItem(modId, itemId);
+
+            return new ItemStack(item, 1, meta);
+        }
+
+        return new ItemStack(item, 1, meta);
+    }
+
+    public static ItemStack[] getItemsFromConfig(Configuration config, String key, String category, String[] defaultItems, String comment)
+    {
+        List<ItemStack> items = Lists.newArrayList();
+        String[] itemNames = config.getStringList(key, category, defaultItems, comment);
+
+        boolean breakOff = false;
+
+        for(String itemName : itemNames)
+        {
+            String modId = itemName.contains(":") ? itemName.split(":", 2)[0] : "minecraft";
+            String itemId = itemName.contains(":") ? itemName.split(":", 2)[1] : itemName;
+            int meta = (itemName.contains("@") ? Integer.parseInt(itemName.split("@")[1]) : OreDictionary.WILDCARD_VALUE);
+
+            Item item = GameRegistry.findItem(modId, itemId);
+
+            if(item == null)
+            {
+                new InvalidConfigurationException("Could not find item " + itemName + " for value " + key + " in the CompactStorage config! Reverting to default.").printStackTrace();
+                breakOff = true;
+                break;
+            }
+
+            items.add(new ItemStack(item, 1, meta));
+        }
+
+        if(breakOff)
+        {
+            items.clear();
+
+            for(String itemName : defaultItems)
+            {
+                String modId = itemName.contains(":") ? itemName.split(":", 2)[0] : "minecraft";
+                String itemId = itemName.contains(":") ? itemName.split(":", 2)[1] : itemName;
+                int meta = (itemName.contains("@") ? Integer.parseInt(itemName.split("@")[1]) : OreDictionary.WILDCARD_VALUE);
+
+                Item item = GameRegistry.findItem(modId, itemId);
+                items.add(new ItemStack(item, 1, meta));
+            }
+        }
+
+        return items.toArray(new ItemStack[items.size()]);
     }
 }

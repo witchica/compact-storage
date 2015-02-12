@@ -1,10 +1,13 @@
 package com.workshop.compactstorage.block;
 
+import com.workshop.compactstorage.essential.CompactStorage;
+import com.workshop.compactstorage.tileentity.TileEntityChestBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -13,8 +16,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import com.workshop.compactstorage.essential.CompactStorage;
-import com.workshop.compactstorage.tileentity.TileEntityChestBuilder;
+import java.util.Random;
 
 public class BlockChestBuilder extends Block implements ITileEntityProvider
 {
@@ -65,11 +67,11 @@ public class BlockChestBuilder extends Block implements ITileEntityProvider
 	@Override
 	public IIcon getIcon(IBlockAccess access, int x, int y, int z, int side) 
 	{
-		return getIcon(0, side);
+		return getIcon(side, 0);
 	}
 	
 	@Override
-	public IIcon getIcon(int meta, int side) 
+	public IIcon getIcon(int side, int meta)
 	{
 		switch(side)
 		{
@@ -82,5 +84,22 @@ public class BlockChestBuilder extends Block implements ITileEntityProvider
 		}
 		
 		return null;
+	}
+
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int meta)
+	{
+		TileEntityChestBuilder chest = (TileEntityChestBuilder) world.getTileEntity(x, y, z);
+		Random rand = new Random();
+
+		for(int slot = 0; slot < chest.items.length; slot++)
+		{
+			float randX = rand.nextFloat();
+			float randZ = rand.nextFloat();
+
+			if(chest.items != null && chest.items[slot] != null) world.spawnEntityInWorld(new EntityItem(world, x + randX, y + 0.5f, z + randZ, chest.items[slot]));
+		}
+
+		super.breakBlock(world, x, y, z, block, meta);
 	}
 }

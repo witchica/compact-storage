@@ -107,7 +107,8 @@ public class CompactStorage
             case SERVER: legacy_instance.proxy = new com.workshop.compactchests.proxy.Server(); break;
         }
 
-        ConfigurationHandler.init(event.getSuggestedConfigurationFile());
+
+        ConfigurationHandler.configFile = event.getSuggestedConfigurationFile();
     }
 
     @EventHandler
@@ -151,33 +152,16 @@ public class CompactStorage
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        if(deobf)
-        {
-            NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
-        }
-        else
-        {
-            NetworkRegistry.INSTANCE.registerGuiHandler(instance, new com.workshop.compactchests.client.GuiHandler());
-
-
-            GameRegistry.addShapedRecipe(new ItemStack(ChestBlocks.doubleChest), "SIS", "ICI", "SIS", 'S', new ItemStack(Items.stick, 1), 'I', new ItemStack(Items.iron_ingot, 1), 'C', new ItemStack(Blocks.chest, 1));
-            GameRegistry.addShapedRecipe(new ItemStack(ChestBlocks.tripleChest), "SIS", "ICI", "SIS", 'S', new ItemStack(Blocks.cobblestone_wall, 1), 'I', new ItemStack(Items.iron_ingot, 1), 'C', new ItemStack(ChestBlocks.doubleChest, 1));
-            GameRegistry.addShapedRecipe(new ItemStack(ChestBlocks.quadrupleChest), "SIS", "ICI", "SIS", 'S', new ItemStack(Blocks.cobblestone_wall, 1), 'I', new ItemStack(Items.gold_ingot, 1), 'C', new ItemStack(ChestBlocks.tripleChest, 1));
-            GameRegistry.addShapedRecipe(new ItemStack(ChestBlocks.quintupleChest), "SIS", "ICI", "SIS", 'S', new ItemStack(Blocks.glass_pane, 1), 'I', new ItemStack(Items.gold_ingot, 1), 'C', new ItemStack(ChestBlocks.quadrupleChest, 1));
-            GameRegistry.addShapedRecipe(new ItemStack(ChestBlocks.sextupleChest), "SIS", "ICI", "SIS", 'S', new ItemStack(Blocks.glass_pane, 1), 'I', new ItemStack(Items.diamond, 1), 'C', new ItemStack(ChestBlocks.quintupleChest, 1));
-        
-            GameRegistry.addShapedRecipe(new ItemStack(ChestItems.single_backpack), "WSW", "SCS", "WSW", 'C', new ItemStack(Blocks.chest, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'S', new ItemStack(Items.string, 1));
-            GameRegistry.addShapedRecipe(new ItemStack(ChestItems.double_backpack), "WSW", "SCS", "WSW", 'C', new ItemStack(ChestBlocks.doubleChest, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'S', new ItemStack(Items.string, 1));
-            GameRegistry.addShapedRecipe(new ItemStack(ChestItems.triple_backpack), "WSW", "SCS", "WSW", 'C', new ItemStack(ChestBlocks.tripleChest, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'S', new ItemStack(Items.string, 1));
-            GameRegistry.addShapedRecipe(new ItemStack(ChestItems.quadruple_backpack), "WSW", "SCS", "WSW", 'C', new ItemStack(ChestBlocks.quadrupleChest, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'S', new ItemStack(Items.string, 1));
-            GameRegistry.addShapedRecipe(new ItemStack(ChestItems.quintuple_backpack), "WSW", "SCS", "WSW", 'C', new ItemStack(ChestBlocks.quintupleChest, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'S', new ItemStack(Items.string, 1));
-            GameRegistry.addShapedRecipe(new ItemStack(ChestItems.sextuple_backpack), "WSW", "SCS", "WSW", 'C', new ItemStack(ChestBlocks.sextupleChest, 1), 'W', new ItemStack(Blocks.wool, 1, OreDictionary.WILDCARD_VALUE), 'S', new ItemStack(Items.string, 1));
-        }
+        NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
         proxy.registerRenderers();
         legacy_instance.postInitialization(event);
         
         MinecraftForge.EVENT_BUS.register(new FirstTimeRunHandler());
         FMLCommonHandler.instance().bus().register(new FirstTimeRunHandler());
+
+        GameRegistry.addRecipe(new ItemStack(StorageBlocks.chestBuilder, 1), "ILI", "ICI", "ILI", 'I', new ItemStack(Items.iron_ingot, 1), 'C', new ItemStack(Blocks.chest, 1), 'L', new ItemStack(Blocks.lever, 1));
+
+        ConfigurationHandler.init();
     }
 }

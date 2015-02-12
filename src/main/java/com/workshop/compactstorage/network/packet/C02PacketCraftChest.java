@@ -1,12 +1,10 @@
 package com.workshop.compactstorage.network.packet;
 
-import cpw.mods.fml.common.network.ByteBufUtils;
-import io.netty.buffer.ByteBuf;
-
 import com.workshop.compactstorage.util.BlockPos;
 import com.workshop.compactstorage.util.StorageInfo;
-
+import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import io.netty.buffer.ByteBuf;
 
 public class C02PacketCraftChest implements IMessage
 {

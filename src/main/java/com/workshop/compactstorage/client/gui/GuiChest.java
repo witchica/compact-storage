@@ -1,5 +1,7 @@
 package com.workshop.compactstorage.client.gui;
 
+import com.workshop.compactstorage.api.IChest;
+import com.workshop.compactstorage.util.BlockPos;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
@@ -7,11 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
 import org.lwjgl.opengl.GL11;
-
-import com.workshop.compactstorage.tileentity.TileEntityChest;
-import com.workshop.compactstorage.util.BlockPos;
 
 /**
  * Created by Toby on 09/11/2014.
@@ -27,9 +25,11 @@ public class GuiChest extends GuiContainer
     
     public int list;
 
+    public IChest chest;
+
     public static final ResourceLocation realTexture = new ResourceLocation("compactstorage", "textures/gui/chest.png");
     
-    public GuiChest(Container container, World world, EntityPlayer player, BlockPos pos)
+    public GuiChest(Container container, IChest chest, World world, EntityPlayer player, BlockPos pos)
     {
         super(container);
 
@@ -37,8 +37,10 @@ public class GuiChest extends GuiContainer
         this.player = player;
         this.pos = pos;
 
-        this.invX = ((TileEntityChest) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ())).invX;
-        this.invY = ((TileEntityChest) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ())).invY;
+        this.chest = chest;
+
+        this.invX = chest.getInvX();
+        this.invY = chest.getInvY();
 
         this.xSize = 7 + ((invX) < 9 ? (9 * 18) : (invX * 18)) + 7;
         this.ySize = 15 + (invY * 18) + 13 + 54 + 4 + 18 + 7;
@@ -146,5 +148,12 @@ public class GuiChest extends GuiContainer
         tessellator.addVertexWithUV(x + width, y + 0, zLevel, 1,0);
         tessellator.addVertexWithUV(x + 0, y + 0, zLevel, 0, 0);
         tessellator.draw();
+    }
+
+    @Override
+    public void onGuiClosed()
+    {
+        //chest.closeInventory();
+        super.onGuiClosed();
     }
 }

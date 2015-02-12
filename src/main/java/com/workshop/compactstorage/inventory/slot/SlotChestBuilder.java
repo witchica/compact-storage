@@ -1,9 +1,8 @@
 package com.workshop.compactstorage.inventory.slot;
 
+import com.workshop.compactstorage.tileentity.TileEntityChestBuilder;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-
-import com.workshop.compactstorage.tileentity.TileEntityChestBuilder;
 
 public class SlotChestBuilder extends Slot
 {

@@ -1,14 +1,13 @@
 package com.workshop.compactstorage.compat;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import com.workshop.compactstorage.tileentity.TileEntityChest;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import com.workshop.compactstorage.tileentity.TileEntityChest;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class JabbaCompat implements ICompat
 {

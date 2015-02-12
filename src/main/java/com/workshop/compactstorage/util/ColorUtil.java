@@ -1,6 +1,6 @@
 package com.workshop.compactstorage.util;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * Created by Toby on 07/11/2014.

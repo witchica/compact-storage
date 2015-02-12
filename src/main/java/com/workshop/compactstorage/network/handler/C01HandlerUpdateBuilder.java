@@ -1,14 +1,11 @@
 package com.workshop.compactstorage.network.handler;
 
-import net.minecraft.server.MinecraftServer;
-
 import com.workshop.compactstorage.network.packet.C01PacketUpdateBuilder;
 import com.workshop.compactstorage.tileentity.TileEntityChestBuilder;
-
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.server.MinecraftServer;
 
 public class C01HandlerUpdateBuilder implements IMessageHandler<C01PacketUpdateBuilder, IMessage>
 {
@@ -17,8 +14,7 @@ public class C01HandlerUpdateBuilder implements IMessageHandler<C01PacketUpdateB
 	{
 		TileEntityChestBuilder builder = (TileEntityChestBuilder) MinecraftServer.getServer().worldServerForDimension(message.dimension).getTileEntity(message.x, message.y, message.z);
 		if(builder != null) builder.info = message.info;
-		
-		System.out.println(FMLCommonHandler.instance().getEffectiveSide() + ": RECEIVED PACKET");
+		if(builder != null) builder.type = message.type;
 		
 		return null;
 	}

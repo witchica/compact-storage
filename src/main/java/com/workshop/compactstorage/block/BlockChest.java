@@ -1,7 +1,10 @@
 package com.workshop.compactstorage.block;
 
-import java.util.Random;
-
+import com.workshop.compactstorage.essential.CompactStorage;
+import com.workshop.compactstorage.essential.init.StorageBlocks;
+import com.workshop.compactstorage.exception.InvalidSizeException;
+import com.workshop.compactstorage.tileentity.TileEntityChest;
+import com.workshop.compactstorage.util.EntityUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -19,11 +22,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import com.workshop.compactstorage.essential.CompactStorage;
-import com.workshop.compactstorage.essential.init.StorageBlocks;
-import com.workshop.compactstorage.exception.InvalidSizeException;
-import com.workshop.compactstorage.tileentity.TileEntityChest;
-import com.workshop.compactstorage.util.EntityUtil;
+import java.util.Random;
 
 /**
  * Created by Toby on 06/11/2014.
@@ -154,26 +153,30 @@ public class BlockChest extends Block implements ITileEntityProvider
     public void breakBlock(World world, int x, int y, int z, Block block, int meta)
     {
         TileEntityChest chest = (TileEntityChest) world.getTileEntity(x, y, z);
-        ItemStack stack = new ItemStack(StorageBlocks.chest, 1);
-        Random rand = new Random();
 
-        stack.setTagCompound(new NBTTagCompound());
-
-        int invX = chest.invX;
-        int invY = chest.invY;
-        int color = chest.color;
-
-        stack.getTagCompound().setIntArray("size", new int[]{invX, invY});
-        stack.getTagCompound().setInteger("color", color);
-
-        world.spawnEntityInWorld(new EntityItem(world, x, y + 0.5f, z, stack));
-
-        for(int slot = 0; slot < chest.items.length; slot++)
+        if(chest != null)
         {
-            float randX = rand.nextFloat();
-            float randZ = rand.nextFloat();
+            ItemStack stack = new ItemStack(StorageBlocks.chest, 1);
+            Random rand = new Random();
 
-            if(chest.items != null && chest.items[slot] != null) world.spawnEntityInWorld(new EntityItem(world, x + randX, y + 0.5f, z + randZ, chest.items[slot]));
+            stack.setTagCompound(new NBTTagCompound());
+
+            int invX = chest.invX;
+            int invY = chest.invY;
+            int color = chest.color;
+
+            stack.getTagCompound().setIntArray("size", new int[]{invX, invY});
+            stack.getTagCompound().setInteger("color", color);
+
+            world.spawnEntityInWorld(new EntityItem(world, x, y + 0.5f, z, stack));
+
+            for(int slot = 0; slot < chest.items.length; slot++)
+            {
+                float randX = rand.nextFloat();
+                float randZ = rand.nextFloat();
+
+                if(chest.items != null && chest.items[slot] != null) world.spawnEntityInWorld(new EntityItem(world, x + randX, y + 0.5f, z + randZ, chest.items[slot]));
+            }
         }
 
         super.breakBlock(world, x, y, z, block, meta);

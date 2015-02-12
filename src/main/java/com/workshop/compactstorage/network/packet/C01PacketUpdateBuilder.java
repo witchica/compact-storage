@@ -1,11 +1,9 @@
 package com.workshop.compactstorage.network.packet;
 
-import io.netty.buffer.ByteBuf;
-
 import com.workshop.compactstorage.util.BlockPos;
 import com.workshop.compactstorage.util.StorageInfo;
-
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import io.netty.buffer.ByteBuf;
 
 public class C01PacketUpdateBuilder implements IMessage
 {
@@ -16,6 +14,7 @@ public class C01PacketUpdateBuilder implements IMessage
 	public int dimension;
 	
 	public StorageInfo info;
+	public StorageInfo.Type type;
 	
 	public C01PacketUpdateBuilder() 
 	{
@@ -25,18 +24,20 @@ public class C01PacketUpdateBuilder implements IMessage
 		
 		this.dimension = 0;
 		this.info = new StorageInfo(0, 0);
+		this.type = StorageInfo.Type.CHEST;
 	}
 	
-	public C01PacketUpdateBuilder(int x, int y, int z, int dim, StorageInfo info)
+	public C01PacketUpdateBuilder(int x, int y, int z, int dim, StorageInfo info, StorageInfo.Type type)
 	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.dimension = dim;
 		this.info = info;
+		this.type = type;
 	}
 	
-	public C01PacketUpdateBuilder(BlockPos pos, int dim, StorageInfo info)
+	public C01PacketUpdateBuilder(BlockPos pos, int dim, StorageInfo info, StorageInfo.Type type)
 	{
 		this.x = pos.getX();
 		this.y = pos.getY();
@@ -44,6 +45,7 @@ public class C01PacketUpdateBuilder implements IMessage
 		
 		this.dimension = dim;
 		this.info = info;
+		this.type = type;
 	}
 	
 	@Override
@@ -56,6 +58,7 @@ public class C01PacketUpdateBuilder implements IMessage
 		dimension = buf.readInt();
 		
 		info = new StorageInfo(buf.readInt(), buf.readInt());
+		type = StorageInfo.Type.values()[buf.readInt()];
 	}
 
 	@Override
@@ -69,5 +72,6 @@ public class C01PacketUpdateBuilder implements IMessage
 		
 		buf.writeInt(info.getSizeX());
 		buf.writeInt(info.getSizeY());
+		buf.writeInt(type.ordinal());
 	}
 }

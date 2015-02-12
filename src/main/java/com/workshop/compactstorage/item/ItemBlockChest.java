@@ -1,9 +1,6 @@
 package com.workshop.compactstorage.item;
 
-import java.util.List;
-
 import com.workshop.compactstorage.exception.InvalidSizeException;
-
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.util.EnumChatFormatting;
+
+import java.util.List;
 
 /**
  * Created by Toby on 06/11/2014.

@@ -1,11 +1,11 @@
 package com.workshop.compactstorage.client.gui;
 
-import java.security.Key;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import com.workshop.compactstorage.essential.init.StorageBlocks;
+import com.workshop.compactstorage.essential.CompactStorage;
+import com.workshop.compactstorage.network.packet.C01PacketUpdateBuilder;
+import com.workshop.compactstorage.network.packet.C02PacketCraftChest;
+import com.workshop.compactstorage.tileentity.TileEntityChestBuilder;
+import com.workshop.compactstorage.util.BlockPos;
+import com.workshop.compactstorage.util.StorageInfo;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -17,20 +17,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
+import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import com.workshop.compactstorage.essential.CompactStorage;
-import com.workshop.compactstorage.network.packet.C01PacketUpdateBuilder;
-import com.workshop.compactstorage.network.packet.C02PacketCraftChest;
-import com.workshop.compactstorage.tileentity.TileEntityChestBuilder;
-import com.workshop.compactstorage.util.BlockPos;
-import com.workshop.compactstorage.util.StorageInfo;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Toby on 09/11/2014.
@@ -277,28 +272,30 @@ public class GuiChestBuilder extends GuiContainer
     	{
     		for(int x = 0; x < 4; x++)
             {
-    			List<ItemStack> stackList = builder.info.getMaterialCost(builder.type).get(x);
-    			
-                ItemStack stack = stackList.get(0);
-            	int startX = guiLeft + 7 + x * 18 + 1;
-                int startY = guiTop + 18;
-                
-                int endX = startX + 18;
-                int endY = startY + 18;
-                
-                if(mouseX >= startX && mouseX <= endX)
+                if(x < builder.info.getMaterialCost(builder.type).size() && builder.info.getMaterialCost(builder.type).get(x) != null)
                 {
-                	if(mouseY >= startY && mouseY <= endY)
-                	{
-                		ArrayList<String> toolList = new ArrayList<String>();
-                		toolList.add(stack.getDisplayName());
-                		toolList.add(EnumChatFormatting.AQUA + "Amount Required: " + stack.stackSize);
-                		
-                		drawHoveringText(toolList, mouseX, mouseY, getFontRenderer());
-                	}
+                    ItemStack stack = builder.info.getMaterialCost(builder.type).get(x);
+
+                    int startX = guiLeft + 7 + x * 18 + 1;
+                    int startY = guiTop + 18;
+
+                    int endX = startX + 18;
+                    int endY = startY + 18;
+
+                    if(mouseX >= startX && mouseX <= endX)
+                    {
+                        if(mouseY >= startY && mouseY <= endY)
+                        {
+                            ArrayList<String> toolList = new ArrayList<String>();
+                            toolList.add(stack.getDisplayName());
+                            toolList.add(EnumChatFormatting.AQUA + "Amount Required: " + stack.stackSize);
+
+                            drawHoveringText(toolList, mouseX, mouseY, getFontRenderer());
+                        }
+                    }
+
+                    RenderHelper.disableStandardItemLighting();
                 }
-                
-                RenderHelper.disableStandardItemLighting();
             }
     	}
     }
@@ -389,8 +386,10 @@ public class GuiChestBuilder extends GuiContainer
         {
             drawTexturedModalRect(guiLeft + 7 + (x * 18), guiTop + 17, 18, 0, 18, 18);
             
-            ItemStack stack = info.getMaterialCost(builder.type).get(x).get(0);
-            
+            ItemStack stack = info.getMaterialCost(builder.type).get(x);
+
+            if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) stack.setItemDamage(0);
+
             RenderHelper.enableGUIStandardItemLighting();
             itemRender.renderItemIntoGUI(fontRendererObj, mc.renderEngine, stack, guiLeft + 7 + x * 18 + 1, guiTop + 18);
             
@@ -434,28 +433,28 @@ public class GuiChestBuilder extends GuiContainer
     		case 0:
     		{
     			info.setSizeX(info.getSizeX() + 1);
-    			CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(pos, builder.dimension, info));
-    			
+    			CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(pos, builder.dimension, info, builder.type));
+
     			break;
     		}
     		case 1:
     		{
     			info.setSizeX(info.getSizeX() - 1);
-    			CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(pos, builder.dimension, info));
+    			CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(pos, builder.dimension, info, builder.type));
 
     			break;
     		}
     		case 2:
     		{
     			info.setSizeY(info.getSizeY() + 1);
-    			CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(pos, builder.dimension, info));
+    			CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(pos, builder.dimension, info, builder.type));
 
     			break;
     		}
     		case 3:
     		{
     			info.setSizeY(info.getSizeY() - 1);
-    			CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(pos, builder.dimension, info));
+    			CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(pos, builder.dimension, info, builder.type));
 
     			break;
     		}
@@ -478,6 +477,8 @@ public class GuiChestBuilder extends GuiContainer
                 builder.type = StorageInfo.Type.values()[newType];
                 buttonChangeType.displayString = builder.type.name();
                 buttonSubmit.displayString = "Build " + builder.type.name();
+
+                CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(pos, builder.dimension, info, builder.type));
 
                 break;
             }

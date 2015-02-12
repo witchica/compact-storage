@@ -1,15 +1,12 @@
 package com.workshop.compactstorage.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.workshop.compactstorage.essential.handler.ConfigurationHandler.*;
 
 public class StorageInfo
 {
@@ -48,67 +45,76 @@ public class StorageInfo
 		this.sizeY = sizeY;
 	}
 	
-	public ArrayList<List<ItemStack>> getMaterialCost(Type type)
+	public List<ItemStack> getMaterialCost(Type type)
 	{
-		ArrayList<List<ItemStack>> list = new ArrayList<List<ItemStack>>();
-		
-		/* Max 12 */
-		
-		String[] primary = new String[] 
-		{
-				"ingotIron", 
-				"ingotGold",
-				"gemDiamond", 
-				"gemEmerald"
-		};
-		
-		String[] secondary = new String[] 
-		{
-			"logWood", 
-			"blockCoal", 
-			"barsIron", 
-			"blockQuartz"
-		};
-		
-		int primaryIndex = (sizeX / 3 * sizeY / 3) / 4;
-		int secondaryIndex = ((sizeX / 3 * sizeY / 3) / 4);
-		
-		int storageAmount = (sizeX * sizeY) / 27 == 0 ? 1 : (sizeX * sizeY) / 27;
-		int binderAmount = (int) ((int) (sizeX * sizeY) / 3 == 0 ? 1 : (sizeX * sizeY) / 4.5f);
+		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
 
-		String storageName = "blockChest";
-		String binderName = "itemClay";
+		/* STORAGE */
 
-		if(type.equals(Type.BACKPACK))
+		int storageAmount = (int) (((sizeX * sizeY) / 8f) * storageModifier);
+		list.add(changeStackSize(type.equals(Type.BACKPACK) ? storageBackpack : storage, type.equals(Type.BACKPACK) ? storageAmount : (storageAmount / 2)));
+
+		/* PRIMARY */
+
+		int amount = primary.length;
+		int maxChest = 24 * 12;
+		int thisChest = sizeX * sizeY;
+		int divider = maxChest / amount;
+
+		int primaryTier = 0;
+		ItemStack primaryStack = null;
+
+		for(int i = 0; i < amount; i++)
 		{
-			storageAmount = (int) (storageAmount * 1.5f);
-			binderAmount = (int) (binderAmount / 1.5f);
-
-			storageName = "wool";
-			binderName=  "string";
+			if(thisChest <= divider * (i + 1))
+			{
+				primaryTier = i;
+				break;
+			}
 		}
-		
-		list.add(changeAmounts(OreDictionary.getOres(storageName), storageAmount));
-		list.add(changeAmounts(OreDictionary.getOres(primary[primaryIndex > 3 ? 3 : primaryIndex]), primaryIndex + 1 * 2));
-		list.add(changeAmounts(OreDictionary.getOres(secondary[secondaryIndex > 3 ? 3 : primaryIndex]), secondaryIndex + 1 * 2));
-		list.add(changeAmounts(OreDictionary.getOres(binderName), binderAmount));
-		
+
+		primaryStack = primary[primaryTier];
+
+		list.add(changeStackSize(primaryStack, (int) (((sizeX * sizeY) / 4.5f) / (primaryTier + 1) * primaryModifier)));
+
+		/* SECONDARY */
+
+		amount = secondary.length;
+		divider = maxChest / amount;
+
+		int secondaryTier = 0;
+		ItemStack secondaryStack = null;
+
+		for(int i = 0; i < amount; i++)
+		{
+			if(thisChest <= divider * (i + 1))
+			{
+				secondaryTier = i;
+				break;
+			}
+		}
+
+		secondaryStack = secondary[secondaryTier];
+
+		list.add(changeStackSize(secondaryStack, (int) (((sizeX * sizeY) / 4.5f) / (secondaryTier + 1) * secondaryModifier)));
+
+		/* BINDER */
+
+		int binderAmount = (int) (((sizeX * sizeY) / 8F) * binderModifier);
+		list.add(changeStackSize(type.equals(Type.BACKPACK) ? binderBackpack : binder, binderAmount / 2));
+
 		return list;
 	}
-	
-	public List<ItemStack> changeAmounts(List<ItemStack> list, int amount)
+
+	public ItemStack changeStackSize(ItemStack stack, int amount)
 	{
-		List<ItemStack> newList = new ArrayList<ItemStack>();
-		
-		for(ItemStack stack : list)
-		{
-			stack.stackSize = amount;
-			newList.add(stack);
-		}
-		
-		return newList;
+		if(amount <= 0) amount = 1;
+
+		stack.stackSize = amount;
+
+		return stack;
 	}
-	
+
 	public static NBTTagCompound writeToNBT(StorageInfo info)
 	{
 		if(info != null)

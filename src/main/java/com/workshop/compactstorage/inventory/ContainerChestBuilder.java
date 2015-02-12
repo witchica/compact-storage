@@ -1,19 +1,17 @@
 package com.workshop.compactstorage.inventory;
 
+import com.workshop.compactstorage.inventory.slot.SlotChestBuilder;
+import com.workshop.compactstorage.tileentity.TileEntityChestBuilder;
+import com.workshop.compactstorage.util.BlockPos;
+import com.workshop.compactstorage.util.StorageInfo;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-
-import com.workshop.compactstorage.inventory.slot.SlotChestBuilder;
-import com.workshop.compactstorage.tileentity.TileEntityChestBuilder;
-import com.workshop.compactstorage.util.BlockPos;
-import com.workshop.compactstorage.util.StorageInfo;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Created by Toby on 11/11/2014.
@@ -88,51 +86,45 @@ public class ContainerChestBuilder extends Container
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
     {
-    	Slot slot = (Slot) inventorySlots.get(slotIndex);
-    	
-    	try
-    	{
-    		if (slot != null && slot.getHasStack())
-    		{
-    			ItemStack itemStack = slot.getStack().copy();
-    			
-    			if (slotIndex < 36)
-    			{
-    				if (!this.mergeItemStack(itemStack, 36, xSize * ySize + 36, false))
-    				{
-    					return null;
-    				}
-    			}
-    			else if (!this.mergeItemStack(itemStack, 0, 36, false))
-    			{
-    				return null;
-    			}
-    			
-    			if (itemStack.stackSize == 0)
-    			{
-    				slot.putStack(null);
-    			}
-    			else
-    			{
-    				slot.onSlotChanged();
-    			}
-    		}
-    		
-    		slot.onSlotChanged();
-    		
-    		return null;
-    	}
-    	catch(Exception e)
-    	{
-    		slot.onSlotChanged();
-    	}
-    	
-    	//chest.markDirty();
-    	player.inventory.inventoryChanged = true;
-    	
-    	return null;
+        try
+        {
+            Slot slot = (Slot) inventorySlots.get(slotIndex);
+
+            if (slot != null && slot.getHasStack())
+            {
+                ItemStack itemStack = slot.getStack().copy();
+
+                if (slotIndex < 4)
+                {
+                    if (!this.mergeItemStack(itemStack, 4, 4 + 36, false))
+                    {
+                        return null;
+                    }
+                }
+                else if (!this.mergeItemStack(itemStack, 0, 4, false))
+                {
+                    return null;
+                }
+
+                if (itemStack.stackSize == 0)
+                {
+                    slot.putStack(null);
+                }
+                else
+                {
+                    slot.onSlotChanged();
+                }
+            }
+
+            return null;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
-    
+
     @Override
     public void addCraftingToCrafters(ICrafting crafter) 
     {
@@ -165,5 +157,98 @@ public class ContainerChestBuilder extends Container
         	case 0: chest.info.setSizeX(value); break;
         	case 1: chest.info.setSizeY(value); break;
         }
+    }
+
+    /**
+     * merges provided ItemStack with the first avaliable one in the container/player inventory
+     */
+    protected boolean mergeItemStack(ItemStack p_75135_1_, int p_75135_2_, int p_75135_3_, boolean p_75135_4_)
+    {
+        boolean flag1 = false;
+        int k = p_75135_2_;
+
+        if (p_75135_4_)
+        {
+            k = p_75135_3_ - 1;
+        }
+
+        Slot slot;
+        ItemStack itemstack1;
+
+        if (p_75135_1_.isStackable())
+        {
+            while (p_75135_1_.stackSize > 0 && (!p_75135_4_ && k < p_75135_3_ || p_75135_4_ && k >= p_75135_2_))
+            {
+                slot = (Slot)this.inventorySlots.get(k);
+                itemstack1 = slot.getStack();
+
+                if (itemstack1 != null && itemstack1.getItem() == p_75135_1_.getItem() && (!p_75135_1_.getHasSubtypes() || p_75135_1_.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(p_75135_1_, itemstack1) && slot.isItemValid(p_75135_1_))
+                {
+                    int l = itemstack1.stackSize + p_75135_1_.stackSize;
+
+                    if (l <= p_75135_1_.getMaxStackSize())
+                    {
+                        p_75135_1_.stackSize = 0;
+                        itemstack1.stackSize = l;
+                        slot.onSlotChanged();
+                        flag1 = true;
+                    }
+                    else if (itemstack1.stackSize < p_75135_1_.getMaxStackSize())
+                    {
+                        p_75135_1_.stackSize -= p_75135_1_.getMaxStackSize() - itemstack1.stackSize;
+                        itemstack1.stackSize = p_75135_1_.getMaxStackSize();
+                        slot.onSlotChanged();
+                        flag1 = true;
+                    }
+                }
+
+                if (p_75135_4_)
+                {
+                    --k;
+                }
+                else
+                {
+                    ++k;
+                }
+            }
+        }
+
+        if (p_75135_1_.stackSize > 0)
+        {
+            if (p_75135_4_)
+            {
+                k = p_75135_3_ - 1;
+            }
+            else
+            {
+                k = p_75135_2_;
+            }
+
+            while (!p_75135_4_ && k < p_75135_3_ || p_75135_4_ && k >= p_75135_2_)
+            {
+                slot = (Slot)this.inventorySlots.get(k);
+                itemstack1 = slot.getStack();
+
+                if (itemstack1 == null && slot.isItemValid(p_75135_1_))
+                {
+                    slot.putStack(p_75135_1_.copy());
+                    slot.onSlotChanged();
+                    p_75135_1_.stackSize = 0;
+                    flag1 = true;
+                    break;
+                }
+
+                if (p_75135_4_)
+                {
+                    --k;
+                }
+                else
+                {
+                    ++k;
+                }
+            }
+        }
+
+        return flag1;
     }
 }

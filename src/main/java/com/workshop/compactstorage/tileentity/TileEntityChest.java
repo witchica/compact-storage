@@ -1,5 +1,7 @@
 package com.workshop.compactstorage.tileentity;
 
+import com.workshop.compactstorage.api.IChest;
+import com.workshop.compactstorage.util.StorageInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -11,12 +13,11 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.common.Loader;
 
 /**
  * Created by Toby on 06/11/2014.
  */
-public class TileEntityChest extends TileEntity implements IInventory
+public class TileEntityChest extends TileEntity implements IInventory, IChest
 {
     public ForgeDirection direction;
 
@@ -89,11 +90,11 @@ public class TileEntityChest extends TileEntity implements IInventory
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) 
     {
-    	if(items != null)
-    	{
-    		items[slot] = stack;
-    		markDirty();
-    	}
+    	if(items != null && slot < items.length)
+        {
+            items[slot] = stack;
+            markDirty();
+        }
     }
 
     @Override
@@ -131,7 +132,14 @@ public class TileEntityChest extends TileEntity implements IInventory
     {
         return true;
     }
-    
+
+    @Override
+    public void markDirty()
+    {
+        super.markDirty();
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+
     /* CUSTOM START */
     
     @Override
@@ -223,6 +231,30 @@ public class TileEntityChest extends TileEntity implements IInventory
 
     public void updateBlock()
     {
-        //worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    }
+
+    @Override
+    public int getInvX()
+    {
+        return invX;
+    }
+
+    @Override
+    public int getInvY()
+    {
+        return invY;
+    }
+
+    @Override
+    public StorageInfo getInfo()
+    {
+        return new StorageInfo(invX, invY);
+    }
+
+    @Override
+    public int getColor()
+    {
+        return color;
     }
 }

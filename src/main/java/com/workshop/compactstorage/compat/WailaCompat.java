@@ -1,7 +1,8 @@
 package com.workshop.compactstorage.compat;
 
-import java.util.List;
-
+import com.workshop.compactstorage.block.BlockChest;
+import com.workshop.compactstorage.tileentity.TileEntityChest;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaRegistrar;
@@ -13,10 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
-import com.workshop.compactstorage.block.BlockChest;
-import com.workshop.compactstorage.tileentity.TileEntityChest;
-
-import cpw.mods.fml.common.event.FMLInterModComms;
+import java.util.List;
 
 public class WailaCompat implements ICompat
 {

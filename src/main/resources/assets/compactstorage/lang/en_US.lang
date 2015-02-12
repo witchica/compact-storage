@@ -1,2 +1,4 @@
-block.compactChest.name=[WIP] Configurable Chest
+tile.compactchest.name=Compact Chest
+tile.chestbuilder.name=Builder
+item.backpack.name=Backpack
 itemGroup.compactStorage=CompactStorage

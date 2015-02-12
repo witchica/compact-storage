@@ -23,52 +23,19 @@ task sourceJar(dependsOn: 'classes', type: Jar) {
     manifest commonManifest
 }
 
-task jsonFile(dependsOn: 'classes') {
-	def map = [version: "${project.modversion}", minecraft: "${project.version_minecraft}", release: "${project.extra_curseforge_releasetype}"]
-	String jsonString = new JsonBuilder(map).toPrettyString()
-	
-	File jsonFile = new File('build/libs/build.json')
-	jsonFile.delete()
-	jsonFile.getParentFile().mkdirs()
-	jsonFile.createNewFile()
+task propFile(dependsOn: 'classes') {
+    String string = "version.dependency=MC " + version_minecraft + "\nversion.dependency=Forge " + version_forge + "\nversion.name=" + modversion
+    File file = new File('build/libs/build.properties')
+    file.delete()
+    file.getParentFile().mkdirs()
+    file.createNewFile()
 
-	jsonFile << jsonString
-	
-	return jsonFile
+    file << string
+    return file
 }
 
 artifacts {
     archives devJar
     archives sourceJar
-	jsonFile
-}
-
-apply plugin: 'maven-publish'
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-			from components.java
-			classifier = "universal"
-			
-			artifact sourceJar {
-				
-			}
-			
-			artifact devJar {
-				
-			}
-        }
-    }
-}
-publishing {
-    repositories {
-        maven {
-			if(System.getenv().containsKey("BUILD_NUMBER")) {
-				url "/var/lib/jenkins/maven/maven"
-			} else {
-				url "$buildDir/tempMaven"
-			}
-        }
-    }
+    propFile
 }

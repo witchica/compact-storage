@@ -4,7 +4,6 @@ import com.workshop.compactstorage.client.render.ChestItemRenderer;
 import com.workshop.compactstorage.client.render.TileEntityChestRenderer;
 import com.workshop.compactstorage.essential.init.StorageBlocks;
 import com.workshop.compactstorage.tileentity.TileEntityChest;
-
 import cpw.mods.fml.client.registry.ClientRegistry;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.MinecraftForgeClient;

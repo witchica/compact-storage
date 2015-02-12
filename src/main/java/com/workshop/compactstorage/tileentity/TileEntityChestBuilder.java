@@ -1,7 +1,7 @@
 package com.workshop.compactstorage.tileentity;
 
-import java.util.List;
-
+import com.workshop.compactstorage.util.StorageInfo;
+import cpw.mods.fml.common.Loader;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -12,10 +12,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
-
-import com.workshop.compactstorage.util.StorageInfo;
-
-import cpw.mods.fml.common.Loader;
 
 public class TileEntityChestBuilder extends TileEntity implements IInventory
 {
@@ -206,15 +202,7 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory
 	{
 		if(info != null)
 		{
-			List<ItemStack> stack2 = info.getMaterialCost(type).get(slot);
-			
-			for(ItemStack stack3 : stack2)
-			{
-				if(stack3.getItem().equals(stack.getItem()))
-				{
-					return true;
-				}
-			}
+			return stack.getItem().equals(info.getMaterialCost(type).get(slot).getItem());
 		}
 		
 		return false;
