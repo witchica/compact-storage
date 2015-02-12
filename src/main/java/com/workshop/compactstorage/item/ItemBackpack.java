@@ -40,10 +40,10 @@ public class ItemBackpack extends Item
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int i, float xx, float yy, float zz)
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
-        player.openGui(CompactStorage.instance, 0, world, x, y, z);
-        return true;
+        player.openGui(CompactStorage.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+        return stack;
     }
 
     @Override
