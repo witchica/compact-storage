@@ -158,9 +158,6 @@ public class CompactStorage
 
         proxy.registerRenderers();
         legacy_instance.postInitialization(event);
-        
-        MinecraftForge.EVENT_BUS.register(new FirstTimeRunHandler());
-        FMLCommonHandler.instance().bus().register(new FirstTimeRunHandler());
 
         GameRegistry.addRecipe(new ItemStack(StorageBlocks.chestBuilder, 1), "ILI", "ICI", "ILI", 'I', new ItemStack(Items.iron_ingot, 1), 'C', new ItemStack(Blocks.chest, 1), 'L', new ItemStack(Blocks.lever, 1));
 
