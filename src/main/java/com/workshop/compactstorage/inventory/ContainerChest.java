@@ -1,5 +1,6 @@
 package com.workshop.compactstorage.inventory;
 
+import com.workshop.compactchests.itementity.ItemEntityChest;
 import com.workshop.compactstorage.api.IChest;
 import com.workshop.compactstorage.util.BlockPos;
 import invtweaks.api.container.ChestContainer;
@@ -153,5 +154,19 @@ public class ContainerChest extends Container
     {
         chest.closeInventory();
         super.onContainerClosed(player);
+    }
+
+    @Override
+    public ItemStack slotClick(int slot, int button, int flag, EntityPlayer player)
+    {
+        if(chest instanceof InventoryBackpack)
+        {
+            if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItem())
+            {
+                return null;
+            }
+        }
+
+        return super.slotClick(slot, button, flag, player);
     }
 }

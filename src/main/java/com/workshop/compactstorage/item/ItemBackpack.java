@@ -19,6 +19,7 @@ public class ItemBackpack extends Item
         setTextureName("compactstorage:backpack");
         setUnlocalizedName("backpack");
         setCreativeTab(CompactStorage.tabCS);
+        setMaxStackSize(1);
     }
 
     @Override

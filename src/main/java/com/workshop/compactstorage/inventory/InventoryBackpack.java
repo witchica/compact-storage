@@ -142,7 +142,7 @@ public class InventoryBackpack implements IChest
     @Override
     public void markDirty()
     {
-
+        writeToNBT(stack.getTagCompound());
     }
 
     @Override
