@@ -44,6 +44,12 @@ public class ItemBackpack extends Item
     public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
     {
         player.openGui(CompactStorage.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+
+        if(!world.isRemote)
+        {
+            world.playSoundEffect(player.posX, player.posY, player.posZ, "random.chestopen", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+        }
+
         return stack;
     }
 

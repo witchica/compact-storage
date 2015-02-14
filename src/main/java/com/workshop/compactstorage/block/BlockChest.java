@@ -70,7 +70,7 @@ public class BlockChest extends Block implements ITileEntityProvider
 
         chest.direction = EntityUtil.get2dOrientation(entity);
         
-        if(stack.hasTagCompound())
+        if(stack.hasTagCompound() && stack.getTagCompound().hasKey("size"))
         {
         	if(stack.getTagCompound().getTag("size") instanceof NBTTagIntArray)
         	{
@@ -97,6 +97,7 @@ public class BlockChest extends Block implements ITileEntityProvider
                     chest.invX = 9;
                     chest.invY = 3;
                     chest.items = new ItemStack[chest.invX * chest.invY];
+                    chest.color = 0xFFFFFF;
 
         			InvalidSizeException exception = new InvalidSizeException("You tried to pass off a " + stack.getTagCompound().getTag("size").getClass().getName() + " as a Integer Array. Do not report this or you will be ignored. This is a user based error.");
         			exception.printStackTrace();
@@ -105,40 +106,40 @@ public class BlockChest extends Block implements ITileEntityProvider
         }
         else
         {
-        	((TileEntityChest) world.getTileEntity(x, y, z)).invX = 0;
-            ((TileEntityChest) world.getTileEntity(x, y, z)).invY = 0;
+            if(entity instanceof EntityPlayer)
+            {
+                ((EntityPlayer) entity).addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "You attempted something bad! :("));
+
+                chest.invX = 9;
+                chest.invY = 3;
+                chest.items = new ItemStack[chest.invX * chest.invY];
+                chest.color = 0xFFFFFF;
+            }
         }
     }
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int i, float j, float k, float l)
     {
-        if(CompactStorage.deobf)
+        if(!player.isSneaking())
         {
-        	if(!player.isSneaking())
+            if(player.getHeldItem() != null)
             {
-        		if(player.getHeldItem() != null)
-        		{
-        			String name = player.getHeldItem().getUnlocalizedName();
-        			
-        			if(name.startsWith("item.dolly.normal.empty") || name.startsWith("item.dolly.diamond.empty"))
-        			{
-        				return true;
-        			}
-        		}
-        		
-                player.openGui(CompactStorage.instance, 0, world, x, y, z);
-                return true;
+                String name = player.getHeldItem().getUnlocalizedName();
+
+                if(name.startsWith("item.dolly.normal.empty") || name.startsWith("item.dolly.diamond.empty"))
+                {
+                    return true;
+                }
             }
-            else
+
+            if(!world.isRemote)
             {
-            	((TileEntityChest) world.getTileEntity(x, y, z)).color = world.rand.nextInt(0xFFFFFF);
+                world.playSoundEffect(x, y, z, "random.chestopen", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
             }
-        }
-        else
-        {
-        	player.addChatMessage(new ChatComponentText("Nope! WIP!"));
-        	((TileEntityChest) world.getTileEntity(x, y, z)).color = 0xFF0000;
+
+            player.openGui(CompactStorage.instance, 0, world, x, y, z);
+            return true;
         }
 
         return false;

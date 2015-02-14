@@ -153,6 +153,12 @@ public class ContainerChest extends Container
     public void onContainerClosed(EntityPlayer player)
     {
         chest.closeInventory();
+
+        if(!world.isRemote)
+        {
+            world.playSoundEffect(pos.getX(), pos.getY(), pos.getZ(), "random.chestclosed", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+        }
+
         super.onContainerClosed(player);
     }
 

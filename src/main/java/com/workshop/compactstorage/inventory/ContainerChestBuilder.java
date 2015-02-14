@@ -126,13 +126,13 @@ public class ContainerChestBuilder extends Container
     }
 
     @Override
-    public void addCraftingToCrafters(ICrafting crafter) 
+    public void addCraftingToCrafters(ICrafting crafter)
     {
     	super.addCraftingToCrafters(crafter);
     	crafter.sendProgressBarUpdate(this, 0, 9);
     	crafter.sendProgressBarUpdate(this, 1, 3);
     }
-    
+
     @Override
     public void detectAndSendChanges()
     {
@@ -151,7 +151,7 @@ public class ContainerChestBuilder extends Container
     public void updateProgressBar(int id, int value)
     {
     	if(chest.info == null) chest.info = new StorageInfo(9, 3);
-    	
+
         switch(id)
         {
         	case 0: chest.info.setSizeX(value); break;
@@ -162,7 +162,7 @@ public class ContainerChestBuilder extends Container
     /**
      * merges provided ItemStack with the first avaliable one in the container/player inventory
      */
-    protected boolean mergeItemStack(ItemStack p_75135_1_, int p_75135_2_, int p_75135_3_, boolean p_75135_4_)
+    protected boolean mergeItemStack2(ItemStack p_75135_1_, int p_75135_2_, int p_75135_3_, boolean p_75135_4_)
     {
         boolean flag1 = false;
         int k = p_75135_2_;
