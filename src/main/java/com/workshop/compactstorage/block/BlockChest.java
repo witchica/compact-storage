@@ -136,9 +136,9 @@ public class BlockChest extends Block implements ITileEntityProvider
             if(!world.isRemote)
             {
                 world.playSoundEffect(x, y, z, "random.chestopen", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+                player.openGui(CompactStorage.instance, 0, world, x, y, z);
             }
 
-            player.openGui(CompactStorage.instance, 0, world, x, y, z);
             return true;
         }
 

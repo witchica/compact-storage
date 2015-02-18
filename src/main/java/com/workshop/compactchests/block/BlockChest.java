@@ -74,38 +74,25 @@ public abstract class BlockChest extends Block implements ITileEntityProvider {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int i, float j, float k, float l)
     {
-    	if(CompactStorage.deobf)
+        if(!world.isRemote)
         {
-            if(!world.isRemote)
-            {
-                int direction = world.getBlockMetadata(x, y, z);
-                NBTTagCompound old = new NBTTagCompound();
-                world.getTileEntity(x, y, z).writeToNBT(old);
+            int direction = world.getBlockMetadata(x, y, z);
+            NBTTagCompound old = new NBTTagCompound();
+            world.getTileEntity(x, y, z).writeToNBT(old);
 
-                player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Converted from old system. Good to go!"));
+            player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Converted from old system. Good to go!"));
 
-                world.setBlock(x, y, z, StorageBlocks.chest);
-                world.getTileEntity(x, y, z).readFromNBT(old);
+            world.setBlock(x, y, z, StorageBlocks.chest);
+            world.getTileEntity(x, y, z).readFromNBT(old);
 
-                TileEntityChest chest = (TileEntityChest) world.getTileEntity(x, y, z);
-                chest.invX = size[guiID][0];
-                chest.invY = size[guiID][1];
-                chest.direction = ForgeDirection.values()[direction].getOpposite();
-                chest.color = colors[guiID];
-            }
+            TileEntityChest chest = (TileEntityChest) world.getTileEntity(x, y, z);
+            chest.invX = size[guiID][0];
+            chest.invY = size[guiID][1];
+            chest.direction = ForgeDirection.values()[direction].getOpposite();
+            chest.color = colors[guiID];
+        }
 
-            return false;
-    	}
-    	else
-    	{
-    		if(!player.isSneaking())
-            {
-                player.openGui(CompactStorage.instance, guiID, world, x, y, z);
-                return true;
-            }
-
-            return false;
-    	}
+        return false;
     }
 
     /**
