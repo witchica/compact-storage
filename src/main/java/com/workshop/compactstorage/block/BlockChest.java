@@ -35,6 +35,10 @@ public class BlockChest extends Block implements ITileEntityProvider
         setBlockName("compactchest");
         setBlockTextureName("planks_oak");
         setCreativeTab(CompactStorage.tabCS);
+
+        setHardness(2F);
+        setResistance(2F);
+        setHarvestLevel("axe", 1);
     }
 
     @Override

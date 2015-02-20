@@ -26,8 +26,11 @@ public class BlockChestBuilder extends Block implements ITileEntityProvider
 	{
 		super(Material.iron);
         setBlockName("chestbuilder");
-        setBlockTextureName("planks_oak");
         setCreativeTab(CompactStorage.tabCS);
+
+		setHardness(2F);
+		setResistance(2F);
+		setHarvestLevel("pickaxe", 1);
 	}
 	
 	@Override
