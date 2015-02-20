@@ -23,7 +23,6 @@ import com.workshop.compactstorage.compat.JabbaCompat;
 import com.workshop.compactstorage.compat.WailaCompat;
 import com.workshop.compactstorage.creativetabs.CreativeTabCompactStorage;
 import com.workshop.compactstorage.essential.handler.ConfigurationHandler;
-import com.workshop.compactstorage.essential.handler.FirstTimeRunHandler;
 import com.workshop.compactstorage.essential.handler.GuiHandler;
 import com.workshop.compactstorage.essential.init.StorageBlocks;
 import com.workshop.compactstorage.essential.init.StorageInfo;
@@ -160,8 +159,6 @@ public class CompactStorage
         legacy_instance.postInitialization(event);
 
         GameRegistry.addRecipe(new ItemStack(StorageBlocks.chestBuilder, 1), "ILI", "ICI", "ILI", 'I', new ItemStack(Items.iron_ingot, 1), 'C', new ItemStack(Blocks.chest, 1), 'L', new ItemStack(Blocks.lever, 1));
-
-        FMLCommonHandler.instance().bus().register(new FirstTimeRunHandler());
 
         ConfigurationHandler.init();
     }
