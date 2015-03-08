@@ -71,7 +71,17 @@ public class ConfigurationHandler
 
         String modId = itemName.contains(":") ? itemName.split(":", 2)[0] : "minecraft";
         String itemId = itemName.contains(":") ? itemName.split(":", 2)[1] : itemName;
-        int meta = (itemName.contains("@") ? Integer.parseInt(itemName.split("@")[1]) : OreDictionary.WILDCARD_VALUE);
+        int meta;
+
+        if(itemName.contains("@"))
+        {
+            meta = Integer.parseInt(itemId.split("@")[1]);
+            itemId = itemId.split("@")[0];
+        }
+        else
+        {
+            meta = OreDictionary.WILDCARD_VALUE;
+        }
 
         Item item = GameRegistry.findItem(modId, itemId);
 
@@ -82,8 +92,16 @@ public class ConfigurationHandler
 
             modId = defaultString.contains(":") ? defaultString.split(":", 2)[0] : "minecraft";
             itemId = defaultString.contains(":") ? defaultString.split(":", 2)[1] : defaultString;
-            meta = (defaultString.contains("@") ? Integer.parseInt(defaultString.split("@")[1]) : OreDictionary.WILDCARD_VALUE);
 
+            if(itemName.contains("@"))
+            {
+                meta = Integer.parseInt(itemId.split("@")[1]);
+                itemId = itemId.split("@")[0];
+            }
+            else
+            {
+                meta = OreDictionary.WILDCARD_VALUE;
+            }
             item = GameRegistry.findItem(modId, itemId);
 
             return new ItemStack(item, 1, meta);
@@ -103,7 +121,17 @@ public class ConfigurationHandler
         {
             String modId = itemName.contains(":") ? itemName.split(":", 2)[0] : "minecraft";
             String itemId = itemName.contains(":") ? itemName.split(":", 2)[1] : itemName;
-            int meta = (itemName.contains("@") ? Integer.parseInt(itemName.split("@")[1]) : OreDictionary.WILDCARD_VALUE);
+            int meta;
+
+            if(itemName.contains("@"))
+            {
+                meta = Integer.parseInt(itemId.split("@")[1]);
+                itemId = itemId.split("@")[0];
+            }
+            else
+            {
+                meta = OreDictionary.WILDCARD_VALUE;
+            }
 
             Item item = GameRegistry.findItem(modId, itemId);
 
@@ -125,8 +153,17 @@ public class ConfigurationHandler
             {
                 String modId = itemName.contains(":") ? itemName.split(":", 2)[0] : "minecraft";
                 String itemId = itemName.contains(":") ? itemName.split(":", 2)[1] : itemName;
-                int meta = (itemName.contains("@") ? Integer.parseInt(itemName.split("@")[1]) : OreDictionary.WILDCARD_VALUE);
+                int meta;
 
+                if(itemName.contains("@"))
+                {
+                    meta = Integer.parseInt(itemId.split("@")[1]);
+                    itemId = itemId.split("@")[0];
+                }
+                else
+                {
+                    meta = OreDictionary.WILDCARD_VALUE;
+                }
                 Item item = GameRegistry.findItem(modId, itemId);
                 items.add(new ItemStack(item, 1, meta));
             }
