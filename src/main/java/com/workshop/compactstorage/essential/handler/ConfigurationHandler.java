@@ -35,6 +35,8 @@ public class ConfigurationHandler
     public static float secondaryModifier;
     public static float binderModifier;
 
+    public static boolean shouldConnect;
+
     public static void init()
     {
         configuration = new Configuration(configFile);
@@ -63,6 +65,8 @@ public class ConfigurationHandler
         {
             configuration.save();
         }
+
+        shouldConnect = configuration.getBoolean("shouldConnectToNetworks", "chest", true, "This determines whether chests will connect to ES networks.");
     }
 
     public static ItemStack getItemFromConfig(Configuration config, String name, String category, String defaultString, String comment)

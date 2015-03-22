@@ -1,6 +1,7 @@
 package com.workshop.compactstorage.tileentity;
 
 import com.workshop.compactstorage.api.IChest;
+import com.workshop.compactstorage.essential.handler.ConfigurationHandler;
 import com.workshop.compactstorage.util.StorageInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -256,5 +257,11 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     public int getColor()
     {
         return color;
+    }
+
+    @Override
+    public boolean shouldConnectToNetwork()
+    {
+        return ConfigurationHandler.shouldConnect;
     }
 }
