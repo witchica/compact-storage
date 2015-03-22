@@ -202,4 +202,10 @@ public class InventoryBackpack implements IChest
 
         tag.setTag("Items", nbtTagList);
     }
+
+    @Override
+    public boolean shouldConnectToNetwork()
+    {
+        return false;
+    }
 }
