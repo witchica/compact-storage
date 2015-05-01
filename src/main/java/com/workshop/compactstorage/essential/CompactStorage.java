@@ -3,6 +3,7 @@ package com.workshop.compactstorage.essential;
 import java.util.List;
 
 import com.workshop.compactstorage.command.CommandCompactStorage;
+import com.workshop.compactstorage.compat.RefinedRelocationCompat;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
@@ -77,6 +78,7 @@ public class CompactStorage
     	
     	if(Loader.isModLoaded("JABBA")) compat.add(new JabbaCompat());
     	if(Loader.isModLoaded("Waila")) compat.add(new WailaCompat());
+        if(Loader.isModLoaded("RefinedRelocation")) compat.add(new RefinedRelocationCompat());
     	
         try
         {

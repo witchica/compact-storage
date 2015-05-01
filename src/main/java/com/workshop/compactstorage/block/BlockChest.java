@@ -1,10 +1,12 @@
 package com.workshop.compactstorage.block;
 
+import com.workshop.compactstorage.compat.RefinedRelocationCompat;
 import com.workshop.compactstorage.essential.CompactStorage;
 import com.workshop.compactstorage.essential.init.StorageBlocks;
 import com.workshop.compactstorage.exception.InvalidSizeException;
 import com.workshop.compactstorage.tileentity.TileEntityChest;
 import com.workshop.compactstorage.util.EntityUtil;
+import cpw.mods.fml.common.Loader;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -134,6 +136,11 @@ public class BlockChest extends Block implements ITileEntityProvider
                 if(name.startsWith("item.dolly.normal.empty") || name.startsWith("item.dolly.diamond.empty"))
                 {
                     return true;
+                }
+                if (Loader.isModLoaded("RefinedRelocation"))
+                {
+                    if (RefinedRelocationCompat.tryToUpgrade(player.getHeldItem(), world, x, y, z))
+                        return true;
                 }
             }
 
