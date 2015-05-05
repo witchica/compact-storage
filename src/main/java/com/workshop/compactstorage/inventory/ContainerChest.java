@@ -105,21 +105,22 @@ public class ContainerChest extends Container
     		
     		if (slot != null && slot.getHasStack())
     		{
-    			ItemStack itemStack = slot.getStack().copy();
+    		    ItemStack itemStack1 = slot.getStack();
+    			ItemStack itemStack = itemStack1.copy();
     			
     			if (slotIndex < lastId)
     			{
-    				if (!this.mergeItemStack(itemStack, lastId, lastId + 36, false))
+    				if (!this.mergeItemStack(itemStack1, lastId, lastId + 36, false))
     				{
     					return null;
     				}
     			}
-    			else if (!this.mergeItemStack(itemStack, 0, lastId, false))
+    			else if (!this.mergeItemStack(itemStack1, 0, lastId, false))
     			{
     				return null;
     			}
     			
-    			if (itemStack.stackSize == 0)
+    			if (itemStack1.stackSize == 0)
     			{
     				slot.putStack(null);
     			}
@@ -127,6 +128,7 @@ public class ContainerChest extends Container
     			{
     				slot.onSlotChanged();
     			}
+    			return itemStack;
     		}
     		
     		return null;
