@@ -40,7 +40,6 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 				if(OreDictionary.itemMatches(requiredItems.get(slot), stack, false) && stack.stackSize >=  requiredItems.get(slot).stackSize)
 				{
 					hasRequiredMaterials = true;
-					break;
 				}
 				else
 				{
