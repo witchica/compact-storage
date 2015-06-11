@@ -36,9 +36,12 @@ public class BlockChestBuilder extends Block implements ITileEntityProvider
 	@Override
 	public boolean onBlockActivated(World world, int x,int y, int z, EntityPlayer player,int u, float i, float a, float p)
 	{
-		if(!player.isSneaking() && !world.isRemote)
+		if(!player.isSneaking())
 		{
-			player.openGui(CompactStorage.instance, 1, world, x, y, z);
+			if(!world.isRemote) {
+				player.openGui(CompactStorage.instance, 1, world, x, y, z);
+			}
+
 			return true;
 		}
 		return false;
