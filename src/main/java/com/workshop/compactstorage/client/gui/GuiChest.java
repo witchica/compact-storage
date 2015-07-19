@@ -136,6 +136,7 @@ public class GuiChest extends GuiContainer
     public void drawGuiContainerBackgroundLayer(float i, int j, int k)
     {    	
         Minecraft.getMinecraft().renderEngine.bindTexture(realTexture);
+        GL11.glColor3f(1, 1, 1);
         GL11.glCallList(list);
     }
 
