@@ -1,1 +1,0 @@
-This folder is here for the legacy support so people don't lose their items. This will be removed after 2.0.
