@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
@@ -27,6 +28,7 @@ import com.tattyseal.compactstorage.network.packet.C01PacketUpdateBuilder;
 import com.tattyseal.compactstorage.network.packet.C02PacketCraftChest;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
 import com.tattyseal.compactstorage.util.BlockPos;
+import com.tattyseal.compactstorage.util.RenderUtil;
 import com.tattyseal.compactstorage.util.StorageInfo;
 
 /**
@@ -37,8 +39,6 @@ public class GuiChestBuilder extends GuiContainer
     public World world;
     public EntityPlayer player;
     public BlockPos pos;
-    
-    public int list;
     
     public GuiButton buttonAddX;
     public GuiButton buttonMinusX;
@@ -75,8 +75,6 @@ public class GuiChestBuilder extends GuiContainer
         Keyboard.KEY_LEFT,
         Keyboard.KEY_RIGHT
     };
-
-    public static final ResourceLocation realTexture = new ResourceLocation("compactstorage", "textures/gui/chest.png");
     
     public GuiChestBuilder(Container container, World world, EntityPlayer player, BlockPos pos)
     {
@@ -96,78 +94,7 @@ public class GuiChestBuilder extends GuiContainer
     public void initGui()
     {
         super.initGui();
-        
-        list = GL11.glGenLists(1);
-        
-        GL11.glNewList(list, GL11.GL_COMPILE);
-        {
-        	drawTexturedModalRect(guiLeft, guiTop, 0, 0, 7, 7);
-
-            for(int xx = 0; xx < 162; xx++)
-            {
-                drawTexturedModalRect(guiLeft + 7 + xx, guiTop, 8, 0, 1, 7);
-            }
-
-            drawTexturedModalRect(guiLeft + 7 + 162, guiTop, 10, 0, 7, 7);
-
-            for(int yy = 0; yy < ySize - 14; yy++)
-            {
-                drawTexturedModalRect(guiLeft, guiTop + 7 + yy, 0, 8, 7, 1);
-            }
-
-            drawTexturedModalRect(guiLeft, guiTop + 7 + ySize - 14, 0, 10, 7, 7);
-
-            for(int xx = 0; xx < xSize - 14; xx++)
-            {
-                drawTexturedModalRect(guiLeft + 7 + xx, guiTop + 7 + (ySize - 14), 8, 10, 1, 7);
-            }
-
-            drawTexturedModalRect(guiLeft + xSize - 7, guiTop + 7 + (ySize - 14), 10, 10, 7, 7);
-
-            for(int yy = 0; yy < ySize - 14; yy++)
-            {
-                drawTexturedModalRect(guiLeft + xSize - 7, guiTop + 7 + yy, 10, 8, 7, 1);
-            }
-
-            for(int xx = 0; xx < xSize - 14; xx++)
-            {
-                for(int yy = 0; yy < ySize - 14; yy++)
-                {
-                    drawTexturedModalRect(guiLeft + 7 + xx, guiTop + 7 + yy, 8, 8, 1, 1);
-                }
-            }
-
-            int slotX = (xSize / 2) - (162 / 2);
-            int slotY = 7; //(ySize / 2) - ((invY * 18) / 2);
-
-            /*for(int x = 0; x < 162; x++)
-            {
-                for(int y = 0; y < 54; y++)
-                {
-                    drawTexturedModalRect(guiLeft + slotX + (x * 18), guiTop + slotY + (y * 18), 18, 0, 18, 18);
-                }
-            }*/
-
-            slotX = (xSize / 2) - ((9 * 18) / 2);
-            slotY = slotY + 108 + 13;
-
-            for(int x = 0; x < 9; x++)
-            {
-                for(int y = 0; y < 3; y++)
-                {
-                    drawTexturedModalRect(guiLeft + slotX + (x * 18), guiTop + slotY + (y * 18), 18, 0, 18, 18);
-                }
-            }
-
-            slotY = slotY + (3 * 18) + 4;
-
-            for(int x = 0; x < 9; x++)
-            {
-                drawTexturedModalRect(guiLeft + slotX + (x * 18), guiTop + slotY, 18, 0, 18, 18);
-            }
-        }
-        GL11.glEndList();
-        
+                
         buttonAddX = new GuiButton(0, guiLeft + 7 + getFontRenderer().getStringWidth("XX Rows --"), guiTop + 62, 20, 20, "+");
         buttonList.add(buttonAddX);
         
@@ -206,7 +133,7 @@ public class GuiChestBuilder extends GuiContainer
     @Override
     protected void keyTyped(char key, int keyid)
     {
-        if(colorField.isFocused() && getAllowed().contains(keyid))
+        if(colorField.isFocused() && getAllowed().contains(keyid) && !GuiScreen.isShiftKeyDown())
         {
             colorField.textboxKeyTyped(key, keyid);
         }
@@ -357,16 +284,31 @@ public class GuiChestBuilder extends GuiContainer
         super.drawGuiContainerForegroundLayer(j, k);
         
         RenderHelper.disableStandardItemLighting();
-        GL11.glColor3f(1, 1, 1);    
+        GL11.glColor3f(1, 1, 1); 
         
-        int mouseX = j;
-        int mouseY = k;
+    	drawTexturedModalRect(guiLeft, guiTop, 0, 0, 7, 7);
+
+    	RenderUtil.renderBackground(this, guiLeft, guiTop, 162, 14 + 15 + 15 + 18 + 36);
+
+        int slotX = guiLeft + (xSize / 2) - ((9 * 18) / 2);
+        int slotY = guiTop + 7 + 108 + 13;
+
+        RenderUtil.renderSlots(slotX, slotY, 9, 3);
+
+        slotY = slotY + (3 * 18) + 4;
+
+        RenderUtil.renderSlots(slotX, slotY, 9, 1);
         
-        Minecraft.getMinecraft().renderEngine.bindTexture(realTexture);
-        GL11.glCallList(list);
+        slotY = guiTop + 17;
+        
+        RenderUtil.renderSlots(slotX, slotY, 4, 1);
+        
+        slotY = guiTop + 7 + (18 * 2);
+        
+        RenderUtil.renderSlots(slotX, slotY, 4, 1);
         
         fontRendererObj.drawString("Required Materials", guiLeft + 7, guiTop + 7, 0x404040);
-        Minecraft.getMinecraft().renderEngine.bindTexture(realTexture);
+
         GL11.glColor3f(1, 1, 1);
         
         StorageInfo info = builder.info;
@@ -375,19 +317,9 @@ public class GuiChestBuilder extends GuiContainer
         {
         	return;
         }
-
-        for(int x = 0; x < 4; x++)
-        {
-            Minecraft.getMinecraft().renderEngine.bindTexture(realTexture);
-            GL11.glColor3f(1, 1, 1);
-            
-            drawTexturedModalRect(guiLeft + 7 + (x * 18), guiTop + 7 + (18 * 2), 18, 0, 18, 18);
-        }
         
         for(int x = 0; x < info.getMaterialCost(builder.type).size(); x++)
         {
-            drawTexturedModalRect(guiLeft + 7 + (x * 18), guiTop + 17, 18, 0, 18, 18);
-            
             ItemStack stack = info.getMaterialCost(builder.type).get(x);
 
             if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) stack.setItemDamage(0);
@@ -395,7 +327,6 @@ public class GuiChestBuilder extends GuiContainer
             RenderHelper.enableGUIStandardItemLighting();
             itemRender.renderItemIntoGUI(fontRendererObj, mc.renderEngine, stack, guiLeft + 7 + x * 18 + 1, guiTop + 18);
             
-            Minecraft.getMinecraft().renderEngine.bindTexture(realTexture);
             RenderHelper.disableStandardItemLighting();
         }
 
@@ -409,8 +340,8 @@ public class GuiChestBuilder extends GuiContainer
 
         RenderHelper.disableStandardItemLighting();
 
-        getFontRenderer().drawString(info.getSizeX() + " Rows", guiLeft + 7, guiTop + 68, 0x404040);
-        getFontRenderer().drawString(info.getSizeY() + " Columns", guiLeft + 7, guiTop + 88, 0x404040);
+        getFontRenderer().drawString(info.getSizeX() + " Columns", guiLeft + 7, guiTop + 68, 0x404040);
+        getFontRenderer().drawString(info.getSizeY() + " Rows", guiLeft + 7, guiTop + 88, 0x404040);
 
         int color = 0xFFFFFF;
 

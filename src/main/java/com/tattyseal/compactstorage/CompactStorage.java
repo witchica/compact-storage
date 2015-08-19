@@ -72,8 +72,8 @@ public class CompactStorage
     public static final String NAME = "CompactStorage";
     public static final String VERSION = "v2.0.0a";
 
-    public static final String CLIENT_PROXY = "com.workshop.compactstorage.essential.proxy.ClientProxy";
-    public static final String SERVER_PROXY = "com.workshop.compactstorage.essential.proxy.ServerProxy";
+    public static final String CLIENT_PROXY = "com.tattyseal.compactstorage.proxy.ClientProxy";
+    public static final String SERVER_PROXY = "com.tattyseal.compactstorage.proxy.ServerProxy";
     
     public static Block chest;
     public static Block chestBuilder;
