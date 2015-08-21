@@ -163,8 +163,9 @@ public class CompactStorage
     {
     	for(int map = 0; map < event.getAll().size(); map++)
     	{
-    		if(event.getAll().get(map).name.startsWith("compactchests"))
+    		if(event.getAll().get(map).name.startsWith("compactstorage"))
     		{
+    			System.out.println("Ignoring missing block/item " + event.getAll().get(map).name);
     			event.getAll().get(map).ignore();
     		}
     	}
