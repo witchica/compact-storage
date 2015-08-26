@@ -3,3 +3,5 @@ tile.sortingcompactchest.name=Sorting Compact Chest
 tile.chestbuilder.name=Builder
 item.backpack.name=Backpack
 itemGroup.compactStorage=CompactStorage
+tab.chest=Inventory
+tab.settings=Settings

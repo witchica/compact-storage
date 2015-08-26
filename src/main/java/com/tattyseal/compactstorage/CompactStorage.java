@@ -7,7 +7,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import org.apache.logging.log4j.LogManager;
@@ -15,7 +14,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
 import com.tattyseal.compactstorage.block.BlockChest;
-import com.tattyseal.compactstorage.block.BlockChestBuilder;
 import com.tattyseal.compactstorage.command.CommandCompactStorage;
 import com.tattyseal.compactstorage.compat.ICompat;
 import com.tattyseal.compactstorage.compat.JabbaCompat;
@@ -24,13 +22,8 @@ import com.tattyseal.compactstorage.compat.WailaCompat;
 import com.tattyseal.compactstorage.creativetabs.CreativeTabCompactStorage;
 import com.tattyseal.compactstorage.item.ItemBackpack;
 import com.tattyseal.compactstorage.item.ItemBlockChest;
-import com.tattyseal.compactstorage.network.handler.C01HandlerUpdateBuilder;
-import com.tattyseal.compactstorage.network.handler.C02HandlerCraftChest;
-import com.tattyseal.compactstorage.network.packet.C01PacketUpdateBuilder;
-import com.tattyseal.compactstorage.network.packet.C02PacketCraftChest;
 import com.tattyseal.compactstorage.proxy.IProxy;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
-import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -45,7 +38,6 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 /**
  * Created by Toby on 06/11/2014.
@@ -76,7 +68,6 @@ public class CompactStorage
     public static final String SERVER_PROXY = "com.tattyseal.compactstorage.proxy.ServerProxy";
     
     public static Block chest;
-    public static Block chestBuilder;
     
     public static Item backpack;
     
@@ -99,17 +90,11 @@ public class CompactStorage
         tabCS = new CreativeTabCompactStorage();
         
         wrapper = NetworkRegistry.INSTANCE.newSimpleChannel(CompactStorage.ID);
-        wrapper.registerMessage(C01HandlerUpdateBuilder.class, C01PacketUpdateBuilder.class, 0, Side.SERVER);
-        wrapper.registerMessage(C02HandlerCraftChest.class, C02PacketCraftChest.class, 1, Side.SERVER);
 
         chest = new BlockChest();
         GameRegistry.registerBlock(chest, ItemBlockChest.class, "compactChest");
         GameRegistry.registerTileEntity(TileEntityChest.class, "tileChest");
-        
-        chestBuilder = new BlockChestBuilder();
-        GameRegistry.registerBlock(chestBuilder, "chestBuilder");
-        GameRegistry.registerTileEntity(TileEntityChestBuilder.class, "tileChestBuilder");
-    
+
         backpack = new ItemBackpack();
         GameRegistry.registerItem(backpack, "backpack");
         
@@ -152,9 +137,6 @@ public class CompactStorage
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
 
         proxy.registerRenderers();
-
-        GameRegistry.addRecipe(new ItemStack(chestBuilder, 1), "ILI", "ICI", "ILI", 'I', new ItemStack(Items.iron_ingot, 1), 'C', new ItemStack(Blocks.chest, 1), 'L', new ItemStack(Blocks.lever, 1));
-
         ConfigurationHandler.init();
     }
 

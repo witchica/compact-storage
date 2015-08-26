@@ -6,9 +6,7 @@ import net.minecraft.world.World;
 
 import com.tattyseal.compactstorage.api.IChest;
 import com.tattyseal.compactstorage.client.gui.GuiChest;
-import com.tattyseal.compactstorage.client.gui.GuiChestBuilder;
 import com.tattyseal.compactstorage.inventory.ContainerChest;
-import com.tattyseal.compactstorage.inventory.ContainerChestBuilder;
 import com.tattyseal.compactstorage.inventory.InventoryBackpack;
 import com.tattyseal.compactstorage.util.BlockPos;
 
@@ -41,7 +39,6 @@ public class GuiHandler implements IGuiHandler
 
                 return new ContainerChest(world, chest, player, new BlockPos(x, y, z));
             }
-            case 1: /* chest builder */ return new ContainerChestBuilder(world, player, new BlockPos(x, y, z));
             default: return null;
         }
     }
@@ -67,7 +64,6 @@ public class GuiHandler implements IGuiHandler
 
                 return new GuiChest((Container) getServerGuiElement(ID, player, world, x, y, z), chest, world, player, new BlockPos(x, y, z));
             }
-            case 1: /* chest builder */ return new GuiChestBuilder((Container) getServerGuiElement(ID, player, world, x, y, z), world, player, new BlockPos(x, y, z));
             default: return null;
         }
     }
