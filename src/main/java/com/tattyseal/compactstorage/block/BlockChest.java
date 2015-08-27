@@ -2,6 +2,11 @@ package com.tattyseal.compactstorage.block;
 
 import java.util.Random;
 
+import com.tattyseal.compactstorage.CompactStorage;
+import com.tattyseal.compactstorage.exception.InvalidSizeException;
+import com.tattyseal.compactstorage.tileentity.TileEntityChest;
+import com.tattyseal.compactstorage.util.EntityUtil;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -18,14 +23,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import com.tattyseal.compactstorage.CompactStorage;
-import com.tattyseal.compactstorage.compat.RefinedRelocationCompat;
-import com.tattyseal.compactstorage.exception.InvalidSizeException;
-import com.tattyseal.compactstorage.tileentity.TileEntityChest;
-import com.tattyseal.compactstorage.util.EntityUtil;
-
-import cpw.mods.fml.common.Loader;
 
 /**
  * Created by Toby on 06/11/2014.
@@ -131,21 +128,6 @@ public class BlockChest extends Block implements ITileEntityProvider
     {
         if(!player.isSneaking())
         {
-            if(player.getHeldItem() != null)
-            {
-                String name = player.getHeldItem().getUnlocalizedName();
-
-                if(name.startsWith("item.dolly.normal.empty") || name.startsWith("item.dolly.diamond.empty"))
-                {
-                    return true;
-                }
-                if (Loader.isModLoaded("RefinedRelocation"))
-                {
-                    if (RefinedRelocationCompat.tryToUpgrade(player.getHeldItem(), world, x, y, z))
-                        return true;
-                }
-            }
-
             if(!world.isRemote)
             {
                 world.playSoundEffect(x, y, z, "random.chestopen", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);

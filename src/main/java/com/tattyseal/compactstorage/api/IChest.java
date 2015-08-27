@@ -1,7 +1,5 @@
 package com.tattyseal.compactstorage.api;
 
-import com.tattyseal.compactstorage.util.StorageInfo;
-
 import net.minecraft.inventory.IInventory;
 
 /**
@@ -15,8 +13,6 @@ public interface IChest extends IInventory
 {
     public int getInvX();
     public int getInvY();
-
-    public StorageInfo getInfo();
 
     public int getColor();
 

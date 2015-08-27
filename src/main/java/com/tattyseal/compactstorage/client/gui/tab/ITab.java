@@ -1,6 +1,7 @@
 package com.tattyseal.compactstorage.client.gui.tab;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
@@ -53,4 +54,8 @@ public abstract class ITab
 	
 	public abstract void drawBackground(int guiLeft, int guiTop);
 	public abstract void drawForeground(int guiLeft, int guiTop);
+	public abstract void buttonClicked(GuiButton button);
+	public abstract void mouseClicked(int x, int z, int b);
+	public abstract void keyTyped(char c, int id);
+	public abstract boolean areTextboxesInFocus();
 }

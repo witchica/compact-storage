@@ -1,5 +1,11 @@
 package com.tattyseal.compactstorage.tileentity;
 
+import java.util.Arrays;
+
+import com.tattyseal.compactstorage.ConfigurationHandler;
+import com.tattyseal.compactstorage.api.IChest;
+
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -11,10 +17,6 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import com.tattyseal.compactstorage.ConfigurationHandler;
-import com.tattyseal.compactstorage.api.IChest;
-import com.tattyseal.compactstorage.util.StorageInfo;
 
 /**
  * Created by Toby on 06/11/2014.
@@ -139,6 +141,16 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     public void markDirty()
     {
         super.markDirty();
+        
+        if(items.length != getSizeInventory())
+        {
+        	for(int i = getSizeInventory() - 1; i < items.length; i++)
+        	{
+        		if(items[i] != null) worldObj.spawnEntityInWorld(new EntityItem(worldObj, xCoord, yCoord + 1f, zCoord, items[i].copy()));
+        		items[i] = null;
+        	}
+        }
+        
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
@@ -209,7 +221,6 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     public void updateEntity()
     {
     	super.updateEntity();
-    	
     }
 
     @Override
@@ -222,18 +233,19 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     public void setDirection(ForgeDirection direction)
     {
         this.direction = direction;
-        updateBlock();
+        markDirty();
     }
 
     public void setDirection(int direction)
     {
         this.direction = ForgeDirection.getOrientation(direction);
-        updateBlock();
+        markDirty();
     }
 
     public void updateBlock()
     {
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+    	items = Arrays.copyOf(items, getSizeInventory());
+    	worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     @Override
@@ -247,13 +259,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     {
         return invY;
     }
-
-    @Override
-    public StorageInfo getInfo()
-    {
-        return new StorageInfo(invX, invY);
-    }
-
+    
     @Override
     public int getColor()
     {

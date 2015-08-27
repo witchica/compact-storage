@@ -2,13 +2,6 @@ package com.tattyseal.compactstorage;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraftforge.oredict.OreDictionary;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,12 +9,11 @@ import com.google.common.collect.Lists;
 import com.tattyseal.compactstorage.block.BlockChest;
 import com.tattyseal.compactstorage.command.CommandCompactStorage;
 import com.tattyseal.compactstorage.compat.ICompat;
-import com.tattyseal.compactstorage.compat.JabbaCompat;
-import com.tattyseal.compactstorage.compat.RefinedRelocationCompat;
-import com.tattyseal.compactstorage.compat.WailaCompat;
 import com.tattyseal.compactstorage.creativetabs.CreativeTabCompactStorage;
 import com.tattyseal.compactstorage.item.ItemBackpack;
 import com.tattyseal.compactstorage.item.ItemBlockChest;
+import com.tattyseal.compactstorage.network.HandlerApplyChestUpdate;
+import com.tattyseal.compactstorage.network.PacketApplyChestUpdate;
 import com.tattyseal.compactstorage.proxy.IProxy;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 
@@ -38,6 +30,13 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Created by Toby on 06/11/2014.
@@ -76,10 +75,6 @@ public class CompactStorage
     {
     	compat = Lists.newArrayList();
     	
-    	if(Loader.isModLoaded("JABBA")) compat.add(new JabbaCompat());
-    	if(Loader.isModLoaded("Waila")) compat.add(new WailaCompat());
-        if(Loader.isModLoaded("RefinedRelocation")) compat.add(new RefinedRelocationCompat());
-
         OreDictionary.registerOre("barsIron", Blocks.iron_bars);
         OreDictionary.registerOre("blockChest", Blocks.chest);
         OreDictionary.registerOre("itemClay", Items.clay_ball);
@@ -90,7 +85,8 @@ public class CompactStorage
         tabCS = new CreativeTabCompactStorage();
         
         wrapper = NetworkRegistry.INSTANCE.newSimpleChannel(CompactStorage.ID);
-
+        wrapper.registerMessage(HandlerApplyChestUpdate.class, PacketApplyChestUpdate.class, 0, Side.SERVER);
+        
         chest = new BlockChest();
         GameRegistry.registerBlock(chest, ItemBlockChest.class, "compactChest");
         GameRegistry.registerTileEntity(TileEntityChest.class, "tileChest");
