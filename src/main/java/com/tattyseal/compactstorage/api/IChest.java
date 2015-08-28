@@ -13,17 +13,10 @@ public interface IChest extends IInventory
 {
     public int getInvX();
     public int getInvY();
+    
+    public void setInvX(int invX);
+    public void setInvY(int invY);
 
     public int getColor();
-
-    /**
-     *  This is used by my mods if you want chests to connect to the network.
-     *  This is return from configuration files by default but can also be toggle by a switch in a GUI if you want it to.
-     *  You just need to return something.
-     *
-     * Please don't break it.
-     *
-     * @return true if you want this Chest to connect to ES networks.
-     */
-    public boolean shouldConnectToNetwork();
+    public void setColor(int color);
 }

@@ -5,7 +5,9 @@ import com.tattyseal.compactstorage.api.IChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.Constants;
 
 /**
@@ -196,10 +198,25 @@ public class InventoryBackpack implements IChest
 
         tag.setTag("Items", nbtTagList);
     }
+    
+	@Override
+	public void setInvX(int invX) 
+	{
+		this.size[0] = invX;
+	}
 
-    @Override
-    public boolean shouldConnectToNetwork()
-    {
-        return false;
-    }
+	@Override
+	public void setInvY(int invY) 
+	{
+		this.size[1] = invY;
+	}
+
+	@Override
+	public void setColor(int color) 
+	{
+		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("color"))
+        {
+            stack.getTagCompound().setInteger("color", color);
+        }
+	}
 }

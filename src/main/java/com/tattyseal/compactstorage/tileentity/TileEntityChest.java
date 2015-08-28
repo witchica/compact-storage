@@ -266,9 +266,21 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
         return color;
     }
 
-    @Override
-    public boolean shouldConnectToNetwork()
-    {
-        return ConfigurationHandler.shouldConnect;
-    }
+	@Override
+	public void setInvX(int invX) 
+	{
+		this.invX = invX;
+	}
+
+	@Override
+	public void setInvY(int invY) 
+	{
+		this.invY = invY;
+	}
+
+	@Override
+	public void setColor(int color) 
+	{
+		this.color = color;
+	}
 }

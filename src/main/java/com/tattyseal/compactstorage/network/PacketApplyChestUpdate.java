@@ -1,5 +1,7 @@
 package com.tattyseal.compactstorage.network;
 
+import com.tattyseal.compactstorage.util.ChestUtil;
+
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
 
@@ -12,18 +14,21 @@ public class PacketApplyChestUpdate implements IMessage
 	public int invX;
 	public int invY;
 	
-	public PacketApplyChestUpdate(int x, int y, int z, int invX, int invY)
+	public ChestUtil.Type type;
+	
+	public PacketApplyChestUpdate(int x, int y, int z, int invX, int invY, ChestUtil.Type type)
 	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.invX = invX;
 		this.invY = invY;
+		this.type = type;
 	}
 	
 	public PacketApplyChestUpdate()
 	{
-		this(0, 0, 0, 0, 0);
+		this(0, 0, 0, 0, 0, ChestUtil.Type.CHEST);
 	}
 	
 	@Override
@@ -34,6 +39,7 @@ public class PacketApplyChestUpdate implements IMessage
 		z = buf.readInt();
 		invX = buf.readInt();
 		invY = buf.readInt();
+		type = ChestUtil.Type.values()[buf.readInt()];
 	}
 
 	@Override
@@ -44,5 +50,6 @@ public class PacketApplyChestUpdate implements IMessage
 		buf.writeInt(z);
 		buf.writeInt(invX);
 		buf.writeInt(invY);
+		buf.writeInt(type.ordinal());
 	}
 }

@@ -2,10 +2,11 @@ package com.tattyseal.compactstorage.client.gui.tab;
 
 import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.client.gui.GuiChest;
+import com.tattyseal.compactstorage.inventory.InventoryBackpack;
 import com.tattyseal.compactstorage.network.PacketApplyChestUpdate;
 import com.tattyseal.compactstorage.util.ChestUtil;
+import com.tattyseal.compactstorage.util.ChestUtil.Type;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.item.ItemStack;
@@ -112,7 +113,7 @@ public class ChestSettingsTab extends ITab
 			}
 			case 4:
 			{
-				CompactStorage.instance.wrapper.sendToServer(new PacketApplyChestUpdate(chest.pos.getX(), chest.pos.getY(), chest.pos.getZ(), invX, invY));
+				CompactStorage.instance.wrapper.sendToServer(new PacketApplyChestUpdate(chest.pos.getX(), chest.pos.getY(), chest.pos.getZ(), invX, invY, chest.chest instanceof InventoryBackpack ? Type.BACKPACK : Type.CHEST));
 				mc.displayGuiScreen(null);
 			}
 		}
