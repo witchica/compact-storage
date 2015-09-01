@@ -74,14 +74,6 @@ public class CompactStorage
     public void preInit(FMLPreInitializationEvent event)
     {
     	compat = Lists.newArrayList();
-    	
-        OreDictionary.registerOre("barsIron", Blocks.iron_bars);
-        OreDictionary.registerOre("blockChest", Blocks.chest);
-        OreDictionary.registerOre("itemClay", Items.clay_ball);
-
-        OreDictionary.registerOre("string", Items.string);
-        OreDictionary.registerOre("wool", Blocks.wool);
-    	
         tabCS = new CreativeTabCompactStorage();
         
         wrapper = NetworkRegistry.INSTANCE.newSimpleChannel(CompactStorage.ID);

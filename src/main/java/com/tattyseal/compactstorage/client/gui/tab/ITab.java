@@ -58,4 +58,6 @@ public abstract class ITab
 	public abstract void mouseClicked(int x, int z, int b);
 	public abstract void keyTyped(char c, int id);
 	public abstract boolean areTextboxesInFocus();
+
+	public abstract boolean shouldChestRenderBackground();
 }

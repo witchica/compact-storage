@@ -1,6 +1,8 @@
 package com.tattyseal.compactstorage.util;
 
-public class ChestUtil 
+import net.minecraft.item.ItemStack;
+
+public class ChestUtil
 {
 	public static enum Type 
 	{

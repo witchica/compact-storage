@@ -7,6 +7,7 @@ import com.tattyseal.compactstorage.api.IChest;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,6 +18,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Created by Toby on 06/11/2014.
@@ -30,7 +32,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     public int invY;
 
     public boolean init;
-    
+
     public ItemStack[] items;
 
     public TileEntityChest()
@@ -43,19 +45,19 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
 
     /* INVENTORY START */
     @Override
-    public int getSizeInventory() 
+    public int getSizeInventory()
     {
-        return invX * invY + 1;
+        return invX * invY + 3;
     }
 
     @Override
-    public ItemStack getStackInSlot(int slot) 
+    public ItemStack getStackInSlot(int slot)
     {
     	if(slot < items.length && items[slot] != null)
         {
         	return items[slot];
         }
-        
+
         return null;
     }
 
@@ -70,14 +72,14 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
             {
                 setInventorySlotContents(slot, null);
                 markDirty();
-                
+
                 return stack.copy();
             }
             else
             {
                 ItemStack stack2 = stack.splitStack(amount);
                 markDirty();
-                
+
                 return stack2.copy();
             }
         }
@@ -92,7 +94,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     }
 
     @Override
-    public void setInventorySlotContents(int slot, ItemStack stack) 
+    public void setInventorySlotContents(int slot, ItemStack stack)
     {
     	if(items != null && slot < items.length)
         {
@@ -108,19 +110,19 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     }
 
     @Override
-    public boolean hasCustomInventoryName() 
+    public boolean hasCustomInventoryName()
     {
         return false;
     }
 
     @Override
-    public int getInventoryStackLimit() 
+    public int getInventoryStackLimit()
     {
         return 64;
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player) 
+    public boolean isUseableByPlayer(EntityPlayer player)
     {
         return true;
     }
@@ -132,7 +134,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     public void closeInventory() {}
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) 
+    public boolean isItemValidForSlot(int slot, ItemStack stack)
     {
         return true;
     }
@@ -141,21 +143,21 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     public void markDirty()
     {
         super.markDirty();
-        
+
         if(items.length != getSizeInventory())
         {
-        	for(int i = getSizeInventory() - 1; i < items.length; i++)
+        	for(int i = getSizeInventory() - 3; i < items.length; i++)
         	{
         		if(items[i] != null) worldObj.spawnEntityInWorld(new EntityItem(worldObj, xCoord, yCoord + 1f, zCoord, items[i].copy()));
         		items[i] = null;
         	}
         }
-        
+
         worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
     }
 
     /* CUSTOM START */
-    
+
     @Override
     public void readFromNBT(NBTTagCompound tag)
     {
@@ -166,7 +168,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
         this.color = tag.getInteger("color");
         this.invX = tag.getInteger("invX");
         this.invY = tag.getInteger("invY");
-        
+
         NBTTagList nbtTagList = tag.getTagList("Items", Constants.NBT.TAG_COMPOUND);
         items = new ItemStack[getSizeInventory()];
 
@@ -192,7 +194,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
         tag.setInteger("color", color);
         tag.setInteger("invX", invX);
         tag.setInteger("invY", invY);
-        
+
         NBTTagList nbtTagList = new NBTTagList();
         for(int slot = 0; slot < getSizeInventory(); slot++)
         {
@@ -216,7 +218,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
 
         return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, getBlockMetadata(), tag);
     }
-    
+
     @Override
     public void updateEntity()
     {
@@ -259,7 +261,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     {
         return invY;
     }
-    
+
     @Override
     public int getColor()
     {
@@ -267,20 +269,44 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     }
 
 	@Override
-	public void setInvX(int invX) 
+	public void setInvX(int invX)
 	{
 		this.invX = invX;
 	}
 
 	@Override
-	public void setInvY(int invY) 
+	public void setInvY(int invY)
 	{
 		this.invY = invY;
 	}
 
 	@Override
-	public void setColor(int color) 
+	public void setColor(int color)
 	{
 		this.color = color;
 	}
+
+    @Override
+    public int getStartUpgradeSlots()
+    {
+        return getSizeInventory() - getAmountUpgradeSlots();
+    }
+
+    @Override
+    public int getAmountUpgradeSlots()
+    {
+        return 3;
+    }
+
+
+
+    @Override
+    public ItemStack[] getRequiredUpgrades(int invX, int invY)
+    {
+        int all = invX * invY;
+        int oldAll = getInvX() * getInvY();
+
+        ItemStack main = new ItemStack(Blocks.chest, oldAll > all ? 0 : (all - oldAll) / 10);
+        return new ItemStack[] {main.stackSize == 0 ? null : main, null, null};
+    }
 }

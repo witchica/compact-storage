@@ -1,5 +1,7 @@
 package com.tattyseal.compactstorage.inventory;
 
+import com.tattyseal.compactstorage.client.gui.slot.SlotChangePosition;
+import com.tattyseal.compactstorage.client.gui.slot.SlotMaterial;
 import invtweaks.api.container.ChestContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -67,10 +69,17 @@ public class ContainerChest extends Container
         {
         	for(int x = 0; x < invX; x++)
             {
-                Slot slot = new Slot(chest, lastId, slotX + (x * 18), slotY + (y * 18));
+                Slot slot = new SlotChangePosition(chest, lastId, slotX + (x * 18), slotY + (y * 18));
                 addSlotToContainer(slot);
                 lastId++;
             }
+        }
+
+        for(int x = 0; x < 3; x++)
+        {
+            Slot slot = new SlotMaterial(chest, chest.getSizeInventory() - 1 - x, 5 + (x * 18), 60);
+            addSlotToContainer(slot);
+            lastId++;
         }
         
         this.lastId = lastId;
@@ -82,7 +91,7 @@ public class ContainerChest extends Container
         {
             for(int y = 0; y < 3; y++)
             {
-            	Slot slot = new Slot(player.inventory, x + y * 9 + 9, slotX + (x * 18), slotY + (y * 18));
+            	Slot slot = new SlotChangePosition(player.inventory, x + y * 9 + 9, slotX + (x * 18), slotY + (y * 18));
                 addSlotToContainer(slot);
             }
         }
@@ -91,7 +100,7 @@ public class ContainerChest extends Container
 
         for(int x = 0; x < 9; x++)
         {
-        	Slot slot = new Slot(player.inventory, x, slotX + (x * 18), slotY);
+        	Slot slot = new SlotChangePosition(player.inventory, x, slotX + (x * 18), slotY);
             addSlotToContainer(slot);
         }
     }

@@ -1,6 +1,8 @@
 package com.tattyseal.compactstorage.client.gui.tab;
 
 import com.tattyseal.compactstorage.client.gui.GuiChest;
+import com.tattyseal.compactstorage.client.gui.slot.SlotChangePosition;
+import com.tattyseal.compactstorage.client.gui.slot.SlotMaterial;
 import com.tattyseal.compactstorage.util.RenderUtil;
 
 import net.minecraft.client.gui.GuiButton;
@@ -15,23 +17,12 @@ public class ChestInventoryTab extends ITab
 	
 	public GuiChest chest;
 	
-	public int[] slotX;
-	
-	public ChestInventoryTab(GuiChest container, ItemStack item, String name, int x, int y, boolean localizeName, int invX, int invY) 
+	public ChestInventoryTab(GuiChest container, ItemStack item, String name, int x, int y, boolean localizeName, int invX, int invY)
 	{
 		super(container, item, name, x, y, localizeName);
 		this.chest = container;
 		this.invX = invX;
 		this.invY = invY;
-		
-		slotX = new int[container.inventorySlots.inventorySlots.size()];
-		
-		for(Object obj : container.inventorySlots.inventorySlots)
-		{
-			Slot slot = (Slot) obj;
-			
-			slotX[slot.slotNumber] = slot.xDisplayPosition;
-		}
 	}
 
 	@Override
@@ -39,8 +30,13 @@ public class ChestInventoryTab extends ITab
 	{
 		for(Object obj : container.inventorySlots.inventorySlots)
 		{
-			Slot slot = (Slot) obj;
-			if(slot.xDisplayPosition == Integer.MIN_VALUE) slot.xDisplayPosition = slotX[slot.slotNumber];
+			SlotChangePosition slot = (SlotChangePosition) obj;
+			slot.changeToDefaultPosition();
+
+			if(slot instanceof SlotMaterial)
+			{
+				slot.setPosition(Integer.MIN_VALUE, slot.yDisplayPosition);
+			}
 		}
 	}
 
@@ -49,8 +45,8 @@ public class ChestInventoryTab extends ITab
 	{
 		for(Object obj : container.inventorySlots.inventorySlots)
 		{
-			Slot slot = (Slot) obj;
-			slot.xDisplayPosition = Integer.MIN_VALUE;
+			SlotChangePosition slot = (SlotChangePosition) obj;
+			slot.setPosition(Integer.MIN_VALUE, slot.yDisplayPosition);
 		}
  	}
 
@@ -58,9 +54,9 @@ public class ChestInventoryTab extends ITab
 	public void drawBackground(int guiLeft, int guiTop) 
 	{
         RenderUtil.renderSlots(guiLeft + 7 + ((Math.max(9, invX) * 18) / 2) - (invX * 18) / 2, guiTop + 17, invX, invY);
+
         RenderUtil.renderSlots(guiLeft + 7 + (((Math.max(9, invX) * 18) / 2) - ((9 * 18) / 2)), guiTop + 17 + (invY * 18) + 13, 9, 3);
         RenderUtil.renderSlots(guiLeft + 7 + (((Math.max(9, invX) * 18) / 2) - ((9 * 18) / 2)), guiTop + 17 + (invY * 18) + 13 + 54 + 4, 9, 1);
-
 	}
 
 	@Override
@@ -92,5 +88,11 @@ public class ChestInventoryTab extends ITab
 	public boolean areTextboxesInFocus() 
 	{
 		return false;
+	}
+
+	@Override
+	public boolean shouldChestRenderBackground()
+	{
+		return true;
 	}
 }

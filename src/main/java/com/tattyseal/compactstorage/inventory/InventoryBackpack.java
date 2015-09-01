@@ -3,12 +3,14 @@ package com.tattyseal.compactstorage.inventory;
 import com.tattyseal.compactstorage.api.IChest;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Created by Toby on 11/02/2015.
@@ -219,4 +221,26 @@ public class InventoryBackpack implements IChest
             stack.getTagCompound().setInteger("color", color);
         }
 	}
+
+    @Override
+    public int getStartUpgradeSlots()
+    {
+        return getSizeInventory() - getAmountUpgradeSlots();
+    }
+
+    @Override
+    public int getAmountUpgradeSlots()
+    {
+        return 3;
+    }
+
+    @Override
+    public ItemStack[] getRequiredUpgrades(int invX, int invY)
+    {
+        int all = invX * invY;
+        int oldAll = getInvX() * getInvY();
+
+        ItemStack main = new ItemStack(Blocks.wool, oldAll < all ? 0 : all - oldAll / 10, OreDictionary.WILDCARD_VALUE);
+        return new ItemStack[] {main.stackSize == 0 ? null : main, null, null};
+    }
 }

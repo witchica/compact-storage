@@ -67,6 +67,7 @@ public class GuiChest extends GuiContainer
    
         activeTab = tabs[0];
         tabs[0].selected = true;
+        tabs[0].selected();
     }
     
     @Override
@@ -84,7 +85,11 @@ public class GuiChest extends GuiContainer
     	GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glColor3f(1, 1, 1);
 
-		RenderUtil.renderChestBackground(this, guiLeft, guiTop, invX, invY);
+        if(activeTab.shouldChestRenderBackground())
+        {
+            RenderUtil.renderChestBackground(this, guiLeft, guiTop, invX, invY);
+        }
+
         activeTab.drawBackground(guiLeft, guiTop);
         
         GL11.glColor3f(1, 1, 1);
