@@ -125,8 +125,17 @@ public class ChestSettingsTab extends ITab
 
 			if(stack != null)
 			{
-				RenderItem.getInstance().renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, stack, guiLeft + 4 + (i * 18), guiTop + 59);
-				mc.fontRenderer.drawString(stack.stackSize + "", guiLeft + 4 + (i * 18) + ((18 / 2) - (mc.fontRenderer.getStringWidth("X") / 2)), guiTop + 59 + ((18 / 2) - (mc.fontRenderer.FONT_HEIGHT / 2)), 0xFF0000);
+				RenderItem.getInstance().renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, stack, guiLeft + 4 + (i * 18) + 1, guiTop + 59);
+
+				GL11.glDisable(GL11.GL_LIGHTING);
+				GL11.glDisable(GL11.GL_DEPTH_TEST);
+				GL11.glDisable(GL11.GL_BLEND);
+				GL11.glPushMatrix();
+				GL11.glScalef(.75f, .75f, .75f);
+				mc.fontRenderer.drawString(stack.stackSize + "", (int)  ((guiLeft + 4 + (i * 18) + ((18 / 2) - (mc.fontRenderer.getStringWidth(stack.stackSize + "") / 2))) * 1.35f), (int) ((guiTop + 59 + ((18 / 2) - (mc.fontRenderer.FONT_HEIGHT / 2))) * 1.35f), 0xFFFFFF);
+				GL11.glPopMatrix();
+				GL11.glEnable(GL11.GL_BLEND);
+				GL11.glEnable(GL11.GL_DEPTH_TEST);
 			}
 			else
 			{
