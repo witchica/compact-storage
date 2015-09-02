@@ -2,37 +2,66 @@ buildscript {
     repositories {
         mavenCentral()
         maven {
-            name = 'forge'
-            url = 'http://files.minecraftforge.net/maven'
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
         }
         maven {
-            name = 'sonatype'
-            url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-	}
+    }
 }
 
-ext.build = System.getenv().BUILD_NUMBER ?: 'git'
-ext.version_major=3
-ext.version_minor=0
-ext.version_micro=0
-ext.version_name="experimental"
-ext.version_minecraft="1.7.10"
-ext.version_forge="10.13.2.1291"
-ext.version_minforge="10.13.0.1185"
-ext.extra_curseforge_releasetype="alpha"
-ext.modversion = "${extra_curseforge_releasetype}-${project.version_major}.${project.version_minor}.${project.version_micro}-${project.version_name}.${build}"
+plugins {
+	id 'com.matthewprenger.cursegradle' version '1.0.1'
+}
+
+apply from: 'https://raw.githubusercontent.com/BuiltBrokenModding/BuiltBrokenScripts/buildScripts/index.gradle'
+apply plugin: 'forge'
+
+group= "com.tattyseal.compactstorage"
+archivesBaseName = "CompactStorage"
+
+minecraft {
+    version = "1.7.10-10.13.4.1490-1.7.10"
+    runDir = "run"
+
+    replace "@VERSION@", project.version
+}
+
+version = "${project.minecraft.version}-${version_major}.${version_minor}.${version_revis}"
 
 
-group = 'com.tattyseal'
-version = "${project.version_minecraft}-${modversion}"
+println "version = "+ version
 
-apply from: 'gradle/scripts/forge.gradle'
-apply from: 'gradle/scripts/dependencies.gradle'
-apply from: 'gradle/scripts/artifacts.gradle'
-apply from: 'gradle/scripts/signing.gradle'
-apply from: 'gradle/scripts/release.gradle'
-apply from: 'gradle/scripts/curseforge.gradle'
+dependencies {
+	
+}
+
+repositories {
+
+}
+
+processResources
+{
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+                
+        // replace version and mcversion
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+        
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
