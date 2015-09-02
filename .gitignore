@@ -8,6 +8,7 @@
 !/README
 !/*.MD
 !/build.gradle
+!/gradle.properties
 !/settings.gradle
 !/LICENSE
 
