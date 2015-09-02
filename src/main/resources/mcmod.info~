@@ -6,7 +6,7 @@
   "version": "${version}",
   "mcversion": "${mcversion}",
   "logoFile": "/compactchests.png",
-  "url": "http:/github.com/tattyseal/CompactChests/",
+  "url": "http:/github.com/Workshop-Development/CompactChests/",
   "updateUrl": "",
   "authors": ["tattyseal"],
   "credits": "Made by tattyseal",
