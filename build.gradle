@@ -19,6 +19,14 @@ plugins {
 	id 'com.matthewprenger.cursegradle' version '1.0.1'
 }
 
+/*
+    What this code is meant to do is set the bamboo build number so that my Jenkins build server will apply its build number to the versions of my mods.
+ */
+if(System.getenv("BUILD_NUMBER") != null)
+{
+    env.bambooBuildNumber = System.getenv("BUILD_NUMBER");
+}
+
 apply from: 'https://raw.githubusercontent.com/BuiltBrokenModding/BuiltBrokenScripts/buildScripts/index.gradle'
 apply plugin: 'forge'
 
@@ -26,6 +34,7 @@ group= "com.tattyseal.compactstorage"
 archivesBaseName = "CompactStorage"
 
 minecraft {
+    version = "1.7.10-10.13.4.1490-1.7.10"
     runDir = "run"
 
     replace "@VERSION@", project.version
