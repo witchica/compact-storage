@@ -32,18 +32,12 @@ minecraft {
     replace "@VERSION@", project.version
 }
 
-version = "${project.minecraft.version}-${version_major}.${version_minor}.${version_revis}"
-
-
 println "version = "+ version
+println "Current Minecraft version = " + minecraft.apiVersion
+println archivesBaseName
 
-dependencies {
-	
-}
-
-repositories {
-
-}
+def currentJvm = org.gradle.internal.jvm.Jvm.current()
+println "Current Java version = " + currentJvm
 
 processResources
 {
