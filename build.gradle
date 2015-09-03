@@ -26,7 +26,6 @@ group= "com.tattyseal.compactstorage"
 archivesBaseName = "CompactStorage"
 
 minecraft {
-    version = "1.7.10-10.13.4.1490-1.7.10"
     runDir = "run"
 
     replace "@VERSION@", project.version
