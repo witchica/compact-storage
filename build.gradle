@@ -24,7 +24,7 @@ plugins {
  */
 if(System.getenv("BUILD_NUMBER") != null)
 {
-    env.bambooBuildNumber = System.getenv("BUILD_NUMBER");
+    ext.bambooBuildNumber = System.getenv("BUILD_NUMBER");
 }
 
 apply from: 'https://raw.githubusercontent.com/BuiltBrokenModding/BuiltBrokenScripts/buildScripts/index.gradle'
