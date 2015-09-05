@@ -67,12 +67,12 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 			ItemStack stack = new ItemStack((Item) (message.type.equals(StorageInfo.Type.BACKPACK) ? CompactStorage.backpack : ItemBlock.getItemFromBlock(CompactStorage.chest)), 1);
 			
 			NBTTagCompound tag = new NBTTagCompound();
-			tag.setIntArray("size", new int[] {message.info.getSizeX(), message.info.getSizeY()});
+			tag.setIntArray("size", new int[]{message.info.getSizeX(), message.info.getSizeY()});
 			tag.setString("color", message.color);
 			stack.setTagCompound(tag);
 			
-			EntityItem item = new EntityItem(MinecraftServer.getServer().worldServerForDimension(message.dimension), message.x, message.y + 1, message.z, stack);
-			item.worldObj.spawnEntityInWorld(item);
+			EntityItem item = new EntityItem(ctx.getServerHandler().playerEntity.worldObj, message.x, message.y + 1, message.z, stack);
+			ctx.getServerHandler().playerEntity.worldObj.spawnEntityInWorld(item);
 			
 			for(int x = 0; x < requiredItems.size(); x++)
 			{
