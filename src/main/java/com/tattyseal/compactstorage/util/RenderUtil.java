@@ -38,7 +38,7 @@ public class RenderUtil
     
     public static void renderChestBackground(GuiContainer gui, int x, int y, int width, int height)
     {
-    	renderBackground(gui, x, y, width * 18, height * 18);
+    	renderBackground(gui, x, y, (Math.max(9, width)) * 18, height * 18);
     }
     
     public static void renderBackground(GuiContainer gui, int x, int y, int width, int height)

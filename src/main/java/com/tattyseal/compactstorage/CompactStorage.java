@@ -18,9 +18,7 @@ import com.tattyseal.compactstorage.block.BlockChest;
 import com.tattyseal.compactstorage.block.BlockChestBuilder;
 import com.tattyseal.compactstorage.command.CommandCompactStorage;
 import com.tattyseal.compactstorage.compat.ICompat;
-import com.tattyseal.compactstorage.compat.JabbaCompat;
 import com.tattyseal.compactstorage.compat.RefinedRelocationCompat;
-import com.tattyseal.compactstorage.compat.WailaCompat;
 import com.tattyseal.compactstorage.creativetabs.CreativeTabCompactStorage;
 import com.tattyseal.compactstorage.item.ItemBackpack;
 import com.tattyseal.compactstorage.item.ItemBlockChest;
@@ -84,9 +82,7 @@ public class CompactStorage
     public void preInit(FMLPreInitializationEvent event)
     {
     	compat = Lists.newArrayList();
-    	
-    	if(Loader.isModLoaded("JABBA")) compat.add(new JabbaCompat());
-    	if(Loader.isModLoaded("Waila")) compat.add(new WailaCompat());
+
         if(Loader.isModLoaded("RefinedRelocation")) compat.add(new RefinedRelocationCompat());
 
         OreDictionary.registerOre("barsIron", Blocks.iron_bars);

@@ -39,7 +39,7 @@ public class GuiChest extends GuiContainer
         this.invX = chest.getInvX();
         this.invY = chest.getInvY();
 
-        this.xSize = 7 + (invX * 18) + 7;
+        this.xSize = 7 + (Math.max(9, invX) * 18) + 7;
         this.ySize = 15 + (invY * 18) + 13 + 54 + 4 + 18 + 7;
     }
     
@@ -67,10 +67,10 @@ public class GuiChest extends GuiContainer
         GL11.glColor3f(1, 1, 1);
         
         RenderUtil.renderChestBackground(this, guiLeft, guiTop, invX, invY);
-        
-        RenderUtil.renderSlots(guiLeft + 7, guiTop + 17, invX, invY);
-        RenderUtil.renderSlots(guiLeft + 7 + (((invX * 18) / 2) - ((9 * 18) / 2)), guiTop + 17 + (invY * 18) + 13, 9, 3);
-        RenderUtil.renderSlots(guiLeft + 7 + (((invX * 18) / 2) - ((9 * 18) / 2)), guiTop + 17 + (invY * 18) + 13 + 54 + 4, 9, 1);
+
+        RenderUtil.renderSlots(guiLeft + 7 + ((Math.max(9, invX) * 18) / 2) - (invX * 18) / 2, guiTop + 17, invX, invY);
+        RenderUtil.renderSlots(guiLeft + 7 + ((((Math.max(9, invX)) * 18) / 2) - ((9 * 18) / 2)), guiTop + 17 + (invY * 18) + 13, 9, 3);
+        RenderUtil.renderSlots(guiLeft + 7 + ((((Math.max(9, invX)) * 18) / 2) - ((9 * 18) / 2)), guiTop + 17 + (invY * 18) + 13 + 54 + 4, 9, 1);
 
         GL11.glPopMatrix();
     }

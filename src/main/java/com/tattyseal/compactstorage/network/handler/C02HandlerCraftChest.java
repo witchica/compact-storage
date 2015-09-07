@@ -2,7 +2,9 @@ package com.tattyseal.compactstorage.network.handler;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.LogManager;
 
+import com.tattyseal.compactstorage.util.LogHelper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -61,6 +63,8 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 				break;
 			}
 		}
+
+		LogHelper.dump("HAS REQ MATS: " + hasRequiredMaterials);
 		
 		if(hasRequiredMaterials)
 		{
@@ -73,10 +77,14 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 			
 			EntityItem item = new EntityItem(ctx.getServerHandler().playerEntity.worldObj, message.x, message.y + 1, message.z, stack);
 			ctx.getServerHandler().playerEntity.worldObj.spawnEntityInWorld(item);
+
+			LogHelper.dump("SPAWNED ITEM ENTITY");
 			
 			for(int x = 0; x < requiredItems.size(); x++)
 			{
 				builder.decrStackSize(x, requiredItems.get(x).stackSize);
+
+				LogHelper.dump("DECREASED ITEMS IN INVENTORY");
 			}
 		}
 		

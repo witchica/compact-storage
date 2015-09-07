@@ -177,4 +177,6 @@ public class ContainerChest extends Container
 
         return super.slotClick(slot, button, flag, player);
     }
+
+
 }

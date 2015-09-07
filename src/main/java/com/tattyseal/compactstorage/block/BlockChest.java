@@ -129,33 +129,18 @@ public class BlockChest extends Block implements ITileEntityProvider
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int i, float j, float k, float l)
     {
-        if(!player.isSneaking())
+        if(!world.isRemote)
         {
-            if(player.getHeldItem() != null)
-            {
-                String name = player.getHeldItem().getUnlocalizedName();
-
-                if(name.startsWith("item.dolly.normal.empty") || name.startsWith("item.dolly.diamond.empty"))
-                {
-                    return true;
-                }
-                if (Loader.isModLoaded("RefinedRelocation"))
-                {
-                    if (RefinedRelocationCompat.tryToUpgrade(player.getHeldItem(), world, x, y, z))
-                        return true;
-                }
-            }
-
-            if(!world.isRemote)
+            if(!player.isSneaking())
             {
                 world.playSoundEffect(x, y, z, "random.chestopen", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
                 player.openGui(CompactStorage.instance, 0, world, x, y, z);
-            }
 
-            return true;
+                return true;
+            }
         }
 
-        return false;
+        return player.isSneaking() ? false : true;
     }
 
     public TileEntity createNewTileEntity(World world, int dim)
