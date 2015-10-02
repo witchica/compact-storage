@@ -5,7 +5,7 @@ deploy:
   provider: releases
   api_key:
     secure: Iheh34BwC4TPPbYg1LGsiujIODtAv+4dSYChJ/AeHOgzieuKsFKj+Ep1mNgWSgeLtVdnCgz1My6Gs9eMz7ctg/eQMGok3BaquRGYO2W8Dsr6tQC838K5vxyAnnYfnrrzLsdDChBwhn3HEOxlXKfgwkFEsD89dnVA8Wd1guG+tys=
-  file: ''
+  file: 'output/*.jar'
   on:
     repo: tattyseal/CompactStorage
     branch: '3.0'
