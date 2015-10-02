@@ -1,6 +1,9 @@
 language: java
 script: "./gradlew build deobfJar sourcesJar javadocJar javadoc"
-sudo: true
+sudo: false
+cache:
+  directories:
+    - $HOME/.gradle
 deploy:
   provider: releases
   api_key:
