@@ -3,8 +3,6 @@ CompactStorage
 
 [![Build Status](https://travis-ci.org/tattyseal/CompactStorage.svg?branch=3.0)](https://travis-ci.org/tattyseal/CompactStorage)
 
-#This branch is currently experimental and may burn your house down!
-
 ###[Issues go here!](https://github.com/tattyseal/IssueTracker/issues)
 
 CompactStorage is a minecraft mod that allows you to make Chests and Backpacks of custom sizes using the Builder.
