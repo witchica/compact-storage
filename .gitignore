@@ -11,6 +11,7 @@
 !/gradle.properties
 !/settings.gradle
 !/LICENSE
+!/.travis.yml
 
 ## Folders
 !/src
