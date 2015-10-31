@@ -1,0 +1,7 @@
+tile.compactchest.name=Baú Compacto
+tile.sortingcompactchest.name=Baú Compacto de Organização
+tile.chestbuilder.name=Construtor
+item.backpack.name=Mochila
+itemGroup.compactStorage=CompactStorage
+tab.chest=Inventário
+tab.settings=Configurações
