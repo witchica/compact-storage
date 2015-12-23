@@ -4,6 +4,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
+import net.minecraft.client.settings.KeyBinding;
 
 import org.lwjgl.opengl.GL11;
 
@@ -24,6 +25,8 @@ public class GuiChest extends GuiContainer
     public int invY;
 
     public IChest chest;
+    
+    public KeyBinding[] HOTBAR = mc.gameSettings.keyBindsHotbar;
 
     
     public GuiChest(Container container, IChest chest, World world, EntityPlayer player, BlockPos pos)
@@ -80,5 +83,17 @@ public class GuiChest extends GuiContainer
     {
         //chest.closeInventory();
         super.onGuiClosed();
+    }
+    
+    @Override
+    public void keyTyped(char par1, int keyCode)
+    {
+        for (KeyBinding bind : HOTBAR) 
+        {
+            if (bind.getKeyCode() == keyCode) 
+            {
+                return;
+            }
+        }
     }
 }
