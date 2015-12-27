@@ -3,6 +3,7 @@ package com.tattyseal.compactstorage.inventory;
 import com.tattyseal.compactstorage.api.IChest;
 import com.tattyseal.compactstorage.util.StorageInfo;
 
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

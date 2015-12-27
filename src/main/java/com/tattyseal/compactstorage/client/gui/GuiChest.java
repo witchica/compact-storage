@@ -1,6 +1,8 @@
 package com.tattyseal.compactstorage.client.gui;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.world.World;
@@ -8,6 +10,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import com.tattyseal.compactstorage.api.IChest;
+import com.tattyseal.compactstorage.inventory.InventoryBackpack;
 import com.tattyseal.compactstorage.util.BlockPos;
 import com.tattyseal.compactstorage.util.RenderUtil;
 
@@ -24,6 +27,9 @@ public class GuiChest extends GuiContainer
     public int invY;
 
     public IChest chest;
+    
+    public KeyBinding[] HOTBAR;
+    public int backpackSlot;
 
     
     public GuiChest(Container container, IChest chest, World world, EntityPlayer player, BlockPos pos)
@@ -35,6 +41,14 @@ public class GuiChest extends GuiContainer
         this.pos = pos;
 
         this.chest = chest;
+        
+        this.HOTBAR = Minecraft.getMinecraft().gameSettings.keyBindsHotbar;
+        
+        backpackSlot = -1;
+        if(chest instanceof InventoryBackpack)
+	    {
+        	backpackSlot = player.inventory.currentItem;
+	    }
 
         this.invX = chest.getInvX();
         this.invY = chest.getInvY();
@@ -73,6 +87,17 @@ public class GuiChest extends GuiContainer
         RenderUtil.renderSlots(guiLeft + 7 + ((((Math.max(9, invX)) * 18) / 2) - ((9 * 18) / 2)), guiTop + 17 + (invY * 18) + 13 + 54 + 4, 9, 1);
 
         GL11.glPopMatrix();
+    }
+    
+    @Override
+    protected void keyTyped(char c, int id) 
+    {
+    	if (backpackSlot != -1 && HOTBAR[backpackSlot].getKeyCode() == id) 
+    	{
+    		return;
+    	}
+    	
+    	super.keyTyped(c, id);
     }
 
     @Override

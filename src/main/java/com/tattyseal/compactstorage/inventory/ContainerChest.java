@@ -1,14 +1,16 @@
 package com.tattyseal.compactstorage.inventory;
 
+import com.tattyseal.compactstorage.api.IChest;
+import com.tattyseal.compactstorage.util.BlockPos;
+
 import invtweaks.api.container.ChestContainer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-
-import com.tattyseal.compactstorage.api.IChest;
-import com.tattyseal.compactstorage.util.BlockPos;
 
 /**
  * Created by Toby on 11/11/2014.
@@ -26,6 +28,7 @@ public class ContainerChest extends Container
     public int invY;
     
     public int lastId;
+    public int backpackSlot;
     
     /***
      * This is carried over from the GUI for slot placement issues
@@ -41,6 +44,12 @@ public class ContainerChest extends Container
         this.player = player;
         this.pos = pos;
         this.chest = chest;
+        
+        backpackSlot = -1;
+        if(chest instanceof InventoryBackpack)
+	    {
+        	backpackSlot = player.inventory.currentItem;
+	    }
         
         this.invX = chest.getInvX();
         this.invY = chest.getInvY();
@@ -91,7 +100,14 @@ public class ContainerChest extends Container
 
         for(int x = 0; x < 9; x++)
         {
-        	Slot slot = new Slot(player.inventory, x, slotX + (x * 18), slotY);
+        	boolean immovable = false;
+                	
+        	if(backpackSlot != -1 && backpackSlot == x)
+        	{
+        		immovable = true;
+        	}
+        	
+        	SlotImmovable slot = new SlotImmovable(player.inventory, x, slotX + (x * 18), slotY, immovable);
             addSlotToContainer(slot);
         }
     }
