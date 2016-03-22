@@ -8,7 +8,8 @@ import com.tattyseal.compactstorage.inventory.ContainerChestBuilder;
 import com.tattyseal.compactstorage.inventory.InventoryBackpack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
@@ -29,9 +30,9 @@ public class GuiHandler implements IGuiHandler
                 /* chest or backpack*/
                 IChest chest;
 
-                if(player.getHeldItem() != null && player.getHeldItem().getItem().equals(CompactStorage.backpack))
+                if(player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(CompactStorage.backpack))
                 {
-                    chest = new InventoryBackpack(player.getHeldItem());
+                    chest = new InventoryBackpack(player.getHeldItem(EnumHand.MAIN_HAND));
                 }
                 else
                 {
@@ -57,9 +58,9 @@ public class GuiHandler implements IGuiHandler
                  /* chest or backpack*/
                 IChest chest;
 
-                if(player.getHeldItem() != null && player.getHeldItem().getItem() == CompactStorage.backpack)
+                if(player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() == CompactStorage.backpack)
                 {
-                    chest = new InventoryBackpack(player.getHeldItem());
+                    chest = new InventoryBackpack(player.getHeldItem(EnumHand.MAIN_HAND));
                 }
                 else
                 {

@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
@@ -46,13 +46,13 @@ public class ItemBlockChest extends ItemBlock
     		if(stack.getTagCompound().getTag("size") instanceof NBTTagIntArray)
     		{
         		int size = (int) (stack.getTagCompound().getIntArray("size")[0] * stack.getTagCompound().getIntArray("size")[1]);
-        		list.add(EnumChatFormatting.GREEN + "Slots: " + size);
+        		list.add(TextFormatting.GREEN + "Slots: " + size);
     		}
     		else
     		{
     			int size = 27;
-    			list.add(EnumChatFormatting.GREEN + "Slots: " + size);
-    			list.add(EnumChatFormatting.RED + "Yep. You broke it.");
+    			list.add(TextFormatting.GREEN + "Slots: " + size);
+    			list.add(TextFormatting.RED + "Yep. You broke it.");
 
                 stack.getTagCompound().setIntArray("size", new int[] {9, 3});
     			
@@ -62,13 +62,13 @@ public class ItemBlockChest extends ItemBlock
     	}
     	else
     	{
-    		list.add(EnumChatFormatting.RED + "Slots: none");
+    		list.add(TextFormatting.RED + "Slots: none");
     	}
     	
     	super.addInformation(stack, player, list, b);
     }
 
-	@Override
+	/*@Override
 	public int getColorFromItemStack(ItemStack stack, int renderPass)
 	{
 		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("color"))
@@ -85,5 +85,5 @@ public class ItemBlockChest extends ItemBlock
 		}
 
 		return 0xFFFFFF;
-	}
+	}*/
 }

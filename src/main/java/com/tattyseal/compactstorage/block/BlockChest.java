@@ -8,18 +8,26 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -36,23 +44,16 @@ public class BlockChest extends Block implements ITileEntityProvider
         setHardness(2F);
         setResistance(2F);
         setHarvestLevel("axe", 1);
-        setBlockBounds(0.0625F, 0.0F, 0.0625F, 0.9375F, 0.875F, 0.9375F);
     }
 
     @Override
-    public boolean isFullCube()
+    public boolean isFullCube(IBlockState state)
     {
         return false;
     }
 
     @Override
-    public int getRenderType()
-    {
-        return -1;
-    }
-
-    @Override
-    public boolean isOpaqueCube()
+    public boolean isOpaqueCube(IBlockState state)
     {
         return false;
     }
@@ -89,7 +90,7 @@ public class BlockChest extends Block implements ITileEntityProvider
         	{
         		if(entity instanceof EntityPlayer)
         		{
-        			((EntityPlayer) entity).addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "You attempted something bad! :("));
+        			((EntityPlayer) entity).addChatMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
 
                     chest.invX = 9;
                     chest.invY = 3;
@@ -105,7 +106,7 @@ public class BlockChest extends Block implements ITileEntityProvider
         {
             if(entity instanceof EntityPlayer)
             {
-                ((EntityPlayer) entity).addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "You attempted something bad! :("));
+                ((EntityPlayer) entity).addChatMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
 
                 chest.invX = 9;
                 chest.invY = 3;
@@ -116,13 +117,14 @@ public class BlockChest extends Block implements ITileEntityProvider
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing facing, float x, float y, float z)
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack held, EnumFacing facing, float x, float y, float z)
     {
         if(!world.isRemote)
         {
             if(!player.isSneaking())
             {
-                world.playSoundEffect(pos.getX(), pos.getY(), pos.getZ(), "random.chestopen", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+                world.playSound((EntityPlayer)null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, SoundEvents.block_chest_open, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+
                 player.openGui(CompactStorage.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
 
                 return true;
@@ -135,6 +137,14 @@ public class BlockChest extends Block implements ITileEntityProvider
     public TileEntity createNewTileEntity(World world, int dim)
     {
         return new TileEntityChest();
+    }
+
+    /**
+     * The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
+     */
+    public EnumBlockRenderType getRenderType(IBlockState state)
+    {
+        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
@@ -171,13 +181,12 @@ public class BlockChest extends Block implements ITileEntityProvider
     }
 
     @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, BlockPos pos, EntityPlayer player)
-    {
-        return getPickBlock(target, world, pos);
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+        list.add(new ItemStack(itemIn, 1, 4));
     }
 
     @Override
-    public ItemStack getPickBlock(MovingObjectPosition target, World world, BlockPos pos)
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
     {
         ItemStack stack = new ItemStack(CompactStorage.chest, 1);
         TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);

@@ -3,9 +3,10 @@ package com.tattyseal.compactstorage.command;
 import com.tattyseal.compactstorage.ConfigurationHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.Loader;
 
 import java.util.Arrays;
@@ -35,7 +36,7 @@ public class CommandCompactStorage implements ICommand
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] args)
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args)
     {
         if(args.length > 0)
         {
@@ -43,32 +44,32 @@ public class CommandCompactStorage implements ICommand
 
             if(cmd.equalsIgnoreCase("version"))
             {
-                sender.addChatMessage(new ChatComponentText("CompactStorage version " + Loader.instance().getIndexedModList().get("compactstorage").getDisplayVersion() + "."));
+                sender.addChatMessage(new TextComponentString("CompactStorage version " + Loader.instance().getIndexedModList().get("compactstorage").getDisplayVersion() + "."));
             }
             else if(cmd.equalsIgnoreCase("reload"))
             {
                 ConfigurationHandler.init();
-                sender.addChatMessage(new ChatComponentText("Reloading configuration..."));
+                sender.addChatMessage(new TextComponentString("Reloading configuration..."));
             }
             else
             {
-                sender.addChatMessage(new ChatComponentTranslation(getCommandUsage(sender)));
+                sender.addChatMessage(new TextComponentTranslation(getCommandUsage(sender)));
             }
         }
         else
         {
-            sender.addChatMessage(new ChatComponentTranslation(getCommandUsage(sender)));
+            sender.addChatMessage(new TextComponentTranslation(getCommandUsage(sender)));
         }
     }
 
     @Override
-    public boolean canCommandSenderUseCommand(ICommandSender p_71519_1_)
+    public boolean checkPermission(MinecraftServer server, ICommandSender p_71519_1_)
     {
         return true;
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_, BlockPos pos) {
+    public List getTabCompletionOptions(MinecraftServer server, ICommandSender p_71516_1_, String[] p_71516_2_, BlockPos pos) {
         return p_71516_2_.length == 1 ? Arrays.asList("reload", "version") : null;
     }
 

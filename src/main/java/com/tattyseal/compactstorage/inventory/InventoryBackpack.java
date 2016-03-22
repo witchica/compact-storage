@@ -6,7 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 
 /**
@@ -59,7 +59,7 @@ public class InventoryBackpack implements IChest
     @Override
     public int getColor()
     {
-        return stack.getItem().getColorFromItemStack(stack, 0);
+        return 0xffffff;//stack.getItem().getColorFromItemStack(stack, 0);
     }
 
     /* INVENTORY START */
@@ -231,7 +231,7 @@ public class InventoryBackpack implements IChest
     }
 
     @Override
-    public IChatComponent getDisplayName() {
+    public ITextComponent getDisplayName() {
         return null;
     }
 }

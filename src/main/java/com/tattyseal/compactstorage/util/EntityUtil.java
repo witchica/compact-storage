@@ -2,7 +2,7 @@ package com.tattyseal.compactstorage.util;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Created by Toby on 07/11/2014.

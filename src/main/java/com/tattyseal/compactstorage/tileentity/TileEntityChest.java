@@ -11,10 +11,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 
 /**
@@ -165,7 +165,6 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     public void markDirty()
     {
         super.markDirty();
-        worldObj.markBlockForUpdate(pos);
     }
 
     /* CUSTOM START */
@@ -228,11 +227,11 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
 
-        return new S35PacketUpdateTileEntity(pos, getBlockMetadata(), tag);
+        return new SPacketUpdateTileEntity(pos, getBlockMetadata(), tag);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
     {
         super.onDataPacket(net, pkt);
         readFromNBT(pkt.getNbtCompound());
@@ -252,7 +251,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
 
     public void updateBlock()
     {
-        worldObj.markBlockForUpdate(pos);
+
     }
 
     @Override
@@ -286,7 +285,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     }
 
     @Override
-    public IChatComponent getDisplayName() {
+    public ITextComponent getDisplayName() {
         return null;
     }
 }

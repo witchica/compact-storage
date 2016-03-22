@@ -11,7 +11,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -25,7 +26,7 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 	@Override
 	public IMessage onMessage(C02PacketCraftChest message, MessageContext ctx)
 	{
-		TileEntityChestBuilder builder = (TileEntityChestBuilder) MinecraftServer.getServer().worldServerForDimension(message.dimension).getTileEntity(new BlockPos(message.x, message.y, message.z));
+		TileEntityChestBuilder builder = (TileEntityChestBuilder) FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(message.dimension).getTileEntity(new BlockPos(message.x, message.y, message.z));
 		
 		List<ItemStack> items = Arrays.asList(builder.items);
 		List<ItemStack> requiredItems = builder.info.getMaterialCost(message.type);

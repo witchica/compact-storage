@@ -13,14 +13,14 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import org.lwjgl.input.Keyboard;
@@ -216,7 +216,7 @@ public class GuiChestBuilder extends GuiContainer
                         {
                             ArrayList<String> toolList = new ArrayList<String>();
                             toolList.add(stack.getDisplayName());
-                            toolList.add(EnumChatFormatting.AQUA + "Amount Required: " + stack.stackSize);
+                            toolList.add(TextFormatting.AQUA + "Amount Required: " + stack.stackSize);
 
                             drawHoveringText(toolList, mouseX, mouseY, getFontRenderer());
                         }
@@ -420,7 +420,7 @@ public class GuiChestBuilder extends GuiContainer
     public static void drawTexturedQuadFit(double x, double y, double width, double height, double zLevel)
     {
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer renderer = tessellator.getWorldRenderer();
+        VertexBuffer renderer = tessellator.getBuffer();
 
         renderer.begin(7, DefaultVertexFormats.POSITION_TEX);
         renderer.pos(x + 0, y + height, 0).tex(0,1).endVertex();

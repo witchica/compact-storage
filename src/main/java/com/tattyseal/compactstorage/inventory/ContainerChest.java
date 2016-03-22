@@ -2,10 +2,14 @@ package com.tattyseal.compactstorage.inventory;
 
 import com.tattyseal.compactstorage.api.IChest;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -168,24 +172,23 @@ public class ContainerChest extends Container
 
         if(!world.isRemote)
         {
-            world.playSoundEffect(pos.getX(), pos.getY(), pos.getZ(), "random.chestclosed", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+            world.playSound((EntityPlayer)null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, SoundEvents.block_chest_close, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
         }
 
         super.onContainerClosed(player);
     }
-
     @Override
-    public ItemStack slotClick(int slot, int button, int flag, EntityPlayer player)
+    public ItemStack func_184996_a(int slot, int button, ClickType flag, EntityPlayer player)
     {
         if(chest instanceof InventoryBackpack)
         {
-            if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItem())
+            if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItem(EnumHand.MAIN_HAND))
             {
                 return null;
             }
         }
 
-        return super.slotClick(slot, button, flag, player);
+        return super.func_184996_a(slot, button, flag, player);
     }
 
 
