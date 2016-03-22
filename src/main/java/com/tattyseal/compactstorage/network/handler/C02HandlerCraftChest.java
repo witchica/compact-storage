@@ -1,33 +1,31 @@
 package com.tattyseal.compactstorage.network.handler;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.LogManager;
-
+import com.tattyseal.compactstorage.CompactStorage;
+import com.tattyseal.compactstorage.network.packet.C02PacketCraftChest;
+import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
 import com.tattyseal.compactstorage.util.LogHelper;
+import com.tattyseal.compactstorage.util.StorageInfo;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.tattyseal.compactstorage.CompactStorage;
-import com.tattyseal.compactstorage.network.packet.C02PacketCraftChest;
-import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
-import com.tattyseal.compactstorage.util.StorageInfo;
-
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import java.util.Arrays;
+import java.util.List;
 
 public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest, IMessage>
 {
 	@Override
-	public IMessage onMessage(C02PacketCraftChest message, MessageContext ctx) 
+	public IMessage onMessage(C02PacketCraftChest message, MessageContext ctx)
 	{
-		TileEntityChestBuilder builder = (TileEntityChestBuilder) MinecraftServer.getServer().worldServerForDimension(message.dimension).getTileEntity(message.x, message.y, message.z);
+		TileEntityChestBuilder builder = (TileEntityChestBuilder) MinecraftServer.getServer().worldServerForDimension(message.dimension).getTileEntity(new BlockPos(message.x, message.y, message.z));
 		
 		List<ItemStack> items = Arrays.asList(builder.items);
 		List<ItemStack> requiredItems = builder.info.getMaterialCost(message.type);

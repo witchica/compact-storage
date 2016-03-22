@@ -1,5 +1,4 @@
 tile.compactchest.name=Compact Chest
-tile.sortingcompactchest.name=Sorting Compact Chest
-tile.chestbuilder.name=Builder
+tile.chestBuilder.name=Builder
 item.backpack.name=Backpack
 itemGroup.compactStorage=CompactStorage

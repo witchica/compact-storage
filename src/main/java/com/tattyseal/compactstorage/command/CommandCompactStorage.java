@@ -1,16 +1,15 @@
 package com.tattyseal.compactstorage.command;
 
-import java.util.Arrays;
-import java.util.List;
-
+import com.tattyseal.compactstorage.ConfigurationHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraftforge.fml.common.Loader;
 
-import com.tattyseal.compactstorage.ConfigurationHandler;
-
-import cpw.mods.fml.common.Loader;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Toby on 11/02/2015.
@@ -69,7 +68,7 @@ public class CommandCompactStorage implements ICommand
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_) {
+    public List addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_, BlockPos pos) {
         return p_71516_2_.length == 1 ? Arrays.asList("reload", "version") : null;
     }
 
@@ -79,7 +78,7 @@ public class CommandCompactStorage implements ICommand
     }
 
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(ICommand o) {
         return 0;
     }
 }

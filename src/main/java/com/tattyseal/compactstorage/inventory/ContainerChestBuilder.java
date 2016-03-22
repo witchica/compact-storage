@@ -2,17 +2,16 @@ package com.tattyseal.compactstorage.inventory;
 
 import com.tattyseal.compactstorage.inventory.slot.SlotChestBuilder;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
-import com.tattyseal.compactstorage.util.BlockPos;
 import com.tattyseal.compactstorage.util.StorageInfo;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Created by Toby on 11/11/2014.
@@ -38,7 +37,7 @@ public class ContainerChestBuilder extends Container
         this.world = world;
         this.player = player;
         this.pos = pos;
-        this.chest = ((TileEntityChestBuilder) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ()));
+        this.chest = ((TileEntityChestBuilder) world.getTileEntity(pos));
         
         this.xSize = 7 + 162 + 7;
         this.ySize = 7 + 108 + 13 + 54 + 4 + 18 + 7;
@@ -129,9 +128,9 @@ public class ContainerChestBuilder extends Container
     }
 
     @Override
-    public void addCraftingToCrafters(ICrafting crafter)
+    public void onCraftGuiOpened(ICrafting crafter)
     {
-    	super.addCraftingToCrafters(crafter);
+    	super.onCraftGuiOpened(crafter);
     	crafter.sendProgressBarUpdate(this, 0, 9);
     	crafter.sendProgressBarUpdate(this, 1, 3);
     }

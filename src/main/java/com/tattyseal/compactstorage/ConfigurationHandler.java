@@ -2,11 +2,10 @@ package com.tattyseal.compactstorage;
 
 import com.google.common.collect.Lists;
 import com.tattyseal.compactstorage.exception.InvalidConfigurationException;
-
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.io.File;

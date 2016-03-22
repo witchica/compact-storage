@@ -1,7 +1,6 @@
 package com.tattyseal.compactstorage.inventory.slot;
 
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
-
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 

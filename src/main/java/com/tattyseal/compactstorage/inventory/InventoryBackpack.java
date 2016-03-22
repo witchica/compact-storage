@@ -2,12 +2,11 @@ package com.tattyseal.compactstorage.inventory;
 
 import com.tattyseal.compactstorage.api.IChest;
 import com.tattyseal.compactstorage.util.StorageInfo;
-
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.Constants;
 
 /**
@@ -108,9 +107,8 @@ public class InventoryBackpack implements IChest
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int slot)
-    {
-        return getStackInSlot(slot);
+    public ItemStack removeStackFromSlot(int index) {
+        return null;
     }
 
     @Override
@@ -124,13 +122,13 @@ public class InventoryBackpack implements IChest
     }
 
     @Override
-    public String getInventoryName()
+    public String getName()
     {
         return "backpack.inv";
     }
 
     @Override
-    public boolean hasCustomInventoryName()
+    public boolean hasCustomName()
     {
         return false;
     }
@@ -154,11 +152,12 @@ public class InventoryBackpack implements IChest
     }
 
     @Override
-    public void openInventory() {}
+    public void openInventory(EntityPlayer player) {
+
+    }
 
     @Override
-    public void closeInventory()
-    {
+    public void closeInventory(EntityPlayer player) {
         writeToNBT(stack.getTagCompound());
     }
 
@@ -166,6 +165,26 @@ public class InventoryBackpack implements IChest
     public boolean isItemValidForSlot(int slot, ItemStack stack)
     {
         return true;
+    }
+
+    @Override
+    public int getField(int id) {
+        return 0;
+    }
+
+    @Override
+    public void setField(int id, int value) {
+
+    }
+
+    @Override
+    public int getFieldCount() {
+        return 0;
+    }
+
+    @Override
+    public void clear() {
+
     }
 
     /** CUSTOM START **/
@@ -209,5 +228,10 @@ public class InventoryBackpack implements IChest
     public boolean shouldConnectToNetwork()
     {
         return false;
+    }
+
+    @Override
+    public IChatComponent getDisplayName() {
+        return null;
     }
 }

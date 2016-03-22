@@ -1,18 +1,18 @@
 package com.tattyseal.compactstorage.client.gui;
 
+import com.tattyseal.compactstorage.api.IChest;
+import com.tattyseal.compactstorage.inventory.InventoryBackpack;
+import com.tattyseal.compactstorage.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-
 import org.lwjgl.opengl.GL11;
 
-import com.tattyseal.compactstorage.api.IChest;
-import com.tattyseal.compactstorage.inventory.InventoryBackpack;
-import com.tattyseal.compactstorage.util.BlockPos;
-import com.tattyseal.compactstorage.util.RenderUtil;
+import java.io.IOException;
 
 /**
  * Created by Toby on 09/11/2014.
@@ -90,7 +90,7 @@ public class GuiChest extends GuiContainer
     }
     
     @Override
-    protected void keyTyped(char c, int id) 
+    protected void keyTyped(char c, int id)  throws IOException
     {
     	if (backpackSlot != -1 && HOTBAR[backpackSlot].getKeyCode() == id) 
     	{

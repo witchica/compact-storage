@@ -1,9 +1,11 @@
 package com.tattyseal.compactstorage.client.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
+import com.tattyseal.compactstorage.CompactStorage;
+import com.tattyseal.compactstorage.network.packet.C01PacketUpdateBuilder;
+import com.tattyseal.compactstorage.network.packet.C02PacketCraftChest;
+import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
+import com.tattyseal.compactstorage.util.RenderUtil;
+import com.tattyseal.compactstorage.util.StorageInfo;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -11,25 +13,22 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import com.tattyseal.compactstorage.CompactStorage;
-import com.tattyseal.compactstorage.network.packet.C01PacketUpdateBuilder;
-import com.tattyseal.compactstorage.network.packet.C02PacketCraftChest;
-import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
-import com.tattyseal.compactstorage.util.BlockPos;
-import com.tattyseal.compactstorage.util.RenderUtil;
-import com.tattyseal.compactstorage.util.StorageInfo;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Toby on 09/11/2014.
@@ -84,7 +83,7 @@ public class GuiChestBuilder extends GuiContainer
         this.player = player;
         this.pos = pos;
         
-        this.builder = ((TileEntityChestBuilder) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ()));
+        this.builder = ((TileEntityChestBuilder) world.getTileEntity(pos));
 
         this.xSize = 7 + 162 + 7;
         this.ySize = 7 + 108 + 13 + 54 + 4 + 18 + 7;
@@ -113,7 +112,7 @@ public class GuiChestBuilder extends GuiContainer
         buttonChangeType = new GuiButton(5, guiLeft + xSize - 7 - 60, guiTop + 8 + 108 - 10 - 21, 60, 20, builder.type.name());
         buttonList.add(buttonChangeType);
 
-        colorField = new GuiTextField(getFontRenderer(), guiLeft + xSize - 7 - 52, guiTop + 7 + 35, 50, 20);
+        colorField = new GuiTextField(0, getFontRenderer(), guiLeft + xSize - 7 - 52, guiTop + 7 + 35, 50, 20);
         colorField.setText("FFFFFF");
         colorField.setMaxStringLength(6);
     }
@@ -131,7 +130,7 @@ public class GuiChestBuilder extends GuiContainer
     }
 
     @Override
-    protected void keyTyped(char key, int keyid)
+    protected void keyTyped(char key, int keyid) throws IOException
     {
         if(colorField.isFocused() && getAllowed().contains(keyid) && !GuiScreen.isShiftKeyDown())
         {
@@ -145,7 +144,7 @@ public class GuiChestBuilder extends GuiContainer
     }
 
     @Override
-    public void mouseClicked(int x, int y, int b)
+    public void mouseClicked(int x, int y, int b) throws IOException
     {
         super.mouseClicked(x, y, b);
         colorField.mouseClicked(x, y, b);
@@ -325,18 +324,18 @@ public class GuiChestBuilder extends GuiContainer
             if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) stack.setItemDamage(0);
 
             RenderHelper.enableGUIStandardItemLighting();
-            itemRender.renderItemIntoGUI(fontRendererObj, mc.renderEngine, stack, guiLeft + 7 + x * 18 + 1, guiTop + 18);
+            itemRender.renderItemIntoGUI(stack, guiLeft + 7 + x * 18 + 1, guiTop + 18);
             
             RenderHelper.disableStandardItemLighting();
         }
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        itemRender.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, new ItemStack(Blocks.wool, 1, 14), guiLeft + xSize - 7 - 34 - 9, guiTop + 7);
-        itemRender.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, new ItemStack(Blocks.wool, 1, 11), guiLeft + xSize - 7 - 17 - 9, guiTop + 7);
+        itemRender.renderItemIntoGUI(new ItemStack(Blocks.wool, 1, 14), guiLeft + xSize - 7 - 34 - 9, guiTop + 7);
+        itemRender.renderItemIntoGUI(new ItemStack(Blocks.wool, 1, 11), guiLeft + xSize - 7 - 17 - 9, guiTop + 7);
 
-        itemRender.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, new ItemStack(Blocks.wool, 1, 5), guiLeft + xSize - 7 - 34 - 9, guiTop + 7 + 17);
-        itemRender.renderItemIntoGUI(getFontRenderer(), mc.renderEngine, new ItemStack(Blocks.wool, 1, 6), guiLeft + xSize - 7 - 17 - 9, guiTop + 7 + 17);
+        itemRender.renderItemIntoGUI(new ItemStack(Blocks.wool, 1, 5), guiLeft + xSize - 7 - 34 - 9, guiTop + 7 + 17);
+        itemRender.renderItemIntoGUI(new ItemStack(Blocks.wool, 1, 6), guiLeft + xSize - 7 - 17 - 9, guiTop + 7 + 17);
 
         RenderHelper.disableStandardItemLighting();
 
@@ -356,7 +355,7 @@ public class GuiChestBuilder extends GuiContainer
     }
 
     @Override
-    public void actionPerformed(GuiButton button) 
+    public void actionPerformed(GuiButton button) throws IOException
     {
     	super.actionPerformed(button);
         StorageInfo info = new StorageInfo(builder.info.getSizeX(), builder.info.getSizeY());
@@ -420,12 +419,14 @@ public class GuiChestBuilder extends GuiContainer
     
     public static void drawTexturedQuadFit(double x, double y, double width, double height, double zLevel)
     {
-        Tessellator tessellator = Tessellator.instance;
-        tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x + 0, y + height, zLevel, 0,1);
-        tessellator.addVertexWithUV(x + width, y + height, zLevel, 1, 1);
-        tessellator.addVertexWithUV(x + width, y + 0, zLevel, 1,0);
-        tessellator.addVertexWithUV(x + 0, y + 0, zLevel, 0, 0);
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer renderer = tessellator.getWorldRenderer();
+
+        renderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        renderer.pos(x + 0, y + height, 0).tex(0,1).endVertex();
+        renderer.pos(x + width, y + height, zLevel).tex(1, 1).endVertex();
+        renderer.pos(x + width, y + 0, zLevel).tex(1,0).endVertex();
+        renderer.pos(x + 0, y + 0, zLevel).tex(0, 0).endVertex();
         tessellator.draw();
     }
     

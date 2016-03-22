@@ -1,10 +1,9 @@
 package com.tattyseal.compactstorage.network.packet;
 
-import com.tattyseal.compactstorage.util.BlockPos;
 import com.tattyseal.compactstorage.util.StorageInfo;
-
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class C01PacketUpdateBuilder implements IMessage
 {

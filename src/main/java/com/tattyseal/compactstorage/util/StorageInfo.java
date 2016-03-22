@@ -1,11 +1,12 @@
 package com.tattyseal.compactstorage.util;
 
-import java.util.ArrayList;
-import java.util.List;
-import static com.tattyseal.compactstorage.ConfigurationHandler.*;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.tattyseal.compactstorage.ConfigurationHandler.*;
 
 public class StorageInfo
 {

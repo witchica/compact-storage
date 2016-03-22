@@ -1,24 +1,10 @@
 package com.tattyseal.compactstorage;
 
-import java.util.List;
-
-import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.google.common.collect.Lists;
 import com.tattyseal.compactstorage.block.BlockChest;
 import com.tattyseal.compactstorage.block.BlockChestBuilder;
 import com.tattyseal.compactstorage.command.CommandCompactStorage;
 import com.tattyseal.compactstorage.compat.ICompat;
-import com.tattyseal.compactstorage.compat.RefinedRelocationCompat;
 import com.tattyseal.compactstorage.creativetabs.CreativeTabCompactStorage;
 import com.tattyseal.compactstorage.item.ItemBackpack;
 import com.tattyseal.compactstorage.item.ItemBlockChest;
@@ -29,21 +15,25 @@ import com.tattyseal.compactstorage.network.packet.C02PacketCraftChest;
 import com.tattyseal.compactstorage.proxy.IProxy;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
+import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.oredict.OreDictionary;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLMissingMappingsEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
+import java.util.List;
 
 /**
  * Created by Toby on 06/11/2014.
@@ -51,7 +41,7 @@ import cpw.mods.fml.relauncher.Side;
 @Mod(modid = CompactStorage.ID, name = CompactStorage.NAME, version = CompactStorage.VERSION)
 public class CompactStorage
 {
-    @Instance(CompactStorage.ID)
+    @Mod.Instance(CompactStorage.ID)
     public static CompactStorage instance;
     
     public static List<ICompat> compat;
@@ -78,12 +68,10 @@ public class CompactStorage
     
     public static Item backpack;
     
-    @EventHandler
+    @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
     	compat = Lists.newArrayList();
-
-        if(Loader.isModLoaded("RefinedRelocation")) compat.add(new RefinedRelocationCompat());
 
         OreDictionary.registerOre("barsIron", Blocks.iron_bars);
         OreDictionary.registerOre("blockChest", Blocks.chest);
@@ -112,7 +100,7 @@ public class CompactStorage
         ConfigurationHandler.configFile = event.getSuggestedConfigurationFile();
     }
 
-    @EventHandler
+    @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
     	for(ICompat icompat : compat)
@@ -142,7 +130,7 @@ public class CompactStorage
     	}
     }
 
-    @EventHandler
+    @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
@@ -153,21 +141,8 @@ public class CompactStorage
 
         ConfigurationHandler.init();
     }
-
-    @EventHandler
-    public void missingMapping(FMLMissingMappingsEvent event)
-    {
-    	for(int map = 0; map < event.getAll().size(); map++)
-    	{
-    		if(event.getAll().get(map).name.startsWith("compactstorage"))
-    		{
-    			System.out.println("Ignoring missing block/item " + event.getAll().get(map).name);
-    			event.getAll().get(map).ignore();
-    		}
-    	}
-    }
     
-    @EventHandler
+    @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
         event.registerServerCommand(new CommandCompactStorage());

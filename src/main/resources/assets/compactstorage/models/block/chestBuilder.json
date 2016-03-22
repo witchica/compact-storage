@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "particle": "compactstorage:blocks/chestBuilderTop",
+    "up": "compactstorage:blocks/chestBuilderTop",
+    "down": "blocks/iron_block",
+    "north": "compactstorage:blocks/chestBuilderFront",
+    "east": "compactstorage:blocks/chestBuilderSide",
+    "south": "compactstorage:blocks/chestBuilderFront",
+    "west": "compactstorage:blocks/chestBuilderSide"
+  }
+}

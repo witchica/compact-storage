@@ -1,15 +1,14 @@
 package com.tattyseal.compactstorage.client.render;
 
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelChest;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -27,7 +26,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float scale)
+    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float scale, int i)
     {
         GL11.glPushMatrix();
 
@@ -36,7 +35,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
 
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 
-        ForgeDirection direction = ((TileEntityChest) tile).direction;
+        EnumFacing direction = ((TileEntityChest) tile).direction;
 
         switch (direction)
         {

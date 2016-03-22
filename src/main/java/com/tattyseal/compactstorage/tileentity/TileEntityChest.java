@@ -1,5 +1,9 @@
 package com.tattyseal.compactstorage.tileentity;
 
+import com.tattyseal.compactstorage.ConfigurationHandler;
+import com.tattyseal.compactstorage.api.IChest;
+import com.tattyseal.compactstorage.util.StorageInfo;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -9,19 +13,16 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.ForgeDirection;
-
-import com.tattyseal.compactstorage.ConfigurationHandler;
-import com.tattyseal.compactstorage.api.IChest;
-import com.tattyseal.compactstorage.util.StorageInfo;
 
 /**
  * Created by Toby on 06/11/2014.
  */
 public class TileEntityChest extends TileEntity implements IInventory, IChest
 {
-    public ForgeDirection direction;
+    public EnumFacing direction;
 
     public int color;
     public int invX;
@@ -35,7 +36,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     {
         super();
 
-        this.direction = ForgeDirection.NORTH;
+        this.direction = EnumFacing.NORTH;
         this.items = new ItemStack[getSizeInventory()];
     }
 
@@ -84,9 +85,10 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     }
 
     @Override
-    public ItemStack getStackInSlotOnClosing(int slot)
+    public ItemStack removeStackFromSlot(int index)
     {
-        return getStackInSlot(slot);
+        items[index] = null;
+        return null;
     }
 
     @Override
@@ -100,13 +102,13 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     }
 
     @Override
-    public String getInventoryName()
+    public String getName()
     {
         return "compactChest.inv";
     }
 
     @Override
-    public boolean hasCustomInventoryName() 
+    public boolean hasCustomName()
     {
         return false;
     }
@@ -124,10 +126,14 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     }
 
     @Override
-    public void openInventory() {}
+    public void openInventory(EntityPlayer player) {
+
+    }
 
     @Override
-    public void closeInventory() {}
+    public void closeInventory(EntityPlayer player) {
+
+    }
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) 
@@ -136,10 +142,30 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     }
 
     @Override
+    public int getField(int id) {
+        return 0;
+    }
+
+    @Override
+    public void setField(int id, int value) {
+
+    }
+
+    @Override
+    public int getFieldCount() {
+        return 0;
+    }
+
+    @Override
+    public void clear() {
+
+    }
+
+    @Override
     public void markDirty()
     {
         super.markDirty();
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        worldObj.markBlockForUpdate(pos);
     }
 
     /* CUSTOM START */
@@ -149,7 +175,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     {
         super.readFromNBT(tag);
 
-        if(tag.hasKey("facing")) this.direction = ForgeDirection.getOrientation(tag.getInteger("facing"));
+        if(tag.hasKey("facing")) this.direction = EnumFacing.getFront(tag.getInteger("facing"));
 
         this.color = tag.getInteger("color");
         this.invX = tag.getInteger("invX");
@@ -202,24 +228,17 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
         NBTTagCompound tag = new NBTTagCompound();
         writeToNBT(tag);
 
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, getBlockMetadata(), tag);
-    }
-    
-    @Override
-    public void updateEntity()
-    {
-    	super.updateEntity();
-    	
+        return new S35PacketUpdateTileEntity(pos, getBlockMetadata(), tag);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
     {
         super.onDataPacket(net, pkt);
-        readFromNBT(pkt.func_148857_g());
+        readFromNBT(pkt.getNbtCompound());
     }
 
-    public void setDirection(ForgeDirection direction)
+    public void setDirection(EnumFacing direction)
     {
         this.direction = direction;
         updateBlock();
@@ -227,13 +246,13 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
 
     public void setDirection(int direction)
     {
-        this.direction = ForgeDirection.getOrientation(direction);
+        this.direction = EnumFacing.getFront(direction);
         updateBlock();
     }
 
     public void updateBlock()
     {
-        worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+        worldObj.markBlockForUpdate(pos);
     }
 
     @Override
@@ -264,5 +283,10 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest
     public boolean shouldConnectToNetwork()
     {
         return ConfigurationHandler.shouldConnect;
+    }
+
+    @Override
+    public IChatComponent getDisplayName() {
+        return null;
     }
 }

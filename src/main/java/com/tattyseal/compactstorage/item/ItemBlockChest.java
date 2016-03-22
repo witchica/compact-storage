@@ -1,7 +1,6 @@
 package com.tattyseal.compactstorage.item;
 
 import com.tattyseal.compactstorage.exception.InvalidSizeException;
-
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,7 +8,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagIntArray;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.List;
@@ -66,4 +67,23 @@ public class ItemBlockChest extends ItemBlock
     	
     	super.addInformation(stack, player, list, b);
     }
+
+	@Override
+	public int getColorFromItemStack(ItemStack stack, int renderPass)
+	{
+		if(stack.hasTagCompound() && stack.getTagCompound().hasKey("color"))
+		{
+			if(stack.getTagCompound().hasKey("color"))
+			{
+				String color = stack.getTagCompound().getString("color");
+				return color == "" ? 0xffffff : Integer.decode(color);
+			}
+			else
+			{
+				return 0xffffff;
+			}
+		}
+
+		return 0xFFFFFF;
+	}
 }
