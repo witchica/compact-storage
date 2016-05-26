@@ -22,7 +22,7 @@ public class BlockChestBuilder extends Block implements ITileEntityProvider
 {
 	public BlockChestBuilder()
 	{
-		super(Material.iron);
+		super(Material.IRON);
         setUnlocalizedName("chestBuilder");
         setCreativeTab(CompactStorage.tabCS);
 

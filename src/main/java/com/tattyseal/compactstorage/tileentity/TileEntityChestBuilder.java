@@ -38,7 +38,34 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound tag)
+	public NBTTagCompound getTileData()
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		tag = writeToNBT(tag);
+
+		return tag;
+	}
+
+	@Override
+	public NBTTagCompound serializeNBT()
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		tag = writeToNBT(tag);
+
+		return tag;
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag()
+	{
+		NBTTagCompound tag = new NBTTagCompound();
+		tag = writeToNBT(tag);
+
+		return tag;
+	}
+
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
 
@@ -61,6 +88,8 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
         }
 
         tag.setTag("Items", nbtTagList);
+
+		return tag;
 	}
 
 	@Override
@@ -85,8 +114,6 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
         markDirty();
 	}
 
-
-
 	@Override
 	public void update()
 	{
@@ -99,10 +126,9 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	}
 
 	@Override
-	public Packet getDescriptionPacket()
+	public SPacketUpdateTileEntity getUpdatePacket()
 	{
-		NBTTagCompound tag = new NBTTagCompound();
-		writeToNBT(tag);
+		NBTTagCompound tag = getUpdateTag();
 
 		return new SPacketUpdateTileEntity(pos, 1, tag);
 	}

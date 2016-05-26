@@ -5,7 +5,7 @@ import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
 import com.tattyseal.compactstorage.util.StorageInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
@@ -128,11 +128,11 @@ public class ContainerChestBuilder extends Container
     }
 
     @Override
-    public void onCraftGuiOpened(ICrafting crafter)
+    public void addListener(IContainerListener listener)
     {
-    	super.onCraftGuiOpened(crafter);
-    	crafter.sendProgressBarUpdate(this, 0, 9);
-    	crafter.sendProgressBarUpdate(this, 1, 3);
+        super.addListener(listener);
+        listener.sendProgressBarUpdate(this, 0, 9);
+        listener.sendProgressBarUpdate(this, 1, 3);
     }
 
     @Override
@@ -140,9 +140,9 @@ public class ContainerChestBuilder extends Container
     {
         super.detectAndSendChanges();
 
-        for (int i = 0; i < this.crafters.size(); ++i)
+        for (int i = 0; i < this.listeners.size(); ++i)
         {
-            ICrafting crafter = (ICrafting)this.crafters.get(i);
+            IContainerListener crafter = (IContainerListener)this.listeners.get(i);
             if(chest != null && chest.info != null) crafter.sendProgressBarUpdate(this, 0, chest.info.getSizeX());
             if(chest != null && chest.info != null) crafter.sendProgressBarUpdate(this, 1, chest.info.getSizeY());
         }

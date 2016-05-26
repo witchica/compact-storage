@@ -37,7 +37,7 @@ public class BlockChest extends Block implements ITileEntityProvider
 {
     public BlockChest()
     {
-        super(Material.wood);
+        super(Material.WOOD);
         setUnlocalizedName("compactchest");
         setCreativeTab(CompactStorage.tabCS);
 
@@ -123,7 +123,7 @@ public class BlockChest extends Block implements ITileEntityProvider
         {
             if(!player.isSneaking())
             {
-                world.playSound((EntityPlayer)null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, SoundEvents.block_chest_open, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+                world.playSound((EntityPlayer)null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
 
                 player.openGui(CompactStorage.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
 

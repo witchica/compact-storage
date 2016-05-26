@@ -73,12 +73,12 @@ public class CompactStorage
     {
     	compat = Lists.newArrayList();
 
-        OreDictionary.registerOre("barsIron", Blocks.iron_bars);
-        OreDictionary.registerOre("blockChest", Blocks.chest);
-        OreDictionary.registerOre("itemClay", Items.clay_ball);
+        OreDictionary.registerOre("barsIron", Blocks.IRON_BARS);
+        OreDictionary.registerOre("blockChest", Blocks.CHEST);
+        OreDictionary.registerOre("itemClay", Items.CLAY_BALL);
 
-        OreDictionary.registerOre("string", Items.string);
-        OreDictionary.registerOre("wool", Blocks.wool);
+        OreDictionary.registerOre("string", Items.STRING);
+        OreDictionary.registerOre("wool", Blocks.WOOL);
     	
         tabCS = new CreativeTabCompactStorage();
         
@@ -137,7 +137,7 @@ public class CompactStorage
 
         proxy.registerRenderers();
 
-        GameRegistry.addRecipe(new ItemStack(chestBuilder, 1), "ILI", "ICI", "ILI", 'I', new ItemStack(Items.iron_ingot, 1), 'C', new ItemStack(Blocks.chest, 1), 'L', new ItemStack(Blocks.lever, 1));
+        GameRegistry.addRecipe(new ItemStack(chestBuilder, 1), "ILI", "ICI", "ILI", 'I', new ItemStack(Items.IRON_INGOT, 1), 'C', new ItemStack(Blocks.CHEST, 1), 'L', new ItemStack(Blocks.LEVER, 1));
 
         ConfigurationHandler.init();
     }

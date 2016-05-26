@@ -331,11 +331,11 @@ public class GuiChestBuilder extends GuiContainer
 
         RenderHelper.enableGUIStandardItemLighting();
 
-        itemRender.renderItemIntoGUI(new ItemStack(Blocks.wool, 1, 14), guiLeft + xSize - 7 - 34 - 9, guiTop + 7);
-        itemRender.renderItemIntoGUI(new ItemStack(Blocks.wool, 1, 11), guiLeft + xSize - 7 - 17 - 9, guiTop + 7);
+        itemRender.renderItemIntoGUI(new ItemStack(Blocks.WOOL, 1, 14), guiLeft + xSize - 7 - 34 - 9, guiTop + 7);
+        itemRender.renderItemIntoGUI(new ItemStack(Blocks.WOOL, 1, 11), guiLeft + xSize - 7 - 17 - 9, guiTop + 7);
 
-        itemRender.renderItemIntoGUI(new ItemStack(Blocks.wool, 1, 5), guiLeft + xSize - 7 - 34 - 9, guiTop + 7 + 17);
-        itemRender.renderItemIntoGUI(new ItemStack(Blocks.wool, 1, 6), guiLeft + xSize - 7 - 17 - 9, guiTop + 7 + 17);
+        itemRender.renderItemIntoGUI(new ItemStack(Blocks.WOOL, 1, 5), guiLeft + xSize - 7 - 34 - 9, guiTop + 7 + 17);
+        itemRender.renderItemIntoGUI(new ItemStack(Blocks.WOOL, 1, 6), guiLeft + xSize - 7 - 17 - 9, guiTop + 7 + 17);
 
         RenderHelper.disableStandardItemLighting();
 

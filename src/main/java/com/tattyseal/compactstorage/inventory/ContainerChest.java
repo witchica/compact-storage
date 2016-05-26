@@ -172,13 +172,15 @@ public class ContainerChest extends Container
 
         if(!world.isRemote)
         {
-            world.playSound((EntityPlayer)null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, SoundEvents.block_chest_close, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+            world.playSound((EntityPlayer)null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
         }
 
         super.onContainerClosed(player);
     }
+
+
     @Override
-    public ItemStack func_184996_a(int slot, int button, ClickType flag, EntityPlayer player)
+    public ItemStack slotClick(int slot, int button, ClickType flag, EntityPlayer player)
     {
         if(chest instanceof InventoryBackpack)
         {
@@ -188,7 +190,7 @@ public class ContainerChest extends Container
             }
         }
 
-        return super.func_184996_a(slot, button, flag, player);
+        return super.slotClick(slot, button, flag, player);
     }
 
 
