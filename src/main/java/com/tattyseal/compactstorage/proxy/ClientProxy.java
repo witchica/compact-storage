@@ -17,5 +17,6 @@ public class ClientProxy implements IProxy
         ModelUtil.registerChest();
         ModelUtil.registerBlock(CompactStorage.chestBuilder, 0, "compactstorage:chestBuilder");
         ModelUtil.registerItem(CompactStorage.backpack, 0, "compactstorage:backpack");
+        ModelUtil.registerItem(CompactStorage.storage, 0, "compactstorage:storage");
     }
 }

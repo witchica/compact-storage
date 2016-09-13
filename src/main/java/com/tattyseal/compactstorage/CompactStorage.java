@@ -8,6 +8,7 @@ import com.tattyseal.compactstorage.compat.ICompat;
 import com.tattyseal.compactstorage.creativetabs.CreativeTabCompactStorage;
 import com.tattyseal.compactstorage.item.ItemBackpack;
 import com.tattyseal.compactstorage.item.ItemBlockChest;
+import com.tattyseal.compactstorage.item.ItemStorage;
 import com.tattyseal.compactstorage.network.handler.C01HandlerUpdateBuilder;
 import com.tattyseal.compactstorage.network.handler.C02HandlerCraftChest;
 import com.tattyseal.compactstorage.network.packet.C01PacketUpdateBuilder;
@@ -21,6 +22,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -67,6 +69,7 @@ public class CompactStorage
     public static Block chestBuilder;
     
     public static Item backpack;
+    public static Item storage;
     
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -96,6 +99,9 @@ public class CompactStorage
     
         backpack = new ItemBackpack();
         GameRegistry.registerItem(backpack, "backpack");
+
+        storage = new ItemStorage();
+        GameRegistry.register(storage);
         
         ConfigurationHandler.configFile = event.getSuggestedConfigurationFile();
     }
@@ -138,7 +144,8 @@ public class CompactStorage
         proxy.registerRenderers();
 
         GameRegistry.addRecipe(new ItemStack(chestBuilder, 1), "ILI", "ICI", "ILI", 'I', new ItemStack(Items.IRON_INGOT, 1), 'C', new ItemStack(Blocks.CHEST, 1), 'L', new ItemStack(Blocks.LEVER, 1));
-
+        GameRegistry.addRecipe(new ItemStack(chest, 1), "III", "GCG", "III", 'I', new ItemStack(Items.IRON_INGOT, 1), 'G', new ItemStack(Blocks.GLASS_PANE, 1), 'C', new ItemStack(Blocks.CHEST, 1));
+        GameRegistry.addRecipe(new ItemStack(backpack, 1), "III", "GCG", "III", 'I', new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE), 'G', new ItemStack(Items.STRING, 1), 'C', new ItemStack(Blocks.CHEST, 1));
         ConfigurationHandler.init();
     }
     
