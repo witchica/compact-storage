@@ -10,10 +10,11 @@ import net.minecraft.inventory.IInventory;
  *
  * In the future stuff will be here.
  */
-public interface IChest extends IInventory
-{
+ 
+public interface IChest extends IInventory {
     public int getInvX();
     public int getInvY();
+    public int getInvZ();
 
     public StorageInfo getInfo();
 
