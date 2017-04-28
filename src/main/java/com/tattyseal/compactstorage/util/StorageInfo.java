@@ -110,7 +110,7 @@ public class StorageInfo
 	{
 		if(amount <= 0) amount = 1;
 
-		stack.stackSize = amount;
+		stack.setCount(amount);
 
 		return stack;
 	}

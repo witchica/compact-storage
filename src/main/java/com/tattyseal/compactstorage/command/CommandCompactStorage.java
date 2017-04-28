@@ -18,19 +18,19 @@ import java.util.List;
 public class CommandCompactStorage implements ICommand
 {
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "cs";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         return "/cs {version:reload}";
     }
 
     @Override
-    public List getCommandAliases()
+    public List getAliases()
     {
         return Arrays.asList("compactstorage");
     }
@@ -44,21 +44,21 @@ public class CommandCompactStorage implements ICommand
 
             if(cmd.equalsIgnoreCase("version"))
             {
-                sender.addChatMessage(new TextComponentString("CompactStorage version " + Loader.instance().getIndexedModList().get("compactstorage").getDisplayVersion() + "."));
+                sender.sendMessage(new TextComponentString("CompactStorage version " + Loader.instance().getIndexedModList().get("compactstorage").getDisplayVersion() + "."));
             }
             else if(cmd.equalsIgnoreCase("reload"))
             {
                 ConfigurationHandler.init();
-                sender.addChatMessage(new TextComponentString("Reloading configuration..."));
+                sender.sendMessage(new TextComponentString("Reloading configuration..."));
             }
             else
             {
-                sender.addChatMessage(new TextComponentTranslation(getCommandUsage(sender)));
+                sender.sendMessage(new TextComponentTranslation(getUsage(sender)));
             }
         }
         else
         {
-            sender.addChatMessage(new TextComponentTranslation(getCommandUsage(sender)));
+            sender.sendMessage(new TextComponentTranslation(getUsage(sender)));
         }
     }
 
@@ -69,7 +69,7 @@ public class CommandCompactStorage implements ICommand
     }
 
     @Override
-    public List getTabCompletionOptions(MinecraftServer server, ICommandSender p_71516_1_, String[] p_71516_2_, BlockPos pos) {
+    public List getTabCompletions(MinecraftServer server, ICommandSender p_71516_1_, String[] p_71516_2_, BlockPos pos) {
         return p_71516_2_.length == 1 ? Arrays.asList("reload", "version") : null;
     }
 

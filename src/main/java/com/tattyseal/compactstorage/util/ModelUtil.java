@@ -21,11 +21,9 @@ public class ModelUtil
 
     public static void registerChest()
     {
-        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getModelManager().getBlockModelShapes().registerBuiltInBlocks(CompactStorage.chest);
-
         ItemModelMesher mesher = Minecraft.getMinecraft().getRenderItem().getItemModelMesher();
         Item chestItem = Item.getItemFromBlock(CompactStorage.chest);
-        mesher.register(chestItem, 0, new ModelResourceLocation("compactstorage:compactChest", "inventory"));
+        mesher.register(chestItem, 0, new ModelResourceLocation("compactstorage:compactchest", "inventory"));
     }
 
     public static void registerBlock(Block block, int metadata, String blockName)

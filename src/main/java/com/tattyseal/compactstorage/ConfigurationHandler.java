@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.tattyseal.compactstorage.exception.InvalidConfigurationException;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
@@ -87,7 +88,7 @@ public class ConfigurationHandler
             meta = OreDictionary.WILDCARD_VALUE;
         }
 
-        Item item = GameRegistry.findItem(modId, itemId);
+        Item item = Item.REGISTRY.getObject(new ResourceLocation(modId, itemId));
 
         if(item == null)
         {
@@ -106,7 +107,7 @@ public class ConfigurationHandler
             {
                 meta = OreDictionary.WILDCARD_VALUE;
             }
-            item = GameRegistry.findItem(modId, itemId);
+            item = Item.REGISTRY.getObject(new ResourceLocation(modId, itemId));
 
             return new ItemStack(item, 1, meta);
         }
@@ -137,7 +138,7 @@ public class ConfigurationHandler
                 meta = OreDictionary.WILDCARD_VALUE;
             }
 
-            Item item = GameRegistry.findItem(modId, itemId);
+            Item item = Item.REGISTRY.getObject(new ResourceLocation(modId, itemId));
 
             if(item == null)
             {
@@ -168,7 +169,7 @@ public class ConfigurationHandler
                 {
                     meta = OreDictionary.WILDCARD_VALUE;
                 }
-                Item item = GameRegistry.findItem(modId, itemId);
+                Item item = Item.REGISTRY.getObject(new ResourceLocation(modId, itemId));
                 items.add(new ItemStack(item, 1, meta));
             }
         }

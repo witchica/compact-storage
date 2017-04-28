@@ -1,5 +1,5 @@
 {
-  "parent": "block/cube_all",
+  "parent": "block/cube",
   "textures": {
     "particle": "compactstorage:blocks/chestBuilderTop",
     "up": "compactstorage:blocks/chestBuilderTop",

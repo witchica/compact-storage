@@ -39,13 +39,13 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 
 			if(stack != null && slot < requiredItems.size() && requiredItems.get(slot) != null)
 			{
-				if(OreDictionary.itemMatches(requiredItems.get(slot), stack, false) && stack.stackSize >=  requiredItems.get(slot).stackSize)
+				if(OreDictionary.itemMatches(requiredItems.get(slot), stack, false) && stack.getCount() >=  requiredItems.get(slot).getCount())
 				{
 					hasRequiredMaterials = true;
 				}
 				else
 				{
-					if(requiredItems.get(slot) != null && requiredItems.get(slot).stackSize == 0)
+					if(requiredItems.get(slot) != null && requiredItems.get(slot).getCount() == 0)
 					{
 						hasRequiredMaterials = true;
 					}
@@ -74,14 +74,14 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 			tag.setString("color", message.color);
 			stack.setTagCompound(tag);
 			
-			EntityItem item = new EntityItem(ctx.getServerHandler().playerEntity.worldObj, message.x, message.y + 1, message.z, stack);
-			ctx.getServerHandler().playerEntity.worldObj.spawnEntityInWorld(item);
+			EntityItem item = new EntityItem(ctx.getServerHandler().playerEntity.world, message.x, message.y + 1, message.z, stack);
+			ctx.getServerHandler().playerEntity.world.spawnEntity(item);
 
 			LogHelper.dump("SPAWNED ITEM ENTITY");
 			
 			for(int x = 0; x < requiredItems.size(); x++)
 			{
-				builder.decrStackSize(x, requiredItems.get(x).stackSize);
+				builder.decrStackSize(x, requiredItems.get(x).getCount());
 
 				LogHelper.dump("DECREASED ITEMS IN INVENTORY");
 			}

@@ -21,6 +21,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
@@ -67,9 +68,10 @@ public class CompactStorage
     
     public static Block chest;
     public static Block chestBuilder;
+
+    public static ItemBlockChest ibChest;
     
     public static Item backpack;
-    public static Item storage;
     
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -90,18 +92,30 @@ public class CompactStorage
         wrapper.registerMessage(C02HandlerCraftChest.class, C02PacketCraftChest.class, 1, Side.SERVER);
 
         chest = new BlockChest();
-        GameRegistry.registerBlock(chest, ItemBlockChest.class, "compactChest");
+        chest.setRegistryName("compactChest");
+        GameRegistry.register(chest);
+
+        ibChest = new ItemBlockChest(chest);
+        ibChest.setRegistryName("compactChest");
+        GameRegistry.register(ibChest);
+
         GameRegistry.registerTileEntity(TileEntityChest.class, "tileChest");
         
         chestBuilder = new BlockChestBuilder();
-        GameRegistry.registerBlock(chestBuilder, "chestBuilder");
+        chestBuilder.setRegistryName("chestBuilder");
+        GameRegistry.register(chestBuilder);
         GameRegistry.registerTileEntity(TileEntityChestBuilder.class, "tileChestBuilder");
+
+        ItemBlock ibChestBuilder = new ItemBlock(chestBuilder);
+        ibChestBuilder.setRegistryName("chestBuilder");
+        ibChestBuilder.setCreativeTab(tabCS);
+        GameRegistry.register(ibChestBuilder);
+
+
     
         backpack = new ItemBackpack();
-        GameRegistry.registerItem(backpack, "backpack");
-
-        storage = new ItemStorage();
-        GameRegistry.register(storage);
+        backpack.setRegistryName("backpack");
+        GameRegistry.register(backpack);
         
         ConfigurationHandler.configFile = event.getSuggestedConfigurationFile();
     }

@@ -82,6 +82,7 @@ public class ContainerChest extends Container
         }
         
         this.lastId = lastId;
+        System.out.println(lastId);
 
         slotX = (xSize / 2) - ((9 * 18) / 2) + 1;
         slotY = slotY + (invY * 18) + 13;
@@ -127,17 +128,17 @@ public class ContainerChest extends Container
     			{
     				if (!this.mergeItemStack(itemStack1, lastId, lastId + 36, false))
     				{
-    					return null;
+    					return ItemStack.EMPTY;
     				}
     			}
     			else if (!this.mergeItemStack(itemStack1, 0, lastId, false))
     			{
-    				return null;
+    				return ItemStack.EMPTY;
     			}
     			
-    			if (itemStack1.stackSize == 0)
+    			if (itemStack1.getCount() == 0)
     			{
-    				slot.putStack(null);
+    				slot.putStack(ItemStack.EMPTY);
     			}
     			else
     			{
@@ -146,12 +147,12 @@ public class ContainerChest extends Container
     			return itemStack;
     		}
     		
-    		return null;
+    		return ItemStack.EMPTY;
     	}
     	catch(Exception e)
     	{
     		e.printStackTrace();
-    		return null;
+    		return ItemStack.EMPTY;
     	}
     }
 
@@ -182,13 +183,16 @@ public class ContainerChest extends Container
     @Override
     public ItemStack slotClick(int slot, int button, ClickType flag, EntityPlayer player)
     {
+        System.out.println("Slot id : " + slot);
+
         if(chest instanceof InventoryBackpack)
         {
             if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItem(EnumHand.MAIN_HAND))
             {
-                return null;
+                return ItemStack.EMPTY;
             }
         }
+
 
         return super.slotClick(slot, button, flag, player);
     }

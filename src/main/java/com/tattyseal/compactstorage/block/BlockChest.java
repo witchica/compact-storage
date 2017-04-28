@@ -90,7 +90,7 @@ public class BlockChest extends Block implements ITileEntityProvider
         	{
         		if(entity instanceof EntityPlayer)
         		{
-        			((EntityPlayer) entity).addChatMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
+        			((EntityPlayer) entity).sendMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
 
                     chest.invX = 9;
                     chest.invY = 3;
@@ -106,7 +106,7 @@ public class BlockChest extends Block implements ITileEntityProvider
         {
             if(entity instanceof EntityPlayer)
             {
-                ((EntityPlayer) entity).addChatMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
+                ((EntityPlayer) entity).sendMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
 
                 chest.invX = 9;
                 chest.invY = 3;
@@ -117,7 +117,7 @@ public class BlockChest extends Block implements ITileEntityProvider
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack held, EnumFacing facing, float x, float y, float z)
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z)
     {
         if(!world.isRemote)
         {
@@ -144,7 +144,7 @@ public class BlockChest extends Block implements ITileEntityProvider
      */
     public EnumBlockRenderType getRenderType(IBlockState state)
     {
-        return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
+        return EnumBlockRenderType.INVISIBLE;
     }
 
     @Override
@@ -163,17 +163,20 @@ public class BlockChest extends Block implements ITileEntityProvider
             int invY = chest.invY;
             int color = chest.color;
 
-            stack.getTagCompound().setIntArray("size", new int[]{invX, invY});
-            stack.getTagCompound().setInteger("color", color);
+            String colorString = String.format("0x%06X", (0xFFFFFF & color));
+            System.out.println(colorString);
 
-            world.spawnEntityInWorld(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack));
+            stack.getTagCompound().setIntArray("size", new int[]{invX, invY});
+            stack.getTagCompound().setString("color", colorString);
+
+            world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack));
 
             for(int slot = 0; slot < chest.items.length; slot++)
             {
                 float randX = rand.nextFloat();
                 float randZ = rand.nextFloat();
 
-                if(chest.items != null && chest.items[slot] != null) world.spawnEntityInWorld(new EntityItem(world, pos.getX() + randX, pos.getY() + 0.5f, pos.getZ() + randZ, chest.items[slot]));
+                if(chest.items != null && chest.items[slot] != null && chest.items[slot] != ItemStack.EMPTY) world.spawnEntity(new EntityItem(world, pos.getX() + randX, pos.getY() + 0.5f, pos.getZ() + randZ, chest.items[slot]));
             }
         }
 
@@ -181,7 +184,7 @@ public class BlockChest extends Block implements ITileEntityProvider
     }
 
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
         list.add(new ItemStack(itemIn, 1, 4));
     }
 

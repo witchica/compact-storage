@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderUtil
 {
-    public static final ResourceLocation slotTexture = new ResourceLocation("compactstorage", "textures/gui/chestSlots.png");
+    public static final ResourceLocation slotTexture = new ResourceLocation("compactstorage", "textures/gui/chestslots.png");
     public static final ResourceLocation backgroundTexture = new ResourceLocation("compactstorage", "textures/gui/chest.png");
     public static final ResourceLocation colorTexture = new ResourceLocation("compactstorage", "textures/gui/colorGrid.png");
     private static double slotTextureWidth = 432d;

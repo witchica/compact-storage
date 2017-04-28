@@ -1,7 +1,7 @@
 {
   "variants": {
     "normal": {
-      "model": ""
+      "model": "compactstorage:compactchest"
     }
   }
 }

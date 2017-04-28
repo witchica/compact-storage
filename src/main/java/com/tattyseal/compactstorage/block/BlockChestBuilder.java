@@ -32,7 +32,7 @@ public class BlockChestBuilder extends Block implements ITileEntityProvider
 	}
 	
 	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack held, EnumFacing facing, float x, float y, float z)
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z)
 	{
 		if(!player.isSneaking())
 		{
@@ -70,7 +70,7 @@ public class BlockChestBuilder extends Block implements ITileEntityProvider
 			float randX = rand.nextFloat();
 			float randZ = rand.nextFloat();
 
-			if(chest.items != null && chest.items[slot] != null) world.spawnEntityInWorld(new EntityItem(world, pos.getX() + randX, pos.getY() + 0.5f, pos.getZ() + randZ, chest.items[slot]));
+			if(chest.items != null && chest.items[slot] != ItemStack.EMPTY) world.spawnEntity(new EntityItem(world, pos.getX() + randX, pos.getY() + 0.5f, pos.getZ() + randZ, chest.items[slot]));
 		}
 
 		super.breakBlock(world, pos, state);
