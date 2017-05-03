@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -38,11 +39,24 @@ public class ConfigurationHandler
 
     public static boolean shouldConnect;
 
+    public static boolean newFeatures;
+    public static Property newFeaturesField;
+
+    public static void disableMessage()
+    {
+        newFeatures = false;
+        newFeaturesField.set(false);
+        configuration.save();
+    }
+
     public static void init()
     {
         configuration = new Configuration(configFile);
 
         firstTimeRun = configuration.getBoolean("firstTimeRun", "internal", false, "This is used internally for the GUI shown when you first start the game.");
+
+        newFeaturesField = configuration.get("internal", "newFeatures", true, "Should the text be shown on startup informing you about new features?");
+        newFeatures = newFeaturesField.getBoolean();
 
         storage = getItemFromConfig(configuration, "chestStorage", "builder", "minecraft:chest", "This is used as the first component in the Builder when building a CHEST.");
         storageBackpack = getItemFromConfig(configuration, "backpackStorage", "builder", "minecraft:wool", "This is used as the first component in the Builder when building a BACKPACK.");

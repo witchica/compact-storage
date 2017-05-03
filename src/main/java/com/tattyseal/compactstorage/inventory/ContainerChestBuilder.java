@@ -1,6 +1,7 @@
 package com.tattyseal.compactstorage.inventory;
 
 import com.tattyseal.compactstorage.inventory.slot.SlotChestBuilder;
+import com.tattyseal.compactstorage.inventory.slot.SlotUnplacable;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
 import com.tattyseal.compactstorage.util.StorageInfo;
 import net.minecraft.entity.player.EntityPlayer;
@@ -53,17 +54,20 @@ public class ContainerChestBuilder extends Container
     
     public void setupSlots()
     {
-    	int slotX = (xSize / 2) - (162 / 2) + 1;
-        int slotY = 8; //(ySize / 2) - ((invY * 18) / 2);
+        int slotY =  50 + 12;
+        int slotX = ((xSize / 2) - 36);
 
         for(int x = 0; x < 4; x++)
         {
-        	SlotChestBuilder slot = new SlotChestBuilder(chest, x, 7 + (x * 18) + 1, 7 + (18 * 2) + 1);
+        	SlotChestBuilder slot = new SlotChestBuilder(chest, x, slotX + (x * 18) + 1, slotY + 21);
             addSlotToContainer(slot);
         }
-        
+
+        SlotUnplacable chestSlot = new SlotUnplacable(chest, 4, 5 + xSize - 29, 8 + 108 - 12);
+        addSlotToContainer(chestSlot);
+
         slotX = (xSize / 2) - ((9 * 18) / 2) + 1;
-        slotY = slotY + 108 + 13;
+        slotY = 8 + 108 + 10;
 
         for(int x = 0; x < 9; x++)
         {
@@ -95,14 +99,14 @@ public class ContainerChestBuilder extends Container
                 ItemStack itemStack1 = slot.getStack();
                 ItemStack itemStack = itemStack1.copy();
 
-                if (slotIndex < 4)
+                if (slotIndex < 5)
                 {
-                    if (!this.mergeItemStack(itemStack1, 4, 4 + 36, false))
+                    if (!this.mergeItemStack(itemStack1, 5, 5 + 36, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (!this.mergeItemStack(itemStack1, 0, 4, false))
+                else if (!this.mergeItemStack(itemStack1, 0, 5, false))
                 {
                     return ItemStack.EMPTY;
                 }
@@ -145,6 +149,8 @@ public class ContainerChestBuilder extends Container
             IContainerListener crafter = (IContainerListener)this.listeners.get(i);
             if(chest != null && chest.info != null) crafter.sendProgressBarUpdate(this, 0, chest.info.getSizeX());
             if(chest != null && chest.info != null) crafter.sendProgressBarUpdate(this, 1, chest.info.getSizeY());
+            if(chest != null && chest.info != null) crafter.sendProgressBarUpdate(this, 2, chest.info.getHue());
+            if(chest != null && chest.info != null) crafter.sendProgressBarUpdate(this, 3, chest.info.getType().ordinal());
         }
     }
 
@@ -152,12 +158,14 @@ public class ContainerChestBuilder extends Container
     @Override
     public void updateProgressBar(int id, int value)
     {
-    	if(chest.info == null) chest.info = new StorageInfo(9, 3);
+    	if(chest.info == null) chest.info = new StorageInfo(9, 3, 180, StorageInfo.Type.CHEST);
 
         switch(id)
         {
         	case 0: chest.info.setSizeX(value); break;
         	case 1: chest.info.setSizeY(value); break;
+            case 2: chest.info.setHue(value); break;
+            case 3: chest.info.setType(StorageInfo.Type.values()[value]); break;
         }
     }
 

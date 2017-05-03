@@ -1,0 +1,23 @@
+package com.tattyseal.compactstorage.inventory.slot;
+
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+
+/**
+ * Created by tobystrong on 02/05/2017.
+ */
+public class SlotUnplacable extends Slot
+{
+
+    public SlotUnplacable(IInventory inventoryIn, int index, int xPosition, int yPosition)
+    {
+        super(inventoryIn, index, xPosition, yPosition);
+    }
+
+    @Override
+    public boolean isItemValid(ItemStack stack)
+    {
+        return false;
+    }
+}

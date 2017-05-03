@@ -1,5 +1,6 @@
 package com.tattyseal.compactstorage.util;
 
+import com.tattyseal.compactstorage.CompactStorage;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -12,17 +13,30 @@ public class StorageInfo
 {
 	private int sizeX;
 	private int sizeY;
+	private int hue;
+	private Type type;
 	
-	public StorageInfo(int sizeX, int sizeY)
+	public StorageInfo(int sizeX, int sizeY, int hue, Type type)
 	{
 		this.sizeX = sizeX;
 		this.sizeY = sizeY;
+		this.hue = hue;
+		this.type = type;
 	}
 
 	public static enum Type
 	{
-		CHEST,
-		BACKPACK;
+		CHEST("Chest", new ItemStack(CompactStorage.chest, 1)),
+		BACKPACK("Backpack", new ItemStack(CompactStorage.backpack, 1));
+
+		public String name;
+		public ItemStack display;
+
+		Type(String name, ItemStack display)
+		{
+			this.name = name;
+			this.display = display;
+		}
 	}
 
 	public int getSizeX() 
@@ -44,9 +58,27 @@ public class StorageInfo
 	{
 		this.sizeY = sizeY;
 	}
-	
-	public List<ItemStack> getMaterialCost(Type type)
+
+	public int getHue() { return hue; }
+
+	public void setHue(int hue)
 	{
+		this.hue = hue;
+	}
+
+	public Type getType()
+	{
+		return type;
+	}
+
+	public void setType(Type type)
+	{
+		this.type = type;
+	}
+	
+	public List<ItemStack> getMaterialCost()
+	{
+		Type type = getType();
 		ArrayList<ItemStack> list = new ArrayList<ItemStack>();
 
 		/* STORAGE */
@@ -123,6 +155,8 @@ public class StorageInfo
 			
 			tag.setInteger("sizeX", info.getSizeX());
 			tag.setInteger("sizeY", info.getSizeY());
+			tag.setInteger("hue", info.getHue());
+			tag.setInteger("type", info.getType().ordinal());
 		
 			return tag;
 		}
@@ -134,10 +168,10 @@ public class StorageInfo
 	{
 		if(tag == null)
 		{
-			return new StorageInfo(9, 3);
+			return new StorageInfo(9, 3, 180, Type.CHEST);
 		}
 		
-		StorageInfo info = new StorageInfo(tag.getInteger("sizeX"), tag.getInteger("sizeY"));
+		StorageInfo info = new StorageInfo(tag.getInteger("sizeX"), tag.getInteger("sizeY"), tag.getInteger("hue"), Type.values()[tag.getInteger("type")]);
 		return info;
 	}
 }

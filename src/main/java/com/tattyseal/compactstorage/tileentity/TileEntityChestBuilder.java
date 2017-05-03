@@ -27,14 +27,11 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	public int mode;
 	public String player;
 
-	public StorageInfo.Type type;
-
 	public TileEntityChestBuilder()
 	{
 		init = false;
-		info = new StorageInfo(9, 3);
+		info = new StorageInfo(9, 3, 180, StorageInfo.Type.CHEST);
 		items = new ItemStack[getSizeInventory()];
-		type = StorageInfo.Type.CHEST;
 
 		for(int i = 0; i < items.length; i++)
 		{
@@ -76,6 +73,8 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 
 		tag.setInteger("infoX", info.getSizeX());
 		tag.setInteger("infoY", info.getSizeY());
+		tag.setInteger("infoHue", info.getHue());
+		tag.setInteger("type", info.getType().ordinal());
 
 		NBTTagList nbtTagList = new NBTTagList();
         for(int slot = 0; slot < getSizeInventory(); slot++)
@@ -99,7 +98,7 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	{
 		super.readFromNBT(tag);
 
-		this.info = new StorageInfo(tag.getInteger("infoX"), tag.getInteger("infoY"));
+		this.info = new StorageInfo(tag.getInteger("infoX"), tag.getInteger("infoY"), tag.getInteger("hue"), StorageInfo.Type.values()[tag.getInteger("type")]);
 
 		this.mode = tag.getInteger("mode");
 		this.player = tag.getString("player");
@@ -147,7 +146,7 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	@Override
 	public int getSizeInventory()
 	{
-		return 4;
+		return 5;
 	}
 
 	@Override
@@ -234,7 +233,7 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	{
 		if(info != null)
 		{
-			return stack.getItem().equals(info.getMaterialCost(type).get(slot).getItem());
+			return stack.getItem().equals(info.getMaterialCost().get(slot).getItem());
 		}
 
 		return false;

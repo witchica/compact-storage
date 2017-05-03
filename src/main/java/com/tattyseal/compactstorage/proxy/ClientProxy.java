@@ -3,7 +3,7 @@ package com.tattyseal.compactstorage.proxy;
 import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.block.BlockChest;
 import com.tattyseal.compactstorage.client.render.TileEntityChestRenderer;
-import com.tattyseal.compactstorage.event.GuiOverlayEvent;
+import com.tattyseal.compactstorage.event.ConnectionHandler;
 import com.tattyseal.compactstorage.item.ItemBackpack;
 import com.tattyseal.compactstorage.item.ItemBlockChest;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
@@ -12,12 +12,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.renderer.color.ItemColors;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+
+import java.awt.*;
 
 /**
  * Created by Toby on 06/11/2014.
@@ -63,20 +65,47 @@ public class ClientProxy implements IProxy
             }
         }, chest);
 
-        //MinecraftForge.EVENT_BUS.register(new GuiOverlayEvent());
+        MinecraftForge.EVENT_BUS.register(new ConnectionHandler());
     }
 
     private int getColorFromNBT(ItemStack stack)
     {
-        if(stack.hasTagCompound() && stack.getTagCompound().hasKey("color"))
+        NBTTagCompound tag = stack.getTagCompound();
+
+        if(stack.hasTagCompound() && stack.getTagCompound().hasKey("hue"))
         {
-            if(stack.getTagCompound().getTag("color") instanceof NBTTagString)
+            int hue = stack.getTagCompound().getInteger("hue");
+            Color color = hue == -1 ? Color.white : Color.getHSBColor(hue / 360f, 0.5f, 0.5f).brighter();
+            return color.getRGB();
+        }
+
+        if(stack.hasTagCompound() && !stack.getTagCompound().hasKey("hue") && stack.getTagCompound().hasKey("color"))
+        {
+            String color = "";
+
+            if(tag.getTag("color") instanceof NBTTagInt)
             {
-                return Integer.decode(stack.getTagCompound().getString("color"));
+                color = String.format("#%06X", (0xFFFFFF & tag.getInteger("color")));
             }
-            else if(stack.getTagCompound().getTag("color") instanceof NBTTagInt)
+            else
             {
-                return stack.getTagCompound().getInteger("color");
+                color = tag.getString("color");
+
+                if(color.startsWith("0x"))
+                {
+                    color = "#" + color.substring(2);
+                }
+            }
+
+            //System.out.println("color: " + color);
+
+            if(!color.isEmpty())
+            {
+                Color c = Color.decode(color);
+                float[] hsbVals = new float[3];
+
+                hsbVals = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsbVals);
+                tag.setInteger("hue", (int) (hsbVals[0] * 360));
             }
         }
 

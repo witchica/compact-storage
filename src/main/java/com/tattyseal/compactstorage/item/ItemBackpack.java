@@ -8,11 +8,15 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemColored;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 /**
  * Created by Toby on 11/02/2015.
@@ -45,5 +49,27 @@ public class ItemBackpack extends Item
     public int getMaxItemUseDuration(ItemStack stack)
     {
         return 1;
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    {
+        super.addInformation(stack, playerIn, tooltip, advanced);
+
+        if(stack.hasTagCompound())
+        {
+            NBTTagCompound tag = stack.getTagCompound();
+
+            if(tag.hasKey("size"))
+            {
+                int[] size = tag.getIntArray("size");
+                tooltip.add(TextFormatting.RED + "Slots: " + (size[0] * size[1]));
+            }
+
+            if(tag.hasKey("hue"))
+            {
+                tooltip.add(TextFormatting.AQUA + "Hue: " + stack.getTagCompound().getInteger("hue"));
+            }
+        }
     }
 }

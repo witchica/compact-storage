@@ -3,13 +3,20 @@ package com.tattyseal.compactstorage.client.render;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelChest;
+import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
 
 /**
  * Created by Toby on 06/11/2014.
@@ -26,8 +33,10 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float scale, int i)
+    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float partialTicks, int i)
     {
+        TileEntityChest chest = (TileEntityChest) tile;
+
         GL11.glPushMatrix();
 
         GL11.glTranslatef((float) x, (float) y + 1.0F, (float) z + 1.0F);
@@ -53,11 +62,11 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
 
         try
         {
-            color = ((TileEntityChest) tile).color;
+            color = ((TileEntityChest) tile).color.brighter().getRGB();
         }
         catch(Exception exception)
         {
-            color = 0xFFFFFF;
+            color = Color.white.getRGB();
         }
 
         float r = (float)(color >> 16 & 255) / 255.0F;
@@ -65,11 +74,27 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
         float b = (float)(color & 255) / 255.0F;
         GL11.glColor4f(r, g, b, 1F);
 
-        model.chestBelow.render(0.0625f);
-        model.chestLid.render(0.0625f);
+        float f = chest.prevLidAngle + (chest.lidAngle - chest.prevLidAngle) * partialTicks;
 
-        GL11.glColor4f(1f, 1f, 1f, 1f);
-        model.chestKnob.render(0.0625f);
+        f = 1.0F - f;
+        f = 1.0F - f * f * f;
+
+        model.chestLid.rotateAngleX = -(f * ((float)Math.PI / 2F));
+        model.renderAll();
+
+        GL11.glColor3f(1f, 1f, 1f);
+
+        if(chest.getRetaining())
+        {
+            ItemStack stack = new ItemStack(Items.DIAMOND, 1, 0);
+            EntityItem item = new EntityItem(tile.getWorld(), 0D, 0D, 0D, stack);
+            item.hoverStart = 0.0F;
+
+            GL11.glRotatef(180, 0, 0, 1);
+            GL11.glTranslatef(-0.5f, -1.1f, 0.01f);
+
+            Minecraft.getMinecraft().getRenderManager().doRenderEntity(item, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F, false);
+        }
 
         GL11.glPopMatrix();
     }

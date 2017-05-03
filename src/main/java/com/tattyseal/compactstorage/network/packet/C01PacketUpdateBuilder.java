@@ -14,7 +14,6 @@ public class C01PacketUpdateBuilder implements IMessage
 	public int dimension;
 	
 	public StorageInfo info;
-	public StorageInfo.Type type;
 	
 	public C01PacketUpdateBuilder() 
 	{
@@ -23,21 +22,19 @@ public class C01PacketUpdateBuilder implements IMessage
 		this.z = 0;
 		
 		this.dimension = 0;
-		this.info = new StorageInfo(0, 0);
-		this.type = StorageInfo.Type.CHEST;
+		this.info = new StorageInfo(0, 0, 180, StorageInfo.Type.CHEST);
 	}
 	
-	public C01PacketUpdateBuilder(int x, int y, int z, int dim, StorageInfo info, StorageInfo.Type type)
+	public C01PacketUpdateBuilder(int x, int y, int z, int dim, StorageInfo info)
 	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.dimension = dim;
 		this.info = info;
-		this.type = type;
 	}
 	
-	public C01PacketUpdateBuilder(BlockPos pos, int dim, StorageInfo info, StorageInfo.Type type)
+	public C01PacketUpdateBuilder(BlockPos pos, int dim, StorageInfo info)
 	{
 		this.x = pos.getX();
 		this.y = pos.getY();
@@ -45,7 +42,6 @@ public class C01PacketUpdateBuilder implements IMessage
 		
 		this.dimension = dim;
 		this.info = info;
-		this.type = type;
 	}
 	
 	@Override
@@ -57,8 +53,7 @@ public class C01PacketUpdateBuilder implements IMessage
 		
 		dimension = buf.readInt();
 		
-		info = new StorageInfo(buf.readInt(), buf.readInt());
-		type = StorageInfo.Type.values()[buf.readInt()];
+		info = new StorageInfo(buf.readInt(), buf.readInt(), buf.readInt(), StorageInfo.Type.values()[buf.readInt()]);
 	}
 
 	@Override
@@ -72,6 +67,7 @@ public class C01PacketUpdateBuilder implements IMessage
 		
 		buf.writeInt(info.getSizeX());
 		buf.writeInt(info.getSizeY());
-		buf.writeInt(type.ordinal());
+		buf.writeInt(info.getHue());
+		buf.writeInt(info.getType().ordinal());
 	}
 }

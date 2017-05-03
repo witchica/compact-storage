@@ -5,9 +5,12 @@ import com.tattyseal.compactstorage.util.StorageInfo;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
+
+import java.awt.*;
 
 /**
  * Created by Toby on 11/02/2015.
@@ -19,6 +22,8 @@ public class InventoryBackpack implements IChest
 
     public ItemStack[] items;
 
+    public StorageInfo info;
+
     public InventoryBackpack(ItemStack stack)
     {
         this.stack = stack;
@@ -26,10 +31,12 @@ public class InventoryBackpack implements IChest
         if(stack.hasTagCompound() && stack.getTagCompound().hasKey("size"))
         {
             this.size = stack.getTagCompound().getIntArray("size");
+            this.info = new StorageInfo(size[0], size[1], stack.getTagCompound().getInteger("hue"), StorageInfo.Type.BACKPACK);
         }
         else
         {
             this.size = new int[] {9, 3};
+            this.info = new StorageInfo(size[0], size[1], 180, StorageInfo.Type.BACKPACK);
             stack.setTagCompound(new NBTTagCompound());
             stack.getTagCompound().setIntArray("size", new int[] {9, 3});
         }
@@ -59,7 +66,7 @@ public class InventoryBackpack implements IChest
     @Override
     public StorageInfo getInfo()
     {
-        return new StorageInfo(getInvX(), getInvY());
+        return info;
     }
 
     @Override
@@ -215,6 +222,39 @@ public class InventoryBackpack implements IChest
                 items[i] = new ItemStack(item);
             }
         }
+
+
+
+        if(stack.hasTagCompound() && !stack.getTagCompound().hasKey("hue") && stack.getTagCompound().hasKey("color"))
+        {
+            String color = "";
+
+            if(tag.getTag("color") instanceof NBTTagInt)
+            {
+                color = String.format("#%06X", (0xFFFFFF & tag.getInteger("color")));
+            }
+            else
+            {
+                color = tag.getString("color");
+
+                if(color.startsWith("0x"))
+                {
+                    color = "#" + color.substring(2);
+                }
+            }
+
+            //System.out.println("color: " + color);
+
+            if(!color.isEmpty())
+            {
+                Color c = Color.decode(color);
+                float[] hsbVals = new float[3];
+
+                hsbVals = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsbVals);
+                tag.setInteger("hue", (int) (hsbVals[0] * 360));
+                tag.removeTag("color");
+            }
+        }
     }
 
     public void writeToNBT(NBTTagCompound tag)
@@ -232,12 +272,35 @@ public class InventoryBackpack implements IChest
         }
 
         tag.setTag("Items", nbtTagList);
+        tag.setInteger("hue", getHue());
     }
 
     @Override
     public boolean shouldConnectToNetwork()
     {
         return false;
+    }
+
+    @Override
+    public boolean getRetaining()
+    {
+        return true;
+    }
+
+    @Override
+    public void setRetaining(boolean retaining) {
+        //nope.
+    }
+
+    @Override
+    public int getHue() {
+        return info.getHue();
+    }
+
+    @Override
+    public void setHue(int hue)
+    {
+        info.setHue(hue);
     }
 
     @Override

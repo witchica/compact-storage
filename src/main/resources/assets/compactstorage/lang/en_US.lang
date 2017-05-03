@@ -1,8 +1,9 @@
 tile.compactchest.name=Compact Chest
-tile.compactchest.chip.name=Chest
 tile.chestBuilder.name=Chest Builder
 
-item.backpack.name=Empty Backback
-item.backpack.chip.name=Backpack
+item.backpack.name=Backpack
 
 itemGroup.compactStorage=CompactStorage
+
+text.columns=Columns
+text.rows=Rows

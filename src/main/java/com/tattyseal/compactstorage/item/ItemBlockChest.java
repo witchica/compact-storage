@@ -36,14 +36,14 @@ public class ItemBlockChest extends ItemBlock
     @Override
     public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list)
     {
-    	ItemStack stack = new ItemStack(item, 1);
-    	
-    	NBTTagCompound tag = new NBTTagCompound();
-    	tag.setIntArray("size", new int[] {9, 3});
-		tag.setString("color", "0xFFFFFF");
-    	
-    	stack.setTagCompound(tag);
-    	list.add(stack);
+		ItemStack stack = new ItemStack(item, 1);
+
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setIntArray("size", new int[] {9, 3});
+		tag.setInteger("hue", 180);
+
+		stack.setTagCompound(tag);
+		list.add(stack);
     }
 
 	@Override
@@ -69,16 +69,19 @@ public class ItemBlockChest extends ItemBlock
     		}
 
 
-			if(stack.getTagCompound().hasKey("color"))
+			if(stack.getTagCompound().hasKey("hue"))
 			{
-				String color = stack.getTagCompound().getTag("color").toString();
+				int hue = stack.getTagCompound().getInteger("hue");
+				list.add(TextFormatting.GREEN + "Hue: " + hue);
+			}
 
-				if(stack.getTagCompound().getTag("color") instanceof NBTTagInt)
-				{
-					color = String.format("0x%06X", (0xFFFFFF & stack.getTagCompound().getInteger("color")));
-				}
-
-				list.add(TextFormatting.GREEN + "Color: " + color);
+			if(stack.getTagCompound().hasKey("chestData") && stack.getTagCompound().getCompoundTag("chestData").hasKey("retaining") && stack.getTagCompound().getCompoundTag("chestData").getBoolean("retaining"))
+			{
+				list.add(TextFormatting.AQUA + "" + TextFormatting.ITALIC + "Retaining");
+			}
+			else
+			{
+				list.add(TextFormatting.RED + "" + TextFormatting.ITALIC + "Non-Retaining");
 			}
     	}
     	else

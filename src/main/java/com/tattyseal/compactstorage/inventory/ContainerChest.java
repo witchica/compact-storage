@@ -1,6 +1,7 @@
 package com.tattyseal.compactstorage.inventory;
 
 import com.tattyseal.compactstorage.api.IChest;
+import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.ClickType;
@@ -43,6 +44,8 @@ public class ContainerChest extends Container
         this.player = player;
         this.pos = pos;
         this.chest = chest;
+
+        chest.openInventory(player);
         
         backpackSlot = -1;
         if(chest instanceof InventoryBackpack)
@@ -173,7 +176,12 @@ public class ContainerChest extends Container
 
         if(!world.isRemote)
         {
-            world.playSound((EntityPlayer)null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+            boolean isChest = chest instanceof TileEntityChest;
+
+            if(!isChest)
+            {
+                world.playSound((EntityPlayer)null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+            }
         }
 
         super.onContainerClosed(player);
