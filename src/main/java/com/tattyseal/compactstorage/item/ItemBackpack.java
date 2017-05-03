@@ -68,7 +68,16 @@ public class ItemBackpack extends Item
 
             if(tag.hasKey("hue"))
             {
-                tooltip.add(TextFormatting.AQUA + "Hue: " + stack.getTagCompound().getInteger("hue"));
+                int hue = stack.getTagCompound().getInteger("hue");
+
+                if(hue != -1)
+                {
+                    tooltip.add(TextFormatting.AQUA + "Hue: " + hue);
+                }
+                else
+                {
+                    tooltip.add(TextFormatting.AQUA + "White");
+                }
             }
         }
     }

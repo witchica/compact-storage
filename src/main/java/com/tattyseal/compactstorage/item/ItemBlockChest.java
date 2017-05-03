@@ -72,7 +72,15 @@ public class ItemBlockChest extends ItemBlock
 			if(stack.getTagCompound().hasKey("hue"))
 			{
 				int hue = stack.getTagCompound().getInteger("hue");
-				list.add(TextFormatting.GREEN + "Hue: " + hue);
+
+				if(hue != -1)
+				{
+					list.add(TextFormatting.AQUA + "Hue: " + hue);
+				}
+				else
+				{
+					list.add(TextFormatting.AQUA + "White");
+				}
 			}
 
 			if(stack.getTagCompound().hasKey("chestData") && stack.getTagCompound().getCompoundTag("chestData").hasKey("retaining") && stack.getTagCompound().getCompoundTag("chestData").getBoolean("retaining"))
