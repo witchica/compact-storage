@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * Created by Toby on 06/11/2014.
  */
-@Mod(modid = CompactStorage.ID, name = CompactStorage.NAME, version = CompactStorage.VERSION)
+@Mod(modid = CompactStorage.ID, name = CompactStorage.NAME, version = CompactStorage.VERSION, guiFactory = "com.tattyseal.compactstorage.client.gui.factory.CompactStorageGuiFactory")
 public class CompactStorage
 {
     @Mod.Instance(CompactStorage.ID)
@@ -59,7 +59,7 @@ public class CompactStorage
     
     public static final String ID = "compactstorage";
     public static final String NAME = "CompactStorage";
-    public static final String VERSION = "v2.0.0a";
+    public static final String VERSION = "2.2";
 
     public static final String CLIENT_PROXY = "com.tattyseal.compactstorage.proxy.ClientProxy";
     public static final String SERVER_PROXY = "com.tattyseal.compactstorage.proxy.ServerProxy";

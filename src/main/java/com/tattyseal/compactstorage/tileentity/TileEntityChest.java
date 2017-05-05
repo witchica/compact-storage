@@ -281,12 +281,8 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
 
                     this.color = Color.decode(color);
 
-                    System.out.println(String.format("rgb(%d, %d, %d)", this.color.getRed(), this.color.getGreen(), this.color.getBlue()));
-
                     hsbVals = Color.RGBtoHSB(this.color.getRed(), this.color.getGreen(), this.color.getBlue(), hsbVals);
                     this.info.setHue((int) (hsbVals[0] * 360));
-
-                    System.out.println(String.format("hsl(%f, %f, %f)", hsbVals[0] * 360, hsbVals[1] * 100, hsbVals[2]));
 
                     tag.removeTag("color");
                 }
@@ -403,7 +399,6 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
 
     public void updateBlock()
     {
-        System.out.println("updating");
         markDirty();
     }
 

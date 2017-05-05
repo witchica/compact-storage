@@ -6,10 +6,10 @@
   "version": "${version}",
   "mcversion": "${mcversion}",
   "logoFile": "/compactchests.png",
-  "url": "http:/github.com/Workshop-Development/CompactChests/",
+  "url": "http:/github.com/tobystrong/CompactStorage/",
   "updateUrl": "",
   "authors": ["tattyseal"],
-  "credits": "Made by the Workshop team",
+  "credits": "Made by Toby Strong",
   "parent": "",
   "screenshots": [],
   "dependencies": []

@@ -89,7 +89,6 @@ public class BlockChest extends Block implements ITileEntityProvider
                     {
                         color = "#" + color.substring(2);
                     }
-                    System.out.println(color);
 
                     chest.color = color == "" ? Color.white : Color.decode(color);
 
@@ -208,7 +207,6 @@ public class BlockChest extends Block implements ITileEntityProvider
             int color = chest.color.getRGB();
 
             String colorString = String.format("0x%06X", (0xFFFFFF & color));
-            System.out.println(colorString);
 
             stack.getTagCompound().setIntArray("size", new int[]{invX, invY});
             stack.getTagCompound().setString("color", colorString);

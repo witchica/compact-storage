@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -41,6 +43,15 @@ public class ConfigurationHandler
 
     public static boolean newFeatures;
     public static Property newFeaturesField;
+
+    public class EventHandler
+    {
+        @SubscribeEvent
+        public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent eventArgs) {
+            if(eventArgs.getModID().equals("compactstorage"))
+                ConfigurationHandler.init();
+        }
+    }
 
     public static void disableMessage()
     {
