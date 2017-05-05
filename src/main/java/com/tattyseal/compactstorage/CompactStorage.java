@@ -6,6 +6,7 @@ import com.tattyseal.compactstorage.block.BlockChestBuilder;
 import com.tattyseal.compactstorage.command.CommandCompactStorage;
 import com.tattyseal.compactstorage.compat.ICompat;
 import com.tattyseal.compactstorage.creativetabs.CreativeTabCompactStorage;
+import com.tattyseal.compactstorage.event.RightClickHandler;
 import com.tattyseal.compactstorage.item.ItemBackpack;
 import com.tattyseal.compactstorage.item.ItemBlockChest;
 import com.tattyseal.compactstorage.network.handler.C01HandlerUpdateBuilder;
@@ -22,6 +23,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -146,14 +148,15 @@ public class CompactStorage
     			logger.warn("Compatability for " + modid + " cannot be loaded as it depends on the mod being installed.");
     		}
     	}
+
+        proxy.registerRenderers();
+        MinecraftForge.EVENT_BUS.register(new RightClickHandler());
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
-
-        proxy.registerRenderers();
 
         GameRegistry.addRecipe(new ItemStack(chestBuilder, 1), "ILI", "ICI", "ILI", 'I', new ItemStack(Items.IRON_INGOT, 1), 'C', new ItemStack(Blocks.CHEST, 1), 'L', new ItemStack(Blocks.LEVER, 1));
         GameRegistry.addRecipe(new ItemStack(chest, 1), "III", "GCG", "III", 'I', new ItemStack(Items.IRON_INGOT, 1), 'G', new ItemStack(Blocks.GLASS_PANE, 1), 'C', new ItemStack(Blocks.CHEST, 1));

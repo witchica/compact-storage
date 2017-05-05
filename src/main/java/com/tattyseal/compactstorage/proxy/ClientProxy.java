@@ -31,8 +31,10 @@ public class ClientProxy implements IProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChest.class, new TileEntityChestRenderer());
         ModelUtil.registerChest();
         ModelUtil.registerBlock(CompactStorage.chestBuilder, 0, "compactstorage:chestBuilder");
-        ModelUtil.registerBlock(CompactStorage.chest, 0, "compactstorage:compactchest");
+        ModelUtil.registerBlock(CompactStorage.chest, 0, "compactstorage:compactChest");
+
         ModelUtil.registerItem(CompactStorage.backpack, 0, "compactstorage:backpack");
+        ModelUtil.registerItem(CompactStorage.ibChest, 0, "compactstorage:compactChest");
 
         ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
         BlockColors blockColors = Minecraft.getMinecraft().getBlockColors();

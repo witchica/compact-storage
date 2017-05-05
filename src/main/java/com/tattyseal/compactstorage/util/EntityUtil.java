@@ -12,7 +12,7 @@ public class EntityUtil
     public static EnumFacing get2dOrientation(EntityLivingBase entityliving)
     {
         EnumFacing[] orientationTable = {EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.NORTH, EnumFacing.EAST};
-        int orientationIndex = MathHelper.floor((entityliving.rotationYaw + 45.0) / 90.0) & 3;
+        int orientationIndex = MathHelper.floor_double((entityliving.rotationYaw + 45.0) / 90.0) & 3;
 
         return orientationTable[orientationIndex];
     }

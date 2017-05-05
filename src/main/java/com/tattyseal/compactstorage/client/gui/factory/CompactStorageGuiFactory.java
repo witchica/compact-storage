@@ -20,16 +20,6 @@ public class CompactStorageGuiFactory implements IModGuiFactory
     }
 
     @Override
-    public boolean hasConfigGui() {
-        return true;
-    }
-
-    @Override
-    public GuiScreen createConfigGui(GuiScreen parentScreen) {
-        return new GuiCompactStorageConfig(parentScreen, "compactstorage", "CompactStorage");
-    }
-
-    @Override
     public Class<? extends GuiScreen> mainConfigGuiClass() {
         return GuiCompactStorageConfig.class;
     }

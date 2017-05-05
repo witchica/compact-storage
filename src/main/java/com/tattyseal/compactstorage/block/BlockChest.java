@@ -28,6 +28,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.List;
 import java.util.Random;
@@ -107,7 +108,7 @@ public class BlockChest extends Block implements ITileEntityProvider
         	{
         		if(entity instanceof EntityPlayer)
         		{
-        			((EntityPlayer) entity).sendMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
+        			((EntityPlayer) entity).addChatComponentMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
 
                     chest.invX = 9;
                     chest.invY = 3;
@@ -124,7 +125,7 @@ public class BlockChest extends Block implements ITileEntityProvider
         {
             if(entity instanceof EntityPlayer)
             {
-                ((EntityPlayer) entity).sendMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
+                ((EntityPlayer) entity).addChatComponentMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
 
                 chest.invX = 9;
                 chest.invY = 3;
@@ -142,14 +143,18 @@ public class BlockChest extends Block implements ITileEntityProvider
             chestData.setInteger("y", pos.getY());
             chestData.setInteger("z", pos.getZ());
 
+            System.out.println("READING NBT");
+
             chest.readFromNBT(chestData);
-            chest.markDirty();
+            chest.updateBlock();
         }
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z)
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack stack, EnumFacing facing, float x, float y, float z)
     {
+        ItemStack held = player.getHeldItem(hand);
+
         if(!world.isRemote)
         {
             if(!player.isSneaking())
@@ -160,20 +165,19 @@ public class BlockChest extends Block implements ITileEntityProvider
             }
             else
             {
-                ItemStack held = player.getHeldItem(EnumHand.MAIN_HAND);
                 TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
-                if(!chest.getRetaining() && !held.isEmpty() && held.getItem() == Items.DIAMOND)
+                if(!chest.getRetaining() && held != null && held.getItem() == Items.DIAMOND)
                 {
                     chest.setRetaining(true);
-                    held.setCount(held.getCount() - 1);
-                    player.sendMessage(new TextComponentString(TextFormatting.AQUA + "Chest will now retain items when broken!"));
+                    held.stackSize = held.stackSize - 1;
+                    player.addChatComponentMessage(new TextComponentString(TextFormatting.AQUA + "Chest will now retain items when broken!"));
                     world.playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.AMBIENT, 1, 1);
                     chest.updateBlock();
                 }
             }
         }
 
-        return player.isSneaking() ? false : true;
+        return true;
     }
 
     public TileEntity createNewTileEntity(World world, int dim)
@@ -226,18 +230,18 @@ public class BlockChest extends Block implements ITileEntityProvider
                     float randX = rand.nextFloat();
                     float randZ = rand.nextFloat();
 
-                    if(chest.items != null && chest.items[slot] != null && chest.items[slot] != ItemStack.EMPTY) world.spawnEntity(new EntityItem(world, pos.getX() + randX, pos.getY() + 0.5f, pos.getZ() + randZ, chest.items[slot]));
+                    if(chest.items != null && chest.items[slot] != null) world.spawnEntityInWorld(new EntityItem(world, pos.getX() + randX, pos.getY() + 0.5f, pos.getZ() + randZ, chest.items[slot]));
                 }
             }
 
-            world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack));
+            world.spawnEntityInWorld(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack));
         }
 
         super.breakBlock(world, pos, state);
     }
 
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
         list.add(new ItemStack(itemIn, 1, 4));
     }
 

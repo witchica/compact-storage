@@ -130,17 +130,17 @@ public class ContainerChest extends Container
     			{
     				if (!this.mergeItemStack(itemStack1, lastId, lastId + 36, false))
     				{
-    					return ItemStack.EMPTY;
+    					return null;
     				}
     			}
     			else if (!this.mergeItemStack(itemStack1, 0, lastId, false))
     			{
-    				return ItemStack.EMPTY;
+    				return null;
     			}
     			
-    			if (itemStack1.getCount() == 0)
+    			if (itemStack1.stackSize == 0)
     			{
-    				slot.putStack(ItemStack.EMPTY);
+    				slot.putStack(null);
     			}
     			else
     			{
@@ -149,12 +149,12 @@ public class ContainerChest extends Container
     			return itemStack;
     		}
     		
-    		return ItemStack.EMPTY;
+    		return null;
     	}
     	catch(Exception e)
     	{
     		e.printStackTrace();
-    		return ItemStack.EMPTY;
+    		return null;
     	}
     }
 
@@ -194,7 +194,7 @@ public class ContainerChest extends Container
         {
             if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItem(EnumHand.MAIN_HAND))
             {
-                return ItemStack.EMPTY;
+                return null;
             }
         }
 

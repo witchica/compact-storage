@@ -43,11 +43,6 @@ public class InventoryBackpack implements IChest
 
         items = new ItemStack[getSizeInventory()];
 
-        for(int i = 0; i < items.length; i++)
-        {
-            items[i] = ItemStack.EMPTY;
-        }
-
         readFromNBT(this.stack.getTagCompound());
     }
 
@@ -83,19 +78,14 @@ public class InventoryBackpack implements IChest
     }
 
     @Override
-    public boolean isEmpty() {
-        return false;
-    }
-
-    @Override
     public ItemStack getStackInSlot(int slot)
     {
-        if(slot < items.length && items[slot] != null && items[slot] != ItemStack.EMPTY)
+        if(slot < items.length && items[slot] != null)
         {
             return items[slot];
         }
 
-        return ItemStack.EMPTY;
+        return null;
     }
 
     @Override
@@ -103,11 +93,11 @@ public class InventoryBackpack implements IChest
     {
         ItemStack stack = getStackInSlot(slot);
 
-        if(stack != ItemStack.EMPTY)
+        if(stack != null)
         {
-            if(stack.getCount() <= amount)
+            if(stack.stackSize <= amount)
             {
-                setInventorySlotContents(slot, ItemStack.EMPTY);
+                setInventorySlotContents(slot, null);
                 markDirty();
 
                 return stack.copy();
@@ -126,7 +116,8 @@ public class InventoryBackpack implements IChest
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        return ItemStack.EMPTY;
+        items[index] = null;
+        return null;
     }
 
     @Override
@@ -164,7 +155,8 @@ public class InventoryBackpack implements IChest
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
+    public boolean isUseableByPlayer(EntityPlayer player)
+    {
         return false;
     }
 
@@ -219,7 +211,7 @@ public class InventoryBackpack implements IChest
 
             if(i >= 0 && i < getSizeInventory())
             {
-                items[i] = new ItemStack(item);
+                items[i] = ItemStack.loadItemStackFromNBT(item);
             }
         }
 
@@ -262,7 +254,7 @@ public class InventoryBackpack implements IChest
         NBTTagList nbtTagList = new NBTTagList();
         for(int slot = 0; slot < getSizeInventory(); slot++)
         {
-            if(slot < items.length && items[slot] != null && items[slot] != ItemStack.EMPTY)
+            if(slot < items.length && items[slot] != null)
             {
                 NBTTagCompound item = new NBTTagCompound();
                 item.setInteger("Slot", slot);

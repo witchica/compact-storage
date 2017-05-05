@@ -34,19 +34,19 @@ public class GuiChestBuilderResponder implements GuiPageButtonList.GuiResponder
         {
             case 0:
             {
-                info.setSizeX((int) MathHelper.clamp(value, 1, 24));
+                info.setSizeX((int) MathHelper.clamp_float(value, 1, 24));
                 CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(gui.pos, gui.builder.dimension, info));
                 break;
             }
             case 1:
             {
-                info.setSizeY((int) MathHelper.clamp(value, 1, 12));
+                info.setSizeY((int) MathHelper.clamp_float(value, 1, 12));
                 CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(gui.pos, gui.builder.dimension, info));
                 break;
             }
             case 2:
             {
-                info.setHue((int) MathHelper.clamp(value, -1, 360));
+                info.setHue((int) MathHelper.clamp_float(value, -1, 360));
                 CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(gui.pos, gui.builder.dimension, info));
                 break;
             }

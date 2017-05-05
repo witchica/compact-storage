@@ -23,8 +23,8 @@ public class GuiCompactStorageConfig extends GuiConfig
         elementList.add(new ConfigElement(ConfigurationHandler.configuration.getCategory("builder")));
     }
 
-    public GuiCompactStorageConfig(GuiScreen parentScreen, String modid, String title)
+    public GuiCompactStorageConfig(GuiScreen parentScreen)
     {
-        super(parentScreen, elementList, modid, title, false, false, GuiConfig.getAbridgedConfigPath(ConfigurationHandler.configuration.toString()));
+        super(parentScreen, elementList, "compactstorage", "CompactStorage", false, false, GuiConfig.getAbridgedConfigPath(ConfigurationHandler.configuration.toString()));
     }
 }

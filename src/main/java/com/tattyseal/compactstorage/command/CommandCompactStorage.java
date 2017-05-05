@@ -9,6 +9,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.Loader;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,19 +19,19 @@ import java.util.List;
 public class CommandCompactStorage implements ICommand
 {
     @Override
-    public String getName()
+    public String getCommandName()
     {
         return "cs";
     }
 
     @Override
-    public String getUsage(ICommandSender sender)
+    public String getCommandUsage(ICommandSender sender)
     {
         return "/cs {version:reload}";
     }
 
     @Override
-    public List getAliases()
+    public List getCommandAliases()
     {
         return Arrays.asList("compactstorage");
     }
@@ -44,21 +45,21 @@ public class CommandCompactStorage implements ICommand
 
             if(cmd.equalsIgnoreCase("version"))
             {
-                sender.sendMessage(new TextComponentString("CompactStorage version " + Loader.instance().getIndexedModList().get("compactstorage").getDisplayVersion() + "."));
+                sender.addChatMessage(new TextComponentString("CompactStorage version " + Loader.instance().getIndexedModList().get("compactstorage").getDisplayVersion() + "."));
             }
             else if(cmd.equalsIgnoreCase("reload"))
             {
                 ConfigurationHandler.init();
-                sender.sendMessage(new TextComponentString("Reloading configuration..."));
+                sender.addChatMessage(new TextComponentString("Reloading configuration..."));
             }
             else
             {
-                sender.sendMessage(new TextComponentTranslation(getUsage(sender)));
+                sender.addChatMessage(new TextComponentTranslation(getCommandUsage(sender)));
             }
         }
         else
         {
-            sender.sendMessage(new TextComponentTranslation(getUsage(sender)));
+            sender.addChatMessage(new TextComponentTranslation(getCommandUsage(sender)));
         }
     }
 
@@ -68,8 +69,9 @@ public class CommandCompactStorage implements ICommand
         return true;
     }
 
+
     @Override
-    public List getTabCompletions(MinecraftServer server, ICommandSender p_71516_1_, String[] p_71516_2_, BlockPos pos) {
+    public List getTabCompletionOptions(MinecraftServer server, ICommandSender p_71516_1_, String[] p_71516_2_, @Nullable BlockPos pos) {
         return p_71516_2_.length == 1 ? Arrays.asList("reload", "version") : null;
     }
 

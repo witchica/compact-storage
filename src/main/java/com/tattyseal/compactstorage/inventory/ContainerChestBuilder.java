@@ -103,17 +103,17 @@ public class ContainerChestBuilder extends Container
                 {
                     if (!this.mergeItemStack(itemStack1, 5, 5 + 36, false))
                     {
-                        return ItemStack.EMPTY;
+                        return null;
                     }
                 }
                 else if (!this.mergeItemStack(itemStack1, 0, 5, false))
                 {
-                    return ItemStack.EMPTY;
+                    return null;
                 }
 
-                if (itemStack1.getCount() == 0)
+                if (itemStack1.stackSize == 0)
                 {
-                    slot.putStack(ItemStack.EMPTY);
+                    slot.putStack(null);
                 }
                 else
                 {
@@ -122,12 +122,12 @@ public class ContainerChestBuilder extends Container
                 return itemStack;
             }
 
-            return ItemStack.EMPTY;
+            return null;
         }
         catch(Exception e)
         {
             e.printStackTrace();
-            return ItemStack.EMPTY;
+            return null;
         }
     }
 
@@ -187,26 +187,26 @@ public class ContainerChestBuilder extends Container
 
         if (p_75135_1_.isStackable())
         {
-            while (p_75135_1_.getCount() > 0 && (!p_75135_4_ && k < p_75135_3_ || p_75135_4_ && k >= p_75135_2_))
+            while (p_75135_1_.stackSize > 0 && (!p_75135_4_ && k < p_75135_3_ || p_75135_4_ && k >= p_75135_2_))
             {
                 slot = (Slot)this.inventorySlots.get(k);
                 itemstack1 = slot.getStack();
 
-                if (itemstack1 != ItemStack.EMPTY && itemstack1.getItem() == p_75135_1_.getItem() && (!p_75135_1_.getHasSubtypes() || p_75135_1_.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(p_75135_1_, itemstack1) && slot.isItemValid(p_75135_1_))
+                if (itemstack1 != null && itemstack1.getItem() == p_75135_1_.getItem() && (!p_75135_1_.getHasSubtypes() || p_75135_1_.getItemDamage() == itemstack1.getItemDamage()) && ItemStack.areItemStackTagsEqual(p_75135_1_, itemstack1) && slot.isItemValid(p_75135_1_))
                 {
-                    int l = itemstack1.getCount() + p_75135_1_.getCount();
+                    int l = itemstack1.stackSize + p_75135_1_.stackSize;
 
                     if (l <= p_75135_1_.getMaxStackSize())
                     {
-                        p_75135_1_.setCount(0);
-                        itemstack1.setCount(l);
+                        p_75135_1_.stackSize = 0;
+                        itemstack1.stackSize = l;
                         slot.onSlotChanged();
                         flag1 = true;
                     }
-                    else if (itemstack1.getCount() < p_75135_1_.getMaxStackSize())
+                    else if (itemstack1.stackSize < p_75135_1_.getMaxStackSize())
                     {
-                        p_75135_1_.setCount(p_75135_1_.getCount() - p_75135_1_.getMaxStackSize() - itemstack1.getCount());
-                        itemstack1.setCount(p_75135_1_.getMaxStackSize());
+                        p_75135_1_.stackSize = p_75135_1_.stackSize - p_75135_1_.getMaxStackSize() - itemstack1.stackSize;
+                        itemstack1.stackSize = p_75135_1_.getMaxStackSize();
                         slot.onSlotChanged();
                         flag1 = true;
                     }
@@ -223,7 +223,7 @@ public class ContainerChestBuilder extends Container
             }
         }
 
-        if (p_75135_1_.getCount() > 0)
+        if (p_75135_1_.stackSize > 0)
         {
             if (p_75135_4_)
             {
@@ -239,11 +239,11 @@ public class ContainerChestBuilder extends Container
                 slot = (Slot)this.inventorySlots.get(k);
                 itemstack1 = slot.getStack();
 
-                if (itemstack1.isEmpty() && slot.isItemValid(p_75135_1_))
+                if (itemstack1 != null && slot.isItemValid(p_75135_1_))
                 {
                     slot.putStack(p_75135_1_.copy());
                     slot.onSlotChanged();
-                    p_75135_1_.setCount(0);
+                    p_75135_1_.stackSize = 0;
                     flag1 = true;
                     break;
                 }

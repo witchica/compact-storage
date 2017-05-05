@@ -32,11 +32,6 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 		init = false;
 		info = new StorageInfo(9, 3, 180, StorageInfo.Type.CHEST);
 		items = new ItemStack[getSizeInventory()];
-
-		for(int i = 0; i < items.length; i++)
-		{
-			items[i] = ItemStack.EMPTY;
-		}
 	}
 
 	@Override
@@ -79,7 +74,7 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 		NBTTagList nbtTagList = new NBTTagList();
         for(int slot = 0; slot < getSizeInventory(); slot++)
         {
-            if(items != null && items[slot] != null && items[slot] != ItemStack.EMPTY)
+            if(items != null && items[slot] != null && items[slot] != null)
             {
                 NBTTagCompound item = new NBTTagCompound();
                 item.setInteger("Slot", slot);
@@ -109,7 +104,7 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
         for(int slot = 0; slot < getSizeInventory(); slot++)
         {
             NBTTagCompound item = nbtTagList.getCompoundTagAt(slot);
-            items[slot] = new ItemStack(item);
+            items[slot] = ItemStack.loadItemStackFromNBT(item);
         }
 
         markDirty();
@@ -160,11 +155,11 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
     {
     	ItemStack stack = getStackInSlot(slot);
 
-        if(stack != ItemStack.EMPTY)
+        if(stack != null)
         {
-            if(stack.getCount() <= amount)
+            if(stack.stackSize <= amount)
             {
-                setInventorySlotContents(slot, ItemStack.EMPTY);
+                setInventorySlotContents(slot, null);
                 markDirty();
             }
             else
@@ -181,8 +176,8 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
-		items[index] = ItemStack.EMPTY;
-		return ItemStack.EMPTY;
+		items[index] = null;
+		return null;
 	}
 
 	@Override
@@ -209,16 +204,13 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	}
 
 	@Override
-	public boolean isEmpty() { return true; }
-
-	@Override
 	public int getInventoryStackLimit()
 	{
 		return 64;
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
+	public boolean isUseableByPlayer(EntityPlayer player) {
 		return true;
 	}
 

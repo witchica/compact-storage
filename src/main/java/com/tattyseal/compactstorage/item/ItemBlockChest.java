@@ -14,7 +14,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
@@ -34,7 +33,7 @@ public class ItemBlockChest extends ItemBlock
 
 
     @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list)
+    public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list)
     {
 		ItemStack stack = new ItemStack(item, 1);
 

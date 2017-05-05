@@ -16,8 +16,8 @@ public class CreativeTabCompactStorage extends CreativeTabs
     }
 
     @Override
-    public ItemStack getTabIconItem()
+    public Item getTabIconItem()
     {
-        return new ItemStack(Blocks.CHEST, 1, 0);
+        return new ItemStack(Blocks.CHEST, 1, 0).getItem();
     }
 }

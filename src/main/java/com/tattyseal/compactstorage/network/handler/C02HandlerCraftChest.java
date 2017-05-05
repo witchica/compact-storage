@@ -60,13 +60,13 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 
 					if(stack != null && slot < requiredItems.size() && requiredItems.get(slot) != null)
 					{
-						if(OreDictionary.itemMatches(requiredItems.get(slot), stack, false) && stack.getCount() >=  requiredItems.get(slot).getCount())
+						if(OreDictionary.itemMatches(requiredItems.get(slot), stack, false) && stack.stackSize >=  requiredItems.get(slot).stackSize)
 						{
 							hasRequiredMaterials = true;
 						}
 						else
 						{
-							if(requiredItems.get(slot) != null && requiredItems.get(slot).getCount() == 0)
+							if(requiredItems.get(slot) != null && requiredItems.get(slot).stackSize == 0)
 							{
 								hasRequiredMaterials = true;
 							}
@@ -86,7 +86,7 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 
 				LogHelper.dump("HAS REQ MATS: " + hasRequiredMaterials);
 
-				if(hasRequiredMaterials && builder.getStackInSlot(4).isEmpty())
+				if(hasRequiredMaterials && builder.getStackInSlot(4) == null)
 				{
 					ItemStack stack = new ItemStack((Item) (message.info.getType().equals(StorageInfo.Type.BACKPACK) ? CompactStorage.backpack : ItemBlock.getItemFromBlock(CompactStorage.chest)), 1);
 
@@ -101,7 +101,7 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 
 					for(int x = 0; x < requiredItems.size(); x++)
 					{
-						builder.decrStackSize(x, requiredItems.get(x).getCount());
+						builder.decrStackSize(x, requiredItems.get(x).stackSize);
 
 						LogHelper.dump("DECREASED ITEMS IN INVENTORY");
 					}

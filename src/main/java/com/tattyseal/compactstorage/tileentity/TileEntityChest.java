@@ -62,11 +62,6 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
         this.direction = EnumFacing.NORTH;
         this.items = new ItemStack[getSizeInventory()];
         this.info = new StorageInfo(getInvX(), getInvY(), 180, StorageInfo.Type.CHEST);
-
-        for(int i = 0; i < items.length; i++)
-        {
-            items[i] = ItemStack.EMPTY;
-        }
     }
 
     /* INVENTORY START */
@@ -77,19 +72,14 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     }
 
     @Override
-    public boolean isEmpty() {
-        return false;
-    }
-
-    @Override
     public ItemStack getStackInSlot(int slot) 
     {
-    	if(slot < items.length && items[slot] != null && !items[slot].isEmpty())
+    	if(slot < items.length && items[slot] != null)
         {
         	return items[slot];
         }
         
-        return ItemStack.EMPTY;
+        return null;
     }
 
     @Override
@@ -97,11 +87,11 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     {
     	ItemStack stack = getStackInSlot(slot);
 
-        if(stack != ItemStack.EMPTY)
+        if(stack != null)
         {
-            if(stack.getCount() <= amount)
+            if(stack.stackSize <= amount)
             {
-                setInventorySlotContents(slot, ItemStack.EMPTY);
+                setInventorySlotContents(slot, null);
                 markDirty();
                 
                 return stack.copy();
@@ -121,8 +111,8 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     @Override
     public ItemStack removeStackFromSlot(int index)
     {
-        items[index] = ItemStack.EMPTY;
-        return ItemStack.EMPTY;
+        items[index] = null;
+        return null;
     }
 
     @Override
@@ -177,8 +167,8 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
             }
 
             ++this.numPlayersUsing;
-            this.world.addBlockEvent(this.pos, this.getBlockType(), 1, this.numPlayersUsing);
-            this.world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), false);
+            this.getWorld().addBlockEvent(this.pos, this.getBlockType(), 1, this.numPlayersUsing);
+            this.getWorld().notifyNeighborsOfStateChange(this.pos, this.getBlockType());
         }
     }
 
@@ -187,8 +177,8 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
         if (!player.isSpectator() && this.getBlockType() instanceof BlockChest)
         {
             --this.numPlayersUsing;
-            this.world.addBlockEvent(this.pos, this.getBlockType(), 1, this.numPlayersUsing);
-            this.world.notifyNeighborsOfStateChange(this.pos, this.getBlockType(), false);
+            this.getWorld().addBlockEvent(this.pos, this.getBlockType(), 1, this.numPlayersUsing);
+            this.getWorld().notifyNeighborsOfStateChange(this.pos, this.getBlockType());
         }
     }
 
@@ -221,12 +211,16 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     @Override
     public void markDirty()
     {
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
         super.markDirty();
     }
 
+    public void notifyOfUpdate()
+    {
+        getWorld().notifyBlockUpdate(pos, getWorld().getBlockState(pos), getWorld().getBlockState(pos), 3);
+    }
+
     @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
+    public boolean isUseableByPlayer(EntityPlayer player) {
         return true;
     }
 
@@ -309,7 +303,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
 
             if(i >= 0 && i < getSizeInventory())
             {
-                items[i] = new ItemStack(item);
+                items[i] = ItemStack.loadItemStackFromNBT(item);
             }
         }
     }
@@ -355,7 +349,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
         NBTTagList nbtTagList = new NBTTagList();
         for(int slot = 0; slot < getSizeInventory(); slot++)
         {
-            if(slot < items.length && items[slot] != null && !items[slot].isEmpty())
+            if(slot < items.length && items[slot] != null)
             {
                 NBTTagCompound item = new NBTTagCompound();
                 item.setInteger("Slot", slot);
@@ -400,6 +394,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     public void updateBlock()
     {
         markDirty();
+        notifyOfUpdate();
     }
 
     @Override
@@ -410,12 +405,12 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
         int k = this.pos.getZ();
         ++this.ticksSinceSync;
 
-        if (!this.world.isRemote && this.numPlayersUsing != 0 && (this.ticksSinceSync + i + j + k) % 200 == 0)
+        if (!this.getWorld().isRemote && this.numPlayersUsing != 0 && (this.ticksSinceSync + i + j + k) % 200 == 0)
         {
             this.numPlayersUsing = 0;
             float f = 5.0F;
 
-            for (EntityPlayer entityplayer : this.world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB((double)((float)i - 5.0F), (double)((float)j - 5.0F), (double)((float)k - 5.0F), (double)((float)(i + 1) + 5.0F), (double)((float)(j + 1) + 5.0F), (double)((float)(k + 1) + 5.0F))))
+            for (EntityPlayer entityplayer : this.getWorld().getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB((double)((float)i - 5.0F), (double)((float)j - 5.0F), (double)((float)k - 5.0F), (double)((float)(i + 1) + 5.0F), (double)((float)(j + 1) + 5.0F), (double)((float)(k + 1) + 5.0F))))
             {
                 if (entityplayer.openContainer instanceof ContainerChest)
                 {
@@ -437,7 +432,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
             double d1 = (double)i + 0.5D;
             double d2 = (double)k + 0.5D;
 
-            this.world.playSound((EntityPlayer)null, d1, (double)j + 0.5D, d2, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+            this.getWorld().playSound((EntityPlayer)null, d1, (double)j + 0.5D, d2, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.getWorld().rand.nextFloat() * 0.1F + 0.9F);
         }
 
         if (this.numPlayersUsing == 0 && this.lidAngle > 0.0F || this.numPlayersUsing > 0 && this.lidAngle < 1.0F)
@@ -465,7 +460,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
                 double d3 = (double)i + 0.5D;
                 double d0 = (double)k + 0.5D;
 
-                this.world.playSound((EntityPlayer)null, d3, (double)j + 0.5D, d0, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+                this.getWorld().playSound((EntityPlayer)null, d3, (double)j + 0.5D, d0, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, this.getWorld().rand.nextFloat() * 0.1F + 0.9F);
             }
 
             if (this.lidAngle < 0.0F)

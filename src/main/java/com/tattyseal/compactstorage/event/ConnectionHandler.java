@@ -20,10 +20,10 @@ public class ConnectionHandler
     {
         if(FMLCommonHandler.instance().getSide().equals(Side.CLIENT) && ConfigurationHandler.newFeatures)
         {
-            e.player.sendMessage(new TextComponentString("What's new in CompactStorage 2.2?"));
-            e.player.sendMessage(new TextComponentString(" - New retainer chests, regular compact chests can be made to retain items by crouch clicking on them with a diamond."));
-            e.player.sendMessage(new TextComponentString(" - New builder interface redesign."));
-            e.player.sendMessage(new TextComponentString("This message will only be displayed once and can be re-enabled in the configuration file."));
+            e.player.addChatComponentMessage(new TextComponentString("What's new in CompactStorage 2.2?"));
+            e.player.addChatComponentMessage(new TextComponentString(" - New retainer chests, regular compact chests can be made to retain items by crouch clicking on them with a diamond."));
+            e.player.addChatComponentMessage(new TextComponentString(" - New builder interface redesign."));
+            e.player.addChatComponentMessage(new TextComponentString("This message will only be displayed once and can be re-enabled in the configuration file."));
             ConfigurationHandler.disableMessage();
         }
     }

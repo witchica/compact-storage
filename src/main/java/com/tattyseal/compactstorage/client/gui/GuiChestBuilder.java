@@ -163,7 +163,7 @@ public class GuiChestBuilder extends GuiContainer
                         {
                             ArrayList<String> toolList = new ArrayList<String>();
                             toolList.add(stack.getDisplayName());
-                            toolList.add(TextFormatting.AQUA + "Amount Required: " + stack.getCount());
+                            toolList.add(TextFormatting.AQUA + "Amount Required: " + stack.stackSize);
 
                             drawHoveringText(toolList, mouseX, mouseY, getFontRenderer());
                         }
