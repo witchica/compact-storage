@@ -532,18 +532,22 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     }
     
     @Override
-	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-			return true;
-		}
-		return super.hasCapability(capability, facing);
-	}
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) 
+    {
+   	 if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
+	 {
+    	     return true;
+   	 }
+    	return super.hasCapability(capability, facing);
+    }
     
-    @Override
-	public <T> T getCapability(Capability<T> capability, EnumFacing facing){
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-			return (T) new InvWrapper(this, facing);
-		}
+   @Override
+   public <T> T getCapability(Capability<T> capability, EnumFacing facing) 
+   {
+  	if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
+   	{
+   		return (T) new InvWrapper(this);
+   	}
 		return super.getCapability(capability, facing);
 	}
 }
