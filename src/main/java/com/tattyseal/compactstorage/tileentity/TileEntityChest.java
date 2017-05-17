@@ -24,6 +24,9 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
 import java.awt.*;
 
@@ -527,4 +530,24 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     public ITextComponent getDisplayName() {
         return null;
     }
+    
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) 
+    {
+   	 if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
+	 {
+    	     return true;
+   	 }
+    	return super.hasCapability(capability, facing);
+    }
+    
+   @Override
+   public <T> T getCapability(Capability<T> capability, EnumFacing facing) 
+   {
+  	if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) 
+   	{
+   		return (T) new InvWrapper(this);
+   	}
+		return super.getCapability(capability, facing);
+	}
 }
