@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "blocks/planks_oak",
+    "up": "compactstorage:blocks/empty",
+    "down": "compactstorage:blocks/empty",
+    "north": "compactstorage:blocks/empty",
+    "east": "compactstorage:blocks/empty",
+    "south": "compactstorage:blocks/empty",
+    "west": "compactstorage:blocks/empty"
+  }
+}
