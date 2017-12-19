@@ -28,8 +28,8 @@ public class GuiSliderHue extends GuiSlider
 
             GlStateManager.color(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f);
 
-            this.drawTexturedModalRect(this.xPosition + (int)(this.getSliderPosition() * (float)(this.width - 8)), this.yPosition, 0, 66, 4, 20);
-            this.drawTexturedModalRect(this.xPosition + (int)(this.getSliderPosition() * (float)(this.width - 8)) + 4, this.yPosition, 196, 66, 4, 20);
+            this.drawTexturedModalRect(this.x + (int)(this.getSliderPosition() * (float)(this.width - 8)), this.y, 0, 66, 4, 20);
+            this.drawTexturedModalRect(this.x + (int)(this.getSliderPosition() * (float)(this.width - 8)) + 4, this.y, 196, 66, 4, 20);
         }
     }
 }

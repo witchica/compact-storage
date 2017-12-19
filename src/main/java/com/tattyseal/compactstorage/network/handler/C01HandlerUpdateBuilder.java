@@ -18,7 +18,7 @@ public class C01HandlerUpdateBuilder implements IMessageHandler<C01PacketUpdateB
 	{
 		if(ctx.side.equals(Side.SERVER))
 		{
-			final WorldServer world = ctx.getServerHandler().playerEntity.getServerWorld();
+			final WorldServer world = ctx.getServerHandler().player.getServerWorld();
 
 			world.addScheduledTask(new Runnable() {
 				@Override

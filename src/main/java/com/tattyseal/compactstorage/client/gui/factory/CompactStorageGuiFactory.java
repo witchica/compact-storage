@@ -29,19 +29,15 @@ public class CompactStorageGuiFactory implements IModGuiFactory
         return new GuiCompactStorageConfig(parentScreen, "compactstorage", "CompactStorage");
     }
 
-    @Override
-    public Class<? extends GuiScreen> mainConfigGuiClass() {
-        return GuiCompactStorageConfig.class;
-    }
+//    @Override
+//    public Class<? extends GuiScreen> mainConfigGuiClass() {
+//        return GuiCompactStorageConfig.class;
+//    }
 
     @Override
     public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {
         return null;
     }
 
-    @Nullable
-    @Override
-    public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
-        return null;
-    }
+
 }
