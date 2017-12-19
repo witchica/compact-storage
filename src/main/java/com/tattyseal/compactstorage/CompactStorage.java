@@ -167,7 +167,9 @@ public class CompactStorage
         ConfigurationHandler.init();
     }
 
-    public static void addShapedRecipe(ItemStack output, Object... params) {
+    //This is so I don't need to Json the recipes...
+    public static void addShapedRecipe(ItemStack output, Object... params)
+    {
         ResourceLocation location = getNameForRecipe(output);
         CraftingHelper.ShapedPrimer primer = CraftingHelper.parseShaped(params);
         ShapedRecipes recipe = new ShapedRecipes(output.getItem().getRegistryName().toString(), primer.width, primer.height, primer.input, output);
@@ -175,12 +177,14 @@ public class CompactStorage
         GameData.register_impl(recipe);
     }
 
-    public static ResourceLocation getNameForRecipe(ItemStack output) {
+    public static ResourceLocation getNameForRecipe(ItemStack output)
+    {
         ModContainer activeContainer = Loader.instance().activeModContainer();
         ResourceLocation baseLoc = new ResourceLocation(activeContainer.getModId(), output.getItem().getRegistryName().getResourcePath());
         ResourceLocation recipeLoc = baseLoc;
         int index = 0;
-        while (CraftingManager.REGISTRY.containsKey(recipeLoc)) {
+        while (CraftingManager.REGISTRY.containsKey(recipeLoc))
+        {
             index++;
             recipeLoc = new ResourceLocation(activeContainer.getModId(), baseLoc.getResourcePath() + "_" + index);
         }
