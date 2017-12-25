@@ -33,7 +33,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
     }
 
     @Override
-    public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float partialTicks, int i)
+    public void render(TileEntity tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
         TileEntityChest chest = (TileEntityChest) tile;
 
@@ -93,7 +93,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
             GL11.glRotatef(180, 0, 0, 1);
             GL11.glTranslatef(-0.5f, -1.1f, 0.01f);
 
-            Minecraft.getMinecraft().getRenderManager().doRenderEntity(item, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F, false);
+            Minecraft.getMinecraft().getRenderManager().renderEntity(item, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F, false);
         }
 
         GL11.glPopMatrix();

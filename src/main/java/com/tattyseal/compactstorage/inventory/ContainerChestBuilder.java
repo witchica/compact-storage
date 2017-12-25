@@ -135,8 +135,8 @@ public class ContainerChestBuilder extends Container
     public void addListener(IContainerListener listener)
     {
         super.addListener(listener);
-        listener.sendProgressBarUpdate(this, 0, 9);
-        listener.sendProgressBarUpdate(this, 1, 3);
+        listener.sendWindowProperty(this, 0, 9);
+        listener.sendWindowProperty(this, 1, 3);
     }
 
     @Override
@@ -147,10 +147,10 @@ public class ContainerChestBuilder extends Container
         for (int i = 0; i < this.listeners.size(); ++i)
         {
             IContainerListener crafter = (IContainerListener)this.listeners.get(i);
-            if(chest != null && chest.info != null) crafter.sendProgressBarUpdate(this, 0, chest.info.getSizeX());
-            if(chest != null && chest.info != null) crafter.sendProgressBarUpdate(this, 1, chest.info.getSizeY());
-            if(chest != null && chest.info != null) crafter.sendProgressBarUpdate(this, 2, chest.info.getHue());
-            if(chest != null && chest.info != null) crafter.sendProgressBarUpdate(this, 3, chest.info.getType().ordinal());
+            if(chest != null && chest.info != null) crafter.sendWindowProperty(this, 0, chest.info.getSizeX());
+            if(chest != null && chest.info != null) crafter.sendWindowProperty(this, 1, chest.info.getSizeY());
+            if(chest != null && chest.info != null) crafter.sendWindowProperty(this, 2, chest.info.getHue());
+            if(chest != null && chest.info != null) crafter.sendWindowProperty(this, 3, chest.info.getType().ordinal());
         }
     }
 

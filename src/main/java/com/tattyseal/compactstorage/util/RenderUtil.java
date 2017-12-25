@@ -2,8 +2,8 @@ package com.tattyseal.compactstorage.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 
@@ -30,7 +30,7 @@ public class RenderUtil
         double uz = (1D / slotTextureHeight) * realHeight;
 
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer worldRenderer = tessellator.getBuffer();
+        BufferBuilder worldRenderer = tessellator.getBuffer();
 
         worldRenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
         worldRenderer.pos(x + 0, y + realHeight, 0).tex(0, uz).endVertex();
@@ -71,7 +71,7 @@ public class RenderUtil
     private static void renderPartBackground(int x, int y, int startX, int startY, int endX, int endY, int width, int height)
     {
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer worldRenderer = tessellator.getBuffer();
+        BufferBuilder worldRenderer = tessellator.getBuffer();
         worldRenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
 
         worldRenderer.pos((double) x, (double) y + height, 0).tex(getEnd(chestTextureWidth, startX), getEnd(chestTextureHeight, endY)).endVertex();
@@ -90,7 +90,7 @@ public class RenderUtil
     public static void drawTexturedQuadFit(double x, double y, double width, double height, double zLevel)
     {
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer worldRenderer = tessellator.getBuffer();
+        BufferBuilder worldRenderer = tessellator.getBuffer();
         worldRenderer.begin(7, DefaultVertexFormats.POSITION);
         worldRenderer.pos(x + 0, y + height, zLevel).tex(0,1).endVertex();
         worldRenderer.pos(x + width, y + height, zLevel).tex(1, 1).endVertex();

@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -18,6 +19,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -32,22 +34,21 @@ public class ItemBlockChest extends ItemBlock
         super(block);
     }
 
-
-    @Override
-    public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list)
+	@Override
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)
     {
-		ItemStack stack = new ItemStack(item, 1);
+		ItemStack stack = new ItemStack(this, 1);
 
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setIntArray("size", new int[] {9, 3});
 		tag.setInteger("hue", 180);
 
 		stack.setTagCompound(tag);
-		list.add(stack);
+		items.add(stack);
     }
 
-	@Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> list, boolean advanced)
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn)
     {
     	if(stack.hasTagCompound())
     	{
@@ -97,6 +98,6 @@ public class ItemBlockChest extends ItemBlock
     		list.add(TextFormatting.RED + "Slots: none");
     	}
     	
-    	super.addInformation(stack, playerIn, list, advanced);
+    	super.addInformation(stack, worldIn, list, flagIn);
     }
 }

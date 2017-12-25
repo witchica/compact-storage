@@ -34,7 +34,7 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 		if(!ctx.side.equals(Side.SERVER))
 			return null;
 
-		final WorldServer world = ctx.getServerHandler().playerEntity.getServerWorld();
+		final WorldServer world = ctx.getServerHandler().player.getServerWorld();
 		world.addScheduledTask(new Runnable() {
 			@Override
 			public void run() {

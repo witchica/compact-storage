@@ -43,7 +43,7 @@ public class ClientProxy implements IProxy
 
         itemColors.registerItemColorHandler(new IItemColor() {
             @Override
-            public int getColorFromItemstack(ItemStack stack, int color)
+            public int colorMultiplier(ItemStack stack, int color)
             {
                 return getColorFromNBT(stack);
             }
@@ -51,7 +51,7 @@ public class ClientProxy implements IProxy
 
         itemColors.registerItemColorHandler(new IItemColor() {
             @Override
-            public int getColorFromItemstack(ItemStack stack, int color)
+            public int colorMultiplier(ItemStack stack, int color)
             {
                 return getColorFromNBT(stack);
             }
@@ -59,7 +59,7 @@ public class ClientProxy implements IProxy
 
         itemColors.registerItemColorHandler(new IItemColor() {
             @Override
-            public int getColorFromItemstack(ItemStack stack, int color)
+            public int colorMultiplier(ItemStack stack, int color)
             {
                 return getColorFromNBT(stack);
             }

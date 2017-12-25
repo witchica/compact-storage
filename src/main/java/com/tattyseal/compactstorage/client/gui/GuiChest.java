@@ -68,8 +68,8 @@ public class GuiChest extends GuiContainer
     {
     	super.drawGuiContainerForegroundLayer(arg0, arg1);
     	
-        this.fontRendererObj.drawString("Chest (" + invX + "x" + invY + ")", 8, 6, 4210752);
-        this.fontRendererObj.drawString("Inventory", 8, 15 + (invY * 18) + 5, 4210752);
+        this.fontRenderer.drawString("Chest (" + invX + "x" + invY + ")", 8, 6, 4210752);
+        this.fontRenderer.drawString("Inventory", 8, 15 + (invY * 18) + 5, 4210752);
     }
 
     @Override

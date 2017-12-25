@@ -13,15 +13,13 @@ import com.tattyseal.compactstorage.util.RenderUtil;
 import com.tattyseal.compactstorage.util.StorageInfo;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -29,12 +27,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Toby on 09/11/2014.
@@ -340,7 +336,7 @@ public class GuiChestBuilder extends GuiContainer
         GlStateManager.enableRescaleNormal();
         GlStateManager.color(1f, 0f, 0f);
         this.itemRender.renderItemAndEffectIntoGUI(stack, l, i1);
-        this.itemRender.renderItemOverlays(this.fontRendererObj, stack, l, i1);
+        this.itemRender.renderItemOverlays(this.fontRenderer, stack, l, i1);
         GlStateManager.disableLighting();
         this.itemRender.zLevel = 0.0F;
         this.zLevel = 0.0F;
@@ -349,7 +345,7 @@ public class GuiChestBuilder extends GuiContainer
     public static void drawTexturedQuadFit(double x, double y, double width, double height, double zLevel)
     {
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer renderer = tessellator.getBuffer();
+        BufferBuilder renderer = tessellator.getBuffer();
 
         renderer.begin(7, DefaultVertexFormats.POSITION_TEX);
         renderer.pos(x + 0, y + height, 0).tex(0,1).endVertex();
@@ -361,6 +357,6 @@ public class GuiChestBuilder extends GuiContainer
     
     public FontRenderer getFontRenderer()
     {
-    	return fontRendererObj;
+    	return fontRenderer;
     }
 }

@@ -194,7 +194,7 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	@Override
 	public String getName()
 	{
-		return "chestBuilder.json";
+		return "chestbuilder.json";
 	}
 
 	@Override

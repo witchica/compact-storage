@@ -237,8 +237,9 @@ public class BlockChest extends Block implements ITileEntityProvider
     }
 
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
-        list.add(new ItemStack(itemIn, 1, 4));
+    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items)
+    {
+        items.add(new ItemStack(this, 1, 4));
     }
 
     @Override
