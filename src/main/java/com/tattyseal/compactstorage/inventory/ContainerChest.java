@@ -2,6 +2,7 @@ package com.tattyseal.compactstorage.inventory;
 
 import com.tattyseal.compactstorage.api.IChest;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
+import invtweaks.api.container.ChestContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.ClickType;
@@ -18,6 +19,7 @@ import javax.annotation.Nonnull;
 /**
  * Created by Toby on 11/11/2014.
  */
+@ChestContainer()
 public class ContainerChest extends Container
 {
     public World world;
@@ -161,6 +163,7 @@ public class ContainerChest extends Container
     	}
     }
 
+    @ChestContainer.RowSizeCallback
     public int getInvX()
     {
     	return invX;
