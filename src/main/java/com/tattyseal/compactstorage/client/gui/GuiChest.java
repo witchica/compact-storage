@@ -23,13 +23,13 @@ public class GuiChest extends GuiContainer
     public EntityPlayer player;
     public BlockPos pos;
 
-    public int invX;
-    public int invY;
+    private int invX;
+    private int invY;
 
     public IChest chest;
     
-    public KeyBinding[] HOTBAR;
-    public int backpackSlot;
+    private KeyBinding[] HOTBAR;
+    private int backpackSlot;
 
     
     public GuiChest(Container container, IChest chest, World world, EntityPlayer player, BlockPos pos)

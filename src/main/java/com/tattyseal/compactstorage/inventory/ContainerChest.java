@@ -13,6 +13,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by Toby on 11/11/2014.
  */
@@ -62,15 +64,15 @@ public class ContainerChest extends Container
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer player)
+    public boolean canInteractWith(@Nonnull EntityPlayer player)
     {
         return true;
     }
     
-    public void setupSlots()
+    private void setupSlots()
     {
     	int slotX = (xSize / 2) - (invX * 18 / 2) + 1; 
-        int slotY = 18; //(ySize / 2) - ((invY * 18) / 2);
+        int slotY = 18;
 
         int lastId = 0;
         
@@ -115,11 +117,12 @@ public class ContainerChest extends Container
     }
     
     @Override
+    @Nonnull
     public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
     {
     	try
     	{
-    		Slot slot = (Slot) inventorySlots.get(slotIndex);
+    		Slot slot = inventorySlots.get(slotIndex);
     		
     		if (slot != null && slot.getHasStack())
     		{
@@ -179,7 +182,7 @@ public class ContainerChest extends Container
 
             if(!isChest)
             {
-                world.playSound((EntityPlayer)null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+                world.playSound(null, pos.getX() + 0.5d, pos.getY() + 0.5d, pos.getZ() + 0.5d, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
             }
         }
 
@@ -188,11 +191,12 @@ public class ContainerChest extends Container
 
 
     @Override
+    @Nonnull
     public ItemStack slotClick(int slot, int button, ClickType flag, EntityPlayer player)
     {
         if(chest instanceof InventoryBackpack)
         {
-            if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItem(EnumHand.MAIN_HAND))
+            if (slot >= 0 && getSlot(slot).getStack() == player.getHeldItem(EnumHand.MAIN_HAND))
             {
                 return ItemStack.EMPTY;
             }

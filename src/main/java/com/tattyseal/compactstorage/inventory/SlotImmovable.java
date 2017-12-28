@@ -6,9 +6,9 @@ import net.minecraft.inventory.Slot;
 
 public class SlotImmovable extends Slot
 {
-	public boolean immovable;
+	private boolean immovable;
 	
-	public SlotImmovable(IInventory inventory, int id, int x, int y, boolean immovable) 
+	SlotImmovable(IInventory inventory, int id, int x, int y, boolean immovable)
 	{
 		super(inventory, id, x, y);
 		this.immovable = immovable;

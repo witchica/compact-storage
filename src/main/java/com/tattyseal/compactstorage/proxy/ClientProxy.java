@@ -15,11 +15,10 @@ import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * Created by Toby on 06/11/2014.

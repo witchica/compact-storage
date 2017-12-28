@@ -11,11 +11,12 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class BlockChestBuilder extends Block implements ITileEntityProvider
@@ -49,20 +50,29 @@ public class BlockChestBuilder extends Block implements ITileEntityProvider
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack)
 	{
 		super.onBlockPlacedBy(world, pos, state, player, stack);
-		
-		((TileEntityChestBuilder) world.getTileEntity(pos)).player = player.getName();
+
+		TileEntityChestBuilder cb = (TileEntityChestBuilder) world.getTileEntity(pos);
+
+		if (cb != null) {
+			cb.player = player.getName();
+		}
 	}
 	
 	@Override
-	public TileEntity createNewTileEntity(World world, int dim)
+	public TileEntity createNewTileEntity(@Nonnull World world, int dim)
 	{
 		return new TileEntityChestBuilder();
 	}
 
 	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state)
+	public void breakBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state)
 	{
 		TileEntityChestBuilder chest = (TileEntityChestBuilder) world.getTileEntity(pos);
+
+		if (chest == null) {
+			return;
+		}
+
 		Random rand = new Random();
 
 		for(int slot = 0; slot < chest.items.length; slot++)

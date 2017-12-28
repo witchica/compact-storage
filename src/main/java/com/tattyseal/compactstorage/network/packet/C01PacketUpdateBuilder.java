@@ -11,27 +11,18 @@ public class C01PacketUpdateBuilder implements IMessage
 	public int y;
 	public int z;
 	
-	public int dimension;
+	private int dimension;
 	
 	public StorageInfo info;
-	
-	public C01PacketUpdateBuilder() 
+
+	public C01PacketUpdateBuilder()
 	{
 		this.x = 0;
 		this.y = 0;
 		this.z = 0;
-		
+
 		this.dimension = 0;
 		this.info = new StorageInfo(0, 0, 180, StorageInfo.Type.CHEST);
-	}
-	
-	public C01PacketUpdateBuilder(int x, int y, int z, int dim, StorageInfo info)
-	{
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.dimension = dim;
-		this.info = info;
 	}
 	
 	public C01PacketUpdateBuilder(BlockPos pos, int dim, StorageInfo info)

@@ -1,6 +1,6 @@
 package com.tattyseal.compactstorage.util;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * Created by Toby on 07/11/2014.

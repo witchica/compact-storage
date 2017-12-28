@@ -5,5 +5,5 @@ package com.tattyseal.compactstorage.proxy;
  */
 public interface IProxy
 {
-    public void registerRenderers();
+    void registerRenderers();
 }

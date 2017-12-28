@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.IModGuiFactory;
 
-import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
@@ -15,7 +14,7 @@ public class CompactStorageGuiFactory implements IModGuiFactory
 {
 
     @Override
-    public void initialize(Minecraft minecraftInstance) {
+    public void initialize(Minecraft mc) {
 
     }
 
@@ -28,11 +27,6 @@ public class CompactStorageGuiFactory implements IModGuiFactory
     public GuiScreen createConfigGui(GuiScreen parentScreen) {
         return new GuiCompactStorageConfig(parentScreen, "compactstorage", "CompactStorage");
     }
-
-//    @Override
-//    public Class<? extends GuiScreen> mainConfigGuiClass() {
-//        return GuiCompactStorageConfig.class;
-//    }
 
     @Override
     public Set<RuntimeOptionCategoryElement> runtimeGuiCategories() {

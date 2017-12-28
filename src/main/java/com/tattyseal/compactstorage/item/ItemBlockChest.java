@@ -2,25 +2,17 @@ package com.tattyseal.compactstorage.item;
 
 import com.tattyseal.compactstorage.exception.InvalidSizeException;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagIntArray;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -35,7 +27,7 @@ public class ItemBlockChest extends ItemBlock
     }
 
 	@Override
-    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items)
+    public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items)
     {
 		ItemStack stack = new ItemStack(this, 1);
 
@@ -48,13 +40,13 @@ public class ItemBlockChest extends ItemBlock
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> list, ITooltipFlag flagIn)
+    public void addInformation(@Nonnull ItemStack stack, @Nullable World worldIn, @Nonnull List<String> list, @Nonnull ITooltipFlag flagIn)
     {
     	if(stack.hasTagCompound())
     	{
 			if(stack.getTagCompound().getTag("size") instanceof NBTTagIntArray)
 			{
-				int size = (int) (stack.getTagCompound().getIntArray("size")[0] * stack.getTagCompound().getIntArray("size")[1]);
+				int size = stack.getTagCompound().getIntArray("size")[0] * stack.getTagCompound().getIntArray("size")[1];
 				list.add(TextFormatting.GREEN + "Slots: " + size);
 			}
     		else
