@@ -4,6 +4,7 @@ import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.exception.InvalidSizeException;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 import com.tattyseal.compactstorage.util.EntityUtil;
+import com.tattyseal.compactstorage.util.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -14,6 +15,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
@@ -31,6 +33,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import java.awt.Color;
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -201,6 +204,7 @@ public class BlockChest extends Block implements ITileEntityProvider
     @Override
     public void breakBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state)
     {
+        LogHelper.dump("breakBlock()");
         TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
 
         if(chest != null)
@@ -262,5 +266,10 @@ public class BlockChest extends Block implements ITileEntityProvider
         stack.getTagCompound().setIntArray("size", new int[] {chest.invX, chest.invY});
 
         return stack;
+    }
+
+    @Override
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+        return null;
     }
 }
