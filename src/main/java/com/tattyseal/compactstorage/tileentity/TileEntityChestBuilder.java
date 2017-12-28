@@ -23,6 +23,8 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 
 	public ItemStack[] items;
 
+	private String customName;
+
 	public int mode;
 	public String player;
 
@@ -93,6 +95,10 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 
         tag.setTag("Items", nbtTagList);
 
+		if (this.hasCustomName()) {
+			tag.setString("Name", this.customName);
+		}
+
 		return tag;
 	}
 
@@ -114,6 +120,10 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
             NBTTagCompound item = nbtTagList.getCompoundTagAt(slot);
             items[slot] = new ItemStack(item);
         }
+
+		if (tag.hasKey("Name", 8)) {
+			this.customName = tag.getString("Name");
+		}
 
         markDirty();
 	}
@@ -201,13 +211,17 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	@Nonnull
 	public String getName()
 	{
-		return "chestbuilder.json";
+		return this.hasCustomName() ? this.customName : "chestbuilder.json";
 	}
 
 	@Override
 	public boolean hasCustomName()
 	{
-		return false;
+		return this.customName != null && !this.customName.isEmpty();
+	}
+
+	public void setCustomName(String customName) {
+		this.customName = customName;
 	}
 
 	@Override

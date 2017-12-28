@@ -56,19 +56,19 @@ public class GuiChest extends GuiContainer
         this.xSize = 7 + (Math.max(9, invX) * 18) + 7;
         this.ySize = 15 + (invY * 18) + 13 + 54 + 4 + 18 + 7;
     }
-    
+
     @Override
-    public void initGui()
+    public void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        super.initGui();
-    }
-    
-    @Override
-    public void drawGuiContainerForegroundLayer(int arg0, int arg1) 
-    {
-    	super.drawGuiContainerForegroundLayer(arg0, arg1);
+    	super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+
+    	if (chest.hasCustomName()) {
+    	    this.fontRenderer.drawString(chest.getName(), 8, 6, 4210752);
+        } else {
+            this.fontRenderer.drawString("Chest (" + invX + "x" + invY + ")", 8, 6, 4210752);
+        }
     	
-        this.fontRenderer.drawString("Chest (" + invX + "x" + invY + ")", 8, 6, 4210752);
+
         this.fontRenderer.drawString("Inventory", 8, 15 + (invY * 18) + 5, 4210752);
     }
 
@@ -103,7 +103,6 @@ public class GuiChest extends GuiContainer
     @Override
     public void onGuiClosed()
     {
-        //chest.closeInventory();
         super.onGuiClosed();
     }
 }

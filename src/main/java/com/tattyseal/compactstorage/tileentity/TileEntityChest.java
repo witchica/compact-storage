@@ -44,13 +44,15 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     /** The angle of the lid last tick */
     public float prevLidAngle;
     /** The number of players currently using this chest */
-    public int numPlayersUsing;
+    private int numPlayersUsing;
     /** Server sync counter (once per 20 ticks) */
     private int ticksSinceSync;
 
     private boolean retaining;
     
     public ItemStack[] items;
+
+    private String customName;
 
     public TileEntityChest()
     {
@@ -140,13 +142,17 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     @Nonnull
     public String getName()
     {
-        return "compactChest.inv";
+        return this.hasCustomName() ? this.customName : "compactChest.inv";
     }
 
     @Override
     public boolean hasCustomName()
     {
-        return false;
+        return this.customName != null && !this.customName.isEmpty();
+    }
+
+    public void setCustomName(String customName) {
+        this.customName = customName;
     }
 
     @Override
@@ -294,6 +300,43 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
                 items[i] = new ItemStack(item);
             }
         }
+
+        if (tag.hasKey("Name", 8)) {
+            this.customName = tag.getString("Name");
+        }
+    }
+
+    @Override
+    @Nonnull
+    public NBTTagCompound writeToNBT(NBTTagCompound tag)
+    {
+        super.writeToNBT(tag);
+
+        if(direction != null) tag.setInteger("facing", direction.ordinal());
+        tag.setInteger("hue", info.getHue());
+        tag.setInteger("invX", invX);
+        tag.setInteger("invY", invY);
+        tag.setBoolean("retaining", retaining);
+
+        NBTTagList nbtTagList = new NBTTagList();
+        for(int slot = 0; slot < getSizeInventory(); slot++)
+        {
+            if(slot < items.length && items[slot] != null && !items[slot].isEmpty())
+            {
+                NBTTagCompound item = new NBTTagCompound();
+                item.setInteger("Slot", slot);
+                items[slot].writeToNBT(item);
+                nbtTagList.appendTag(item);
+            }
+        }
+
+        tag.setTag("Items", nbtTagList);
+
+        if (this.hasCustomName()) {
+            tag.setString("Name", this.customName);
+        }
+
+        return tag;
     }
 
     @Override
@@ -322,35 +365,6 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     {
         NBTTagCompound tag = new NBTTagCompound();
         tag = writeToNBT(tag);
-
-        return tag;
-    }
-
-    @Override
-    @Nonnull
-    public NBTTagCompound writeToNBT(NBTTagCompound tag)
-    {
-        super.writeToNBT(tag);
-
-        if(direction != null) tag.setInteger("facing", direction.ordinal());
-        tag.setInteger("hue", info.getHue());
-        tag.setInteger("invX", invX);
-        tag.setInteger("invY", invY);
-        tag.setBoolean("retaining", retaining);
-        
-        NBTTagList nbtTagList = new NBTTagList();
-        for(int slot = 0; slot < getSizeInventory(); slot++)
-        {
-            if(slot < items.length && items[slot] != null && !items[slot].isEmpty())
-            {
-                NBTTagCompound item = new NBTTagCompound();
-                item.setInteger("Slot", slot);
-                items[slot].writeToNBT(item);
-                nbtTagList.appendTag(item);
-            }
-        }
-
-        tag.setTag("Items", nbtTagList);
 
         return tag;
     }

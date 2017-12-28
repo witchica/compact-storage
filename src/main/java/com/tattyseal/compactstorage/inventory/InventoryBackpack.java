@@ -26,6 +26,8 @@ public class InventoryBackpack implements IChest
 
     public StorageInfo info;
 
+    private String customName;
+
     public InventoryBackpack(ItemStack stack)
     {
         this.stack = stack;
@@ -51,6 +53,10 @@ public class InventoryBackpack implements IChest
         }
 
         readFromNBT(this.stack.getTagCompound());
+
+        if (stack.hasDisplayName()) {
+            setCustomName(stack.getDisplayName());
+        }
     }
 
     @Override
@@ -145,13 +151,17 @@ public class InventoryBackpack implements IChest
     @Nonnull
     public String getName()
     {
-        return "backpack.inv";
+        return this.hasCustomName() ? this.customName : "backpack.inv";
     }
 
     @Override
     public boolean hasCustomName()
     {
-        return false;
+        return this.customName != null && !this.customName.isEmpty();
+    }
+
+    public void setCustomName(String customName) {
+        this.customName = customName;
     }
 
     @Override
@@ -264,6 +274,10 @@ public class InventoryBackpack implements IChest
                 tag.removeTag("color");
             }
         }
+
+        if (tag.hasKey("Name", 8)) {
+            this.customName = tag.getString("Name");
+        }
     }
 
     private void writeToNBT(NBTTagCompound tag)
@@ -282,6 +296,10 @@ public class InventoryBackpack implements IChest
 
         tag.setTag("Items", nbtTagList);
         tag.setInteger("hue", getHue());
+
+        if (this.hasCustomName()) {
+            tag.setString("Name", this.customName);
+        }
     }
 
     @Override

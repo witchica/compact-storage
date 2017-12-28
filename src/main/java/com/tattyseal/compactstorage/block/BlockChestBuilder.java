@@ -55,6 +55,10 @@ public class BlockChestBuilder extends Block implements ITileEntityProvider
 
 		if (cb != null) {
 			cb.player = player.getName();
+
+			if (stack.hasDisplayName()) {
+				cb.setCustomName(stack.getDisplayName());
+			}
 		}
 	}
 	

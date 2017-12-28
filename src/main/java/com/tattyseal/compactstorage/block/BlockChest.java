@@ -72,6 +72,10 @@ public class BlockChest extends Block implements ITileEntityProvider
             return;
         }
 
+        if (stack.hasDisplayName()) {
+            chest.setCustomName(stack.getDisplayName());
+        }
+
         chest.direction = EntityUtil.get2dOrientation(entity);
         
         if(stack.hasTagCompound() && stack.getTagCompound().hasKey("size"))

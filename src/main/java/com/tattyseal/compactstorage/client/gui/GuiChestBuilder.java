@@ -245,7 +245,11 @@ public class GuiChestBuilder extends GuiContainer
             RenderHelper.disableStandardItemLighting();
         }
 
-        fontRenderer.drawString(I18n.format("tile.chestBuilder.name"), guiLeft + 7, guiTop + 7, 0x404040);
+        if (builder.hasCustomName()) {
+            fontRenderer.drawString(builder.getName(), guiLeft + 7, guiTop + 7, 0x404040);
+        } else {
+            fontRenderer.drawString(I18n.format("tile.chestBuilder.name"), guiLeft + 7, guiTop + 7, 0x404040);
+        }
 
         drawTab(builder.info.getType(), builder.info.getType().display);
     }
@@ -278,7 +282,6 @@ public class GuiChestBuilder extends GuiContainer
     private void drawTab(StorageInfo.Type type, ItemStack stack)
     {
         boolean flag = type.ordinal() == builder.info.getType().ordinal();
-        boolean flag1 = true;
         int i = type.ordinal();
         int j = i * 28;
         int k = 0;
