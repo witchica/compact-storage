@@ -115,20 +115,17 @@ public class GuiChestBuilder extends GuiContainer
             }
         }
     }
-
-    @Override
-    public void drawGuiContainerForegroundLayer(int arg0, int arg1) 
-    {
-    	
-    }
     
     @Override
     public void drawScreen(int mouseX, int mouseY, float k)
     {
+        this.drawDefaultBackground();
     	super.drawScreen(mouseX, mouseY, k);
 
         if(builder != null && builder.info != null)
     	{
+            boolean hoverTooltip = false;
+
     		for(int x = 0; x < 4; x++)
             {
                 if(x < builder.info.getMaterialCost().size() && builder.info.getMaterialCost().get(x) != null)
@@ -150,6 +147,8 @@ public class GuiChestBuilder extends GuiContainer
                             toolList.add(TextFormatting.AQUA + "Amount Required: " + stack.getCount());
 
                             drawHoveringText(toolList, mouseX, mouseY, fontRenderer);
+                            hoverTooltip = true;
+                            break;
                         }
                     }
 
@@ -157,26 +156,34 @@ public class GuiChestBuilder extends GuiContainer
                 }
             }
 
-            for(int t = 0; t < StorageInfo.Type.values().length; t++)
-            {
-                StorageInfo.Type type = StorageInfo.Type.values()[t];
-
-                int startX = guiLeft + (26 * t);
-                int startY = guiTop - 26;
-
-                int endX = startX + 26;
-                int endY = startY + 26;
-
-                if(mouseX >= startX && mouseX <= endX)
+            if (!hoverTooltip) {
+                for(int t = 0; t < StorageInfo.Type.values().length; t++)
                 {
-                    if(mouseY >= startY && mouseY <= endY)
-                    {
-                        ArrayList<String> toolList = new ArrayList<String>();
-                        toolList.add(type.name);
+                    StorageInfo.Type type = StorageInfo.Type.values()[t];
 
-                        drawHoveringText(toolList, mouseX, mouseY, fontRenderer);
+                    int startX = guiLeft + (26 * t);
+                    int startY = guiTop - 26;
+
+                    int endX = startX + 26;
+                    int endY = startY + 26;
+
+                    if(mouseX >= startX && mouseX <= endX)
+                    {
+                        if(mouseY >= startY && mouseY <= endY)
+                        {
+                            ArrayList<String> toolList = new ArrayList<String>();
+                            toolList.add(type.name);
+
+                            drawHoveringText(toolList, mouseX, mouseY, fontRenderer);
+                            hoverTooltip = true;
+                            break;
+                        }
                     }
                 }
+            }
+
+            if (!hoverTooltip) {
+    		    this.renderHoveredToolTip(mouseX, mouseY);
             }
     	}
     }
