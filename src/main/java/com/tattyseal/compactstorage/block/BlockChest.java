@@ -162,6 +162,7 @@ public class BlockChest extends Block implements ITileEntityProvider
             {
                 ItemStack held = player.getHeldItem(EnumHand.MAIN_HAND);
                 TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
+                
                 if(!chest.getRetaining() && !held.isEmpty() && held.getItem() == Items.DIAMOND)
                 {
                     chest.setRetaining(true);

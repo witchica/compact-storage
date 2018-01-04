@@ -6,6 +6,7 @@ import com.tattyseal.compactstorage.block.BlockChestBuilder;
 import com.tattyseal.compactstorage.command.CommandCompactStorage;
 import com.tattyseal.compactstorage.compat.ICompat;
 import com.tattyseal.compactstorage.creativetabs.CreativeTabCompactStorage;
+import com.tattyseal.compactstorage.event.CompactStorageEventHandler;
 import com.tattyseal.compactstorage.item.ItemBackpack;
 import com.tattyseal.compactstorage.item.ItemBlockChest;
 import com.tattyseal.compactstorage.network.handler.C01HandlerUpdateBuilder;
@@ -23,8 +24,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
@@ -101,7 +104,7 @@ public class CompactStorage
 
         ibChest = new ItemBlockChest(chest);
         ibChest.setRegistryName("compactChest");
-        GameData.register_impl(ibChest);
+        GameData.register_impl((Item) ibChest);
 
         GameRegistry.registerTileEntity(TileEntityChest.class, "tileChest");
         
@@ -113,7 +116,7 @@ public class CompactStorage
         ItemBlock ibChestBuilder = new ItemBlock(chestBuilder);
         ibChestBuilder.setRegistryName("chestBuilder");
         ibChestBuilder.setCreativeTab(tabCS);
-        GameData.register_impl(ibChestBuilder);
+        GameData.register_impl((Item) ibChestBuilder);
 
 
     
@@ -158,6 +161,7 @@ public class CompactStorage
     public void postInit(FMLPostInitializationEvent event)
     {
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
+        MinecraftForge.EVENT_BUS.register(new CompactStorageEventHandler());
 
         proxy.registerRenderers();
 
@@ -174,7 +178,7 @@ public class CompactStorage
         CraftingHelper.ShapedPrimer primer = CraftingHelper.parseShaped(params);
         ShapedRecipes recipe = new ShapedRecipes(output.getItem().getRegistryName().toString(), primer.width, primer.height, primer.input, output);
         recipe.setRegistryName(location);
-        GameData.register_impl(recipe);
+        GameData.register_impl((IRecipe) recipe);
     }
 
     public static ResourceLocation getNameForRecipe(ItemStack output)
