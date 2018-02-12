@@ -18,6 +18,9 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
  */
 public class GuiHandler implements IGuiHandler
 {
+    private static final int GUI_CHEST = 0;
+    private static final int GUI_CHEST_BUILDER = 1;
+
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
@@ -25,12 +28,12 @@ public class GuiHandler implements IGuiHandler
 
         switch (ID)
         {
-            case 0:
+            case GUI_CHEST:
             {
-                /* chest or backpack*/
+                // chest or backpack
                 IChest chest;
 
-                if(player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(CompactStorage.backpack))
+                if(player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(CompactStorage.backpack))
                 {
                     chest = new InventoryBackpack(player.getHeldItem(EnumHand.MAIN_HAND));
                 }
@@ -41,7 +44,7 @@ public class GuiHandler implements IGuiHandler
 
                 return new ContainerChest(world, chest, player, pos);
             }
-            case 1: /* chest builder */ return new ContainerChestBuilder(world, player, pos);
+            case GUI_CHEST_BUILDER: return new ContainerChestBuilder(world, player, pos);
             default: return null;
         }
     }
@@ -53,12 +56,12 @@ public class GuiHandler implements IGuiHandler
 
         switch (ID)
         {
-            case 0:
+            case GUI_CHEST:
             {
-                 /* chest or backpack*/
+                 // chest or backpack
                 IChest chest;
 
-                if(player.getHeldItem(EnumHand.MAIN_HAND) != null && player.getHeldItem(EnumHand.MAIN_HAND).getItem() == CompactStorage.backpack)
+                if(player.getHeldItem(EnumHand.MAIN_HAND).getItem() == CompactStorage.backpack)
                 {
                     chest = new InventoryBackpack(player.getHeldItem(EnumHand.MAIN_HAND));
                 }
@@ -69,7 +72,7 @@ public class GuiHandler implements IGuiHandler
 
                 return new GuiChest((Container) getServerGuiElement(ID, player, world, x, y, z), chest, world, player, pos);
             }
-            case 1: /* chest builder */ return new GuiChestBuilder((Container) getServerGuiElement(ID, player, world, x, y, z), world, player, pos);
+            case GUI_CHEST_BUILDER: return new GuiChestBuilder((Container) getServerGuiElement(ID, player, world, x, y, z), world, player, pos);
             default: return null;
         }
     }

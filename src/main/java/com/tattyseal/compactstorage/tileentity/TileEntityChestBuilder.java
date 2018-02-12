@@ -7,13 +7,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.Loader;
+
+import javax.annotation.Nonnull;
 
 public class TileEntityChestBuilder extends TileEntity implements IInventory, ITickable
 {
@@ -23,6 +22,8 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	public boolean init;
 
 	public ItemStack[] items;
+
+	private String customName;
 
 	public int mode;
 	public String player;
@@ -40,6 +41,7 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	}
 
 	@Override
+	@Nonnull
 	public NBTTagCompound getTileData()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
@@ -49,6 +51,7 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	}
 
 	@Override
+	@Nonnull
 	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
@@ -58,6 +61,7 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	}
 
 	@Override
+	@Nonnull
 	public NBTTagCompound getUpdateTag()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
@@ -67,6 +71,7 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	}
 
 	@Override
+	@Nonnull
 	public NBTTagCompound writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
@@ -90,6 +95,10 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 
         tag.setTag("Items", nbtTagList);
 
+		if (this.hasCustomName()) {
+			tag.setString("Name", this.customName);
+		}
+
 		return tag;
 	}
 
@@ -111,6 +120,10 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
             NBTTagCompound item = nbtTagList.getCompoundTagAt(slot);
             items[slot] = new ItemStack(item);
         }
+
+		if (tag.hasKey("Name", 8)) {
+			this.customName = tag.getString("Name");
+		}
 
         markDirty();
 	}
@@ -150,12 +163,14 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	}
 
 	@Override
+	@Nonnull
 	public ItemStack getStackInSlot(int slot)
 	{
 		return items[slot];
 	}
 
 	@Override
+	@Nonnull
     public ItemStack decrStackSize(int slot, int amount)
     {
     	ItemStack stack = getStackInSlot(slot);
@@ -180,32 +195,33 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
     }
 
 	@Override
+	@Nonnull
 	public ItemStack removeStackFromSlot(int index) {
 		items[index] = ItemStack.EMPTY;
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public void setInventorySlotContents(int slot, ItemStack stack)
+	public void setInventorySlotContents(int slot, @Nonnull ItemStack stack)
 	{
 		items[slot] = stack;
 	}
 
 	@Override
+	@Nonnull
 	public String getName()
 	{
-		return "chestbuilder.json";
+		return this.hasCustomName() ? this.customName : "chestbuilder.json";
 	}
 
 	@Override
 	public boolean hasCustomName()
 	{
-		return false;
+		return this.customName != null && !this.customName.isEmpty();
 	}
 
-	@Override
-	public ITextComponent getDisplayName() {
-		return null;
+	public void setCustomName(String customName) {
+		this.customName = customName;
 	}
 
 	@Override
@@ -218,18 +234,19 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	}
 
 	@Override
-	public boolean isUsableByPlayer(EntityPlayer player) {
-		return true;
+	public boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
+		return this.world.getTileEntity(this.pos) == this
+				&& player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
 	}
 
 	@Override
-	public void openInventory(EntityPlayer player) {}
+	public void openInventory(@Nonnull EntityPlayer player) {}
 
 	@Override
-	public void closeInventory(EntityPlayer player) {}
+	public void closeInventory(@Nonnull EntityPlayer player) {}
 
 	@Override
-	public boolean isItemValidForSlot(int slot, ItemStack stack)
+	public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack)
 	{
 		if(info != null)
 		{

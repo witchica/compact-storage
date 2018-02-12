@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 
 public class SlotChestBuilder extends Slot
 {
-	public TileEntityChestBuilder builder;
+	private TileEntityChestBuilder builder;
 	
 	public SlotChestBuilder(TileEntityChestBuilder builder, int id, int x, int y) 
 	{

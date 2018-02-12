@@ -4,6 +4,7 @@ import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.exception.InvalidSizeException;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 import com.tattyseal.compactstorage.util.EntityUtil;
+import com.tattyseal.compactstorage.util.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -19,17 +20,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import java.awt.*;
-import java.util.List;
+import javax.annotation.Nonnull;
+import java.awt.Color;
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -67,6 +71,14 @@ public class BlockChest extends Block implements ITileEntityProvider
 
         TileEntityChest chest = ((TileEntityChest) world.getTileEntity(pos));
 
+        if (chest == null) {
+            return;
+        }
+
+        if (stack.hasDisplayName()) {
+            chest.setCustomName(stack.getDisplayName());
+        }
+
         chest.direction = EntityUtil.get2dOrientation(entity);
         
         if(stack.hasTagCompound() && stack.getTagCompound().hasKey("size"))
@@ -90,7 +102,7 @@ public class BlockChest extends Block implements ITileEntityProvider
                         color = "#" + color.substring(2);
                     }
 
-                    chest.color = color == "" ? Color.white : Color.decode(color);
+                    chest.color = color.equals("") ? Color.white : Color.decode(color);
 
                     float[] hsbVals = new float[3];
                     hsbVals = Color.RGBtoHSB(chest.color.getRed(), chest.color.getGreen(), chest.color.getBlue(), hsbVals);
@@ -107,7 +119,7 @@ public class BlockChest extends Block implements ITileEntityProvider
         	{
         		if(entity instanceof EntityPlayer)
         		{
-        			((EntityPlayer) entity).sendMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
+        			entity.sendMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
 
                     chest.invX = 9;
                     chest.invY = 3;
@@ -124,7 +136,7 @@ public class BlockChest extends Block implements ITileEntityProvider
         {
             if(entity instanceof EntityPlayer)
             {
-                ((EntityPlayer) entity).sendMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
+                entity.sendMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
 
                 chest.invX = 9;
                 chest.invY = 3;
@@ -162,8 +174,7 @@ public class BlockChest extends Block implements ITileEntityProvider
             {
                 ItemStack held = player.getHeldItem(EnumHand.MAIN_HAND);
                 TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
-                
-                if(!chest.getRetaining() && !held.isEmpty() && held.getItem() == Items.DIAMOND)
+                if(chest != null && !chest.getRetaining() && !held.isEmpty() && held.getItem() == Items.DIAMOND)
                 {
                     chest.setRetaining(true);
                     held.setCount(held.getCount() - 1);
@@ -174,10 +185,10 @@ public class BlockChest extends Block implements ITileEntityProvider
             }
         }
 
-        return player.isSneaking() ? false : true;
+        return !player.isSneaking();
     }
 
-    public TileEntity createNewTileEntity(World world, int dim)
+    public TileEntity createNewTileEntity(@Nonnull World world, int dim)
     {
         return new TileEntityChest();
     }
@@ -191,8 +202,9 @@ public class BlockChest extends Block implements ITileEntityProvider
     }
 
     @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state)
+    public void breakBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state)
     {
+        LogHelper.dump("breakBlock()");
         TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
 
         if(chest != null)
@@ -244,7 +256,8 @@ public class BlockChest extends Block implements ITileEntityProvider
     }
 
     @Override
-    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player)
+    @Nonnull
+    public ItemStack getPickBlock(@Nonnull IBlockState state, RayTraceResult target, @Nonnull World world, @Nonnull BlockPos pos, EntityPlayer player)
     {
         ItemStack stack = new ItemStack(CompactStorage.chest, 1);
         TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);

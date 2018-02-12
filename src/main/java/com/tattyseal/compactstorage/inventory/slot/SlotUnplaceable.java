@@ -7,10 +7,10 @@ import net.minecraft.item.ItemStack;
 /**
  * Created by tobystrong on 02/05/2017.
  */
-public class SlotUnplacable extends Slot
+public class SlotUnplaceable extends Slot
 {
 
-    public SlotUnplacable(IInventory inventoryIn, int index, int xPosition, int yPosition)
+    public SlotUnplaceable(IInventory inventoryIn, int index, int xPosition, int yPosition)
     {
         super(inventoryIn, index, xPosition, yPosition);
     }

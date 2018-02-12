@@ -3,29 +3,26 @@ package com.tattyseal.compactstorage.client.render;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelChest;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * Created by Toby on 06/11/2014.
  */
 @SideOnly(Side.CLIENT)
-public class TileEntityChestRenderer extends TileEntitySpecialRenderer
+public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntityChest>
 {
-    public ModelChest model;
-    public static final ResourceLocation texture = new ResourceLocation("compactstorage", "textures/models/chest.png");
+    private ModelChest model;
+    private static final ResourceLocation texture = new ResourceLocation("compactstorage", "textures/models/chest.png");
 
     public TileEntityChestRenderer()
     {
@@ -33,10 +30,8 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
     }
 
     @Override
-    public void render(TileEntity tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
+    public void render(TileEntityChest tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
-        TileEntityChest chest = (TileEntityChest) tile;
-
         GL11.glPushMatrix();
 
         GL11.glTranslatef((float) x, (float) y + 1.0F, (float) z + 1.0F);
@@ -44,7 +39,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
 
         GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 
-        EnumFacing direction = ((TileEntityChest) tile).direction;
+        EnumFacing direction = tile.direction;
 
         switch (direction)
         {
@@ -62,7 +57,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
 
         try
         {
-            color = ((TileEntityChest) tile).color.brighter().getRGB();
+            color = tile.color.brighter().getRGB();
         }
         catch(Exception exception)
         {
@@ -74,7 +69,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
         float b = (float)(color & 255) / 255.0F;
         GL11.glColor4f(r, g, b, 1F);
 
-        float f = chest.prevLidAngle + (chest.lidAngle - chest.prevLidAngle) * partialTicks;
+        float f = tile.prevLidAngle + (tile.lidAngle - tile.prevLidAngle) * partialTicks;
 
         f = 1.0F - f;
         f = 1.0F - f * f * f;
@@ -84,7 +79,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
 
         GL11.glColor3f(1f, 1f, 1f);
 
-        if(chest.getRetaining())
+        if(tile.getRetaining())
         {
             ItemStack stack = new ItemStack(Items.DIAMOND, 1, 0);
             EntityItem item = new EntityItem(tile.getWorld(), 0D, 0D, 0D, stack);

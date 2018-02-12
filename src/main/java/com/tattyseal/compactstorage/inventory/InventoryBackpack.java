@@ -10,7 +10,9 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 
-import java.awt.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.awt.Color;
 
 /**
  * Created by Toby on 11/02/2015.
@@ -23,6 +25,8 @@ public class InventoryBackpack implements IChest
     public ItemStack[] items;
 
     public StorageInfo info;
+
+    private String customName;
 
     public InventoryBackpack(ItemStack stack)
     {
@@ -49,6 +53,10 @@ public class InventoryBackpack implements IChest
         }
 
         readFromNBT(this.stack.getTagCompound());
+
+        if (stack.hasDisplayName()) {
+            setCustomName(stack.getDisplayName());
+        }
     }
 
     @Override
@@ -88,6 +96,7 @@ public class InventoryBackpack implements IChest
     }
 
     @Override
+    @Nonnull
     public ItemStack getStackInSlot(int slot)
     {
         if(slot < items.length && items[slot] != null && items[slot] != ItemStack.EMPTY)
@@ -99,6 +108,7 @@ public class InventoryBackpack implements IChest
     }
 
     @Override
+    @Nonnull
     public ItemStack decrStackSize(int slot, int amount)
     {
         ItemStack stack = getStackInSlot(slot);
@@ -125,30 +135,39 @@ public class InventoryBackpack implements IChest
     }
 
     @Override
+    @Nonnull
     public ItemStack removeStackFromSlot(int index) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void setInventorySlotContents(int slot, ItemStack stack)
+    public void setInventorySlotContents(int slot, @Nonnull ItemStack stack)
     {
-        if(items != null)
-        {
-            items[slot] = stack;
-            markDirty();
-        }
+        items[slot] = stack;
+        markDirty();
     }
 
     @Override
+    @Nonnull
     public String getName()
     {
-        return "backpack.inv";
+        return this.hasCustomName() ? this.customName : "backpack.inv";
     }
 
     @Override
     public boolean hasCustomName()
     {
-        return false;
+        return this.customName != null && !this.customName.isEmpty();
+    }
+
+    public void setCustomName(String customName) {
+        this.customName = customName;
+    }
+
+    @Override
+    @Nullable
+    public ITextComponent getDisplayName() {
+        return null;
     }
 
     @Override
@@ -164,22 +183,22 @@ public class InventoryBackpack implements IChest
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
+    public boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
         return false;
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
+    public void openInventory(@Nonnull EntityPlayer player) {
 
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(@Nonnull EntityPlayer player) {
         writeToNBT(stack.getTagCompound());
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack)
+    public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack)
     {
         return true;
     }
@@ -206,7 +225,7 @@ public class InventoryBackpack implements IChest
 
     /** CUSTOM START **/
 
-    public void readFromNBT(NBTTagCompound tag)
+    private void readFromNBT(NBTTagCompound tag)
     {
         NBTTagList nbtTagList = tag.getTagList("Items", Constants.NBT.TAG_COMPOUND);
         items = new ItemStack[getSizeInventory()];
@@ -227,7 +246,7 @@ public class InventoryBackpack implements IChest
 
         if(stack.hasTagCompound() && !stack.getTagCompound().hasKey("hue") && stack.getTagCompound().hasKey("color"))
         {
-            String color = "";
+            String color;
 
             if(tag.getTag("color") instanceof NBTTagInt)
             {
@@ -255,9 +274,13 @@ public class InventoryBackpack implements IChest
                 tag.removeTag("color");
             }
         }
+
+        if (tag.hasKey("Name", 8)) {
+            this.customName = tag.getString("Name");
+        }
     }
 
-    public void writeToNBT(NBTTagCompound tag)
+    private void writeToNBT(NBTTagCompound tag)
     {
         NBTTagList nbtTagList = new NBTTagList();
         for(int slot = 0; slot < getSizeInventory(); slot++)
@@ -273,6 +296,10 @@ public class InventoryBackpack implements IChest
 
         tag.setTag("Items", nbtTagList);
         tag.setInteger("hue", getHue());
+
+        if (this.hasCustomName()) {
+            tag.setString("Name", this.customName);
+        }
     }
 
     @Override
@@ -289,7 +316,6 @@ public class InventoryBackpack implements IChest
 
     @Override
     public void setRetaining(boolean retaining) {
-        //nope.
     }
 
     @Override
@@ -301,10 +327,5 @@ public class InventoryBackpack implements IChest
     public void setHue(int hue)
     {
         info.setHue(hue);
-    }
-
-    @Override
-    public ITextComponent getDisplayName() {
-        return null;
     }
 }

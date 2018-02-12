@@ -11,13 +11,11 @@ import com.tattyseal.compactstorage.network.packet.C02PacketCraftChest;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
 import com.tattyseal.compactstorage.util.RenderUtil;
 import com.tattyseal.compactstorage.util.StorageInfo;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiSlider;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -41,18 +39,11 @@ public class GuiChestBuilder extends GuiContainer
     public EntityPlayer player;
     public BlockPos pos;
     
-    public GuiButton buttonAddX;
-    public GuiButton buttonMinusX;
+    private GuiButton buttonSubmit;
 
-    public GuiButton buttonAddY;
-    public GuiButton buttonMinusY;
-    
-    public GuiButton buttonSubmit;
-    public GuiButton buttonChangeType;
-
-    public GuiSlider hueSlider;
-    public GuiSlider columnSlider;
-    public GuiSlider rowSlider;
+    private GuiSlider hueSlider;
+    private GuiSlider columnSlider;
+    private GuiSlider rowSlider;
 
     public TileEntityChestBuilder builder;
 
@@ -124,23 +115,17 @@ public class GuiChestBuilder extends GuiContainer
             }
         }
     }
-
-    @Override
-    public void drawGuiContainerForegroundLayer(int arg0, int arg1) 
-    {
-    	
-    }
     
     @Override
-    public void drawScreen(int i, int j, float k)
+    public void drawScreen(int mouseX, int mouseY, float k)
     {
-    	super.drawScreen(i, j, k);
-    	
-    	int mouseX = i;
-    	int mouseY = j;
-    	
-    	if(builder != null && builder.info != null)
+        this.drawDefaultBackground();
+    	super.drawScreen(mouseX, mouseY, k);
+
+        if(builder != null && builder.info != null)
     	{
+            boolean hoverTooltip = false;
+
     		for(int x = 0; x < 4; x++)
             {
                 if(x < builder.info.getMaterialCost().size() && builder.info.getMaterialCost().get(x) != null)
@@ -161,7 +146,9 @@ public class GuiChestBuilder extends GuiContainer
                             toolList.add(stack.getDisplayName());
                             toolList.add(TextFormatting.AQUA + "Amount Required: " + stack.getCount());
 
-                            drawHoveringText(toolList, mouseX, mouseY, getFontRenderer());
+                            drawHoveringText(toolList, mouseX, mouseY, fontRenderer);
+                            hoverTooltip = true;
+                            break;
                         }
                     }
 
@@ -169,26 +156,34 @@ public class GuiChestBuilder extends GuiContainer
                 }
             }
 
-            for(int t = 0; t < StorageInfo.Type.values().length; t++)
-            {
-                StorageInfo.Type type = StorageInfo.Type.values()[t];
-
-                int startX = guiLeft + (26 * t);
-                int startY = guiTop - 26;
-
-                int endX = startX + 26;
-                int endY = startY + 26;
-
-                if(mouseX >= startX && mouseX <= endX)
+            if (!hoverTooltip) {
+                for(int t = 0; t < StorageInfo.Type.values().length; t++)
                 {
-                    if(mouseY >= startY && mouseY <= endY)
-                    {
-                        ArrayList<String> toolList = new ArrayList<String>();
-                        toolList.add(type.name);
+                    StorageInfo.Type type = StorageInfo.Type.values()[t];
 
-                        drawHoveringText(toolList, mouseX, mouseY, getFontRenderer());
+                    int startX = guiLeft + (26 * t);
+                    int startY = guiTop - 26;
+
+                    int endX = startX + 26;
+                    int endY = startY + 26;
+
+                    if(mouseX >= startX && mouseX <= endX)
+                    {
+                        if(mouseY >= startY && mouseY <= endY)
+                        {
+                            ArrayList<String> toolList = new ArrayList<String>();
+                            toolList.add(type.name);
+
+                            drawHoveringText(toolList, mouseX, mouseY, fontRenderer);
+                            hoverTooltip = true;
+                            break;
+                        }
                     }
                 }
+            }
+
+            if (!hoverTooltip) {
+    		    this.renderHoveredToolTip(mouseX, mouseY);
             }
     	}
     }
@@ -257,7 +252,11 @@ public class GuiChestBuilder extends GuiContainer
             RenderHelper.disableStandardItemLighting();
         }
 
-        getFontRenderer().drawString(I18n.format("tile.chestBuilder.name"), guiLeft + 7, guiTop + 7, 0x404040);
+        if (builder.hasCustomName()) {
+            fontRenderer.drawString(builder.getName(), guiLeft + 7, guiTop + 7, 0x404040);
+        } else {
+            fontRenderer.drawString(I18n.format("tile.chestBuilder.name"), guiLeft + 7, guiTop + 7, 0x404040);
+        }
 
         drawTab(builder.info.getType(), builder.info.getType().display);
     }
@@ -287,16 +286,14 @@ public class GuiChestBuilder extends GuiContainer
      * Draws the given tab and its background, deciding whether to highlight the tab or not based off of the selected
      * index.
      */
-    public void drawTab(StorageInfo.Type type, ItemStack stack)
+    private void drawTab(StorageInfo.Type type, ItemStack stack)
     {
         boolean flag = type.ordinal() == builder.info.getType().ordinal();
-        boolean flag1 = true;
         int i = type.ordinal();
         int j = i * 28;
         int k = 0;
         int l = this.guiLeft + 26 * i;
         int i1 = this.guiTop;
-        int j1 = 32;
 
         if (flag)
         {
@@ -312,15 +309,7 @@ public class GuiChestBuilder extends GuiContainer
             l += i;
         }
 
-        if (flag1)
-        {
-            i1 = i1 - 28;
-        }
-        else
-        {
-            k += 64;
-            i1 = i1 + (this.ySize - 4);
-        }
+        i1 -= 28;
 
         GlStateManager.disableLighting();
         GlStateManager.color(1F, 1F, 1F); //Forge: Reset color in case Items change it.
@@ -330,8 +319,8 @@ public class GuiChestBuilder extends GuiContainer
         this.drawTexturedModalRect(l, i1, j, k, 28, 32);
         this.zLevel = 100.0F;
         this.itemRender.zLevel = 100.0F;
-        l = l + 6;
-        i1 = i1 + 8 + (flag1 ? 1 : -1);
+        l += 6;
+        i1 += 8 + 1;
         GlStateManager.enableLighting();
         GlStateManager.enableRescaleNormal();
         GlStateManager.color(1f, 0f, 0f);
@@ -340,23 +329,5 @@ public class GuiChestBuilder extends GuiContainer
         GlStateManager.disableLighting();
         this.itemRender.zLevel = 0.0F;
         this.zLevel = 0.0F;
-    }
-    
-    public static void drawTexturedQuadFit(double x, double y, double width, double height, double zLevel)
-    {
-        Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder renderer = tessellator.getBuffer();
-
-        renderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        renderer.pos(x + 0, y + height, 0).tex(0,1).endVertex();
-        renderer.pos(x + width, y + height, zLevel).tex(1, 1).endVertex();
-        renderer.pos(x + width, y + 0, zLevel).tex(1,0).endVertex();
-        renderer.pos(x + 0, y + 0, zLevel).tex(0, 0).endVertex();
-        tessellator.draw();
-    }
-    
-    public FontRenderer getFontRenderer()
-    {
-    	return fontRenderer;
     }
 }

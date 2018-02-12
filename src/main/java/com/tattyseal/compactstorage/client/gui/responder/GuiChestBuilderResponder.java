@@ -7,6 +7,8 @@ import com.tattyseal.compactstorage.util.StorageInfo;
 import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.util.math.MathHelper;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by tobystrong on 02/05/2017.
  */
@@ -17,12 +19,6 @@ public class GuiChestBuilderResponder implements GuiPageButtonList.GuiResponder
     public GuiChestBuilderResponder(GuiChestBuilder gui)
     {
         this.gui = gui;
-    }
-
-    @Override
-    public void setEntryValue(int id, boolean value)
-    {
-        //not
     }
 
     @Override
@@ -54,7 +50,11 @@ public class GuiChestBuilderResponder implements GuiPageButtonList.GuiResponder
     }
 
     @Override
-    public void setEntryValue(int id, String value) {
+    public void setEntryValue(int id, boolean value)
+    {
+    }
 
+    @Override
+    public void setEntryValue(int id, @Nonnull String value) {
     }
 }

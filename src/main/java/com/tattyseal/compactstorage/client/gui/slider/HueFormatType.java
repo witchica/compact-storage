@@ -2,12 +2,15 @@ package com.tattyseal.compactstorage.client.gui.slider;
 
 import net.minecraft.client.gui.GuiSlider;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by tobystrong on 02/05/2017.
  */
 public class HueFormatType implements GuiSlider.FormatHelper {
     @Override
-    public String getText(int id, String name, float value)
+    @Nonnull
+    public String getText(int id, @Nonnull String name, float value)
     {
         if(value == -1)
         {

@@ -23,23 +23,20 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.ShapedRecipes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.crafting.CraftingHelper;
+
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.registries.GameData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -62,7 +59,6 @@ public class CompactStorage
     public static CreativeTabs tabCS;
 
     public static final Logger logger = LogManager.getLogger("CompactStorage");
-    public static boolean deobf;
 
     public SimpleNetworkWrapper wrapper;
     
@@ -100,30 +96,31 @@ public class CompactStorage
 
         chest = new BlockChest();
         chest.setRegistryName("compactChest");
-        GameData.register_impl(chest);
+        ForgeRegistries.BLOCKS.register(chest);
 
         ibChest = new ItemBlockChest(chest);
         ibChest.setRegistryName("compactChest");
-        GameData.register_impl((Item) ibChest);
+      
+        ForgeRegistries.ITEMS.register(ibChest);
+
 
         GameRegistry.registerTileEntity(TileEntityChest.class, "tileChest");
         
         chestBuilder = new BlockChestBuilder();
         chestBuilder.setRegistryName("chestBuilder");
-        GameData.register_impl(chestBuilder);
+        ForgeRegistries.BLOCKS.register(chestBuilder);
         GameRegistry.registerTileEntity(TileEntityChestBuilder.class, "tileChestBuilder");
 
         ItemBlock ibChestBuilder = new ItemBlock(chestBuilder);
         ibChestBuilder.setRegistryName("chestBuilder");
         ibChestBuilder.setCreativeTab(tabCS);
-        GameData.register_impl((Item) ibChestBuilder);
 
+        ForgeRegistries.ITEMS.register(ibChestBuilder);
 
-    
         backpack = new ItemBackpack();
         backpack.setRegistryName("backpack");
-        GameData.register_impl(backpack);
-        
+        ForgeRegistries.ITEMS.register(backpack);
+
         ConfigurationHandler.configFile = event.getSuggestedConfigurationFile();
     }
 
@@ -174,25 +171,7 @@ public class CompactStorage
     //This is so I don't need to Json the recipes...
     public static void addShapedRecipe(ItemStack output, Object... params)
     {
-        ResourceLocation location = getNameForRecipe(output);
-        CraftingHelper.ShapedPrimer primer = CraftingHelper.parseShaped(params);
-        ShapedRecipes recipe = new ShapedRecipes(output.getItem().getRegistryName().toString(), primer.width, primer.height, primer.input, output);
-        recipe.setRegistryName(location);
-        GameData.register_impl((IRecipe) recipe);
-    }
-
-    public static ResourceLocation getNameForRecipe(ItemStack output)
-    {
-        ModContainer activeContainer = Loader.instance().activeModContainer();
-        ResourceLocation baseLoc = new ResourceLocation(activeContainer.getModId(), output.getItem().getRegistryName().getResourcePath());
-        ResourceLocation recipeLoc = baseLoc;
-        int index = 0;
-        while (CraftingManager.REGISTRY.containsKey(recipeLoc))
-        {
-            index++;
-            recipeLoc = new ResourceLocation(activeContainer.getModId(), baseLoc.getResourcePath() + "_" + index);
-        }
-        return recipeLoc;
+        GameRegistry.addShapedRecipe(output.getItem().getRegistryName(), null, output, params);
     }
     
     @Mod.EventHandler

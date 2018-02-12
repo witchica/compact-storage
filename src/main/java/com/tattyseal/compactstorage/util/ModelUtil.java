@@ -1,7 +1,6 @@
 package com.tattyseal.compactstorage.util;
 
 import com.tattyseal.compactstorage.CompactStorage;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemModelMesher;
@@ -29,15 +28,5 @@ public class ModelUtil
     public static void registerBlock(Block block, int metadata, String blockName)
     {
         registerItem(Item.getItemFromBlock(block), metadata, blockName);
-    }
-
-    public static void registerBlock(Block block, String blockName)
-    {
-        registerBlock(block, 0, blockName);
-    }
-
-    public static void registerItem(Item item, String itemName)
-    {
-        registerItem(item, 0, itemName);
     }
 }

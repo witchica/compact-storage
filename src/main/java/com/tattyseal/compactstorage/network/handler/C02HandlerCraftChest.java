@@ -5,24 +5,19 @@ import com.tattyseal.compactstorage.network.packet.C02PacketCraftChest;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
 import com.tattyseal.compactstorage.util.LogHelper;
 import com.tattyseal.compactstorage.util.StorageInfo;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 
-import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,14 +35,15 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 			public void run() {
 				TileEntityChestBuilder builder = (TileEntityChestBuilder) world.getTileEntity(new BlockPos(message.x, message.y, message.z));
 
+				if (builder == null) {
+					return;
+				}
+
 				LogHelper.dump(builder.info.getType().name);
 
 				ItemStack[] itemsArray = new ItemStack[4];
 
-				for(int i = 0; i < 4; i ++)
-				{
-					itemsArray[i] = builder.items[i];
-				}
+				System.arraycopy(builder.items, 0, itemsArray, 0, 4);
 
 				List<ItemStack> items = Arrays.asList(itemsArray);
 				List<ItemStack> requiredItems = builder.info.getMaterialCost();
@@ -66,14 +62,7 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 						}
 						else
 						{
-							if(requiredItems.get(slot) != null && requiredItems.get(slot).getCount() == 0)
-							{
-								hasRequiredMaterials = true;
-							}
-							else
-							{
-								hasRequiredMaterials = false;
-							}
+							hasRequiredMaterials = requiredItems.get(slot) != null && requiredItems.get(slot).getCount() == 0;
 							break;
 						}
 					}
@@ -88,7 +77,7 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 
 				if(hasRequiredMaterials && builder.getStackInSlot(4).isEmpty())
 				{
-					ItemStack stack = new ItemStack((Item) (message.info.getType().equals(StorageInfo.Type.BACKPACK) ? CompactStorage.backpack : ItemBlock.getItemFromBlock(CompactStorage.chest)), 1);
+					ItemStack stack = new ItemStack(message.info.getType().equals(StorageInfo.Type.BACKPACK) ? CompactStorage.backpack : ItemBlock.getItemFromBlock(CompactStorage.chest), 1);
 
 					NBTTagCompound tag = new NBTTagCompound();
 					tag.setIntArray("size", new int[]{message.info.getSizeX(), message.info.getSizeY()});

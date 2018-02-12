@@ -3,7 +3,6 @@ package com.tattyseal.compactstorage.network.packet;
 import com.tattyseal.compactstorage.util.StorageInfo;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class C02PacketCraftChest implements IMessage
@@ -12,27 +11,18 @@ public class C02PacketCraftChest implements IMessage
 	public int y;
 	public int z;
 	
-	public int dimension;
+	private int dimension;
 	
 	public StorageInfo info;
 
-	public C02PacketCraftChest() 
+	public C02PacketCraftChest()
 	{
 		this.x = 0;
 		this.y = 0;
 		this.z = 0;
-		
+
 		this.dimension = 0;
 		this.info = new StorageInfo(0, 0, 180, StorageInfo.Type.CHEST);
-	}
-	
-	public C02PacketCraftChest(int x, int y, int z, int dim, StorageInfo info)
-	{
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.dimension = dim;
-		this.info = info;
 	}
 	
 	public C02PacketCraftChest(BlockPos pos, int dim, StorageInfo info)

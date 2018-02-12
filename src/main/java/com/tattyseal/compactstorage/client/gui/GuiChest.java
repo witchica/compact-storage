@@ -23,13 +23,13 @@ public class GuiChest extends GuiContainer
     public EntityPlayer player;
     public BlockPos pos;
 
-    public int invX;
-    public int invY;
+    private int invX;
+    private int invY;
 
     public IChest chest;
     
-    public KeyBinding[] HOTBAR;
-    public int backpackSlot;
+    private KeyBinding[] HOTBAR;
+    private int backpackSlot;
 
     
     public GuiChest(Container container, IChest chest, World world, EntityPlayer player, BlockPos pos)
@@ -56,19 +56,26 @@ public class GuiChest extends GuiContainer
         this.xSize = 7 + (Math.max(9, invX) * 18) + 7;
         this.ySize = 15 + (invY * 18) + 13 + 54 + 4 + 18 + 7;
     }
-    
+
     @Override
-    public void initGui()
-    {
-        super.initGui();
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawDefaultBackground();
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
     }
-    
+
     @Override
-    public void drawGuiContainerForegroundLayer(int arg0, int arg1) 
+    public void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-    	super.drawGuiContainerForegroundLayer(arg0, arg1);
+    	super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+
+    	if (chest.hasCustomName()) {
+    	    this.fontRenderer.drawString(chest.getName(), 8, 6, 4210752);
+        } else {
+            this.fontRenderer.drawString("Chest (" + invX + "x" + invY + ")", 8, 6, 4210752);
+        }
     	
-        this.fontRenderer.drawString("Chest (" + invX + "x" + invY + ")", 8, 6, 4210752);
+
         this.fontRenderer.drawString("Inventory", 8, 15 + (invY * 18) + 5, 4210752);
     }
 
@@ -103,7 +110,6 @@ public class GuiChest extends GuiContainer
     @Override
     public void onGuiClosed()
     {
-        //chest.closeInventory();
         super.onGuiClosed();
     }
 }

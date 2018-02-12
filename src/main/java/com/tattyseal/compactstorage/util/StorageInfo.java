@@ -2,12 +2,20 @@ package com.tattyseal.compactstorage.util;
 
 import com.tattyseal.compactstorage.CompactStorage;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.tattyseal.compactstorage.ConfigurationHandler.*;
+import static com.tattyseal.compactstorage.ConfigurationHandler.binder;
+import static com.tattyseal.compactstorage.ConfigurationHandler.binderBackpack;
+import static com.tattyseal.compactstorage.ConfigurationHandler.binderModifier;
+import static com.tattyseal.compactstorage.ConfigurationHandler.primary;
+import static com.tattyseal.compactstorage.ConfigurationHandler.primaryModifier;
+import static com.tattyseal.compactstorage.ConfigurationHandler.secondary;
+import static com.tattyseal.compactstorage.ConfigurationHandler.secondaryModifier;
+import static com.tattyseal.compactstorage.ConfigurationHandler.storage;
+import static com.tattyseal.compactstorage.ConfigurationHandler.storageBackpack;
+import static com.tattyseal.compactstorage.ConfigurationHandler.storageModifier;
 
 public class StorageInfo
 {
@@ -24,7 +32,7 @@ public class StorageInfo
 		this.type = type;
 	}
 
-	public static enum Type
+	public enum Type
 	{
 		CHEST("Chest", new ItemStack(CompactStorage.chest, 1)),
 		BACKPACK("Backpack", new ItemStack(CompactStorage.backpack, 1));
@@ -94,7 +102,7 @@ public class StorageInfo
 		int divider = maxChest / amount;
 
 		int primaryTier = 0;
-		ItemStack primaryStack = null;
+		ItemStack primaryStack;
 
 		for(int i = 0; i < amount; i++)
 		{
@@ -115,7 +123,7 @@ public class StorageInfo
 		divider = maxChest / amount;
 
 		int secondaryTier = 0;
-		ItemStack secondaryStack = null;
+		ItemStack secondaryStack;
 
 		for(int i = 0; i < amount; i++)
 		{
@@ -145,33 +153,5 @@ public class StorageInfo
 		stack.setCount(amount);
 
 		return stack;
-	}
-
-	public static NBTTagCompound writeToNBT(StorageInfo info)
-	{
-		if(info != null)
-		{
-			NBTTagCompound tag = new NBTTagCompound();
-			
-			tag.setInteger("sizeX", info.getSizeX());
-			tag.setInteger("sizeY", info.getSizeY());
-			tag.setInteger("hue", info.getHue());
-			tag.setInteger("type", info.getType().ordinal());
-		
-			return tag;
-		}
-		
-		return null;
-	}
-	
-	public static StorageInfo readFromNBT(NBTTagCompound tag)
-	{
-		if(tag == null)
-		{
-			return new StorageInfo(9, 3, 180, Type.CHEST);
-		}
-		
-		StorageInfo info = new StorageInfo(tag.getInteger("sizeX"), tag.getInteger("sizeY"), tag.getInteger("hue"), Type.values()[tag.getInteger("type")]);
-		return info;
 	}
 }

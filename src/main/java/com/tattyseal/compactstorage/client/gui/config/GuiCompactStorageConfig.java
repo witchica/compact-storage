@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class GuiCompactStorageConfig extends GuiConfig
 {
-    static List<IConfigElement> elementList;
+    private static List<IConfigElement> elementList;
 
     static
     {

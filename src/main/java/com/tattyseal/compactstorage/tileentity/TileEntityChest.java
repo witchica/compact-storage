@@ -4,7 +4,6 @@ import com.tattyseal.compactstorage.ConfigurationHandler;
 import com.tattyseal.compactstorage.api.IChest;
 import com.tattyseal.compactstorage.block.BlockChest;
 import com.tattyseal.compactstorage.util.StorageInfo;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.ContainerChest;
@@ -15,17 +14,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
 
-import java.awt.*;
+import javax.annotation.Nonnull;
+import java.awt.Color;
 
 /**
  * Created by Toby on 06/11/2014.
@@ -46,13 +44,15 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     /** The angle of the lid last tick */
     public float prevLidAngle;
     /** The number of players currently using this chest */
-    public int numPlayersUsing;
+    private int numPlayersUsing;
     /** Server sync counter (once per 20 ticks) */
     private int ticksSinceSync;
 
     private boolean retaining;
     
     public ItemStack[] items;
+
+    private String customName;
 
     public TileEntityChest()
     {
@@ -82,6 +82,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     }
 
     @Override
+    @Nonnull
     public ItemStack getStackInSlot(int slot) 
     {
     	if(slot < items.length && items[slot] != null && !items[slot].isEmpty())
@@ -93,6 +94,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     }
 
     @Override
+    @Nonnull
     public ItemStack decrStackSize(int slot, int amount)
     {
     	ItemStack stack = getStackInSlot(slot);
@@ -103,14 +105,14 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
             {
                 setInventorySlotContents(slot, ItemStack.EMPTY);
                 markDirty();
-                
+
                 return stack.copy();
             }
             else
             {
                 ItemStack stack2 = stack.splitStack(amount);
                 markDirty();
-                
+
                 return stack2.copy();
             }
         }
@@ -119,6 +121,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     }
 
     @Override
+    @Nonnull
     public ItemStack removeStackFromSlot(int index)
     {
         items[index] = ItemStack.EMPTY;
@@ -126,7 +129,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     }
 
     @Override
-    public void setInventorySlotContents(int slot, ItemStack stack) 
+    public void setInventorySlotContents(int slot, @Nonnull ItemStack stack)
     {
     	if(items != null && slot < items.length)
         {
@@ -136,15 +139,20 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     }
 
     @Override
+    @Nonnull
     public String getName()
     {
-        return "compactChest.inv";
+        return this.hasCustomName() ? this.customName : "compactChest.inv";
     }
 
     @Override
     public boolean hasCustomName()
     {
-        return false;
+        return this.customName != null && !this.customName.isEmpty();
+    }
+
+    public void setCustomName(String customName) {
+        this.customName = customName;
     }
 
     @Override
@@ -168,7 +176,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
+    public void openInventory(@Nonnull EntityPlayer player) {
         if (!player.isSpectator())
         {
             if (this.numPlayersUsing < 0)
@@ -183,7 +191,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
+    public void closeInventory(@Nonnull EntityPlayer player) {
         if (!player.isSpectator() && this.getBlockType() instanceof BlockChest)
         {
             --this.numPlayersUsing;
@@ -193,7 +201,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     }
 
     @Override
-    public boolean isItemValidForSlot(int slot, ItemStack stack) 
+    public boolean isItemValidForSlot(int slot, @Nonnull ItemStack stack)
     {
         return true;
     }
@@ -226,57 +234,41 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     }
 
     @Override
-    public boolean isUsableByPlayer(EntityPlayer player) {
-        return true;
+    public boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
+        return this.world.getTileEntity(this.pos) == this
+                && player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
     }
 
     /* CUSTOM START */
     
     @Override
-    public void readFromNBT(NBTTagCompound tag)
-    {
+    public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
 
-        if(tag.hasKey("facing")) this.direction = EnumFacing.getFront(tag.getInteger("facing"));
+        if (tag.hasKey("facing")) this.direction = EnumFacing.getFront(tag.getInteger("facing"));
 
-        if(tag.hasKey("retaining"))
-        {
-            this.retaining = tag.getBoolean("retaining");
-        }
-        else
-        {
-            this.retaining = false;
-        }
+        this.retaining = tag.hasKey("retaining") && tag.getBoolean("retaining");
 
-        if(tag.hasKey("hue"))
-        {
+        if (tag.hasKey("hue")) {
             info.setHue(tag.getInteger("hue"));
             this.color = getHue() == -1 ? Color.white : Color.getHSBColor(info.getHue() / 360f, 0.5f, 0.5f);
-        }
-        else
-        {
-            if(tag.hasKey("color"))
-            {
-                String color = "";
+        } else {
+            if (tag.hasKey("color")) {
+                String color;
 
-                if(tag.getTag("color") instanceof NBTTagInt)
-                {
+                if (tag.getTag("color") instanceof NBTTagInt) {
                     color = String.format("#%06X", (0xFFFFFF & tag.getInteger("color")));
-                }
-                else
-                {
+                } else {
                     color = tag.getString("color");
                 }
 
                 System.out.println("color: " + color);
 
-                if(color.startsWith("0x"))
-                {
+                if (color.startsWith("0x")) {
                     color = "#" + color.substring(2, color.length());
                 }
 
-                if(!color.isEmpty())
-                {
+                if (!color.isEmpty()) {
                     float[] hsbVals = new float[3];
 
                     this.color = Color.decode(color);
@@ -285,9 +277,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
                     this.info.setHue((int) (hsbVals[0] * 360));
 
                     tag.removeTag("color");
-                }
-                else
-                {
+                } else {
                     this.color = Color.white;
                     this.info.setHue(180);
                     tag.removeTag("color");
@@ -297,51 +287,27 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
 
         this.invX = tag.getInteger("invX");
         this.invY = tag.getInteger("invY");
-        
+
         NBTTagList nbtTagList = tag.getTagList("Items", Constants.NBT.TAG_COMPOUND);
         items = new ItemStack[getSizeInventory()];
 
-        for(int slot = 0; slot < nbtTagList.tagCount(); slot++)
-        {
+        for (int slot = 0; slot < nbtTagList.tagCount(); slot++) {
             NBTTagCompound item = nbtTagList.getCompoundTagAt(slot);
 
             int i = item.getInteger("Slot");
 
-            if(i >= 0 && i < getSizeInventory())
-            {
+            if (i >= 0 && i < getSizeInventory()) {
                 items[i] = new ItemStack(item);
             }
+        }
+
+        if (tag.hasKey("Name", 8)) {
+            this.customName = tag.getString("Name");
         }
     }
 
     @Override
-    public NBTTagCompound getTileData()
-    {
-        NBTTagCompound tag = new NBTTagCompound();
-        tag = writeToNBT(tag);
-
-        return tag;
-    }
-
-    @Override
-    public NBTTagCompound serializeNBT()
-    {
-        NBTTagCompound tag = new NBTTagCompound();
-        tag = writeToNBT(tag);
-
-        return tag;
-    }
-
-    @Override
-    public NBTTagCompound getUpdateTag()
-    {
-        NBTTagCompound tag = new NBTTagCompound();
-        tag = writeToNBT(tag);
-
-        return tag;
-    }
-
-    @Override
+    @Nonnull
     public NBTTagCompound writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
@@ -351,7 +317,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
         tag.setInteger("invX", invX);
         tag.setInteger("invY", invY);
         tag.setBoolean("retaining", retaining);
-        
+
         NBTTagList nbtTagList = new NBTTagList();
         for(int slot = 0; slot < getSizeInventory(); slot++)
         {
@@ -365,6 +331,40 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
         }
 
         tag.setTag("Items", nbtTagList);
+
+        if (this.hasCustomName()) {
+            tag.setString("Name", this.customName);
+        }
+
+        return tag;
+    }
+
+    @Override
+    @Nonnull
+    public NBTTagCompound getTileData()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag = writeToNBT(tag);
+
+        return tag;
+    }
+
+    @Override
+    @Nonnull
+    public NBTTagCompound serializeNBT()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag = writeToNBT(tag);
+
+        return tag;
+    }
+
+    @Override
+    @Nonnull
+    public NBTTagCompound getUpdateTag()
+    {
+        NBTTagCompound tag = new NBTTagCompound();
+        tag = writeToNBT(tag);
 
         return tag;
     }
@@ -385,18 +385,6 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
         readFromNBT(pkt.getNbtCompound());
     }
 
-    public void setDirection(EnumFacing direction)
-    {
-        this.direction = direction;
-        updateBlock();
-    }
-
-    public void setDirection(int direction)
-    {
-        this.direction = EnumFacing.getFront(direction);
-        updateBlock();
-    }
-
     public void updateBlock()
     {
         markDirty();
@@ -413,7 +401,6 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
         if (!this.world.isRemote && this.numPlayersUsing != 0 && (this.ticksSinceSync + i + j + k) % 200 == 0)
         {
             this.numPlayersUsing = 0;
-            float f = 5.0F;
 
             for (EntityPlayer entityplayer : this.world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB((double)((float)i - 5.0F), (double)((float)j - 5.0F), (double)((float)k - 5.0F), (double)((float)(i + 1) + 5.0F), (double)((float)(j + 1) + 5.0F), (double)((float)(k + 1) + 5.0F))))
             {
@@ -430,14 +417,13 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
         }
 
         this.prevLidAngle = this.lidAngle;
-        float f1 = 0.1F;
 
         if (this.numPlayersUsing > 0 && this.lidAngle == 0.0F)
         {
             double d1 = (double)i + 0.5D;
             double d2 = (double)k + 0.5D;
 
-            this.world.playSound((EntityPlayer)null, d1, (double)j + 0.5D, d2, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+            this.world.playSound(null, d1, (double)j + 0.5D, d2, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
         }
 
         if (this.numPlayersUsing == 0 && this.lidAngle > 0.0F || this.numPlayersUsing > 0 && this.lidAngle < 1.0F)
@@ -458,14 +444,12 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
                 this.lidAngle = 1.0F;
             }
 
-            float f3 = 0.5F;
-
             if (this.lidAngle < 0.5F && f2 >= 0.5F)
             {
                 double d3 = (double)i + 0.5D;
                 double d0 = (double)k + 0.5D;
 
-                this.world.playSound((EntityPlayer)null, d3, (double)j + 0.5D, d0, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+                this.world.playSound(null, d3, (double)j + 0.5D, d0, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
             }
 
             if (this.lidAngle < 0.0F)
@@ -526,10 +510,5 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     public void setHue(int hue)
     {
         info.setHue(hue);
-    }
-
-    @Override
-    public ITextComponent getDisplayName() {
-        return null;
     }
 }

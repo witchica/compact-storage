@@ -9,7 +9,9 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.Loader;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,25 +20,28 @@ import java.util.List;
 public class CommandCompactStorage implements ICommand
 {
     @Override
+    @Nonnull
     public String getName()
     {
         return "cs";
     }
 
     @Override
-    public String getUsage(ICommandSender sender)
+    @Nonnull
+    public String getUsage(@Nonnull ICommandSender sender)
     {
         return "/cs {version:reload}";
     }
 
     @Override
-    public List getAliases()
+    @Nonnull
+    public List<String> getAliases()
     {
-        return Arrays.asList("compactstorage");
+        return Collections.singletonList("compactstorage");
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args)
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args)
     {
         if(args.length > 0)
         {
@@ -63,23 +68,24 @@ public class CommandCompactStorage implements ICommand
     }
 
     @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender p_71519_1_)
+    public boolean checkPermission(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender)
     {
         return true;
     }
 
     @Override
-    public List getTabCompletions(MinecraftServer server, ICommandSender p_71516_1_, String[] p_71516_2_, BlockPos pos) {
-        return p_71516_2_.length == 1 ? Arrays.asList("reload", "version") : null;
+    @Nonnull
+    public List<String> getTabCompletions(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args, BlockPos pos) {
+        return args.length == 1 ? Arrays.asList("reload", "version") : Collections.<String>emptyList();
     }
 
     @Override
-    public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
+    public boolean isUsernameIndex(@Nonnull String[] args, int n) {
         return false;
     }
 
     @Override
-    public int compareTo(ICommand o) {
+    public int compareTo(@Nonnull ICommand o) {
         return 0;
     }
 }
