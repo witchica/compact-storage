@@ -2,10 +2,12 @@ package com.tattyseal.compactstorage.proxy;
 
 import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.block.BlockChest;
+import com.tattyseal.compactstorage.client.render.TileEntityBarrelRenderer;
 import com.tattyseal.compactstorage.client.render.TileEntityChestRenderer;
 import com.tattyseal.compactstorage.event.ConnectionHandler;
 import com.tattyseal.compactstorage.item.ItemBackpack;
 import com.tattyseal.compactstorage.item.ItemBlockChest;
+import com.tattyseal.compactstorage.tileentity.TileEntityBarrel;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 import com.tattyseal.compactstorage.util.ModelUtil;
 import net.minecraft.client.Minecraft;
@@ -28,8 +30,10 @@ public class ClientProxy implements IProxy
     public void registerRenderers()
     {
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChest.class, new TileEntityChestRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBarrel.class, new TileEntityBarrelRenderer());
         ModelUtil.registerChest();
         ModelUtil.registerBlock(CompactStorage.chestBuilder, 0, "compactstorage:chestBuilder");
+        ModelUtil.registerBlock(CompactStorage.barrel, 0, "compactstorage:barrel");
         ModelUtil.registerBlock(CompactStorage.chest, 0, "compactstorage:compactchest");
         ModelUtil.registerItem(CompactStorage.backpack, 0, "compactstorage:backpack");
 

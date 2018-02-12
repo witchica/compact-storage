@@ -1,6 +1,7 @@
 package com.tattyseal.compactstorage;
 
 import com.google.common.collect.Lists;
+import com.tattyseal.compactstorage.block.BlockBarrel;
 import com.tattyseal.compactstorage.block.BlockChest;
 import com.tattyseal.compactstorage.block.BlockChestBuilder;
 import com.tattyseal.compactstorage.command.CommandCompactStorage;
@@ -14,6 +15,7 @@ import com.tattyseal.compactstorage.network.handler.C02HandlerCraftChest;
 import com.tattyseal.compactstorage.network.packet.C01PacketUpdateBuilder;
 import com.tattyseal.compactstorage.network.packet.C02PacketCraftChest;
 import com.tattyseal.compactstorage.proxy.IProxy;
+import com.tattyseal.compactstorage.tileentity.TileEntityBarrel;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
 import net.minecraft.block.Block;
@@ -72,6 +74,9 @@ public class CompactStorage
     public static Block chest;
     public static Block chestBuilder;
 
+    public static Block barrel;
+    public static ItemBlock itemBlockBarrel;
+
     public static ItemBlockChest ibChest;
     
     public static Item backpack;
@@ -101,7 +106,6 @@ public class CompactStorage
       
         ForgeRegistries.ITEMS.register(ibChest);
 
-
         GameRegistry.registerTileEntity(TileEntityChest.class, "tileChest");
         
         chestBuilder = new BlockChestBuilder();
@@ -118,6 +122,15 @@ public class CompactStorage
         backpack = new ItemBackpack();
         backpack.setRegistryName("backpack");
         ForgeRegistries.ITEMS.register(backpack);
+
+        barrel = new BlockBarrel();
+        ForgeRegistries.BLOCKS.register(barrel);
+
+        itemBlockBarrel = new ItemBlock(barrel);
+        itemBlockBarrel.setRegistryName(barrel.getRegistryName());
+        ForgeRegistries.ITEMS.register(itemBlockBarrel);
+
+        GameRegistry.registerTileEntity(TileEntityBarrel.class, "tileBarrel");
 
         ConfigurationHandler.configFile = event.getSuggestedConfigurationFile();
     }
