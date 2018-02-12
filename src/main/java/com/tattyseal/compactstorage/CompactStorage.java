@@ -6,6 +6,7 @@ import com.tattyseal.compactstorage.block.BlockChestBuilder;
 import com.tattyseal.compactstorage.command.CommandCompactStorage;
 import com.tattyseal.compactstorage.compat.ICompat;
 import com.tattyseal.compactstorage.creativetabs.CreativeTabCompactStorage;
+import com.tattyseal.compactstorage.event.CompactStorageEventHandler;
 import com.tattyseal.compactstorage.item.ItemBackpack;
 import com.tattyseal.compactstorage.item.ItemBlockChest;
 import com.tattyseal.compactstorage.network.handler.C01HandlerUpdateBuilder;
@@ -22,6 +23,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -98,7 +100,9 @@ public class CompactStorage
 
         ibChest = new ItemBlockChest(chest);
         ibChest.setRegistryName("compactChest");
+      
         ForgeRegistries.ITEMS.register(ibChest);
+
 
         GameRegistry.registerTileEntity(TileEntityChest.class, "tileChest");
         
@@ -110,10 +114,9 @@ public class CompactStorage
         ItemBlock ibChestBuilder = new ItemBlock(chestBuilder);
         ibChestBuilder.setRegistryName("chestBuilder");
         ibChestBuilder.setCreativeTab(tabCS);
+
         ForgeRegistries.ITEMS.register(ibChestBuilder);
 
-
-    
         backpack = new ItemBackpack();
         backpack.setRegistryName("backpack");
         ForgeRegistries.ITEMS.register(backpack);
@@ -155,6 +158,7 @@ public class CompactStorage
     public void postInit(FMLPostInitializationEvent event)
     {
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
+        MinecraftForge.EVENT_BUS.register(new CompactStorageEventHandler());
 
         proxy.registerRenderers();
 
