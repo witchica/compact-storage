@@ -13,7 +13,7 @@ public class CreativeTabCompactStorage extends CreativeTabs
 {
     public CreativeTabCompactStorage()
     {
-        super(getNextID(), "compactStorage");
+        super("compactStorage");
     }
 
     @Override

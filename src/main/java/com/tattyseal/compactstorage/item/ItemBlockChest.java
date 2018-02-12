@@ -1,5 +1,6 @@
 package com.tattyseal.compactstorage.item;
 
+import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.exception.InvalidSizeException;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
@@ -29,14 +30,17 @@ public class ItemBlockChest extends ItemBlock
 	@Override
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items)
     {
-		ItemStack stack = new ItemStack(this, 1);
+		if(tab == CompactStorage.tabCS)
+		{
+			ItemStack stack = new ItemStack(this, 1);
 
-		NBTTagCompound tag = new NBTTagCompound();
-		tag.setIntArray("size", new int[] {9, 3});
-		tag.setInteger("hue", 180);
+			NBTTagCompound tag = new NBTTagCompound();
+			tag.setIntArray("size", new int[] {9, 3});
+			tag.setInteger("hue", 180);
 
-		stack.setTagCompound(tag);
-		items.add(stack);
+			stack.setTagCompound(tag);
+			items.add(stack);
+		}
     }
 
     @Override

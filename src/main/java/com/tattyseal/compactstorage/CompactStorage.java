@@ -23,7 +23,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -56,7 +56,7 @@ public class CompactStorage
     @SidedProxy(clientSide = CompactStorage.CLIENT_PROXY, serverSide = CompactStorage.SERVER_PROXY, modId = CompactStorage.ID)
     public static IProxy proxy;
 
-    public static CreativeTabs tabCS;
+    public static final CreativeTabs tabCS = new CreativeTabCompactStorage();
 
     public static final Logger logger = LogManager.getLogger("CompactStorage");
 
@@ -87,8 +87,6 @@ public class CompactStorage
 
         OreDictionary.registerOre("string", Items.STRING);
         OreDictionary.registerOre("wool", Blocks.WOOL);
-    	
-        tabCS = new CreativeTabCompactStorage();
         
         wrapper = NetworkRegistry.INSTANCE.newSimpleChannel(CompactStorage.ID);
         wrapper.registerMessage(C01HandlerUpdateBuilder.class, C01PacketUpdateBuilder.class, 0, Side.SERVER);
@@ -163,8 +161,6 @@ public class CompactStorage
         proxy.registerRenderers();
 
         addShapedRecipe(new ItemStack(chestBuilder, 1), "ILI", "ICI", "ILI", 'I', new ItemStack(Items.IRON_INGOT, 1), 'C', new ItemStack(Blocks.CHEST, 1), 'L', new ItemStack(Blocks.LEVER, 1));
-        addShapedRecipe(new ItemStack(chest, 1), "III", "GCG", "III", 'I', new ItemStack(Items.IRON_INGOT, 1), 'G', new ItemStack(Blocks.GLASS_PANE, 1), 'C', new ItemStack(Blocks.CHEST, 1));
-        addShapedRecipe(new ItemStack(backpack, 1), "III", "GCG", "III", 'I', new ItemStack(Blocks.WOOL, 1, OreDictionary.WILDCARD_VALUE), 'G', new ItemStack(Items.STRING, 1), 'C', new ItemStack(Blocks.CHEST, 1));
         ConfigurationHandler.init();
     }
 
