@@ -4,6 +4,7 @@ import com.tattyseal.compactstorage.tileentity.TileEntityBarrel;
 import com.tattyseal.compactstorage.tileentity.TileEntityBarrelFluid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -15,6 +16,12 @@ public class BlockFluidBarrel extends BlockBarrel
     {
         setRegistryName("barrel_fluid");
         setUnlocalizedName("barrel_fluid");
+    }
+
+    @Override
+    public BlockRenderLayer getBlockLayer()
+    {
+        return BlockRenderLayer.CUTOUT_MIPPED;
     }
 
     @Nullable
