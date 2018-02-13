@@ -1,23 +1,24 @@
 package com.tattyseal.compactstorage.client.render;
 
+import org.lwjgl.opengl.GL11;
+
 import com.tattyseal.compactstorage.block.BlockBarrel;
 import com.tattyseal.compactstorage.tileentity.TileEntityBarrel;
-import com.tattyseal.compactstorage.util.LogHelper;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.client.renderer.entity.RenderEntityItem;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import org.lwjgl.opengl.GL11;
-
-import javax.swing.text.html.parser.Entity;
+import net.minecraft.util.math.BlockPos;
 
 public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEntityBarrel>
 {
     public RenderItem renderItem;
+    public TextureManager textureManager;
 
     public TileEntityBarrelRenderer()
     {
@@ -30,6 +31,7 @@ public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEnti
     {
         super.render(te, x, y, z, partialTicks, destroyStage, alpha);
         renderText(te, x, y, z, 0.0075f);
+        renderItem(te, x, y, z, 1f, 0.5f);
     }
 
     public void renderText(TileEntityBarrel tileEntity, double coordX, double coordY, double coordZ, float scale)
@@ -39,7 +41,25 @@ public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEnti
         GL11.glPushMatrix();
         GL11.glTranslatef((float) coordX + 0.5f, (float) coordY + 0.5f, (float) coordZ + 0.5f);
 
-        switch(facing)
+        rotateElement(facing);
+
+        GL11.glTranslatef(0f, 0.04f, -0.44f);
+
+        GL11.glScalef(scale, scale, scale);
+
+        FontRenderer fontrenderer = this.getFontRenderer();
+        byte b0 = 0;
+
+        String s = tileEntity.getText();
+
+        fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, 0, b0);
+
+        GL11.glPopMatrix();
+    }
+    
+    public void rotateElement(EnumFacing facing)
+    {
+	    	switch(facing)
         {
             case WEST:
             {
@@ -71,29 +91,51 @@ public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEnti
                 break;
             }
         }
-
-        GL11.glTranslatef(0f, 0, -0.44f);
-
-        GL11.glScalef(scale, scale, scale);
-
-        FontRenderer fontrenderer = this.getFontRenderer();
-        byte b0 = 0;
-
-        String s = tileEntity.getText();
-
-        fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, 0, b0);
-
-        GL11.glPopMatrix();
-
-        GL11.glPushMatrix();
-        EntityItem ent = new EntityItem(tileEntity.getWorld(), coordX, coordY, coordZ, tileEntity.item);
+    }
+    
+	public void renderItem(TileEntityBarrel tileEntity, double coordX, double coordY, double coordZ, float scale, float size)
+	{
+		EnumFacing facing = (EnumFacing) tileEntity.getWorld().getBlockState(tileEntity.getPos()).getProperties().get(BlockBarrel.FACING);
+		BlockPos pos = tileEntity.getPos();
+		ItemStack stack = tileEntity.item.copy();
+		
+		if (stack.isEmpty())
+		{
+			return;
+		}
+		
+		stack.setCount(1);
+		
+		GL11.glPushMatrix();
+        EntityItem ent = new EntityItem(tileEntity.getWorld(), coordX, coordY, coordZ, stack);
 
         ent.hoverStart = 0;
 
-        GL11.glTranslatef((float) coordX, (float) coordY + 2, (float) coordZ);
+        GL11.glTranslatef((float) coordX + 0.5f, (float) coordY +  0.5f, (float) coordZ +  0.5f);
+        rotateElement(facing);
+        //GL11.glRotatef(180f, 0, 0, 0);
+        GL11.glTranslatef(0f, 0.13f, -0.44f);
+        GL11.glScalef(-size, -size, 0.001f);
 
         Minecraft.getMinecraft().getRenderManager().renderEntity(ent, 0, 0, 0,0,0, false);
         //renderItem.renderItemIntoGUI(tileEntity.item, 0, 0);
         GL11.glPopMatrix();
+		
+		/*GL11.glPushMatrix();
+		
+		GL11.glTranslatef(pos.getX(), pos.getY(), pos.getZ());     // We align the rendering on the center of the block
+        //GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
+        
+        rotateElement(facing);
+        
+        GL11.glTranslated(-0.5F, -0.5F, -0.5f);	
+        GL11.glScalef(scale, scale, 0.0001f);			  // We flatten the rendering and scale it to the right size
+        GL11.glTranslatef(0f, 2f, -0.44f);
+        //GL11.glScalef(size, size, 1.0f);	
+        
+        this.renderItem.renderItemIntoGUI(stack, 0, 0);      
+		
+		GL11.glPopMatrix();  */  	 
     }
+
 }
