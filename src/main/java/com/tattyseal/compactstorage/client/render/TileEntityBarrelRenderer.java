@@ -113,7 +113,7 @@ public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEnti
 
         ent.hoverStart = 0;
 
-        RenderHelper.enableGUIStandardItemLighting();
+        RenderHelper.enableStandardItemLighting();
 
         GL11.glTranslatef((float) coordX + 0.5f, (float) coordY +  0.5f, (float) coordZ +  0.5f);
         rotateElement(facing);

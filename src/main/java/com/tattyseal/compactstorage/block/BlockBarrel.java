@@ -30,10 +30,15 @@ public class BlockBarrel extends Block implements ITileEntityProvider
     public BlockBarrel()
     {
         super(Material.IRON);
+        setHardness(3f);
+        init();
+        setCreativeTab(CompactStorage.tabCS);
+    }
+
+    public void init()
+    {
         setRegistryName("barrel");
         setUnlocalizedName("barrel");
-        setHardness(3f);
-        setCreativeTab(CompactStorage.tabCS);
     }
 
     @Override
@@ -100,6 +105,9 @@ public class BlockBarrel extends Block implements ITileEntityProvider
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
+        if(playerIn.isSneaking())
+            return false;
+
         if(!worldIn.isRemote)
         {
             TileEntityBarrel barrel = (TileEntityBarrel) worldIn.getTileEntity(pos);

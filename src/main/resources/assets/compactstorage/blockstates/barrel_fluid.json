@@ -3,31 +3,31 @@
     "facing=north": {
       "model": "compactstorage:barrel",
       "textures": {
-        "side": "compactstorage:blocks/barrel_side"
+        "side": "blocks/glass"
       }
     },
     "facing=east": {
       "model": "compactstorage:barrel",
       "textures": {
-        "side": "compactstorage:blocks/barrel_side"
+        "side": "blocks/glass"
       }
     },
     "facing=south": {
       "model": "compactstorage:barrel",
       "textures": {
-        "side": "compactstorage:blocks/barrel_side"
+        "side": "blocks/glass"
       }
     },
     "facing=west": {
       "model": "compactstorage:barrel",
       "textures": {
-        "side": "compactstorage:blocks/barrel_side"
+        "side": "blocks/glass"
       }
     },
     "inventory": {
       "model": "compactstorage:barrel",
       "textures": {
-        "side": "compactstorage:blocks/barrel_side"
+        "side": "blocks/glass"
       }
     }
   }
