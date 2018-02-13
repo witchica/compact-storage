@@ -1,5 +1,6 @@
 package com.tattyseal.compactstorage.client.render;
 
+import net.minecraft.client.renderer.RenderHelper;
 import org.lwjgl.opengl.GL11;
 
 import com.tattyseal.compactstorage.block.BlockBarrel;
@@ -30,7 +31,8 @@ public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEnti
     public void render(TileEntityBarrel te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
     {
         super.render(te, x, y, z, partialTicks, destroyStage, alpha);
-        renderText(te, x, y, z, 0.0075f);
+
+        renderText(te, x, y, z, 0.01f);
         renderItem(te, x, y, z, 1f, 0.5f);
     }
 
@@ -43,7 +45,7 @@ public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEnti
 
         rotateElement(facing);
 
-        GL11.glTranslatef(0f, 0.04f, -0.44f);
+        GL11.glTranslatef(0f, -0.225f, -0.44f);
 
         GL11.glScalef(scale, scale, scale);
 
@@ -59,7 +61,7 @@ public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEnti
     
     public void rotateElement(EnumFacing facing)
     {
-	    	switch(facing)
+        switch(facing)
         {
             case WEST:
             {
@@ -111,31 +113,33 @@ public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEnti
 
         ent.hoverStart = 0;
 
+        RenderHelper.enableGUIStandardItemLighting();
+
         GL11.glTranslatef((float) coordX + 0.5f, (float) coordY +  0.5f, (float) coordZ +  0.5f);
         rotateElement(facing);
         //GL11.glRotatef(180f, 0, 0, 0);
-        GL11.glTranslatef(0f, 0.13f, -0.44f);
-        GL11.glScalef(-size, -size, 0.001f);
+        GL11.glTranslatef(-(size / 3), -0.1f, -0.55f);
+        GL11.glScalef(size / 24, size / 24, 0.001f);
 
-        Minecraft.getMinecraft().getRenderManager().renderEntity(ent, 0, 0, 0,0,0, false);
-        //renderItem.renderItemIntoGUI(tileEntity.item, 0, 0);
+        //Minecraft.getMinecraft().getRenderManager().renderEntity(ent, 0, 0, 0,0,0, false);
+        this.renderItem.renderItemIntoGUI(stack, 0, 0);
         GL11.glPopMatrix();
-		
+
 		/*GL11.glPushMatrix();
-		
+
 		GL11.glTranslatef(pos.getX(), pos.getY(), pos.getZ());     // We align the rendering on the center of the block
         //GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-        
+
         rotateElement(facing);
-        
-        GL11.glTranslated(-0.5F, -0.5F, -0.5f);	
+
+        GL11.glTranslated(-0.5F, -0.5F, -0.5f);
         GL11.glScalef(scale, scale, 0.0001f);			  // We flatten the rendering and scale it to the right size
         GL11.glTranslatef(0f, 2f, -0.44f);
-        //GL11.glScalef(size, size, 1.0f);	
-        
-        this.renderItem.renderItemIntoGUI(stack, 0, 0);      
-		
-		GL11.glPopMatrix();  */  	 
+        //GL11.glScalef(size, size, 1.0f);
+
+        this.renderItem.renderItemIntoGUI(stack, 0, 0);
+
+		GL11.glPopMatrix();  */
     }
 
 }
