@@ -1,34 +1,19 @@
 {
   "variants": {
     "facing=north": {
-      "model": "compactstorage:barrel",
-      "textures": {
-        "side": "blocks/glass"
-      }
+      "model": "compactstorage:barrel_fluid"
     },
     "facing=east": {
-      "model": "compactstorage:barrel",
-      "textures": {
-        "side": "blocks/glass"
-      }
+      "model": "compactstorage:barrel_fluid"
     },
     "facing=south": {
-      "model": "compactstorage:barrel",
-      "textures": {
-        "side": "blocks/glass"
-      }
+      "model": "compactstorage:barrel_fluid"
     },
     "facing=west": {
-      "model": "compactstorage:barrel",
-      "textures": {
-        "side": "blocks/glass"
-      }
+      "model": "compactstorage:barrel_fluid"
     },
     "inventory": {
-      "model": "compactstorage:barrel",
-      "textures": {
-        "side": "blocks/glass"
-      }
+      "model": "compactstorage:barrel_fluid"
     }
   }
 }

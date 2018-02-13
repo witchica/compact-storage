@@ -1,6 +1,7 @@
 package com.tattyseal.compactstorage.block;
 
 import com.tattyseal.compactstorage.CompactStorage;
+import com.tattyseal.compactstorage.tileentity.IBarrel;
 import com.tattyseal.compactstorage.tileentity.TileEntityBarrel;
 import com.tattyseal.compactstorage.util.EntityUtil;
 import com.tattyseal.compactstorage.util.LogHelper;
@@ -81,7 +82,7 @@ public class BlockBarrel extends Block implements ITileEntityProvider
 
         if(!worldIn.isRemote)
         {
-            TileEntityBarrel barrel = (TileEntityBarrel) worldIn.getTileEntity(pos);
+            IBarrel barrel = (IBarrel) worldIn.getTileEntity(pos);
 
             if(barrel != null)
             {
@@ -110,7 +111,7 @@ public class BlockBarrel extends Block implements ITileEntityProvider
 
         if(!worldIn.isRemote)
         {
-            TileEntityBarrel barrel = (TileEntityBarrel) worldIn.getTileEntity(pos);
+            IBarrel barrel = (IBarrel) worldIn.getTileEntity(pos);
 
             if(barrel != null)
             {

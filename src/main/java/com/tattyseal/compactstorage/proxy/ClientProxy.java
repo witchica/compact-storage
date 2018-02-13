@@ -33,7 +33,7 @@ public class ClientProxy implements IProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBarrel.class, new TileEntityBarrelRenderer());
         ModelUtil.registerChest();
         ModelUtil.registerBlock(CompactStorage.chestBuilder, 0, "compactstorage:chestBuilder");
-        
+
         ModelUtil.registerBlock(CompactStorage.barrel, 0, "compactstorage:barrel");
         ModelUtil.registerBlock(CompactStorage.barrel_fluid, 0, "compactstorage:barrel_fluid");
 

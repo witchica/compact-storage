@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
@@ -37,13 +38,19 @@ public class TileEntityBarrelFluid extends TileEntity implements IBarrel
     @Override
     public boolean insertItems(@Nonnull ItemStack stack, EntityPlayer player)
     {
-        IItemHandler playerInventory = new InvWrapper(player.inventory);
+        FluidActionResult res = FluidUtil.tryEmptyContainerAndStow(stack, tank, null, tank.getCapacity(), player);
 
-        FluidActionResult res = FluidUtil.tryEmptyContainerAndStow(stack, tank, playerInventory, tank.getCapacity(), player);
-
-        if(res.equals(FluidActionResult.FAILURE))
+        if (res.isSuccess())
         {
-            FluidUtil.tryFillContainerAndStow(stack, tank, playerInventory, tank.getCapacity(), player);
+            player.setHeldItem(EnumHand.MAIN_HAND, res.result);
+        }
+        else
+        {
+            res = FluidUtil.tryFillContainerAndStow(stack, tank, null, tank.getCapacity(), player);
+            if(res.isSuccess())
+            {
+                player.setHeldItem(EnumHand.MAIN_HAND, res.result);
+            }
         }
 
         markDirty();
