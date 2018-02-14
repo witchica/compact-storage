@@ -4,6 +4,7 @@ import com.tattyseal.compactstorage.ConfigurationHandler;
 import com.tattyseal.compactstorage.api.IChest;
 import com.tattyseal.compactstorage.block.BlockChest;
 import com.tattyseal.compactstorage.util.StorageInfo;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.ContainerChest;
@@ -20,6 +21,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
@@ -510,5 +513,11 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     public void setHue(int hue)
     {
         info.setHue(hue);
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    {
+        return false;
     }
 }

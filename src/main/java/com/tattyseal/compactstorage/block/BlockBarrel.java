@@ -113,10 +113,20 @@ public class BlockBarrel extends Block implements ITileEntityProvider
         {
             IBarrel barrel = (IBarrel) worldIn.getTileEntity(pos);
 
-            if(barrel != null)
+            if(playerIn.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
             {
-                barrel.insertItems(playerIn.getHeldItem(EnumHand.MAIN_HAND), playerIn);
-                return true;
+                if(barrel != null)
+                {
+                    barrel.dropItems(playerIn);
+                }
+            }
+            else
+            {
+                if(barrel != null)
+                {
+                    barrel.insertItems(playerIn.getHeldItem(EnumHand.MAIN_HAND), playerIn);
+                    return true;
+                }
             }
         }
 

@@ -9,4 +9,6 @@ public interface IBarrel
 {
     public void dropItems(EntityPlayer player);
     public boolean insertItems(@Nonnull ItemStack stack, EntityPlayer player);
+
+    public int color();
 }

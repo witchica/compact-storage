@@ -37,6 +37,7 @@ public class StorageInfo
 		CHEST("Chest", new ItemStack(CompactStorage.chest, 1)),
 		BACKPACK("Backpack", new ItemStack(CompactStorage.backpack, 1));
 
+
 		public String name;
 		public ItemStack display;
 

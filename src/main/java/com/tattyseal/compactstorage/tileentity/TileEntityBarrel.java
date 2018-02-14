@@ -9,14 +9,24 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileEntityBarrel extends TileEntity
+public class TileEntityBarrel extends TileEntity implements IBarrel
 {
     public ItemStack item = ItemStack.EMPTY;
     public int stackSize = 0;
+
+    public int hue = 0;
+
+    public TileEntityBarrel()
+    {
+        super();
+        hue = 128;
+    }
 
     public void dropItems(EntityPlayer player)
     {
@@ -95,6 +105,12 @@ public class TileEntityBarrel extends TileEntity
         return false;
     }
 
+    @Override
+    public int color()
+    {
+        return hue;
+    }
+
     public String getText()
     {
         if(item.isEmpty())
@@ -126,6 +142,7 @@ public class TileEntityBarrel extends TileEntity
     {
         compound.setTag("item", item.writeToNBT(new NBTTagCompound()));
         compound.setInteger("stackSize", stackSize);
+        compound.setInteger("hue", hue);
 
         return super.writeToNBT(compound);
     }
@@ -135,6 +152,7 @@ public class TileEntityBarrel extends TileEntity
     {
         item = new ItemStack(compound.getCompoundTag("item"));
         stackSize = compound.getInteger("stackSize");
+        hue = compound.getInteger("hue");
 
         super.readFromNBT(compound);
     }
@@ -181,5 +199,11 @@ public class TileEntityBarrel extends TileEntity
         world.notifyBlockUpdate(pos, getState(), getState(), 3);
         world.scheduleBlockUpdate(pos,this.getBlockType(),0,0);
         super.markDirty();
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    {
+        return oldState.getBlock() != newSate.getBlock();
     }
 }

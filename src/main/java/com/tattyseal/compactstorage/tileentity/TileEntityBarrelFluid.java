@@ -9,24 +9,37 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileEntityBarrelFluid extends TileEntity implements IBarrel
+public class TileEntityBarrelFluid extends TileEntity implements IBarrel, ITickable
 {
+    public static final int CAPACITY = 32000;
+
     public FluidTank tank;
+    public int hue;
+
+    public int lastAmount;
 
     public TileEntityBarrelFluid()
     {
         super();
-        tank = new FluidTank(64000);
+        tank = new FluidTank(CAPACITY);
+        hue = 128;
     }
 
     @Override
@@ -58,6 +71,12 @@ public class TileEntityBarrelFluid extends TileEntity implements IBarrel
         return false;
     }
 
+    @Override
+    public int color()
+    {
+        return hue;
+    }
+
     public String getText()
     {
         return (tank.getFluid() == null ? "Empty" : tank.getFluidAmount() + "mB");
@@ -67,6 +86,7 @@ public class TileEntityBarrelFluid extends TileEntity implements IBarrel
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         compound.setTag("fluid", tank.writeToNBT(new NBTTagCompound()));
+        compound.setInteger("hue", hue);
 
         return super.writeToNBT(compound);
     }
@@ -74,8 +94,10 @@ public class TileEntityBarrelFluid extends TileEntity implements IBarrel
     @Override
     public void readFromNBT(NBTTagCompound compound)
     {
-        tank = new FluidTank(64000);
+        tank = new FluidTank(CAPACITY);
         tank.readFromNBT(compound.getCompoundTag("fluid"));
+
+        hue = compound.getInteger("hue");
 
         super.readFromNBT(compound);
     }
@@ -122,5 +144,43 @@ public class TileEntityBarrelFluid extends TileEntity implements IBarrel
         world.notifyBlockUpdate(pos, getState(), getState(), 3);
         world.scheduleBlockUpdate(pos,this.getBlockType(),0,0);
         super.markDirty();
+    }
+
+    @Override
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    {
+        return oldState.getBlock() != newSate.getBlock();
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    {
+        return super.hasCapability(capability, facing) || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+    }
+
+    @Nullable
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    {
+        if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+        {
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tank);
+        }
+
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public void update()
+    {
+        if(tank != null)
+        {
+            if(tank.getFluid() != null && lastAmount != tank.getFluidAmount())
+            {
+                markDirty();
+            }
+
+            lastAmount = tank.getFluid() == null ? 0 : tank.getFluidAmount();
+        }
     }
 }

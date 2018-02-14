@@ -96,26 +96,26 @@ public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEnti
     }
     
 	public void renderItem(TileEntityBarrel tileEntity, double coordX, double coordY, double coordZ, float scale, float size)
-	{
-		EnumFacing facing = (EnumFacing) tileEntity.getWorld().getBlockState(tileEntity.getPos()).getProperties().get(BlockBarrel.FACING);
-		BlockPos pos = tileEntity.getPos();
-		ItemStack stack = tileEntity.item.copy();
-		
-		if (stack.isEmpty())
-		{
-			return;
-		}
-		
-		stack.setCount(1);
-		
-		GL11.glPushMatrix();
+    {
+        EnumFacing facing = (EnumFacing) tileEntity.getWorld().getBlockState(tileEntity.getPos()).getProperties().get(BlockBarrel.FACING);
+        BlockPos pos = tileEntity.getPos();
+        ItemStack stack = tileEntity.item.copy();
+
+        if (stack.isEmpty())
+        {
+            return;
+        }
+
+        stack.setCount(1);
+
+        GL11.glPushMatrix();
         EntityItem ent = new EntityItem(tileEntity.getWorld(), coordX, coordY, coordZ, stack);
 
         ent.hoverStart = 0;
 
         RenderHelper.enableStandardItemLighting();
 
-        GL11.glTranslatef((float) coordX + 0.5f, (float) coordY +  0.5f, (float) coordZ +  0.5f);
+        GL11.glTranslatef((float) coordX + 0.5f, (float) coordY + 0.5f, (float) coordZ + 0.5f);
         rotateElement(facing);
         //GL11.glRotatef(180f, 0, 0, 0);
         GL11.glTranslatef(-(size / 3), -0.1f, -0.55f);
@@ -124,22 +124,5 @@ public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEnti
         //Minecraft.getMinecraft().getRenderManager().renderEntity(ent, 0, 0, 0,0,0, false);
         this.renderItem.renderItemIntoGUI(stack, 0, 0);
         GL11.glPopMatrix();
-
-		/*GL11.glPushMatrix();
-
-		GL11.glTranslatef(pos.getX(), pos.getY(), pos.getZ());     // We align the rendering on the center of the block
-        //GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-
-        rotateElement(facing);
-
-        GL11.glTranslated(-0.5F, -0.5F, -0.5f);
-        GL11.glScalef(scale, scale, 0.0001f);			  // We flatten the rendering and scale it to the right size
-        GL11.glTranslatef(0f, 2f, -0.44f);
-        //GL11.glScalef(size, size, 1.0f);
-
-        this.renderItem.renderItemIntoGUI(stack, 0, 0);
-
-		GL11.glPopMatrix();  */
     }
-
 }
