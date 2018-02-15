@@ -518,6 +518,6 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     @Override
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
     {
-        return false;
+        return oldState.getBlock() != newSate.getBlock();
     }
 }

@@ -4,6 +4,7 @@ import com.tattyseal.compactstorage.util.LogHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -43,32 +44,32 @@ public class TileEntityBarrelFluid extends TileEntity implements IBarrel, ITicka
     }
 
     @Override
-    public void dropItems(EntityPlayer player)
+    public ItemStack dropItems(EntityPlayer player)
     {
-
+        return ItemStack.EMPTY;
     }
 
     @Override
-    public boolean insertItems(@Nonnull ItemStack stack, EntityPlayer player)
+    public ItemStack insertItems(@Nonnull ItemStack stack, EntityPlayer player)
     {
         FluidActionResult res = FluidUtil.tryEmptyContainerAndStow(stack, tank, null, tank.getCapacity(), player);
 
         if (res.isSuccess())
         {
-            player.setHeldItem(EnumHand.MAIN_HAND, res.result);
+            return res.result;
         }
         else
         {
             res = FluidUtil.tryFillContainerAndStow(stack, tank, null, tank.getCapacity(), player);
             if(res.isSuccess())
             {
-                player.setHeldItem(EnumHand.MAIN_HAND, res.result);
+                return res.result;
             }
         }
 
         markDirty();
 
-        return false;
+        return stack;
     }
 
     @Override

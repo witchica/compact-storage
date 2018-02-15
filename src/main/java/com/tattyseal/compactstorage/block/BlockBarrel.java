@@ -14,6 +14,7 @@ import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -86,7 +87,15 @@ public class BlockBarrel extends Block implements ITileEntityProvider
 
             if(barrel != null)
             {
-                barrel.dropItems(playerIn);
+                ItemStack stack = barrel.dropItems(playerIn);
+
+                if(!stack.isEmpty())
+                {
+                    EntityItem item = new EntityItem(worldIn, playerIn.posX, playerIn.posY, playerIn.posZ);
+                    item.setItem(stack);
+
+                    worldIn.spawnEntity(item);
+                }
             }
         }
     }
@@ -117,14 +126,22 @@ public class BlockBarrel extends Block implements ITileEntityProvider
             {
                 if(barrel != null)
                 {
-                    barrel.dropItems(playerIn);
+                    ItemStack stack = barrel.dropItems(playerIn);
+
+                    if(!stack.isEmpty())
+                    {
+                        EntityItem item = new EntityItem(worldIn, playerIn.posX, playerIn.posY, playerIn.posZ);
+                        item.setItem(stack);
+
+                        worldIn.spawnEntity(item);
+                    }
                 }
             }
             else
             {
                 if(barrel != null)
                 {
-                    barrel.insertItems(playerIn.getHeldItem(EnumHand.MAIN_HAND), playerIn);
+                    playerIn.setHeldItem(EnumHand.MAIN_HAND, barrel.insertItems(playerIn.getHeldItem(EnumHand.MAIN_HAND), playerIn));
                     return true;
                 }
             }

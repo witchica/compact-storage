@@ -7,8 +7,8 @@ import javax.annotation.Nonnull;
 
 public interface IBarrel
 {
-    public void dropItems(EntityPlayer player);
-    public boolean insertItems(@Nonnull ItemStack stack, EntityPlayer player);
+    public ItemStack dropItems(EntityPlayer player);
+    public ItemStack insertItems(@Nonnull ItemStack stack, EntityPlayer player);
 
     public int color();
 }
