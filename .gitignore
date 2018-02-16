@@ -19,3 +19,5 @@
 !/src
 !/gradle
 !/.circleci
+
+!local_build.bat
