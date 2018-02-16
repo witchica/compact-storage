@@ -227,16 +227,20 @@ public class TileEntityBarrel extends TileEntity implements IBarrel
     @Override
     public void markDirty()
     {
-        world.markBlockRangeForRenderUpdate(pos, pos);
-        world.notifyBlockUpdate(pos, getState(), getState(), 3);
-        world.scheduleBlockUpdate(pos,this.getBlockType(),0,0);
+        if(world != null && pos != null)
+        {
+            world.markBlockRangeForRenderUpdate(pos, pos);
+            world.notifyBlockUpdate(pos, getState(), getState(), 3);
+            world.scheduleBlockUpdate(pos,this.getBlockType(),0,0);
+        }
+
         super.markDirty();
     }
 
     @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState)
     {
-        return oldState.getBlock() != newSate.getBlock();
+        return oldState.getBlock() != newState.getBlock();
     }
 
     @Nullable
@@ -257,7 +261,9 @@ public class TileEntityBarrel extends TileEntity implements IBarrel
                 @Override
                 public ItemStack getStackInSlot(int slot)
                 {
-                    return item;
+                    ItemStack s = item.copy();
+                    s.setCount(stackSize);
+                    return s;
                 }
 
                 @Nonnull

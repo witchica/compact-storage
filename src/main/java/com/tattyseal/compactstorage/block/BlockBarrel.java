@@ -32,7 +32,8 @@ public class BlockBarrel extends Block implements ITileEntityProvider
     public BlockBarrel()
     {
         super(Material.IRON);
-        setHardness(3f);
+        setHardness(5f);
+        setHarvestLevel("pickaxe", 2);
         init();
         setCreativeTab(CompactStorage.tabCS);
     }

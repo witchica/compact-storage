@@ -1,7 +1,9 @@
 package com.tattyseal.compactstorage.client.render;
 
 import com.tattyseal.compactstorage.tileentity.TileEntityBarrelFluid;
+import com.tattyseal.compactstorage.util.LogHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -84,6 +86,35 @@ public class TileEntityBarrelFluidRenderer extends TileEntitySpecialRenderer<Til
             builder.pos(minXZ, baseHeight, maxXZ).tex(minU, maxV_side).endVertex();
 
             tessellator.draw();
+
+            GL11.glPopMatrix();
+
+            float scale = 0.01f;
+
+            /**
+             * Draw the text
+             */
+
+            GL11.glPushMatrix();
+            GL11.glTranslatef((float) x + 0.5f, (float) y + 0.5f, (float) z + 0.5f);
+
+            float angle = - (float) Math.toDegrees(Math.atan2(Minecraft.getMinecraft().player.posX - te.getPos().getX(), Minecraft.getMinecraft().player.posZ - te.getPos().getZ()));
+            //LogHelper.dump("Angle:" + angle);
+
+            GL11.glTranslatef(0f, 0.5001f, 0f);
+            //GL11.glRotatef(180f, 0, 1f, 0f);
+            GL11.glRotatef(90f, 1, 0, 0);
+
+            GL11.glRotatef(angle, 0, 0, 1f);
+
+            GL11.glScalef(scale, scale, scale);
+
+            FontRenderer fontrenderer = this.getFontRenderer();
+            byte b0 = 0;
+
+            String s = te.getText();
+
+            fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, 0, b0);
 
             GL11.glPopMatrix();
         }

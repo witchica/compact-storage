@@ -191,8 +191,8 @@ public class CompactStorage
 
         /** Barrel Recipes **/
 
-        addShapedRecipe(new ItemStack(barrel, 1), "IGI", "GCG", "IGI", 'I', new ItemStack(Blocks.IRON_BLOCK, 1), 'G', new ItemStack(Blocks.GOLD_BLOCK, 1), 'C', new ItemStack(Blocks.CHEST, 1));
-        addShapedRecipe(new ItemStack(barrel_fluid, 1), "IGI", "CIC", "IGI", 'I', new ItemStack(Blocks.IRON_BLOCK, 1), 'G', new ItemStack(Blocks.GOLD_BLOCK, 1), 'C', new ItemStack(Blocks.GLASS_PANE, 1));
+        addShapedRecipe(new ItemStack(barrel, 1), "III", "GCG", "III", 'I', new ItemStack(Items.IRON_INGOT, 1), 'G', new ItemStack(Blocks.IRON_BLOCK, 1), 'C', new ItemStack(Blocks.CHEST, 1));
+        addShapedRecipe(new ItemStack(barrel_fluid, 1), "ICI", "GIG", "ICI", 'I', new ItemStack(Items.IRON_INGOT, 1), 'G', new ItemStack(Blocks.IRON_BLOCK, 1), 'C', new ItemStack(Blocks.GLASS_PANE, 1));
 
         ConfigurationHandler.init();
     }

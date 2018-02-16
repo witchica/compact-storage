@@ -1,4 +1,5 @@
 {
+  "forge_marker": 1,
   "variants": {
     "facing=north": {
       "model": "compactstorage:barrel"
@@ -13,7 +14,8 @@
       "model": "compactstorage:barrel"
     },
     "inventory": {
-      "model": "compactstorage:barrel"
+      "model": "compactstorage:barrel",
+      "transform": "forge:default-block"
     }
   }
 }

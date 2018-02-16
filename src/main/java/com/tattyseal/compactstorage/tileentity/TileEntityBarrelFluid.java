@@ -20,6 +20,8 @@ import net.minecraftforge.fluids.*;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
@@ -76,11 +78,6 @@ public class TileEntityBarrelFluid extends TileEntity implements IBarrel, ITicka
     public int color()
     {
         return hue;
-    }
-
-    public String getText()
-    {
-        return (tank.getFluid() == null ? "Empty" : tank.getFluidAmount() + "mB");
     }
 
     @Override
@@ -182,6 +179,19 @@ public class TileEntityBarrelFluid extends TileEntity implements IBarrel, ITicka
             }
 
             lastAmount = tank.getFluid() == null ? 0 : tank.getFluidAmount();
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public String getText()
+    {
+        if(tank == null || tank.getFluid() ==  null || tank.getFluidAmount() == 0)
+        {
+            return "Empty";
+        }
+        else
+        {
+            return tank.getFluidAmount() + "/" + CAPACITY + "mB";
         }
     }
 }

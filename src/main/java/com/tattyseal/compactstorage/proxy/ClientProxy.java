@@ -45,8 +45,8 @@ public class ClientProxy implements IProxy
         ModelUtil.registerChest();
         ModelUtil.registerBlock(CompactStorage.chestBuilder, 0, "compactstorage:chestBuilder");
 
-        ModelUtil.registerBlock(CompactStorage.barrel, 0, "compactstorage:barrel");
-        ModelUtil.registerBlock(CompactStorage.barrel_fluid, 0, "compactstorage:barrel_fluid");
+        ModelUtil.registerItem(CompactStorage.itemBlockBarrel, 0, "compactstorage:barrel");
+        ModelUtil.registerItem(CompactStorage.itemBlockBarrel_fluid, 0, "compactstorage:barrel_fluid");
 
         ModelUtil.registerBlock(CompactStorage.chest, 0, "compactstorage:compactchest");
         ModelUtil.registerItem(CompactStorage.backpack, 0, "compactstorage:backpack");
@@ -54,22 +54,13 @@ public class ClientProxy implements IProxy
         ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
         BlockColors blockColors = Minecraft.getMinecraft().getBlockColors();
 
-        blockColors.registerBlockColorHandler(new IBlockColor() {
-            @Override
-            public int colorMultiplier(IBlockState state, @Nullable IBlockAccess worldIn, @Nullable BlockPos pos, int tintIndex)
-            {
-                return (worldIn != null && pos != null && worldIn.getTileEntity(pos) != null) ? getColorFromHue(((IBarrel) worldIn.getTileEntity(pos)).color()) : 0xFFFFFF;
-            }
-        }, CompactStorage.barrel, CompactStorage.barrel_fluid);
-
-
         itemColors.registerItemColorHandler(new IItemColor() {
             @Override
             public int colorMultiplier(ItemStack stack, int color)
             {
                 return getColorFromNBT(stack);
             }
-        }, CompactStorage.backpack, CompactStorage.ibChest, CompactStorage.itemBlockBarrel, CompactStorage.itemBlockBarrel_fluid);
+        }, CompactStorage.backpack, CompactStorage.ibChest);
 
         MinecraftForge.EVENT_BUS.register(new ConnectionHandler());
     }
