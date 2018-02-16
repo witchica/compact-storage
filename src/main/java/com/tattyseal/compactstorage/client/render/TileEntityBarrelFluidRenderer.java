@@ -98,11 +98,11 @@ public class TileEntityBarrelFluidRenderer extends TileEntitySpecialRenderer<Til
             GL11.glPushMatrix();
             GL11.glTranslatef((float) x + 0.5f, (float) y + 0.5f, (float) z + 0.5f);
 
-            float angle = - (float) Math.toDegrees(Math.atan2(Minecraft.getMinecraft().player.posX - te.getPos().getX(), Minecraft.getMinecraft().player.posZ - te.getPos().getZ()));
+            float angle = Minecraft.getMinecraft().player.rotationYaw; //- (float) Math.toDegrees(Math.atan2(Minecraft.getMinecraft().player.posX - te.getPos().getX(), Minecraft.getMinecraft().player.posZ - te.getPos().getZ()));
             //LogHelper.dump("Angle:" + angle);
 
             GL11.glTranslatef(0f, 0.5001f, 0f);
-            //GL11.glRotatef(180f, 0, 1f, 0f);
+            GL11.glRotatef(180f, 0, 1f, 0f);
             GL11.glRotatef(90f, 1, 0, 0);
 
             GL11.glRotatef(angle, 0, 0, 1f);
@@ -114,7 +114,7 @@ public class TileEntityBarrelFluidRenderer extends TileEntitySpecialRenderer<Til
 
             String s = te.getText();
 
-            fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, 0, b0);
+            fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, -5, b0);
 
             GL11.glPopMatrix();
         }

@@ -21,7 +21,7 @@ public class BlockFluidBarrel extends BlockBarrel
     @Override
     public BlockRenderLayer getBlockLayer()
     {
-        return BlockRenderLayer.TRANSLUCENT;
+        return BlockRenderLayer.CUTOUT_MIPPED;
     }
 
     @Nullable
