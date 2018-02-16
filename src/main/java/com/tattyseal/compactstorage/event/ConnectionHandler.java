@@ -17,9 +17,10 @@ public class ConnectionHandler
     {
         if(FMLCommonHandler.instance().getSide().equals(Side.CLIENT) && ConfigurationHandler.newFeatures)
         {
-            e.player.sendMessage(new TextComponentString("What's new in CompactStorage 2.2?"));
-            e.player.sendMessage(new TextComponentString(" - New retainer chests, regular compact chests can be made to retain items by crouch clicking on them with a diamond."));
-            e.player.sendMessage(new TextComponentString(" - New builder interface redesign."));
+            e.player.sendMessage(new TextComponentString("What's new in CompactStorage 3.0?"));
+            e.player.sendMessage(new TextComponentString(" - New barrels and drums!."));
+            e.player.sendMessage(new TextComponentString("     - Barrels allow 64 stacks of one item to be stored in them, right click to insert and punch to remove items!"));
+            e.player.sendMessage(new TextComponentString("     - Drums allow 32,000mB of storage, these can also be interfaced with pipes etc!"));
             e.player.sendMessage(new TextComponentString("This message will only be displayed once and can be re-enabled in the configuration file."));
             ConfigurationHandler.disableMessage();
         }
