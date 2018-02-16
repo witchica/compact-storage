@@ -32,7 +32,7 @@ jobs:
           - v1-dependencies-
 
       # run build
-      - run: gradle build
+      - run: ./gradlew build
 
       - save_cache:
           paths:
