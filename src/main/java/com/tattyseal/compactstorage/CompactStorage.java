@@ -48,6 +48,7 @@ import java.util.List;
 
 /**
  * Created by Toby on 06/11/2014.
+ * Updated for 3.0 on the 16/02/2018
  */
 @Mod(modid = CompactStorage.ID, name = CompactStorage.NAME, version = CompactStorage.VERSION, guiFactory = "com.tattyseal.compactstorage.client.gui.factory.CompactStorageGuiFactory")
 public class CompactStorage
