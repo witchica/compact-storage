@@ -32,8 +32,6 @@ jobs:
           - v1-dependencies-
 
       # run build
-      - run: rm -r /build/libs
-      
       - run: gradle build
 
       - save_cache:
