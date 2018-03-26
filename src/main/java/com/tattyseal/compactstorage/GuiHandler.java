@@ -37,7 +37,7 @@ public class GuiHandler implements IGuiHandler
 
                 if (entity instanceof IChest)
                 {
-                    chest = (IChest) world.getTileEntity(pos);
+                    chest = (IChest)entity;
                 }
                 else if (player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(CompactStorage.backpack))
                 {
@@ -65,14 +65,18 @@ public class GuiHandler implements IGuiHandler
                  // chest or backpack
                 IChest chest;
 
-                if(player.getHeldItem(EnumHand.MAIN_HAND).getItem() == CompactStorage.backpack)
+                net.minecraft.tileentity.TileEntity entity = world.getTileEntity(pos);
+
+                if (entity instanceof IChest)
+                {
+                    chest = (IChest)entity;
+                }
+                else if (player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(CompactStorage.backpack))
                 {
                     chest = new InventoryBackpack(player.getHeldItem(EnumHand.MAIN_HAND));
                 }
-                else
-                {
-                    chest = (IChest) world.getTileEntity(pos);
-                }
+                // this shouldn't happen
+                else return null;
 
                 return new GuiChest((Container) getServerGuiElement(ID, player, world, x, y, z), chest, world, player, pos);
             }
