@@ -33,14 +33,18 @@ public class GuiHandler implements IGuiHandler
                 // chest or backpack
                 IChest chest;
 
-                if(player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(CompactStorage.backpack))
-                {
-                    chest = new InventoryBackpack(player.getHeldItem(EnumHand.MAIN_HAND));
-                }
-                else
+                net.minecraft.tileentity.TileEntity entity = world.getTileEntity(pos);
+
+                if (entity instanceof IChest)
                 {
                     chest = (IChest) world.getTileEntity(pos);
                 }
+                else if (player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(CompactStorage.backpack))
+                {
+                    chest = new InventoryBackpack(player.getHeldItem(EnumHand.MAIN_HAND));
+                }
+                // this shouldn't happen
+                else return null;
 
                 return new ContainerChest(world, chest, player, pos);
             }
