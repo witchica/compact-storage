@@ -18,13 +18,11 @@ import net.minecraft.util.math.BlockPos;
 
 public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEntityBarrel>
 {
-    public RenderItem renderItem;
     public TextureManager textureManager;
 
     public TileEntityBarrelRenderer()
     {
         super();
-        this.renderItem = Minecraft.getMinecraft().getRenderItem();
     }
 
     @Override
@@ -101,28 +99,32 @@ public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEnti
         BlockPos pos = tileEntity.getPos();
         ItemStack stack = tileEntity.item.copy();
 
-        if (stack.isEmpty())
+        if(stack != null && !stack.isEmpty())
         {
-            return;
+
+            if (stack.isEmpty())
+            {
+                return;
+            }
+
+            stack.setCount(1);
+
+            GL11.glPushMatrix();
+            EntityItem ent = new EntityItem(tileEntity.getWorld(), coordX, coordY, coordZ, stack);
+
+            ent.hoverStart = 0;
+
+            RenderHelper.enableStandardItemLighting();
+
+            GL11.glTranslatef((float) coordX + 0.5f, (float) coordY + 0.5f, (float) coordZ + 0.5f);
+            rotateElement(facing);
+            //GL11.glRotatef(180f, 0, 0, 0);
+            GL11.glTranslatef(-(size / 3), -0.1f, -0.55f);
+            GL11.glScalef(size / 24, size / 24, 0.001f);
+
+            //Minecraft.getMinecraft().getRenderManager().renderEntity(ent, 0, 0, 0,0,0, false);
+            Minecraft.getMinecraft().getRenderItem().renderItemIntoGUI(stack, 0, 0);
+            GL11.glPopMatrix();
         }
-
-        stack.setCount(1);
-
-        GL11.glPushMatrix();
-        EntityItem ent = new EntityItem(tileEntity.getWorld(), coordX, coordY, coordZ, stack);
-
-        ent.hoverStart = 0;
-
-        RenderHelper.enableStandardItemLighting();
-
-        GL11.glTranslatef((float) coordX + 0.5f, (float) coordY + 0.5f, (float) coordZ + 0.5f);
-        rotateElement(facing);
-        //GL11.glRotatef(180f, 0, 0, 0);
-        GL11.glTranslatef(-(size / 3), -0.1f, -0.55f);
-        GL11.glScalef(size / 24, size / 24, 0.001f);
-
-        //Minecraft.getMinecraft().getRenderManager().renderEntity(ent, 0, 0, 0,0,0, false);
-        this.renderItem.renderItemIntoGUI(stack, 0, 0);
-        GL11.glPopMatrix();
     }
 }

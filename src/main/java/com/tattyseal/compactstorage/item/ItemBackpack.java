@@ -40,7 +40,7 @@ public class ItemBackpack extends Item
         if(!world.isRemote && hand == EnumHand.MAIN_HAND)
         {
             player.openGui(CompactStorage.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
-            world.playSound(null, player.posX, player.posY + 1, player.posZ, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+            world.playSound(null, player.posX, player.posY + 1, player.posZ, SoundEvents.BLOCK_CLOTH_FALL, SoundCategory.BLOCKS, 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
         }
 
         return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, player.getHeldItem(hand));

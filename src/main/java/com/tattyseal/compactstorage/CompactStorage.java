@@ -1,14 +1,15 @@
 package com.tattyseal.compactstorage;
 
-import com.google.common.collect.Lists;
 import com.tattyseal.compactstorage.block.BlockBarrel;
 import com.tattyseal.compactstorage.block.BlockChest;
 import com.tattyseal.compactstorage.block.BlockChestBuilder;
 import com.tattyseal.compactstorage.block.BlockFluidBarrel;
-import com.tattyseal.compactstorage.command.CommandCompactStorage;
-import com.tattyseal.compactstorage.compat.ICompat;
+import com.tattyseal.compactstorage.client.render.TileEntityBarrelFluidRenderer;
+import com.tattyseal.compactstorage.client.render.TileEntityBarrelRenderer;
+import com.tattyseal.compactstorage.client.render.TileEntityChestRenderer;
 import com.tattyseal.compactstorage.creativetabs.CreativeTabCompactStorage;
 import com.tattyseal.compactstorage.event.CompactStorageEventHandler;
+import com.tattyseal.compactstorage.event.ConnectionHandler;
 import com.tattyseal.compactstorage.item.ItemBackpack;
 import com.tattyseal.compactstorage.item.ItemBlockChest;
 import com.tattyseal.compactstorage.network.handler.C01HandlerUpdateBuilder;
@@ -20,78 +21,150 @@ import com.tattyseal.compactstorage.tileentity.TileEntityBarrel;
 import com.tattyseal.compactstorage.tileentity.TileEntityBarrelFluid;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
+import com.tattyseal.compactstorage.util.LogHelper;
+import com.tattyseal.compactstorage.util.ModelUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.color.BlockColors;
+import net.minecraft.client.renderer.color.IBlockColor;
+import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
+import javax.annotation.Nullable;
+import java.awt.*;
 
 /**
  * Created by Toby on 06/11/2014.
  * Updated for 3.0 on the 16/02/2018
  */
-@Mod(modid = CompactStorage.ID, name = CompactStorage.NAME, version = CompactStorage.VERSION, guiFactory = "com.tattyseal.compactstorage.client.gui.factory.CompactStorageGuiFactory")
+@Mod(modid = CompactStorage.ID, name = "CompactStorage", version = "3.1", guiFactory = "com.tattyseal.compactstorage.client.gui.factory.CompactStorageGuiFactory")
+@Mod.EventBusSubscriber
 public class CompactStorage
 {
     @Mod.Instance(CompactStorage.ID)
     public static CompactStorage instance;
-    
-    public static List<ICompat> compat;
 
-    @SidedProxy(clientSide = CompactStorage.CLIENT_PROXY, serverSide = CompactStorage.SERVER_PROXY, modId = CompactStorage.ID)
+    @SidedProxy(clientSide = "com.tattyseal.compactstorage.proxy.ClientProxy", serverSide = "com.tattyseal.compactstorage.proxy.ServerProxy", modId = CompactStorage.ID)
     public static IProxy proxy;
 
     public static final CreativeTabs tabCS = new CreativeTabCompactStorage();
-
     public static final Logger logger = LogManager.getLogger("CompactStorage");
-
     public SimpleNetworkWrapper wrapper;
     
     public static final String ID = "compactstorage";
-    public static final String NAME = "CompactStorage";
-    public static final String VERSION = "3.0";
 
-    public static final String CLIENT_PROXY = "com.tattyseal.compactstorage.proxy.ClientProxy";
-    public static final String SERVER_PROXY = "com.tattyseal.compactstorage.proxy.ServerProxy";
-    
-    public static Block chest;
-    public static Block chestBuilder;
+    @GameRegistry.ObjectHolder(ID)
+    public static class ModBlocks
+    {
+        public static Block chest;
+        public static Block chestBuilder;
+        public static Block barrel;
+        public static Block barrel_fluid;
+    }
 
-    public static Block barrel;
-    public static ItemBlock itemBlockBarrel;
+    @GameRegistry.ObjectHolder(ID)
+    public static class ModItems
+    {
+        public static ItemBlock itemBlockBarrel;
+        public static ItemBlock itemBlockBarrel_fluid;
+        public static ItemBlockChest ibChest;
+        public static Item backpack;
+    }
 
-    public static Block barrel_fluid;
-    public static ItemBlock itemBlockBarrel_fluid;
+    @SubscribeEvent
+    public static void registerBlocks(RegistryEvent.Register<Block> e)
+    {
+        e.getRegistry().registerAll(
+                ModBlocks.chest = new BlockChest(),
+                ModBlocks.chestBuilder = new BlockChestBuilder(),
+                ModBlocks.barrel = new BlockBarrel(),
+                ModBlocks.barrel_fluid = new BlockFluidBarrel()
+        );
 
-    public static ItemBlockChest ibChest;
-    
-    public static Item backpack;
-    
+        GameRegistry.registerTileEntity(TileEntityChest.class, "tileChest");
+        GameRegistry.registerTileEntity(TileEntityChestBuilder.class, "tileChestBuilder");
+        GameRegistry.registerTileEntity(TileEntityBarrel.class, "tileBarrel");
+        GameRegistry.registerTileEntity(TileEntityBarrelFluid.class, "tileBarrel_fluid");
+    }
+
+    @SubscribeEvent
+    public static void registerItems(RegistryEvent.Register<Item> e)
+    {
+        ModItems.ibChest = new ItemBlockChest(ModBlocks.chest);
+        ModItems.ibChest.setRegistryName("compactChest");
+        e.getRegistry().register(ModItems.ibChest);
+
+        ItemBlock ibChestBuilder = new ItemBlock(ModBlocks.chestBuilder);
+        ibChestBuilder.setRegistryName("chestBuilder");
+        ibChestBuilder.setCreativeTab(tabCS);
+        e.getRegistry().register(ibChestBuilder);
+
+        ModItems.backpack = new ItemBackpack();
+        ModItems.backpack.setRegistryName("backpack");
+        e.getRegistry().register(ModItems.backpack);
+
+        ModItems.itemBlockBarrel = new ItemBlock(ModBlocks.barrel);
+        ModItems.itemBlockBarrel.setRegistryName(ModBlocks.barrel.getRegistryName());
+        e.getRegistry().register(ModItems.itemBlockBarrel);
+
+        ModItems.itemBlockBarrel_fluid = new ItemBlock(ModBlocks.barrel_fluid);
+        ModItems.itemBlockBarrel_fluid.setRegistryName(ModBlocks.barrel_fluid.getRegistryName());
+        e.getRegistry().register(ModItems.itemBlockBarrel_fluid);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public static void registerModels(ModelRegistryEvent e)
+    {
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChest.class, new TileEntityChestRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBarrel.class, new TileEntityBarrelRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBarrelFluid.class, new TileEntityBarrelFluidRenderer());
+
+        ModelUtil.registerChest();
+        ModelUtil.registerBlock(ModBlocks.chestBuilder, 0, "compactstorage:chestBuilder");
+
+        ModelUtil.registerItem(ModItems.itemBlockBarrel, 0, "compactstorage:barrel");
+        ModelUtil.registerItem(ModItems.itemBlockBarrel_fluid, 0, "compactstorage:barrel_fluid");
+
+        ModelUtil.registerBlock(ModBlocks.chest, 0, "compactstorage:compactchest");
+        ModelUtil.registerItem(ModItems.backpack, 0, "compactstorage:backpack");
+
+    }
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-    	compat = Lists.newArrayList();
-
         OreDictionary.registerOre("barsIron", Blocks.IRON_BARS);
         OreDictionary.registerOre("blockChest", Blocks.CHEST);
         OreDictionary.registerOre("itemClay", Items.CLAY_BALL);
@@ -103,81 +176,15 @@ public class CompactStorage
         wrapper.registerMessage(C01HandlerUpdateBuilder.class, C01PacketUpdateBuilder.class, 0, Side.SERVER);
         wrapper.registerMessage(C02HandlerCraftChest.class, C02PacketCraftChest.class, 1, Side.SERVER);
 
-        chest = new BlockChest();
-        chest.setRegistryName("compactChest");
-        ForgeRegistries.BLOCKS.register(chest);
-
-        ibChest = new ItemBlockChest(chest);
-        ibChest.setRegistryName("compactChest");
-      
-        ForgeRegistries.ITEMS.register(ibChest);
-
-        GameRegistry.registerTileEntity(TileEntityChest.class, "tileChest");
-        
-        chestBuilder = new BlockChestBuilder();
-        chestBuilder.setRegistryName("chestBuilder");
-        ForgeRegistries.BLOCKS.register(chestBuilder);
-        GameRegistry.registerTileEntity(TileEntityChestBuilder.class, "tileChestBuilder");
-
-        ItemBlock ibChestBuilder = new ItemBlock(chestBuilder);
-        ibChestBuilder.setRegistryName("chestBuilder");
-        ibChestBuilder.setCreativeTab(tabCS);
-
-        ForgeRegistries.ITEMS.register(ibChestBuilder);
-
-        backpack = new ItemBackpack();
-        backpack.setRegistryName("backpack");
-        ForgeRegistries.ITEMS.register(backpack);
-
-        barrel = new BlockBarrel();
-        ForgeRegistries.BLOCKS.register(barrel);
-
-        itemBlockBarrel = new ItemBlock(barrel);
-        itemBlockBarrel.setRegistryName(barrel.getRegistryName());
-        ForgeRegistries.ITEMS.register(itemBlockBarrel);
-
-        GameRegistry.registerTileEntity(TileEntityBarrel.class, "tileBarrel");
-
-        barrel_fluid = new BlockFluidBarrel();
-        ForgeRegistries.BLOCKS.register(barrel_fluid);
-
-        itemBlockBarrel_fluid = new ItemBlock(barrel_fluid);
-        itemBlockBarrel_fluid.setRegistryName(barrel_fluid.getRegistryName());
-        ForgeRegistries.ITEMS.register(itemBlockBarrel_fluid);
-
-        GameRegistry.registerTileEntity(TileEntityBarrelFluid.class, "tileBarrel_fluid");
-
         ConfigurationHandler.configFile = event.getSuggestedConfigurationFile();
+
+        MinecraftForge.EVENT_BUS.register(new ConnectionHandler());
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
-    	for(ICompat icompat : compat)
-    	{
-    		String modid = icompat.modid();
-    		
-    		logger.info("Found compatibility for " + modid + " attempting load!");
-    		
-    		if(Loader.isModLoaded(modid))
-    		{
-    			try
-    			{
-    				icompat.registerCompat();
-    			}
-    			catch(Exception e)
-    			{
-    				logger.error("Exception " + e.getClass().getName() + " while loading compatibility for " + modid + ".");
-    				continue;
-    			}
-    			
-        		logger.info("Loaded compatability for " + modid + ".");
-    		}
-    		else
-    		{
-    			logger.warn("Compatability for " + modid + " cannot be loaded as it depends on the mod being installed.");
-    		}
-    	}
+        proxy.registerRenderers();
     }
 
     @Mod.EventHandler
@@ -186,27 +193,57 @@ public class CompactStorage
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
         MinecraftForge.EVENT_BUS.register(new CompactStorageEventHandler());
 
-        proxy.registerRenderers();
-
-        addShapedRecipe(new ItemStack(chestBuilder, 1), "ILI", "ICI", "ILI", 'I', new ItemStack(Items.IRON_INGOT, 1), 'C', new ItemStack(Blocks.CHEST, 1), 'L', new ItemStack(Blocks.LEVER, 1));
-
-        /** Barrel Recipes **/
-
-        addShapedRecipe(new ItemStack(barrel, 1), "III", "GCG", "III", 'I', new ItemStack(Items.IRON_INGOT, 1), 'G', new ItemStack(Blocks.IRON_BLOCK, 1), 'C', new ItemStack(Blocks.CHEST, 1));
-        addShapedRecipe(new ItemStack(barrel_fluid, 1), "ICI", "GIG", "ICI", 'I', new ItemStack(Items.IRON_INGOT, 1), 'G', new ItemStack(Blocks.IRON_BLOCK, 1), 'C', new ItemStack(Blocks.GLASS_PANE, 1));
+        GameRegistry.addShapedRecipe(new ResourceLocation("compactstorage", "chest_builder"), null, new ItemStack(ModBlocks.chestBuilder, 1), "ILI", "ICI", "ILI", 'I', new ItemStack(Items.IRON_INGOT, 1), 'C', new ItemStack(Blocks.CHEST, 1), 'L', new ItemStack(Blocks.LEVER, 1));
+        GameRegistry.addShapedRecipe(new ResourceLocation("compactstorage", "barrel"), null, new ItemStack(ModBlocks.barrel, 1), "III", "GCG", "III", 'I', new ItemStack(Items.IRON_INGOT, 1), 'G', new ItemStack(Blocks.IRON_BLOCK, 1), 'C', new ItemStack(Blocks.CHEST, 1));
+        GameRegistry.addShapedRecipe(new ResourceLocation("compactstorage", "drum"), null, new ItemStack(ModBlocks.barrel_fluid, 1), "ICI", "GIG", "ICI", 'I', new ItemStack(Items.IRON_INGOT, 1), 'G', new ItemStack(Blocks.IRON_BLOCK, 1), 'C', new ItemStack(Blocks.GLASS_PANE, 1));
 
         ConfigurationHandler.init();
     }
 
-    //This is so I don't need to Json the recipes...
-    public static void addShapedRecipe(ItemStack output, Object... params)
+    public static int getColorFromHue(int hue)
     {
-        GameRegistry.addShapedRecipe(output.getItem().getRegistryName(), null, output, params);
+        Color color = (hue == -1 ? Color.white : Color.getHSBColor(hue / 360f, 0.5f, 0.5f).brighter());
+        return color.getRGB();
     }
-    
-    @Mod.EventHandler
-    public void serverStarting(FMLServerStartingEvent event)
+
+    public static int getColorFromNBT(ItemStack stack)
     {
-        event.registerServerCommand(new CommandCompactStorage());
+        NBTTagCompound tag = stack.getTagCompound();
+
+        if(stack.hasTagCompound() && stack.getTagCompound().hasKey("hue"))
+        {
+            int hue = stack.getTagCompound().getInteger("hue");
+            return getColorFromHue(hue);
+        }
+
+        if(stack.hasTagCompound() && !stack.getTagCompound().hasKey("hue") && stack.getTagCompound().hasKey("color"))
+        {
+            String color = "";
+
+            if(tag.getTag("color") instanceof NBTTagInt)
+            {
+                color = String.format("#%06X", (0xFFFFFF & tag.getInteger("color")));
+            }
+            else
+            {
+                color = tag.getString("color");
+
+                if(color.startsWith("0x"))
+                {
+                    color = "#" + color.substring(2);
+                }
+            }
+
+            if(!color.isEmpty())
+            {
+                Color c = Color.decode(color);
+                float[] hsbVals = new float[3];
+
+                hsbVals = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsbVals);
+                tag.setInteger("hue", (int) (hsbVals[0] * 360));
+            }
+        }
+
+        return 0xFFFFFF;
     }
 }

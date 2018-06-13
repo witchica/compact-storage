@@ -25,15 +25,16 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import java.awt.Color;
-import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -41,15 +42,24 @@ import java.util.Random;
  */
 public class BlockChest extends Block implements ITileEntityProvider
 {
+    protected static final AxisAlignedBB NOT_CONNECTED_AABB = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.875D, 0.9375D);
+
     public BlockChest()
     {
         super(Material.WOOD);
         setUnlocalizedName("compactchest");
+        setRegistryName("compactChest");
         setCreativeTab(CompactStorage.tabCS);
 
         setHardness(2F);
         setResistance(2F);
         setHarvestLevel("axe", 1);
+    }
+
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
+    {
+        return NOT_CONNECTED_AABB;
     }
 
     @Override
@@ -209,7 +219,7 @@ public class BlockChest extends Block implements ITileEntityProvider
 
         if(chest != null)
         {
-            ItemStack stack = new ItemStack(CompactStorage.chest, 1);
+            ItemStack stack = new ItemStack(CompactStorage.ModBlocks.chest, 1);
             Random rand = new Random();
 
             stack.setTagCompound(new NBTTagCompound());
@@ -259,7 +269,7 @@ public class BlockChest extends Block implements ITileEntityProvider
     @Nonnull
     public ItemStack getPickBlock(@Nonnull IBlockState state, RayTraceResult target, @Nonnull World world, @Nonnull BlockPos pos, EntityPlayer player)
     {
-        ItemStack stack = new ItemStack(CompactStorage.chest, 1);
+        ItemStack stack = new ItemStack(CompactStorage.ModBlocks.chest, 1);
         TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
 
         stack.setTagCompound(new NBTTagCompound());

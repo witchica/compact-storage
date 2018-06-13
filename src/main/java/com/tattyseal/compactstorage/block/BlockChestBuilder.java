@@ -24,7 +24,8 @@ public class BlockChestBuilder extends Block implements ITileEntityProvider
 	public BlockChestBuilder()
 	{
 		super(Material.IRON);
-        setUnlocalizedName("chestBuilder");
+		setUnlocalizedName("chestBuilder");
+		setRegistryName("chestBuilder");
         setCreativeTab(CompactStorage.tabCS);
 
 		setHardness(2F);

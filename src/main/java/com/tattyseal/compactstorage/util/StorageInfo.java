@@ -34,8 +34,8 @@ public class StorageInfo
 
 	public enum Type
 	{
-		CHEST("Chest", new ItemStack(CompactStorage.chest, 1)),
-		BACKPACK("Backpack", new ItemStack(CompactStorage.backpack, 1));
+		CHEST("Chest", new ItemStack(CompactStorage.ModBlocks.chest, 1)),
+		BACKPACK("Backpack", new ItemStack(CompactStorage.ModItems.backpack, 1));
 
 
 		public String name;

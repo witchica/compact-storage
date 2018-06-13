@@ -151,13 +151,13 @@ public class InventoryBackpack implements IChest
     @Nonnull
     public String getName()
     {
-        return this.hasCustomName() ? this.customName : "backpack.inv";
+        return "backpack.inv";
     }
 
     @Override
     public boolean hasCustomName()
     {
-        return this.customName != null && !this.customName.isEmpty();
+        return true;
     }
 
     public void setCustomName(String customName) {
@@ -274,10 +274,6 @@ public class InventoryBackpack implements IChest
                 tag.removeTag("color");
             }
         }
-
-        if (tag.hasKey("Name", 8)) {
-            this.customName = tag.getString("Name");
-        }
     }
 
     private void writeToNBT(NBTTagCompound tag)
@@ -296,10 +292,6 @@ public class InventoryBackpack implements IChest
 
         tag.setTag("Items", nbtTagList);
         tag.setInteger("hue", getHue());
-
-        if (this.hasCustomName()) {
-            tag.setString("Name", this.customName);
-        }
     }
 
     @Override

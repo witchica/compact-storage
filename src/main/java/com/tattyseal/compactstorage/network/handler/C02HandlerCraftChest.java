@@ -77,7 +77,7 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 
 				if(hasRequiredMaterials && builder.getStackInSlot(4).isEmpty())
 				{
-					ItemStack stack = new ItemStack(message.info.getType().equals(StorageInfo.Type.BACKPACK) ? CompactStorage.backpack : ItemBlock.getItemFromBlock(CompactStorage.chest), 1);
+					ItemStack stack = new ItemStack(message.info.getType().equals(StorageInfo.Type.BACKPACK) ? CompactStorage.ModItems.backpack : ItemBlock.getItemFromBlock(CompactStorage.ModBlocks.chest), 1);
 
 					NBTTagCompound tag = new NBTTagCompound();
 					tag.setIntArray("size", new int[]{message.info.getSizeX(), message.info.getSizeY()});

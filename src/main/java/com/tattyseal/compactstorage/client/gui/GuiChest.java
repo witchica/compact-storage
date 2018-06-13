@@ -5,6 +5,7 @@ import com.tattyseal.compactstorage.inventory.InventoryBackpack;
 import com.tattyseal.compactstorage.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -70,7 +71,7 @@ public class GuiChest extends GuiContainer
     	super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
     	if (chest.hasCustomName()) {
-    	    this.fontRenderer.drawString(chest.getName(), 8, 6, 4210752);
+    	    this.fontRenderer.drawString(I18n.format(chest.getName()) + " (" + invX + "x" + invY + ")", 8, 6, 4210752);
         } else {
             this.fontRenderer.drawString("Chest (" + invX + "x" + invY + ")", 8, 6, 4210752);
         }
