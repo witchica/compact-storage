@@ -5,6 +5,7 @@ import com.tattyseal.compactstorage.inventory.InventoryBackpack;
 import com.tattyseal.compactstorage.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,6 +33,8 @@ public class GuiChest extends GuiContainer
     private KeyBinding[] HOTBAR;
     private int backpackSlot;
 
+    private float scaling;
+    public float getScaling() { return scaling; }
     
     public GuiChest(Container container, IChest chest, World world, EntityPlayer player, BlockPos pos)
     {
@@ -112,5 +115,36 @@ public class GuiChest extends GuiContainer
     public void onGuiClosed()
     {
         super.onGuiClosed();
+    }
+
+    @Override
+    public void setWorldAndResolution(Minecraft mc, int width, int height) {
+        this.mc = mc;
+        this.itemRender = mc.getRenderItem();
+        this.fontRenderer = mc.fontRenderer;
+        
+        ScaledResolution resolution = new ScaledResolution(mc);
+        
+        int currentScale = resolution.getScaleFactor();
+        // Determine the maximum scale to have the whole Gui visible.
+        int maxScale = this.mc.displayHeight / this.ySize;
+        
+        if(maxScale < currentScale)
+            this.scaling = (float)maxScale / (float)currentScale;
+        else this.scaling = 1f;
+        
+        this.width = (int)(width / scaling);
+        this.height = (int)(height / scaling);
+        
+        Minecraft.getMinecraft().gameSettings.guiScale = (int)(currentScale * scaling);
+        
+        if (!net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Pre(this, this.buttonList)))
+        {
+            this.buttonList.clear();
+            this.initGui();
+        }
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Post(this, this.buttonList));
+        
+        Minecraft.getMinecraft().gameSettings.guiScale = (int)currentScale;
     }
 }
