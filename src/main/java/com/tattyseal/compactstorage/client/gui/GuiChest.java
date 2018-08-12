@@ -136,7 +136,10 @@ public class GuiChest extends GuiContainer
         this.width = (int)(width / scaling);
         this.height = (int)(height / scaling);
         
-        Minecraft.getMinecraft().gameSettings.guiScale = (int)(currentScale * scaling);
+        // Could be 0 (auto), that is, not equal to currentScale.
+        int settingsScale = mc.gameSettings.guiScale;
+        
+        mc.gameSettings.guiScale = (int)(currentScale * scaling);
         
         if (!net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Pre(this, this.buttonList)))
         {
@@ -145,6 +148,6 @@ public class GuiChest extends GuiContainer
         }
         net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Post(this, this.buttonList));
         
-        Minecraft.getMinecraft().gameSettings.guiScale = (int)currentScale;
+        mc.gameSettings.guiScale = settingsScale;
     }
 }
