@@ -1,0 +1,14 @@
+tile.compactchest.name=Компактный сундук
+tile.chestBuilder.name=Верстак компактных сундуков
+
+tile.barrel.name=Бочка для предметов
+tile.barrel_fluid.name=Бак
+
+item.backpack.name=Компактный рюкзак
+
+itemGroup.compactStorage=Компактное хранилище
+
+text.columns=Колонки
+text.rows=Ряды
+
+backpack.inv=Компактный рюкзак
