@@ -261,6 +261,12 @@ public class BlockChest extends Block implements ITileEntityProvider
     }
 
     @Override
+    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items)
+    {
+
+    }
+
+    @Override
     @Nonnull
     public ItemStack getPickBlock(@Nonnull IBlockState state, RayTraceResult target, @Nonnull World world, @Nonnull BlockPos pos, EntityPlayer player)
     {
