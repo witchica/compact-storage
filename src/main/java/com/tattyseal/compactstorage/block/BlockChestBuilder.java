@@ -8,7 +8,6 @@ import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,7 +20,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockChestBuilder extends Block implements ITileEntityProvider
+public class BlockChestBuilder extends Block
 {
 	public BlockChestBuilder()
 	{
@@ -66,7 +65,12 @@ public class BlockChestBuilder extends Block implements ITileEntityProvider
 	}
 	
 	@Override
-	public TileEntity createNewTileEntity(@Nonnull World world, int dim)
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
+	}
+	
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state)
 	{
 		return new TileEntityChestBuilder();
 	}

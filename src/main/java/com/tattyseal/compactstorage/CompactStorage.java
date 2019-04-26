@@ -32,20 +32,14 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -59,8 +53,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.oredict.OreDictionary;
 
 /**
@@ -111,10 +103,10 @@ public class CompactStorage
                 ModBlocks.barrel_fluid = new BlockFluidBarrel()
         );
 
-        GameRegistry.registerTileEntity(TileEntityChest.class, "tileChest");
-        GameRegistry.registerTileEntity(TileEntityChestBuilder.class, "tileChestBuilder");
-        GameRegistry.registerTileEntity(TileEntityBarrel.class, "tileBarrel");
-        GameRegistry.registerTileEntity(TileEntityBarrelFluid.class, "tileBarrel_fluid");
+        GameRegistry.registerTileEntity(TileEntityChest.class, new ResourceLocation("tilechest"));
+        GameRegistry.registerTileEntity(TileEntityChestBuilder.class, new ResourceLocation("tilechestbuilder"));
+        GameRegistry.registerTileEntity(TileEntityBarrel.class, new ResourceLocation("tilebarrel"));
+        GameRegistry.registerTileEntity(TileEntityBarrelFluid.class, new ResourceLocation("tileBarrel_fluid"));
     }
 
     @SubscribeEvent
@@ -200,14 +192,6 @@ public class CompactStorage
         ConfigurationHandler.init();
     }
 
-    @SubscribeEvent
-    public void attachCapabilities(AttachCapabilitiesEvent<TileEntity> e) {
-        TileEntity te = e.getObject();
-        if (te instanceof TileEntityChest) {
-            e.addCapability(new ResourceLocation(ID, "invwrapper"), new InvWrappingCap((IInventory) te));
-        }
-    }
-
     public static int getColorFromHue(int hue)
     {
         Color color = (hue == -1 ? Color.white : Color.getHSBColor(hue / 360f, 0.5f, 0.5f).brighter());
@@ -253,29 +237,5 @@ public class CompactStorage
         }
 
         return 0xFFFFFF;
-    }
-
-    private static class InvWrappingCap implements ICapabilityProvider {
-
-        private InvWrapper wrapper;
-
-        private InvWrappingCap(IInventory inventory) {
-            wrapper = new InvWrapper(inventory);
-        }
-
-        @Override
-        public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-            return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
-        }
-
-        @Override
-        public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-            if (this.hasCapability(capability, facing)) {
-                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(wrapper);
-            } else {
-                return null;
-            }
-        }
-
     }
 }

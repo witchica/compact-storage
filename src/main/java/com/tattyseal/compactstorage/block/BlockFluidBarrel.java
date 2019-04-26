@@ -1,7 +1,5 @@
 package com.tattyseal.compactstorage.block;
 
-import javax.annotation.Nullable;
-
 import com.tattyseal.compactstorage.tileentity.TileEntityBarrelFluid;
 
 import net.minecraft.block.state.IBlockState;
@@ -24,7 +22,6 @@ public class BlockFluidBarrel extends BlockBarrel
         return BlockRenderLayer.CUTOUT_MIPPED;
     }
 
-    @Nullable
     @Override
     public TileEntity createTileEntity(World world, IBlockState state)
     {

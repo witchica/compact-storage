@@ -11,7 +11,6 @@ import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 import com.tattyseal.compactstorage.util.EntityUtil;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
@@ -42,7 +41,7 @@ import net.minecraft.world.World;
 /**
  * Created by Toby on 06/11/2014.
  */
-public class BlockChest extends Block implements ITileEntityProvider
+public class BlockChest extends Block
 {
     protected static final AxisAlignedBB NOT_CONNECTED_AABB = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.875D, 0.9375D);
 
@@ -201,7 +200,12 @@ public class BlockChest extends Block implements ITileEntityProvider
     }
 
     @Override
-	public TileEntity createNewTileEntity(@Nonnull World world, int dim)
+    public boolean hasTileEntity(IBlockState state) {
+    	return true;
+    }
+    
+    @Override
+	public TileEntity createTileEntity(World world, IBlockState state)
     {
         return new TileEntityChest();
     }
