@@ -1,16 +1,17 @@
 package com.tattyseal.compactstorage.block;
 
+import javax.annotation.Nullable;
+
 import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.tileentity.IBarrel;
 import com.tattyseal.compactstorage.tileentity.TileEntityBarrel;
 import com.tattyseal.compactstorage.util.EntityUtil;
-import com.tattyseal.compactstorage.util.LogHelper;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -22,8 +23,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public class BlockBarrel extends Block implements ITileEntityProvider
 {
@@ -41,7 +40,7 @@ public class BlockBarrel extends Block implements ITileEntityProvider
     public void init()
     {
         setRegistryName("barrel");
-        setUnlocalizedName("barrel");
+        setTranslationKey("barrel");
     }
 
     @Override

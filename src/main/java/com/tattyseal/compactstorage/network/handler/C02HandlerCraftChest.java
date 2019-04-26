@@ -1,10 +1,13 @@
 package com.tattyseal.compactstorage.network.handler;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.network.packet.C02PacketCraftChest;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
-import com.tattyseal.compactstorage.util.LogHelper;
 import com.tattyseal.compactstorage.util.StorageInfo;
+
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -17,9 +20,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest, IMessage>
 {

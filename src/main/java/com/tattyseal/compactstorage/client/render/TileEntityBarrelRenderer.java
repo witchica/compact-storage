@@ -1,6 +1,5 @@
 package com.tattyseal.compactstorage.client.render;
 
-import net.minecraft.client.renderer.RenderHelper;
 import org.lwjgl.opengl.GL11;
 
 import com.tattyseal.compactstorage.block.BlockBarrel;
@@ -8,22 +7,16 @@ import com.tattyseal.compactstorage.tileentity.TileEntityBarrel;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 
 public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEntityBarrel>
 {
     public TextureManager textureManager;
-
-    public TileEntityBarrelRenderer()
-    {
-        super();
-    }
 
     @Override
     public void render(TileEntityBarrel te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
@@ -96,7 +89,6 @@ public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEnti
 	public void renderItem(TileEntityBarrel tileEntity, double coordX, double coordY, double coordZ, float scale, float size)
     {
         EnumFacing facing = (EnumFacing) tileEntity.getWorld().getBlockState(tileEntity.getPos()).getProperties().get(BlockBarrel.FACING);
-        BlockPos pos = tileEntity.getPos();
         ItemStack stack = tileEntity.item.copy();
 
         if(stack != null && !stack.isEmpty())

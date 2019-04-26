@@ -1,7 +1,12 @@
 package com.tattyseal.compactstorage.block;
 
+import java.util.Random;
+
+import javax.annotation.Nonnull;
+
 import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -16,15 +21,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-import java.util.Random;
-
 public class BlockChestBuilder extends Block implements ITileEntityProvider
 {
 	public BlockChestBuilder()
 	{
 		super(Material.IRON);
-		setUnlocalizedName("chestBuilder");
+		setTranslationKey("chestBuilder");
 		setRegistryName("chestBuilder");
         setCreativeTab(CompactStorage.tabCS);
 

@@ -1,9 +1,12 @@
 package com.tattyseal.compactstorage.inventory;
 
+import javax.annotation.Nonnull;
+
 import com.tattyseal.compactstorage.inventory.slot.SlotChestBuilder;
 import com.tattyseal.compactstorage.inventory.slot.SlotUnplaceable;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
 import com.tattyseal.compactstorage.util.StorageInfo;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
@@ -13,8 +16,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nonnull;
 
 /**
  * Created by Toby on 11/11/2014.
@@ -31,7 +32,6 @@ public class ContainerChestBuilder extends Container
      * This is carried over from the GUI for slot placement issues
      */
     private int xSize;
-    private int ySize;
     
     public ContainerChestBuilder(World world, EntityPlayer player, BlockPos pos)
     {
@@ -43,7 +43,6 @@ public class ContainerChestBuilder extends Container
         this.chest = ((TileEntityChestBuilder) world.getTileEntity(pos));
         
         this.xSize = 7 + 162 + 7;
-        this.ySize = 7 + 108 + 13 + 54 + 4 + 18 + 7;
         
         setupSlots();
     }

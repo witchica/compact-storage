@@ -1,6 +1,11 @@
 package com.tattyseal.compactstorage.tileentity;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import com.tattyseal.compactstorage.util.StorageInfo;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -9,16 +14,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
 public class TileEntityChestBuilder extends TileEntity implements IInventory, ITickable
 {
@@ -242,7 +239,7 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	@Override
 	public boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
 		return this.world.getTileEntity(this.pos) == this
-				&& player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
+				&& player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D;
 	}
 
 	@Override

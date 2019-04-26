@@ -1,7 +1,13 @@
 package com.tattyseal.compactstorage.inventory;
 
+import java.awt.Color;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.tattyseal.compactstorage.api.IChest;
 import com.tattyseal.compactstorage.util.StorageInfo;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -9,10 +15,6 @@ import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.awt.Color;
 
 /**
  * Created by Toby on 11/02/2015.
@@ -25,8 +27,6 @@ public class InventoryBackpack implements IChest
     public ItemStack[] items;
 
     public StorageInfo info;
-
-    private String customName;
 
     public InventoryBackpack(ItemStack stack)
     {
@@ -53,10 +53,6 @@ public class InventoryBackpack implements IChest
         }
 
         readFromNBT(this.stack.getTagCompound());
-
-        if (stack.hasDisplayName()) {
-            setCustomName(stack.getDisplayName());
-        }
     }
 
     @Override
@@ -158,10 +154,6 @@ public class InventoryBackpack implements IChest
     public boolean hasCustomName()
     {
         return true;
-    }
-
-    public void setCustomName(String customName) {
-        this.customName = customName;
     }
 
     @Override

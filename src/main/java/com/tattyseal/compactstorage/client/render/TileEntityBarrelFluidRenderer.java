@@ -1,20 +1,18 @@
 package com.tattyseal.compactstorage.client.render;
 
+import org.lwjgl.opengl.GL11;
+
 import com.tattyseal.compactstorage.tileentity.TileEntityBarrelFluid;
-import com.tattyseal.compactstorage.util.LogHelper;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexBuffer;
-import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
-import org.lwjgl.opengl.GL11;
 
 public class TileEntityBarrelFluidRenderer extends TileEntitySpecialRenderer<TileEntityBarrelFluid>
 {
@@ -51,13 +49,13 @@ public class TileEntityBarrelFluidRenderer extends TileEntitySpecialRenderer<Til
             float baseHeight = increments;
             float height = ((increments * 14f) / te.tank.getCapacity()) * te.tank.getFluidAmount() + baseHeight;
 
-            double minU = (double)tex.getInterpolatedU(3D);
-            double maxU = (double)tex.getInterpolatedU(13D);
-            double minV = (double)tex.getInterpolatedV(3D);
-            double maxV = (double)tex.getInterpolatedV(13D);
+            double minU = tex.getInterpolatedU(3D);
+            double maxU = tex.getInterpolatedU(13D);
+            double minV = tex.getInterpolatedV(3D);
+            double maxV = tex.getInterpolatedV(13D);
 
-            double minV_side = (double)tex.getInterpolatedV(0D);
-            double maxV_side = (double)tex.getInterpolatedV((te.tank.getFluidAmount() - 0) * (16 - 0) / (te.tank.getCapacity() - 0) + 0);
+            double minV_side = tex.getInterpolatedV(0D);
+            double maxV_side = tex.getInterpolatedV((te.tank.getFluidAmount() - 0) * (16 - 0) / (te.tank.getCapacity() - 0) + 0);
 
             builder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
             builder.pos(maxXZ, height, maxXZ).tex(maxU, maxV).endVertex();

@@ -1,6 +1,12 @@
 package com.tattyseal.compactstorage.item;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.tattyseal.compactstorage.CompactStorage;
+
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -14,10 +20,6 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
-
 /**
  * Created by Toby on 11/02/2015.
  */
@@ -26,7 +28,7 @@ public class ItemBackpack extends Item
     public ItemBackpack()
     {
         super();
-        setUnlocalizedName("backpack");
+        setTranslationKey("backpack");
         setCreativeTab(CompactStorage.tabCS);
         setMaxStackSize(1);
 

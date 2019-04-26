@@ -1,16 +1,20 @@
 package com.tattyseal.compactstorage.block;
 
+import java.awt.Color;
+import java.util.Random;
+
+import javax.annotation.Nonnull;
+
 import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.exception.InvalidSizeException;
-import com.tattyseal.compactstorage.item.ItemBlockChest;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 import com.tattyseal.compactstorage.util.EntityUtil;
-import com.tattyseal.compactstorage.util.LogHelper;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.block.state.BlockFaceShape;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -35,10 +39,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
-import java.awt.Color;
-import java.util.Random;
-
 /**
  * Created by Toby on 06/11/2014.
  */
@@ -49,7 +49,7 @@ public class BlockChest extends Block implements ITileEntityProvider
     public BlockChest()
     {
         super(Material.WOOD);
-        setUnlocalizedName("compactchest");
+        setTranslationKey("compactchest");
         setRegistryName("compactChest");
         setCreativeTab(CompactStorage.tabCS);
 
@@ -200,7 +200,8 @@ public class BlockChest extends Block implements ITileEntityProvider
         return !player.isSneaking();
     }
 
-    public TileEntity createNewTileEntity(@Nonnull World world, int dim)
+    @Override
+	public TileEntity createNewTileEntity(@Nonnull World world, int dim)
     {
         return new TileEntityChest();
     }
@@ -208,7 +209,8 @@ public class BlockChest extends Block implements ITileEntityProvider
     /**
      * The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
      */
-    public EnumBlockRenderType getRenderType(IBlockState state)
+    @Override
+	public EnumBlockRenderType getRenderType(IBlockState state)
     {
         return EnumBlockRenderType.INVISIBLE;
     }

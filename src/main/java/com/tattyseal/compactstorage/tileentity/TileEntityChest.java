@@ -165,7 +165,8 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     }
 
 
-    public boolean receiveClientEvent(int id, int type)
+    @Override
+	public boolean receiveClientEvent(int id, int type)
     {
         if (id == 1)
         {
@@ -239,7 +240,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     @Override
     public boolean isUsableByPlayer(@Nonnull EntityPlayer player) {
         return this.world.getTileEntity(this.pos) == this
-                && player.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
+                && player.getDistanceSq(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D) <= 64.0D;
     }
 
     /* CUSTOM START */
@@ -248,7 +249,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
 
-        if (tag.hasKey("facing")) this.direction = EnumFacing.getFront(tag.getInteger("facing"));
+        if (tag.hasKey("facing")) this.direction = EnumFacing.byIndex(tag.getInteger("facing"));
 
         this.retaining = tag.hasKey("retaining") && tag.getBoolean("retaining");
 
@@ -405,7 +406,7 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
         {
             this.numPlayersUsing = 0;
 
-            for (EntityPlayer entityplayer : this.world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB((double)((float)i - 5.0F), (double)((float)j - 5.0F), (double)((float)k - 5.0F), (double)((float)(i + 1) + 5.0F), (double)((float)(j + 1) + 5.0F), (double)((float)(k + 1) + 5.0F))))
+            for (EntityPlayer entityplayer : this.world.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(i - 5.0F, j - 5.0F, k - 5.0F, i + 1 + 5.0F, j + 1 + 5.0F, k + 1 + 5.0F)))
             {
                 if (entityplayer.openContainer instanceof ContainerChest)
                 {
@@ -423,10 +424,10 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
 
         if (this.numPlayersUsing > 0 && this.lidAngle == 0.0F)
         {
-            double d1 = (double)i + 0.5D;
-            double d2 = (double)k + 0.5D;
+            double d1 = i + 0.5D;
+            double d2 = k + 0.5D;
 
-            this.world.playSound(null, d1, (double)j + 0.5D, d2, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+            this.world.playSound(null, d1, j + 0.5D, d2, SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
         }
 
         if (this.numPlayersUsing == 0 && this.lidAngle > 0.0F || this.numPlayersUsing > 0 && this.lidAngle < 1.0F)
@@ -449,10 +450,10 @@ public class TileEntityChest extends TileEntity implements IInventory, IChest, I
 
             if (this.lidAngle < 0.5F && f2 >= 0.5F)
             {
-                double d3 = (double)i + 0.5D;
-                double d0 = (double)k + 0.5D;
+                double d3 = i + 0.5D;
+                double d0 = k + 0.5D;
 
-                this.world.playSound(null, d3, (double)j + 0.5D, d0, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+                this.world.playSound(null, d3, j + 0.5D, d0, SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
             }
 
             if (this.lidAngle < 0.0F)
