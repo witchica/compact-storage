@@ -2,6 +2,7 @@ package com.tattyseal.compactstorage.block;
 
 import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.exception.InvalidSizeException;
+import com.tattyseal.compactstorage.item.ItemBlockChest;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 import com.tattyseal.compactstorage.util.EntityUtil;
 import com.tattyseal.compactstorage.util.LogHelper;
@@ -264,6 +265,7 @@ public class BlockChest extends Block implements ITileEntityProvider
     public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items)
     {
         items.add(new ItemStack(this, 1, 4));
+        items.removeIf(s -> s.getItem() instanceof ItemBlockChest && !s.hasTagCompound());
     }
 
     @Override
