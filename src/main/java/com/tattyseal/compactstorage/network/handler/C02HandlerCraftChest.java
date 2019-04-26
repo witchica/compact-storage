@@ -39,8 +39,6 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 					return;
 				}
 
-				LogHelper.dump(builder.info.getType().name);
-
 				ItemStack[] itemsArray = new ItemStack[4];
 
 				System.arraycopy(builder.items, 0, itemsArray, 0, 4);
@@ -73,8 +71,6 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 					}
 				}
 
-				LogHelper.dump("HAS REQ MATS: " + hasRequiredMaterials);
-
 				if(hasRequiredMaterials && builder.getStackInSlot(4).isEmpty())
 				{
 					ItemStack stack = new ItemStack(message.info.getType().equals(StorageInfo.Type.BACKPACK) ? CompactStorage.ModItems.backpack : ItemBlock.getItemFromBlock(CompactStorage.ModBlocks.chest), 1);
@@ -86,13 +82,9 @@ public class C02HandlerCraftChest implements IMessageHandler<C02PacketCraftChest
 
 					builder.setInventorySlotContents(4, stack);
 
-					LogHelper.dump("SPAWNED ITEM ENTITY");
-
 					for(int x = 0; x < requiredItems.size(); x++)
 					{
 						builder.decrStackSize(x, requiredItems.get(x).getCount());
-
-						LogHelper.dump("DECREASED ITEMS IN INVENTORY");
 					}
 
 					world.playSound(null, builder.getPos(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.AMBIENT, 1, 1);

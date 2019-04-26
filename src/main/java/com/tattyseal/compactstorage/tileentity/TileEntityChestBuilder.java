@@ -9,10 +9,16 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class TileEntityChestBuilder extends TileEntity implements IInventory, ITickable
 {
@@ -250,7 +256,8 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	{
 		if(info != null)
 		{
-			return stack.getItem().equals(info.getMaterialCost().get(slot).getItem());
+			List<ItemStack> cost = info.getMaterialCost();
+			return cost.size() > slot && stack.getItem() == cost.get(slot).getItem();
 		}
 
 		return false;
@@ -274,40 +281,5 @@ public class TileEntityChestBuilder extends TileEntity implements IInventory, IT
 	@Override
 	public void clear() {
 
-	}
-
-    /* COFH CORE START */
-
-    public boolean canPlayerAccess(String name)
-	{
-		switch(mode)
-		{
-			case 0: return true;
-			case 1: return name.equals(player);
-			case 2: return name.equals(player); //SocialRegistry.playerHasAccess(name, player);
-			default: return false;
-		}
-	}
-
-    public int getAccess()
-	{
-		return mode;
-	}
-
-    public String getOwnerName()
-	{
-		return player;
-	}
-
-    public boolean setAccess(int mode)
-	{
-    	this.mode = mode;
-		return true;
-	}
-
-    public boolean setOwnerName(String name)
-	{
-    	this.player = name;
-		return true;
 	}
 }

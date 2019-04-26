@@ -33,16 +33,22 @@ import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -57,6 +63,8 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -179,6 +187,7 @@ public class CompactStorage
         ConfigurationHandler.configFile = event.getSuggestedConfigurationFile();
 
         MinecraftForge.EVENT_BUS.register(new ConnectionHandler());
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Mod.EventHandler
@@ -198,6 +207,14 @@ public class CompactStorage
         GameRegistry.addShapedRecipe(new ResourceLocation("compactstorage", "drum"), null, new ItemStack(ModBlocks.barrel_fluid, 1), "ICI", "GIG", "ICI", 'I', new ItemStack(Items.IRON_INGOT, 1), 'G', new ItemStack(Blocks.IRON_BLOCK, 1), 'C', new ItemStack(Blocks.GLASS_PANE, 1));
 
         ConfigurationHandler.init();
+    }
+
+    @SubscribeEvent
+    public void attachCapabilities(AttachCapabilitiesEvent<TileEntity> e) {
+        TileEntity te = e.getObject();
+        if (te instanceof TileEntityChest) {
+            e.addCapability(new ResourceLocation(ID, "invwrapper"), new InvWrappingCap((IInventory) te));
+        }
     }
 
     public static int getColorFromHue(int hue)
@@ -245,5 +262,29 @@ public class CompactStorage
         }
 
         return 0xFFFFFF;
+    }
+
+    private static class InvWrappingCap implements ICapabilityProvider {
+
+        private InvWrapper wrapper;
+
+        private InvWrappingCap(IInventory inventory) {
+            wrapper = new InvWrapper(inventory);
+        }
+
+        @Override
+        public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+            return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
+        }
+
+        @Override
+        public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+            if (this.hasCapability(capability, facing)) {
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(wrapper);
+            } else {
+                return null;
+            }
+        }
+
     }
 }

@@ -216,7 +216,6 @@ public class BlockChest extends Block implements ITileEntityProvider
     @Override
     public void breakBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state)
     {
-        LogHelper.dump("breakBlock()");
         TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
 
         if(chest != null)
@@ -259,13 +258,6 @@ public class BlockChest extends Block implements ITileEntityProvider
         }
 
         super.breakBlock(world, pos, state);
-    }
-
-    @Override
-    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items)
-    {
-        items.add(new ItemStack(this, 1, 4));
-        items.removeIf(s -> s.getItem() instanceof ItemBlockChest && !s.hasTagCompound());
     }
 
     @Override
