@@ -16,64 +16,55 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 /**
  * Created by Toby on 09/11/2014.
  */
-public class GuiHandler implements IGuiHandler
-{
-    private static final int GUI_CHEST = 0;
-    private static final int GUI_CHEST_BUILDER = 1;
+public class GuiHandler implements IGuiHandler {
+	private static final int GUI_CHEST = 0;
+	private static final int GUI_CHEST_BUILDER = 1;
 
-    @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
-    {
-        BlockPos pos = new BlockPos(x, y, z);
+	@Override
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		BlockPos pos = new BlockPos(x, y, z);
 
-        switch (ID)
-        {
-            case GUI_CHEST:
-            {
-                // chest or backpack
-                IChest chest;
+		switch (ID) {
+		case GUI_CHEST: {
+			// chest or backpack
+			IChest chest;
 
-                if(player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(CompactStorage.ModItems.backpack))
-                {
-                    chest = new InventoryBackpack(player.getHeldItem(EnumHand.MAIN_HAND));
-                }
-                else
-                {
-                    chest = (IChest) world.getTileEntity(pos);
-                }
+			if (player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(CompactStorage.ModItems.backpack)) {
+				chest = new InventoryBackpack(player.getHeldItem(EnumHand.MAIN_HAND));
+			} else {
+				chest = (IChest) world.getTileEntity(pos);
+			}
 
-                return new ContainerChest(world, chest, player, pos);
-            }
-            case GUI_CHEST_BUILDER: return new ContainerChestBuilder(world, player, pos);
-            default: return null;
-        }
-    }
+			return new ContainerChest(world, chest, player, pos);
+		}
+		case GUI_CHEST_BUILDER:
+			return new ContainerChestBuilder(world, player, pos);
+		default:
+			return null;
+		}
+	}
 
-    @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
-    {
-        BlockPos pos = new BlockPos(x, y, z);
+	@Override
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+		BlockPos pos = new BlockPos(x, y, z);
 
-        switch (ID)
-        {
-            case GUI_CHEST:
-            {
-                 // chest or backpack
-                IChest chest;
+		switch (ID) {
+		case GUI_CHEST: {
+			// chest or backpack
+			IChest chest;
 
-                if(player.getHeldItem(EnumHand.MAIN_HAND).getItem() == CompactStorage.ModItems.backpack)
-                {
-                    chest = new InventoryBackpack(player.getHeldItem(EnumHand.MAIN_HAND));
-                }
-                else
-                {
-                    chest = (IChest) world.getTileEntity(pos);
-                }
+			if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == CompactStorage.ModItems.backpack) {
+				chest = new InventoryBackpack(player.getHeldItem(EnumHand.MAIN_HAND));
+			} else {
+				chest = (IChest) world.getTileEntity(pos);
+			}
 
-                return new GuiChest((Container) getServerGuiElement(ID, player, world, x, y, z), chest, world, player, pos);
-            }
-            case GUI_CHEST_BUILDER: return new GuiChestBuilder((Container) getServerGuiElement(ID, player, world, x, y, z), world, player, pos);
-            default: return null;
-        }
-    }
+			return new GuiChest((Container) getServerGuiElement(ID, player, world, x, y, z), chest, world, player, pos);
+		}
+		case GUI_CHEST_BUILDER:
+			return new GuiChestBuilder((Container) getServerGuiElement(ID, player, world, x, y, z), world, player, pos);
+		default:
+			return null;
+		}
+	}
 }

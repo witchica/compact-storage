@@ -14,109 +14,94 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
-public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEntityBarrel>
-{
-    public TextureManager textureManager;
+public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEntityBarrel> {
+	public TextureManager textureManager;
 
-    @Override
-    public void render(TileEntityBarrel te, double x, double y, double z, float partialTicks, int destroyStage, float alpha)
-    {
-        super.render(te, x, y, z, partialTicks, destroyStage, alpha);
+	@Override
+	public void render(TileEntityBarrel te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+		super.render(te, x, y, z, partialTicks, destroyStage, alpha);
 
-        renderText(te, x, y, z, 0.01f);
-        renderItem(te, x, y, z, 1f, 0.5f);
-    }
+		renderText(te, x, y, z, 0.01f);
+		renderItem(te, x, y, z, 1f, 0.5f);
+	}
 
-    public void renderText(TileEntityBarrel tileEntity, double coordX, double coordY, double coordZ, float scale)
-    {
-        EnumFacing facing = (EnumFacing) tileEntity.getWorld().getBlockState(tileEntity.getPos()).getProperties().get(BlockBarrel.FACING);
+	public void renderText(TileEntityBarrel tileEntity, double coordX, double coordY, double coordZ, float scale) {
+		EnumFacing facing = (EnumFacing) tileEntity.getWorld().getBlockState(tileEntity.getPos()).getProperties().get(BlockBarrel.FACING);
 
-        GL11.glPushMatrix();
-        GL11.glTranslatef((float) coordX + 0.5f, (float) coordY + 0.5f, (float) coordZ + 0.5f);
+		GL11.glPushMatrix();
+		GL11.glTranslatef((float) coordX + 0.5f, (float) coordY + 0.5f, (float) coordZ + 0.5f);
 
-        rotateElement(facing);
+		rotateElement(facing);
 
-        GL11.glTranslatef(0f, -0.225f, -0.44f);
+		GL11.glTranslatef(0f, -0.225f, -0.44f);
 
-        GL11.glScalef(scale, scale, scale);
+		GL11.glScalef(scale, scale, scale);
 
-        FontRenderer fontrenderer = this.getFontRenderer();
-        byte b0 = 0;
+		FontRenderer fontrenderer = this.getFontRenderer();
+		byte b0 = 0;
 
-        String s = tileEntity.getText();
+		String s = tileEntity.getText();
 
-        fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, 0, b0);
+		fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, 0, b0);
 
-        GL11.glPopMatrix();
-    }
-    
-    public void rotateElement(EnumFacing facing)
-    {
-        switch(facing)
-        {
-            case WEST:
-            {
-                GL11.glRotatef(180f, 1F, 0.0F, 0f);
-                GL11.glRotatef(270f, 0F, 1F, 0f);
-                break;
-            }
-            case EAST:
-            {
-                GL11.glRotatef(180f, 1F, 0.0F, 0f);
-                GL11.glRotatef(90f, 0F, 1F, 0f);
-                break;
-            }
-            case SOUTH:
-            {
-                GL11.glRotatef(180f, 1F, 0.0F, 0f);
-                GL11.glRotatef(180f, 0F, 1F, 0f);
-                break;
-            }
-            case NORTH:
-            {
-                GL11.glRotatef(180f, 1F, 0.0F, 0f);
-                GL11.glRotatef(0f, 0F, 1F, 0f);
-                break;
-            }
-            default:
-            {
-                GL11.glRotatef(180F, -1F, 0.0F, 3F);
-                break;
-            }
-        }
-    }
-    
-	public void renderItem(TileEntityBarrel tileEntity, double coordX, double coordY, double coordZ, float scale, float size)
-    {
-        EnumFacing facing = (EnumFacing) tileEntity.getWorld().getBlockState(tileEntity.getPos()).getProperties().get(BlockBarrel.FACING);
-        ItemStack stack = tileEntity.item.copy();
+		GL11.glPopMatrix();
+	}
 
-        if(stack != null && !stack.isEmpty())
-        {
+	public void rotateElement(EnumFacing facing) {
+		switch (facing) {
+		case WEST: {
+			GL11.glRotatef(180f, 1F, 0.0F, 0f);
+			GL11.glRotatef(270f, 0F, 1F, 0f);
+			break;
+		}
+		case EAST: {
+			GL11.glRotatef(180f, 1F, 0.0F, 0f);
+			GL11.glRotatef(90f, 0F, 1F, 0f);
+			break;
+		}
+		case SOUTH: {
+			GL11.glRotatef(180f, 1F, 0.0F, 0f);
+			GL11.glRotatef(180f, 0F, 1F, 0f);
+			break;
+		}
+		case NORTH: {
+			GL11.glRotatef(180f, 1F, 0.0F, 0f);
+			GL11.glRotatef(0f, 0F, 1F, 0f);
+			break;
+		}
+		default: {
+			GL11.glRotatef(180F, -1F, 0.0F, 3F);
+			break;
+		}
+		}
+	}
 
-            if (stack.isEmpty())
-            {
-                return;
-            }
+	public void renderItem(TileEntityBarrel tileEntity, double coordX, double coordY, double coordZ, float scale, float size) {
+		EnumFacing facing = (EnumFacing) tileEntity.getWorld().getBlockState(tileEntity.getPos()).getProperties().get(BlockBarrel.FACING);
+		ItemStack stack = tileEntity.item.copy();
 
-            stack.setCount(1);
+		if (stack != null && !stack.isEmpty()) {
 
-            GL11.glPushMatrix();
-            EntityItem ent = new EntityItem(tileEntity.getWorld(), coordX, coordY, coordZ, stack);
+			if (stack.isEmpty()) { return; }
 
-            ent.hoverStart = 0;
+			stack.setCount(1);
 
-            RenderHelper.enableStandardItemLighting();
+			GL11.glPushMatrix();
+			EntityItem ent = new EntityItem(tileEntity.getWorld(), coordX, coordY, coordZ, stack);
 
-            GL11.glTranslatef((float) coordX + 0.5f, (float) coordY + 0.5f, (float) coordZ + 0.5f);
-            rotateElement(facing);
-            //GL11.glRotatef(180f, 0, 0, 0);
-            GL11.glTranslatef(-(size / 3), -0.1f, -0.55f);
-            GL11.glScalef(size / 24, size / 24, 0.001f);
+			ent.hoverStart = 0;
 
-            //Minecraft.getMinecraft().getRenderManager().renderEntity(ent, 0, 0, 0,0,0, false);
-            Minecraft.getMinecraft().getRenderItem().renderItemIntoGUI(stack, 0, 0);
-            GL11.glPopMatrix();
-        }
-    }
+			RenderHelper.enableStandardItemLighting();
+
+			GL11.glTranslatef((float) coordX + 0.5f, (float) coordY + 0.5f, (float) coordZ + 0.5f);
+			rotateElement(facing);
+			//GL11.glRotatef(180f, 0, 0, 0);
+			GL11.glTranslatef(-(size / 3), -0.1f, -0.55f);
+			GL11.glScalef(size / 24, size / 24, 0.001f);
+
+			//Minecraft.getMinecraft().getRenderManager().renderEntity(ent, 0, 0, 0,0,0, false);
+			Minecraft.getMinecraft().getRenderItem().renderItemIntoGUI(stack, 0, 0);
+			GL11.glPopMatrix();
+		}
+	}
 }

@@ -21,140 +21,114 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockBarrel extends Block
-{
-    public static final PropertyEnum<EnumFacing> FACING = PropertyEnum.create("facing", EnumFacing.class, new EnumFacing[] {EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.EAST, EnumFacing.WEST});
+public class BlockBarrel extends Block {
+	public static final PropertyEnum<EnumFacing> FACING = PropertyEnum.create("facing", EnumFacing.class, new EnumFacing[] { EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.EAST, EnumFacing.WEST });
 
-    public BlockBarrel()
-    {
-        super(Material.IRON);
-        setHardness(5f);
-        setHarvestLevel("pickaxe", 2);
-        init();
-        setCreativeTab(CompactStorage.TAB);
-    }
+	public BlockBarrel() {
+		super(Material.IRON);
+		setHardness(5f);
+		setHarvestLevel("pickaxe", 2);
+		init();
+		setCreativeTab(CompactStorage.TAB);
+	}
 
-    public void init()
-    {
-        setRegistryName("barrel");
-        setTranslationKey("barrel");
-    }
+	public void init() {
+		setRegistryName("barrel");
+		setTranslationKey("barrel");
+	}
 
-    @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] {FACING});
-    }
+	@Override
+	protected BlockStateContainer createBlockState() {
+		return new BlockStateContainer(this, new IProperty[] { FACING });
+	}
 
-    @Override
-    public int getMetaFromState(IBlockState state)
-    {
-        return ((EnumFacing) state.getProperties().get(FACING)).ordinal();
-    }
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		return ((EnumFacing) state.getProperties().get(FACING)).ordinal();
+	}
 
-    @Override
-    public IBlockState getStateFromMeta(int meta)
-    {
-        EnumFacing facing = EnumFacing.values()[meta];
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		EnumFacing facing = EnumFacing.values()[meta];
 
-        if(FACING.getAllowedValues().contains(facing))
-        {
-            return getDefaultState().withProperty(FACING, EnumFacing.values()[meta]);
-        }
+		if (FACING.getAllowedValues().contains(facing)) { return getDefaultState().withProperty(FACING, EnumFacing.values()[meta]); }
 
-        return getDefaultState();
-    }
+		return getDefaultState();
+	}
 
-    @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
-    {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+	@Override
+	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
+		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
 
-        worldIn.setBlockState(pos, state.withProperty(FACING, EntityUtil.get2dOrientation(placer)));
-    }
+		worldIn.setBlockState(pos, state.withProperty(FACING, EntityUtil.get2dOrientation(placer)));
+	}
 
-    @Override
-    public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn)
-    {
-        super.onBlockClicked(worldIn, pos, playerIn);
+	@Override
+	public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn) {
+		super.onBlockClicked(worldIn, pos, playerIn);
 
-        if(!worldIn.isRemote)
-        {
-            IBarrel barrel = (IBarrel) worldIn.getTileEntity(pos);
+		if (!worldIn.isRemote) {
+			IBarrel barrel = (IBarrel) worldIn.getTileEntity(pos);
 
-            if(barrel != null)
-            {
-                ItemStack stack = barrel.dropItems(playerIn);
+			if (barrel != null) {
+				ItemStack stack = barrel.dropItems(playerIn);
 
-                if(!stack.isEmpty())
-                {
-                    EntityItem item = new EntityItem(worldIn, playerIn.posX, playerIn.posY, playerIn.posZ);
-                    item.setItem(stack);
+				if (!stack.isEmpty()) {
+					EntityItem item = new EntityItem(worldIn, playerIn.posX, playerIn.posY, playerIn.posZ);
+					item.setItem(stack);
 
-                    worldIn.spawnEntity(item);
-                }
-            }
-        }
-    }
+					worldIn.spawnEntity(item);
+				}
+			}
+		}
+	}
 
-    @Override
-    public boolean isFullBlock(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	public boolean isFullBlock(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
-    {
-        if(playerIn.isSneaking())
-            return false;
+	@Override
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (playerIn.isSneaking()) return false;
 
-        if(!worldIn.isRemote)
-        {
-            IBarrel barrel = (IBarrel) worldIn.getTileEntity(pos);
+		if (!worldIn.isRemote) {
+			IBarrel barrel = (IBarrel) worldIn.getTileEntity(pos);
 
-            if(playerIn.getHeldItem(EnumHand.MAIN_HAND).isEmpty())
-            {
-                if(barrel != null)
-                {
-                    ItemStack stack = barrel.dropItems(playerIn);
+			if (playerIn.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
+				if (barrel != null) {
+					ItemStack stack = barrel.dropItems(playerIn);
 
-                    if(!stack.isEmpty())
-                    {
-                        EntityItem item = new EntityItem(worldIn, playerIn.posX, playerIn.posY, playerIn.posZ);
-                        item.setItem(stack);
+					if (!stack.isEmpty()) {
+						EntityItem item = new EntityItem(worldIn, playerIn.posX, playerIn.posY, playerIn.posZ);
+						item.setItem(stack);
 
-                        worldIn.spawnEntity(item);
-                    }
-                }
-            }
-            else
-            {
-                if(barrel != null)
-                {
-                    playerIn.setHeldItem(EnumHand.MAIN_HAND, barrel.insertItems(playerIn.getHeldItem(EnumHand.MAIN_HAND), playerIn));
-                    return true;
-                }
-            }
-        }
+						worldIn.spawnEntity(item);
+					}
+				}
+			} else {
+				if (barrel != null) {
+					playerIn.setHeldItem(EnumHand.MAIN_HAND, barrel.insertItems(playerIn.getHeldItem(EnumHand.MAIN_HAND), playerIn));
+					return true;
+				}
+			}
+		}
 
-        return true;
-    }
-    
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-    	return true;
-    }
+		return true;
+	}
 
-    @Override
-    public TileEntity createTileEntity(World worldIn, IBlockState state)
-    {
-        return new TileEntityBarrel();
-    }
+	@Override
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
+	}
+
+	@Override
+	public TileEntity createTileEntity(World worldIn, IBlockState state) {
+		return new TileEntityBarrel();
+	}
 }

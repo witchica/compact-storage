@@ -11,23 +11,19 @@ import net.minecraft.item.ItemStack;
 /**
  * Created by Toby on 06/11/2014.
  */
-public class ClientProxy implements IProxy
-{
-    @Override
-	public void registerRenderers()
-    {
+public class ClientProxy implements IProxy {
+	@Override
+	public void registerRenderers() {
 
-        ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
+		ItemColors itemColors = Minecraft.getMinecraft().getItemColors();
 
-        itemColors.registerItemColorHandler(new IItemColor() {
-            @Override
-            public int colorMultiplier(ItemStack stack, int color)
-            {
-                return CompactStorage.getColorFromNBT(stack);
-            }
-        }, CompactStorage.ModItems.backpack, Item.getItemFromBlock(CompactStorage.ModBlocks.chest));
+		itemColors.registerItemColorHandler(new IItemColor() {
+			@Override
+			public int colorMultiplier(ItemStack stack, int color) {
+				return CompactStorage.getColorFromNBT(stack);
+			}
+		}, CompactStorage.ModItems.backpack, Item.getItemFromBlock(CompactStorage.ModBlocks.chest));
 
-    }
-
+	}
 
 }

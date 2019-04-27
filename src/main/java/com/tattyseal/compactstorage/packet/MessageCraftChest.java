@@ -9,6 +9,7 @@ import com.tattyseal.compactstorage.util.StorageInfo;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -72,7 +73,6 @@ public class MessageCraftChest implements IMessage {
 			TileEntityChestBuilder builder = (TileEntityChestBuilder) world.getTileEntity(new BlockPos(message.x, message.y, message.z));
 			if (builder == null) return;
 
-
 			List<ItemStack> items = new ArrayList<>();
 			for (int i = 0; i < 4; i++) {
 				items.add(builder.getItems().getStackInSlot(i));
@@ -98,7 +98,7 @@ public class MessageCraftChest implements IMessage {
 			}
 
 			if (hasRequiredMaterials && builder.getItems().getStackInSlot(4).isEmpty()) {
-				ItemStack stack = new ItemStack(message.info.getType().equals(StorageInfo.Type.BACKPACK) ? CompactStorage.ModItems.backpack : ItemBlock.getItemFromBlock(CompactStorage.ModBlocks.chest), 1);
+				ItemStack stack = new ItemStack(message.info.getType().equals(StorageInfo.Type.BACKPACK) ? CompactStorage.ModItems.backpack : Item.getItemFromBlock(CompactStorage.ModBlocks.chest), 1);
 
 				NBTTagCompound tag = new NBTTagCompound();
 				tag.setIntArray("size", new int[] { message.info.getSizeX(), message.info.getSizeY() });

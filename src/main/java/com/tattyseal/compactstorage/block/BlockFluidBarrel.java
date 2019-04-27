@@ -7,24 +7,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.world.World;
 
-public class BlockFluidBarrel extends BlockBarrel
-{
-    @Override
-    public void init()
-    {
-        setRegistryName("barrel_fluid");
-        setTranslationKey("barrel_fluid");
-    }
+public class BlockFluidBarrel extends BlockBarrel {
+	@Override
+	public void init() {
+		setRegistryName("barrel_fluid");
+		setTranslationKey("barrel_fluid");
+	}
 
-    @Override
-    public BlockRenderLayer getRenderLayer()
-    {
-        return BlockRenderLayer.CUTOUT_MIPPED;
-    }
+	@Override
+	public BlockRenderLayer getRenderLayer() {
+		return BlockRenderLayer.CUTOUT_MIPPED;
+	}
 
-    @Override
-    public TileEntity createTileEntity(World world, IBlockState state)
-    {
-        return new TileEntityBarrelFluid();
-    }
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
+		return new TileEntityBarrelFluid();
+	}
 }

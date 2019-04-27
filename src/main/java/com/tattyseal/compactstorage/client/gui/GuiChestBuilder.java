@@ -33,295 +33,263 @@ import java.util.ArrayList;
 /**
  * Created by Toby on 09/11/2014.
  */
-public class GuiChestBuilder extends GuiContainer
-{
-    public World world;
-    public EntityPlayer player;
-    public BlockPos pos;
-    
-    private GuiButton buttonSubmit;
+public class GuiChestBuilder extends GuiContainer {
+	public World world;
+	public EntityPlayer player;
+	public BlockPos pos;
 
-    private GuiSlider hueSlider;
-    private GuiSlider columnSlider;
-    private GuiSlider rowSlider;
+	private GuiButton buttonSubmit;
 
-    public TileEntityChestBuilder builder;
+	private GuiSlider hueSlider;
+	private GuiSlider columnSlider;
+	private GuiSlider rowSlider;
 
-    private static final ResourceLocation CREATIVE_INVENTORY_TABS = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
-    
-    public GuiChestBuilder(Container container, World world, EntityPlayer player, BlockPos pos)
-    {
-        super(container);
+	public TileEntityChestBuilder builder;
 
-        this.world = world;
-        this.player = player;
-        this.pos = pos;
-        
-        this.builder = ((TileEntityChestBuilder) world.getTileEntity(pos));
+	private static final ResourceLocation CREATIVE_INVENTORY_TABS = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
 
-        this.xSize = 7 + 162 + 7;
-        this.ySize = 7 + 108 + 13 + 54 + 4 + 18 + 7;
-    }
-    
-    @Override
-    public void initGui()
-    {
-        super.initGui();
-        
-        buttonSubmit = new GuiButton(4, guiLeft + 5, guiTop + 8 + 108 - 14, xSize - 31, 20, "Build");
-        buttonList.add(buttonSubmit);
+	public GuiChestBuilder(Container container, World world, EntityPlayer player, BlockPos pos) {
+		super(container);
 
-        int offsetY = 18;
+		this.world = world;
+		this.player = player;
+		this.pos = pos;
 
-        columnSlider = new GuiSlider(new GuiChestBuilderResponder(this), 0, guiLeft + 5, guiTop + offsetY + 22, "Columns", 1f, 24f, 9, new ColumnFormatType());
-        columnSlider.setWidth((xSize / 2) - 7);
-        columnSlider.setSliderValue(builder.getInfo().getSizeX(), false);
-        buttonList.add(columnSlider);
+		this.builder = ((TileEntityChestBuilder) world.getTileEntity(pos));
 
-        rowSlider = new GuiSlider(new GuiChestBuilderResponder(this), 1, guiLeft + ((xSize / 2)) + 3, guiTop + offsetY + 22, "Rows", 1f, 12f, 3, new RowFormatType());
-        rowSlider.setWidth((xSize / 2) - 7);
-        rowSlider.setSliderValue(builder.getInfo().getSizeY(), false);
-        buttonList.add(rowSlider);
+		this.xSize = 7 + 162 + 7;
+		this.ySize = 7 + 108 + 13 + 54 + 4 + 18 + 7;
+	}
 
-        hueSlider = new GuiSliderHue(new GuiChestBuilderResponder(this), 2, guiLeft + 5, guiTop + offsetY, "Hue", -1f, 360f, 180, new HueFormatType());
-        hueSlider.setWidth(xSize - 10);
-        hueSlider.setSliderValue(builder.getInfo().getHue(), false);
-        buttonList.add(hueSlider);
-    }
+	@Override
+	public void initGui() {
+		super.initGui();
 
-    @Override
-    public void mouseClicked(int x, int y, int b) throws IOException
-    {
-        super.mouseClicked(x, y, b);
-        hueSlider.mousePressed(mc, x, y);
+		buttonSubmit = new GuiButton(4, guiLeft + 5, guiTop + 8 + 108 - 14, xSize - 31, 20, "Build");
+		buttonList.add(buttonSubmit);
 
-        for(int t = 0; t < StorageInfo.Type.values().length; t++)
-        {
-            StorageInfo.Type type = StorageInfo.Type.values()[t];
+		int offsetY = 18;
 
-            int startX = guiLeft + (26 * t);
-            int startY = guiTop - 26;
+		columnSlider = new GuiSlider(new GuiChestBuilderResponder(this), 0, guiLeft + 5, guiTop + offsetY + 22, "Columns", 1f, 24f, 9, new ColumnFormatType());
+		columnSlider.setWidth((xSize / 2) - 7);
+		columnSlider.setSliderValue(builder.getInfo().getSizeX(), false);
+		buttonList.add(columnSlider);
 
-            int endX = startX + 26;
-            int endY = startY + 26;
+		rowSlider = new GuiSlider(new GuiChestBuilderResponder(this), 1, guiLeft + ((xSize / 2)) + 3, guiTop + offsetY + 22, "Rows", 1f, 12f, 3, new RowFormatType());
+		rowSlider.setWidth((xSize / 2) - 7);
+		rowSlider.setSliderValue(builder.getInfo().getSizeY(), false);
+		buttonList.add(rowSlider);
 
-            if(x >= startX && x <= endX)
-            {
-                if(y >= startY && y <= endY)
-                {
-                    StorageInfo info = new StorageInfo(builder.getInfo().getSizeX(), builder.getInfo().getSizeY(), builder.getInfo().getHue(), type);
-                    CompactStorage.NETWORK.sendToServer(new MessageUpdateBuilder(pos, info));
-                }
-            }
-        }
-    }
-    
-    @Override
-    public void drawScreen(int mouseX, int mouseY, float k)
-    {
-        this.drawDefaultBackground();
-    	super.drawScreen(mouseX, mouseY, k);
+		hueSlider = new GuiSliderHue(new GuiChestBuilderResponder(this), 2, guiLeft + 5, guiTop + offsetY, "Hue", -1f, 360f, 180, new HueFormatType());
+		hueSlider.setWidth(xSize - 10);
+		hueSlider.setSliderValue(builder.getInfo().getHue(), false);
+		buttonList.add(hueSlider);
+	}
 
-        if(builder != null)
-    	{
-            boolean hoverTooltip = false;
+	@Override
+	public void mouseClicked(int x, int y, int b) throws IOException {
+		super.mouseClicked(x, y, b);
+		hueSlider.mousePressed(mc, x, y);
 
-    		for(int x = 0; x < 4; x++)
-            {
-                if(x < builder.getInfo().getMaterialCost().size() && builder.getInfo().getMaterialCost().get(x) != null)
-                {
-                    ItemStack stack = builder.getInfo().getMaterialCost().get(x);
+		for (int t = 0; t < StorageInfo.Type.values().length; t++) {
+			StorageInfo.Type type = StorageInfo.Type.values()[t];
 
-                    int startX = guiLeft + ((xSize / 2) - 36) + (x * 18);
-                    int startY = guiTop + 62;
+			int startX = guiLeft + (26 * t);
+			int startY = guiTop - 26;
 
-                    int endX = startX + 18;
-                    int endY = startY + 18;
+			int endX = startX + 26;
+			int endY = startY + 26;
 
-                    if(mouseX >= startX && mouseX <= endX)
-                    {
-                        if(mouseY >= startY && mouseY <= endY)
-                        {
-                            ArrayList<String> toolList = new ArrayList<String>();
-                            toolList.add(stack.getDisplayName());
-                            toolList.add(TextFormatting.AQUA + "Amount Required: " + stack.getCount());
+			if (x >= startX && x <= endX) {
+				if (y >= startY && y <= endY) {
+					StorageInfo info = new StorageInfo(builder.getInfo().getSizeX(), builder.getInfo().getSizeY(), builder.getInfo().getHue(), type);
+					CompactStorage.NETWORK.sendToServer(new MessageUpdateBuilder(pos, info));
+				}
+			}
+		}
+	}
 
-                            drawHoveringText(toolList, mouseX, mouseY, fontRenderer);
-                            hoverTooltip = true;
-                            break;
-                        }
-                    }
+	@Override
+	public void drawScreen(int mouseX, int mouseY, float k) {
+		this.drawDefaultBackground();
+		super.drawScreen(mouseX, mouseY, k);
 
-                    RenderHelper.disableStandardItemLighting();
-                }
-            }
+		if (builder != null) {
+			boolean hoverTooltip = false;
 
-            if (!hoverTooltip) {
-                for(int t = 0; t < StorageInfo.Type.values().length; t++)
-                {
-                    StorageInfo.Type type = StorageInfo.Type.values()[t];
+			for (int x = 0; x < 4; x++) {
+				if (x < builder.getInfo().getMaterialCost().size() && builder.getInfo().getMaterialCost().get(x) != null) {
+					ItemStack stack = builder.getInfo().getMaterialCost().get(x);
 
-                    int startX = guiLeft + (26 * t);
-                    int startY = guiTop - 26;
+					int startX = guiLeft + ((xSize / 2) - 36) + (x * 18);
+					int startY = guiTop + 62;
 
-                    int endX = startX + 26;
-                    int endY = startY + 26;
+					int endX = startX + 18;
+					int endY = startY + 18;
 
-                    if(mouseX >= startX && mouseX <= endX)
-                    {
-                        if(mouseY >= startY && mouseY <= endY)
-                        {
-                            ArrayList<String> toolList = new ArrayList<String>();
-                            toolList.add(type.name);
+					if (mouseX >= startX && mouseX <= endX) {
+						if (mouseY >= startY && mouseY <= endY) {
+							ArrayList<String> toolList = new ArrayList<String>();
+							toolList.add(stack.getDisplayName());
+							toolList.add(TextFormatting.AQUA + "Amount Required: " + stack.getCount());
 
-                            drawHoveringText(toolList, mouseX, mouseY, fontRenderer);
-                            hoverTooltip = true;
-                            break;
-                        }
-                    }
-                }
-            }
+							drawHoveringText(toolList, mouseX, mouseY, fontRenderer);
+							hoverTooltip = true;
+							break;
+						}
+					}
 
-            if (!hoverTooltip) {
-    		    this.renderHoveredToolTip(mouseX, mouseY);
-            }
-    	}
-    }
+					RenderHelper.disableStandardItemLighting();
+				}
+			}
 
-    @Override
-    public void drawGuiContainerBackgroundLayer(float i, int j, int k)
-    {    	
-        super.drawGuiContainerForegroundLayer(j, k);
+			if (!hoverTooltip) {
+				for (int t = 0; t < StorageInfo.Type.values().length; t++) {
+					StorageInfo.Type type = StorageInfo.Type.values()[t];
 
-        for(StorageInfo.Type type : StorageInfo.Type.values())
-        {
-            if(!type.equals(builder.getInfo().getType()))
-            {
-                drawTab(type, type.display);
-            }
-        }
-        
-        RenderHelper.disableStandardItemLighting();
-        GL11.glColor3f(1, 1, 1); 
-        
-    	drawTexturedModalRect(guiLeft, guiTop, 0, 0, 7, 7);
+					int startX = guiLeft + (26 * t);
+					int startY = guiTop - 26;
 
-    	RenderUtil.renderBackground(this, guiLeft, guiTop, 162, 14 + 15 + 15 + 15 + 36);
+					int endX = startX + 26;
+					int endY = startY + 26;
 
-        int slotX = guiLeft + (xSize / 2) - ((9 * 18) / 2);
-        int slotY = guiTop + 7 + 108 + 10;
+					if (mouseX >= startX && mouseX <= endX) {
+						if (mouseY >= startY && mouseY <= endY) {
+							ArrayList<String> toolList = new ArrayList<String>();
+							toolList.add(type.name);
 
-        RenderUtil.renderSlots(slotX, slotY, 9, 3);
+							drawHoveringText(toolList, mouseX, mouseY, fontRenderer);
+							hoverTooltip = true;
+							break;
+						}
+					}
+				}
+			}
 
-        slotY = slotY + (3 * 18) + 4;
+			if (!hoverTooltip) {
+				this.renderHoveredToolTip(mouseX, mouseY);
+			}
+		}
+	}
 
-        RenderUtil.renderSlots(slotX, slotY, 9, 1);
-        
-        slotY = guiTop + 50 + 12;
-        slotX = guiLeft + ((xSize / 2) - 36);
-        
-        RenderUtil.renderSlots(slotX, slotY, 4, 1);
-        
-        slotY = slotY + 20;
+	@Override
+	public void drawGuiContainerBackgroundLayer(float i, int j, int k) {
+		super.drawGuiContainerForegroundLayer(j, k);
 
-        RenderUtil.renderSlots(slotX, slotY, 4, 1);
+		for (StorageInfo.Type type : StorageInfo.Type.values()) {
+			if (!type.equals(builder.getInfo().getType())) {
+				drawTab(type, type.display);
+			}
+		}
 
-        RenderUtil.renderSlots(guiLeft + 5 + xSize - 30, guiTop + 8 + 108 - 13, 1, 1);
+		RenderHelper.disableStandardItemLighting();
+		GL11.glColor3f(1, 1, 1);
 
-        GL11.glColor3f(1, 1, 1);
-        
-        StorageInfo info = builder.getInfo();
-        
-        if(info == null)
-        {
-        	return;
-        }
+		drawTexturedModalRect(guiLeft, guiTop, 0, 0, 7, 7);
 
-        slotY = guiTop + 50 + 12;
-        slotX = guiLeft + ((xSize / 2) - 36);
-        
-        for(int x = 0; x < info.getMaterialCost().size(); x++)
-        {
-            ItemStack stack = info.getMaterialCost().get(x);
+		RenderUtil.renderBackground(this, guiLeft, guiTop, 162, 14 + 15 + 15 + 15 + 36);
 
-            if(stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) stack.setItemDamage(0);
+		int slotX = guiLeft + (xSize / 2) - ((9 * 18) / 2);
+		int slotY = guiTop + 7 + 108 + 10;
 
-            RenderHelper.enableGUIStandardItemLighting();
-            itemRender.renderItemIntoGUI(stack, slotX + 1 + (x * 18), slotY + 1);
-            
-            RenderHelper.disableStandardItemLighting();
-        }
-        fontRenderer.drawString(I18n.format("tile.chestBuilder.name"), guiLeft + 7, guiTop + 7, 0x404040);
-        drawTab(builder.getInfo().getType(), builder.getInfo().getType().display);
-    }
+		RenderUtil.renderSlots(slotX, slotY, 9, 3);
 
-    @Override
-    public void actionPerformed(GuiButton button) throws IOException
-    {
-    	super.actionPerformed(button);
-        StorageInfo info = builder.getInfo();
+		slotY = slotY + (3 * 18) + 4;
 
-    	switch(button.id)
-    	{
-    		case 4:
-    		{
-    			CompactStorage.NETWORK.sendToServer(new MessageCraftChest(pos, info));
-    			
-    			break;
-    		}
-            default:
-            {
-                break;
-            }
-    	}
-    }
+		RenderUtil.renderSlots(slotX, slotY, 9, 1);
 
-    /**
-     * Draws the given tab and its background, deciding whether to highlight the tab or not based off of the selected
-     * index.
-     */
-    private void drawTab(StorageInfo.Type type, ItemStack stack)
-    {
-        boolean flag = type.ordinal() == builder.getInfo().getType().ordinal();
-        int i = type.ordinal();
-        int j = i * 28;
-        int k = 0;
-        int l = this.guiLeft + 26 * i;
-        int i1 = this.guiTop;
+		slotY = guiTop + 50 + 12;
+		slotX = guiLeft + ((xSize / 2) - 36);
 
-        if (flag)
-        {
-            k += 32;
-        }
+		RenderUtil.renderSlots(slotX, slotY, 4, 1);
 
-        if (i == 5)
-        {
-            l = this.guiLeft + this.xSize - 28;
-        }
-        else if (i > 0)
-        {
-            l += i;
-        }
+		slotY = slotY + 20;
 
-        i1 -= 28;
+		RenderUtil.renderSlots(slotX, slotY, 4, 1);
 
-        GlStateManager.disableLighting();
-        GlStateManager.color(1F, 1F, 1F); //Forge: Reset color in case Items change it.
-        GlStateManager.enableBlend(); //Forge: Make sure blend is enabled else tabs show a white border.
+		RenderUtil.renderSlots(guiLeft + 5 + xSize - 30, guiTop + 8 + 108 - 13, 1, 1);
 
-        this.mc.getTextureManager().bindTexture(CREATIVE_INVENTORY_TABS);
-        this.drawTexturedModalRect(l, i1, j, k, 28, 32);
-        this.zLevel = 100.0F;
-        this.itemRender.zLevel = 100.0F;
-        l += 6;
-        i1 += 8 + 1;
-        GlStateManager.enableLighting();
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.color(1f, 0f, 0f);
-        this.itemRender.renderItemAndEffectIntoGUI(stack, l, i1);
-        this.itemRender.renderItemOverlays(this.fontRenderer, stack, l, i1);
-        GlStateManager.disableLighting();
-        this.itemRender.zLevel = 0.0F;
-        this.zLevel = 0.0F;
-    }
+		GL11.glColor3f(1, 1, 1);
+
+		StorageInfo info = builder.getInfo();
+
+		if (info == null) { return; }
+
+		slotY = guiTop + 50 + 12;
+		slotX = guiLeft + ((xSize / 2) - 36);
+
+		for (int x = 0; x < info.getMaterialCost().size(); x++) {
+			ItemStack stack = info.getMaterialCost().get(x);
+
+			if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) stack.setItemDamage(0);
+
+			RenderHelper.enableGUIStandardItemLighting();
+			itemRender.renderItemIntoGUI(stack, slotX + 1 + (x * 18), slotY + 1);
+
+			RenderHelper.disableStandardItemLighting();
+		}
+		fontRenderer.drawString(I18n.format("tile.chestBuilder.name"), guiLeft + 7, guiTop + 7, 0x404040);
+		drawTab(builder.getInfo().getType(), builder.getInfo().getType().display);
+	}
+
+	@Override
+	public void actionPerformed(GuiButton button) throws IOException {
+		super.actionPerformed(button);
+		StorageInfo info = builder.getInfo();
+
+		switch (button.id) {
+		case 4: {
+			CompactStorage.NETWORK.sendToServer(new MessageCraftChest(pos, info));
+
+			break;
+		}
+		default: {
+			break;
+		}
+		}
+	}
+
+	/**
+	 * Draws the given tab and its background, deciding whether to highlight the tab or not based off of the selected
+	 * index.
+	 */
+	private void drawTab(StorageInfo.Type type, ItemStack stack) {
+		boolean flag = type.ordinal() == builder.getInfo().getType().ordinal();
+		int i = type.ordinal();
+		int j = i * 28;
+		int k = 0;
+		int l = this.guiLeft + 26 * i;
+		int i1 = this.guiTop;
+
+		if (flag) {
+			k += 32;
+		}
+
+		if (i == 5) {
+			l = this.guiLeft + this.xSize - 28;
+		} else if (i > 0) {
+			l += i;
+		}
+
+		i1 -= 28;
+
+		GlStateManager.disableLighting();
+		GlStateManager.color(1F, 1F, 1F); //Forge: Reset color in case Items change it.
+		GlStateManager.enableBlend(); //Forge: Make sure blend is enabled else tabs show a white border.
+
+		this.mc.getTextureManager().bindTexture(CREATIVE_INVENTORY_TABS);
+		this.drawTexturedModalRect(l, i1, j, k, 28, 32);
+		this.zLevel = 100.0F;
+		this.itemRender.zLevel = 100.0F;
+		l += 6;
+		i1 += 8 + 1;
+		GlStateManager.enableLighting();
+		GlStateManager.enableRescaleNormal();
+		GlStateManager.color(1f, 0f, 0f);
+		this.itemRender.renderItemAndEffectIntoGUI(stack, l, i1);
+		this.itemRender.renderItemOverlays(this.fontRenderer, stack, l, i1);
+		GlStateManager.disableLighting();
+		this.itemRender.zLevel = 0.0F;
+		this.zLevel = 0.0F;
+	}
 }

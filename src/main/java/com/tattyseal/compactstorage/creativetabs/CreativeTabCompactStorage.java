@@ -9,17 +9,14 @@ import javax.annotation.Nonnull;
 /**
  * Created by Toby on 07/11/2014.
  */
-public class CreativeTabCompactStorage extends CreativeTabs
-{
-    public CreativeTabCompactStorage()
-    {
-        super("compactStorage");
-    }
+public class CreativeTabCompactStorage extends CreativeTabs {
+	public CreativeTabCompactStorage() {
+		super("compactStorage");
+	}
 
-    @Override
-    @Nonnull
-    public ItemStack createIcon()
-    {
-        return new ItemStack(Blocks.CHEST, 1, 0);
-    }
+	@Override
+	@Nonnull
+	public ItemStack createIcon() {
+		return new ItemStack(Blocks.CHEST, 1, 0);
+	}
 }

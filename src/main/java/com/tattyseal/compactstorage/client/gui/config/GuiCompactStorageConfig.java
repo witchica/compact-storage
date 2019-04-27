@@ -12,19 +12,16 @@ import java.util.List;
 /**
  * Created by tobystrong on 03/05/2017.
  */
-public class GuiCompactStorageConfig extends GuiConfig
-{
-    private static List<IConfigElement> elementList;
+public class GuiCompactStorageConfig extends GuiConfig {
+	private static List<IConfigElement> elementList;
 
-    static
-    {
-        elementList = new ArrayList<IConfigElement>();
-        elementList.add(new ConfigElement(ConfigurationHandler.configuration.getCategory("internal")));
-        elementList.add(new ConfigElement(ConfigurationHandler.configuration.getCategory("builder")));
-    }
+	static {
+		elementList = new ArrayList<IConfigElement>();
+		elementList.add(new ConfigElement(ConfigurationHandler.configuration.getCategory("internal")));
+		elementList.add(new ConfigElement(ConfigurationHandler.configuration.getCategory("builder")));
+	}
 
-    public GuiCompactStorageConfig(GuiScreen parentScreen, String modid, String title)
-    {
-        super(parentScreen, elementList, modid, title, false, false, GuiConfig.getAbridgedConfigPath(ConfigurationHandler.configuration.toString()));
-    }
+	public GuiCompactStorageConfig(GuiScreen parentScreen, String modid, String title) {
+		super(parentScreen, elementList, modid, title, false, false, GuiConfig.getAbridgedConfigPath(ConfigurationHandler.configuration.toString()));
+	}
 }

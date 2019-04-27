@@ -41,258 +41,218 @@ import net.minecraft.world.World;
 /**
  * Created by Toby on 06/11/2014.
  */
-public class BlockChest extends Block
-{
-    protected static final AxisAlignedBB NOT_CONNECTED_AABB = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.875D, 0.9375D);
+public class BlockChest extends Block {
+	protected static final AxisAlignedBB NOT_CONNECTED_AABB = new AxisAlignedBB(0.0625D, 0.0D, 0.0625D, 0.9375D, 0.875D, 0.9375D);
 
-    public BlockChest()
-    {
-        super(Material.WOOD);
-        setTranslationKey("compactchest");
-        setRegistryName("compactChest");
-        setCreativeTab(CompactStorage.TAB);
+	public BlockChest() {
+		super(Material.WOOD);
+		setTranslationKey("compactchest");
+		setRegistryName("compactChest");
+		setCreativeTab(CompactStorage.TAB);
 
-        setHardness(2F);
-        setResistance(2F);
-        setHarvestLevel("axe", 1);
-    }
+		setHardness(2F);
+		setResistance(2F);
+		setHarvestLevel("axe", 1);
+	}
 
-    @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
-    {
-        return NOT_CONNECTED_AABB;
-    }
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		return NOT_CONNECTED_AABB;
+	}
 
-    @Override
-    public boolean isFullCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    public boolean isOpaqueCube(IBlockState state)
-    {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return false;
+	}
 
-    @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack)
-    {
-        super.onBlockPlacedBy(world, pos, state, entity, stack);
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {
+		super.onBlockPlacedBy(world, pos, state, entity, stack);
 
-        TileEntityChest chest = ((TileEntityChest) world.getTileEntity(pos));
+		TileEntityChest chest = ((TileEntityChest) world.getTileEntity(pos));
 
-        if (chest == null) {
-            return;
-        }
+		if (chest == null) { return; }
 
-        if (stack.hasDisplayName()) {
-            chest.setCustomName(stack.getDisplayName());
-        }
+		if (stack.hasDisplayName()) {
+			chest.setCustomName(stack.getDisplayName());
+		}
 
-        chest.direction = EntityUtil.get2dOrientation(entity);
-        
-        if(stack.hasTagCompound() && stack.getTagCompound().hasKey("size"))
-        {
-        	if(stack.getTagCompound().getTag("size") instanceof NBTTagIntArray)
-        	{
-                chest.invX = stack.getTagCompound().getIntArray("size")[0];
-                chest.invY = stack.getTagCompound().getIntArray("size")[1];
+		chest.direction = EntityUtil.get2dOrientation(entity);
 
-                if(stack.getTagCompound().hasKey("hue"))
-                {
-                    chest.setHue(stack.getTagCompound().getInteger("hue"));
-                    chest.color = chest.getHue() == -1 ? Color.white : Color.getHSBColor(stack.getTagCompound().getInteger("hue"), 50, 50);
-                }
-                else if(stack.getTagCompound().hasKey("color") && !stack.getTagCompound().hasKey("hue"))
-                {
-                    String color = stack.getTagCompound().getString("color");
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("size")) {
+			if (stack.getTagCompound().getTag("size") instanceof NBTTagIntArray) {
+				chest.invX = stack.getTagCompound().getIntArray("size")[0];
+				chest.invY = stack.getTagCompound().getIntArray("size")[1];
 
-                    if(color.startsWith("0x"))
-                    {
-                        color = "#" + color.substring(2);
-                    }
+				if (stack.getTagCompound().hasKey("hue")) {
+					chest.setHue(stack.getTagCompound().getInteger("hue"));
+					chest.color = chest.getHue() == -1 ? Color.white : Color.getHSBColor(stack.getTagCompound().getInteger("hue"), 50, 50);
+				} else if (stack.getTagCompound().hasKey("color") && !stack.getTagCompound().hasKey("hue")) {
+					String color = stack.getTagCompound().getString("color");
 
-                    chest.color = color.equals("") ? Color.white : Color.decode(color);
+					if (color.startsWith("0x")) {
+						color = "#" + color.substring(2);
+					}
 
-                    float[] hsbVals = new float[3];
-                    hsbVals = Color.RGBtoHSB(chest.color.getRed(), chest.color.getGreen(), chest.color.getBlue(), hsbVals);
-                    chest.setHue((int) hsbVals[0] * 360);
-                }
-                else
-                {
-                    chest.color = Color.white;
-                }
+					chest.color = color.equals("") ? Color.white : Color.decode(color);
 
-                chest.items = new ItemStack[chest.invX * chest.invY];
-        	}
-        	else
-        	{
-        		if(entity instanceof EntityPlayer)
-        		{
-        			entity.sendMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
+					float[] hsbVals = new float[3];
+					hsbVals = Color.RGBtoHSB(chest.color.getRed(), chest.color.getGreen(), chest.color.getBlue(), hsbVals);
+					chest.setHue((int) hsbVals[0] * 360);
+				} else {
+					chest.color = Color.white;
+				}
 
-                    chest.invX = 9;
-                    chest.invY = 3;
-                    chest.items = new ItemStack[chest.invX * chest.invY];
-                    chest.setHue(180);
-                    chest.color = Color.white;
+				chest.items = new ItemStack[chest.invX * chest.invY];
+			} else {
+				if (entity instanceof EntityPlayer) {
+					entity.sendMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
 
-        			InvalidSizeException exception = new InvalidSizeException("You tried to pass off a " + stack.getTagCompound().getTag("size").getClass().getName() + " as a Integer Array. Do not report this or you will be ignored. This is a user based error.");
-        			exception.printStackTrace();
-        		}
-        	}
-        }
-        else
-        {
-            if(entity instanceof EntityPlayer)
-            {
-                entity.sendMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
+					chest.invX = 9;
+					chest.invY = 3;
+					chest.items = new ItemStack[chest.invX * chest.invY];
+					chest.setHue(180);
+					chest.color = Color.white;
 
-                chest.invX = 9;
-                chest.invY = 3;
-                chest.items = new ItemStack[chest.invX * chest.invY];
-                chest.setHue(180);
-                chest.color = Color.white;
-            }
-        }
+					InvalidSizeException exception = new InvalidSizeException("You tried to pass off a " + stack.getTagCompound().getTag("size").getClass().getName() + " as a Integer Array. Do not report this or you will be ignored. This is a user based error.");
+					exception.printStackTrace();
+				}
+			}
+		} else {
+			if (entity instanceof EntityPlayer) {
+				entity.sendMessage(new TextComponentString(TextFormatting.RED + "You attempted something bad! :("));
 
-        if(stack.hasTagCompound() && stack.getTagCompound().hasKey("chestData"))
-        {
-            NBTTagCompound chestData = stack.getTagCompound().getCompoundTag("chestData");
-            chestData.removeTag("facing");
-            chestData.setInteger("x", pos.getX());
-            chestData.setInteger("y", pos.getY());
-            chestData.setInteger("z", pos.getZ());
+				chest.invX = 9;
+				chest.invY = 3;
+				chest.items = new ItemStack[chest.invX * chest.invY];
+				chest.setHue(180);
+				chest.color = Color.white;
+			}
+		}
 
-            chest.readFromNBT(chestData);
-            chest.markDirty();
-        }
-    }
+		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("chestData")) {
+			NBTTagCompound chestData = stack.getTagCompound().getCompoundTag("chestData");
+			chestData.removeTag("facing");
+			chestData.setInteger("x", pos.getX());
+			chestData.setInteger("y", pos.getY());
+			chestData.setInteger("z", pos.getZ());
 
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z)
-    {
-        if(!world.isRemote)
-        {
-            if(!player.isSneaking())
-            {
-                player.openGui(CompactStorage.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
+			chest.readFromNBT(chestData);
+			chest.markDirty();
+		}
+	}
 
-                return true;
-            }
-            else
-            {
-                ItemStack held = player.getHeldItem(EnumHand.MAIN_HAND);
-                TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
-                if(chest != null && !chest.getRetaining() && !held.isEmpty() && held.getItem() == Items.DIAMOND)
-                {
-                    chest.setRetaining(true);
-                    held.setCount(held.getCount() - 1);
-                    player.sendMessage(new TextComponentString(TextFormatting.AQUA + "Chest will now retain items when broken!"));
-                    world.playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.AMBIENT, 1, 1);
-                    chest.updateBlock();
-                }
-            }
-        }
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float x, float y, float z) {
+		if (!world.isRemote) {
+			if (!player.isSneaking()) {
+				player.openGui(CompactStorage.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
 
-        return !player.isSneaking();
-    }
+				return true;
+			} else {
+				ItemStack held = player.getHeldItem(EnumHand.MAIN_HAND);
+				TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
+				if (chest != null && !chest.getRetaining() && !held.isEmpty() && held.getItem() == Items.DIAMOND) {
+					chest.setRetaining(true);
+					held.setCount(held.getCount() - 1);
+					player.sendMessage(new TextComponentString(TextFormatting.AQUA + "Chest will now retain items when broken!"));
+					world.playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.AMBIENT, 1, 1);
+					chest.updateBlock();
+				}
+			}
+		}
 
-    @Override
-    public boolean hasTileEntity(IBlockState state) {
-    	return true;
-    }
-    
-    @Override
-	public TileEntity createTileEntity(World world, IBlockState state)
-    {
-        return new TileEntityChest();
-    }
+		return !player.isSneaking();
+	}
 
-    /**
-     * The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
-     */
-    @Override
-	public EnumBlockRenderType getRenderType(IBlockState state)
-    {
-        return EnumBlockRenderType.INVISIBLE;
-    }
+	@Override
+	public boolean hasTileEntity(IBlockState state) {
+		return true;
+	}
 
-    @Override
-    public void breakBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state)
-    {
-        TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
+	@Override
+	public TileEntity createTileEntity(World world, IBlockState state) {
+		return new TileEntityChest();
+	}
 
-        if(chest != null)
-        {
-            ItemStack stack = new ItemStack(CompactStorage.ModBlocks.chest, 1);
-            Random rand = new Random();
+	/**
+	 * The type of render function called. 3 for standard block models, 2 for TESR's, 1 for liquids, -1 is no render
+	 */
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.INVISIBLE;
+	}
 
-            stack.setTagCompound(new NBTTagCompound());
+	@Override
+	public void breakBlock(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state) {
+		TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
 
-            int invX = chest.invX;
-            int invY = chest.invY;
-            int hue = chest.getHue();
-            int color = chest.color.getRGB();
+		if (chest != null) {
+			ItemStack stack = new ItemStack(CompactStorage.ModBlocks.chest, 1);
+			Random rand = new Random();
 
-            String colorString = String.format("0x%06X", (0xFFFFFF & color));
+			stack.setTagCompound(new NBTTagCompound());
 
-            stack.getTagCompound().setIntArray("size", new int[]{invX, invY});
-            stack.getTagCompound().setString("color", colorString);
-            stack.getTagCompound().setInteger("hue", hue);
+			int invX = chest.invX;
+			int invY = chest.invY;
+			int hue = chest.getHue();
+			int color = chest.color.getRGB();
 
-            if(chest.getRetaining())
-            {
-                NBTTagCompound chestData = new NBTTagCompound();
+			String colorString = String.format("0x%06X", (0xFFFFFF & color));
 
-                chest.writeToNBT(chestData);
-                stack.getTagCompound().setTag("chestData", chestData);
-            }
-            else
-            {
-                for(int slot = 0; slot < chest.items.length; slot++)
-                {
-                    float randX = rand.nextFloat();
-                    float randZ = rand.nextFloat();
+			stack.getTagCompound().setIntArray("size", new int[] { invX, invY });
+			stack.getTagCompound().setString("color", colorString);
+			stack.getTagCompound().setInteger("hue", hue);
 
-                    if(chest.items != null && chest.items[slot] != null && chest.items[slot] != ItemStack.EMPTY) world.spawnEntity(new EntityItem(world, pos.getX() + randX, pos.getY() + 0.5f, pos.getZ() + randZ, chest.items[slot]));
-                }
-            }
+			if (chest.getRetaining()) {
+				NBTTagCompound chestData = new NBTTagCompound();
 
-            world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack));
-        }
+				chest.writeToNBT(chestData);
+				stack.getTagCompound().setTag("chestData", chestData);
+			} else {
+				for (int slot = 0; slot < chest.items.length; slot++) {
+					float randX = rand.nextFloat();
+					float randZ = rand.nextFloat();
 
-        super.breakBlock(world, pos, state);
-    }
+					if (chest.items != null && chest.items[slot] != null && chest.items[slot] != ItemStack.EMPTY) world.spawnEntity(new EntityItem(world, pos.getX() + randX, pos.getY() + 0.5f, pos.getZ() + randZ, chest.items[slot]));
+				}
+			}
 
-    @Override
-    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items)
-    {
+			world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack));
+		}
 
-    }
+		super.breakBlock(world, pos, state);
+	}
 
-    @Override
-    @Nonnull
-    public ItemStack getPickBlock(@Nonnull IBlockState state, RayTraceResult target, @Nonnull World world, @Nonnull BlockPos pos, EntityPlayer player)
-    {
-        ItemStack stack = new ItemStack(CompactStorage.ModBlocks.chest, 1);
-        TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
+	@Override
+	public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
 
-        stack.setTagCompound(new NBTTagCompound());
-        stack.getTagCompound().setIntArray("size", new int[] {chest.invX, chest.invY});
+	}
 
-        return stack;
-    }
+	@Override
+	@Nonnull
+	public ItemStack getPickBlock(@Nonnull IBlockState state, RayTraceResult target, @Nonnull World world, @Nonnull BlockPos pos, EntityPlayer player) {
+		ItemStack stack = new ItemStack(CompactStorage.ModBlocks.chest, 1);
+		TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
 
-    @Override
-    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return null;
-    }
+		stack.setTagCompound(new NBTTagCompound());
+		stack.getTagCompound().setIntArray("size", new int[] { chest.invX, chest.invY });
 
-    @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face)
-    {
-        return BlockFaceShape.UNDEFINED;
-    }
+		return stack;
+	}
+
+	@Override
+	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+		return null;
+	}
+
+	@Override
+	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+		return BlockFaceShape.UNDEFINED;
+	}
 }

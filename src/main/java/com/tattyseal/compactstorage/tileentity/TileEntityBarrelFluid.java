@@ -22,169 +22,137 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TileEntityBarrelFluid extends TileEntity implements IBarrel, ITickable
-{
-    public static final int CAPACITY = 32000;
+public class TileEntityBarrelFluid extends TileEntity implements IBarrel, ITickable {
+	public static final int CAPACITY = 32000;
 
-    public FluidTank tank;
-    public int hue;
+	public FluidTank tank;
+	public int hue;
 
-    public int lastAmount;
+	public int lastAmount;
 
-    public TileEntityBarrelFluid()
-    {
-        super();
-        tank = new FluidTank(CAPACITY);
-        hue = 128;
-    }
+	public TileEntityBarrelFluid() {
+		super();
+		tank = new FluidTank(CAPACITY);
+		hue = 128;
+	}
 
-    @Override
-    public ItemStack dropItems(EntityPlayer player)
-    {
-        return ItemStack.EMPTY;
-    }
+	@Override
+	public ItemStack dropItems(EntityPlayer player) {
+		return ItemStack.EMPTY;
+	}
 
-    @Override
-    public ItemStack insertItems(@Nonnull ItemStack stack, EntityPlayer player)
-    {
-        FluidActionResult res = FluidUtil.tryEmptyContainerAndStow(stack, tank, null, tank.getCapacity(), player, true);
+	@Override
+	public ItemStack insertItems(@Nonnull ItemStack stack, EntityPlayer player) {
+		FluidActionResult res = FluidUtil.tryEmptyContainerAndStow(stack, tank, null, tank.getCapacity(), player, true);
 
-        if (res.isSuccess())
-        {
-            return res.result;
-        }
-        else
-        {
-            res = FluidUtil.tryFillContainerAndStow(stack, tank, null, tank.getCapacity(), player, true);
-            if(res.isSuccess())
-            {
-                return res.result;
-            }
-        }
+		if (res.isSuccess()) {
+			return res.result;
+		} else {
+			res = FluidUtil.tryFillContainerAndStow(stack, tank, null, tank.getCapacity(), player, true);
+			if (res.isSuccess()) { return res.result; }
+		}
 
-        markDirty();
+		markDirty();
 
-        return stack;
-    }
+		return stack;
+	}
 
-    @Override
-    public int color()
-    {
-        return hue;
-    }
+	@Override
+	public int color() {
+		return hue;
+	}
 
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound)
-    {
-        compound.setTag("fluid", tank.writeToNBT(new NBTTagCompound()));
-        compound.setInteger("hue", hue);
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+		compound.setTag("fluid", tank.writeToNBT(new NBTTagCompound()));
+		compound.setInteger("hue", hue);
 
-        return super.writeToNBT(compound);
-    }
+		return super.writeToNBT(compound);
+	}
 
-    @Override
-    public void readFromNBT(NBTTagCompound compound)
-    {
-        tank = new FluidTank(CAPACITY);
-        tank.readFromNBT(compound.getCompoundTag("fluid"));
+	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		tank = new FluidTank(CAPACITY);
+		tank.readFromNBT(compound.getCompoundTag("fluid"));
 
-        hue = compound.getInteger("hue");
+		hue = compound.getInteger("hue");
 
-        super.readFromNBT(compound);
-    }
+		super.readFromNBT(compound);
+	}
 
-    @Override
-    public NBTTagCompound getUpdateTag()
-    {
-        NBTTagCompound tag =  super.getUpdateTag();
-        writeToNBT(tag);
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		NBTTagCompound tag = super.getUpdateTag();
+		writeToNBT(tag);
 
-        return tag;
-    }
+		return tag;
+	}
 
-    @Nullable
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket()
-    {
-        return new SPacketUpdateTileEntity(pos, 0, writeToNBT(new NBTTagCompound()));
-    }
+	@Nullable
+	@Override
+	public SPacketUpdateTileEntity getUpdatePacket() {
+		return new SPacketUpdateTileEntity(pos, 0, writeToNBT(new NBTTagCompound()));
+	}
 
-    @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt)
-    {
-        super.onDataPacket(net, pkt);
+	@Override
+	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+		super.onDataPacket(net, pkt);
 
-        readFromNBT(pkt.getNbtCompound());
-    }
+		readFromNBT(pkt.getNbtCompound());
+	}
 
-    @Override
-    public void handleUpdateTag(NBTTagCompound tag)
-    {
-        super.handleUpdateTag(tag);
-    }
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
+		super.handleUpdateTag(tag);
+	}
 
-    public IBlockState getState()
-    {
-        return world.getBlockState(pos);
-    }
+	public IBlockState getState() {
+		return world.getBlockState(pos);
+	}
 
-    @Override
-    public void markDirty()
-    {
-        world.markBlockRangeForRenderUpdate(pos, pos);
-        world.notifyBlockUpdate(pos, getState(), getState(), 3);
-        world.scheduleBlockUpdate(pos,this.getBlockType(),0,0);
-        super.markDirty();
-    }
+	@Override
+	public void markDirty() {
+		world.markBlockRangeForRenderUpdate(pos, pos);
+		world.notifyBlockUpdate(pos, getState(), getState(), 3);
+		world.scheduleBlockUpdate(pos, this.getBlockType(), 0, 0);
+		super.markDirty();
+	}
 
-    @Override
-    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
-    {
-        return oldState.getBlock() != newSate.getBlock();
-    }
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
+		return oldState.getBlock() != newSate.getBlock();
+	}
 
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
-    {
-        return super.hasCapability(capability, facing) || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
-    }
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+		return super.hasCapability(capability, facing) || capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+	}
 
-    @Nullable
-    @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
-    {
-        if(capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-        {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tank);
-        }
+	@Nullable
+	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+		if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) { return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tank); }
 
-        return super.getCapability(capability, facing);
-    }
+		return super.getCapability(capability, facing);
+	}
 
-    @Override
-    public void update()
-    {
-        if(tank != null)
-        {
-            if(tank.getFluid() != null && lastAmount != tank.getFluidAmount())
-            {
-                markDirty();
-            }
+	@Override
+	public void update() {
+		if (tank != null) {
+			if (tank.getFluid() != null && lastAmount != tank.getFluidAmount()) {
+				markDirty();
+			}
 
-            lastAmount = tank.getFluid() == null ? 0 : tank.getFluidAmount();
-        }
-    }
+			lastAmount = tank.getFluid() == null ? 0 : tank.getFluidAmount();
+		}
+	}
 
-    @SideOnly(Side.CLIENT)
-    public String getText()
-    {
-        if(tank == null || tank.getFluid() ==  null || tank.getFluidAmount() == 0)
-        {
-            return "Empty";
-        }
-        else
-        {
-            return tank.getFluidAmount() + "/" + CAPACITY + "mB";
-        }
-    }
+	@SideOnly(Side.CLIENT)
+	public String getText() {
+		if (tank == null || tank.getFluid() == null || tank.getFluidAmount() == 0) {
+			return "Empty";
+		} else {
+			return tank.getFluidAmount() + "/" + CAPACITY + "mB";
+		}
+	}
 }

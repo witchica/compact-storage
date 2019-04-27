@@ -6,12 +6,10 @@ import org.apache.logging.log4j.Logger;
 /**
  * Created by tattyseal on 07/09/15.
  */
-public class LogHelper
-{
-    public static final Logger logger = LogManager.getLogger("CompactStorage");
+public class LogHelper {
+	public static final Logger logger = LogManager.getLogger("CompactStorage");
 
-    public static void dump(String string)
-    {
-        logger.info("COMPACTSTORAGE DATA DUMP: " + string);
-    }
+	public static void dump(String string) {
+		logger.info("COMPACTSTORAGE DATA DUMP: " + string);
+	}
 }
