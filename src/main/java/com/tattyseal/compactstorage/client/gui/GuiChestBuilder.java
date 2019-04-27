@@ -6,8 +6,8 @@ import com.tattyseal.compactstorage.client.gui.responder.GuiChestBuilderResponde
 import com.tattyseal.compactstorage.client.gui.slider.ColumnFormatType;
 import com.tattyseal.compactstorage.client.gui.slider.HueFormatType;
 import com.tattyseal.compactstorage.client.gui.slider.RowFormatType;
-import com.tattyseal.compactstorage.network.packet.C01PacketUpdateBuilder;
-import com.tattyseal.compactstorage.network.packet.C02PacketCraftChest;
+import com.tattyseal.compactstorage.packet.MessageCraftChest;
+import com.tattyseal.compactstorage.packet.MessageUpdateBuilder;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
 import com.tattyseal.compactstorage.util.RenderUtil;
 import com.tattyseal.compactstorage.util.StorageInfo;
@@ -73,19 +73,19 @@ public class GuiChestBuilder extends GuiContainer
 
         int offsetY = 18;
 
-        columnSlider = new GuiSlider(new GuiChestBuilderResponder(this), 0, guiLeft + 5, guiTop + offsetY + 22, "Columns", 1f, 24f, builder.info.getSizeX(), new ColumnFormatType());
+        columnSlider = new GuiSlider(new GuiChestBuilderResponder(this), 0, guiLeft + 5, guiTop + offsetY + 22, "Columns", 1f, 24f, 9, new ColumnFormatType());
         columnSlider.setWidth((xSize / 2) - 7);
-        columnSlider.setSliderValue(builder.info.getSizeX(), false);
+        columnSlider.setSliderValue(builder.getInfo().getSizeX(), false);
         buttonList.add(columnSlider);
 
-        rowSlider = new GuiSlider(new GuiChestBuilderResponder(this), 1, guiLeft + ((xSize / 2)) + 3, guiTop + offsetY + 22, "Rows", 1f, 12f, builder.info.getSizeX(), new RowFormatType());
+        rowSlider = new GuiSlider(new GuiChestBuilderResponder(this), 1, guiLeft + ((xSize / 2)) + 3, guiTop + offsetY + 22, "Rows", 1f, 12f, 3, new RowFormatType());
         rowSlider.setWidth((xSize / 2) - 7);
-        rowSlider.setSliderValue(builder.info.getSizeY(), false);
+        rowSlider.setSliderValue(builder.getInfo().getSizeY(), false);
         buttonList.add(rowSlider);
 
-        hueSlider = new GuiSliderHue(new GuiChestBuilderResponder(this), 2, guiLeft + 5, guiTop + offsetY, "Hue", -1f, 360f, builder.info.getHue(), new HueFormatType());
+        hueSlider = new GuiSliderHue(new GuiChestBuilderResponder(this), 2, guiLeft + 5, guiTop + offsetY, "Hue", -1f, 360f, 180, new HueFormatType());
         hueSlider.setWidth(xSize - 10);
-        hueSlider.setSliderValue(builder.info.getHue(), false);
+        hueSlider.setSliderValue(builder.getInfo().getHue(), false);
         buttonList.add(hueSlider);
     }
 
@@ -109,8 +109,8 @@ public class GuiChestBuilder extends GuiContainer
             {
                 if(y >= startY && y <= endY)
                 {
-                    StorageInfo info = new StorageInfo(builder.info.getSizeX(), builder.info.getSizeY(), builder.info.getHue(), type);
-                    CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(pos, builder.dimension, info));
+                    StorageInfo info = new StorageInfo(builder.getInfo().getSizeX(), builder.getInfo().getSizeY(), builder.getInfo().getHue(), type);
+                    CompactStorage.NETWORK.sendToServer(new MessageUpdateBuilder(pos, info));
                 }
             }
         }
@@ -122,15 +122,15 @@ public class GuiChestBuilder extends GuiContainer
         this.drawDefaultBackground();
     	super.drawScreen(mouseX, mouseY, k);
 
-        if(builder != null && builder.info != null)
+        if(builder != null)
     	{
             boolean hoverTooltip = false;
 
     		for(int x = 0; x < 4; x++)
             {
-                if(x < builder.info.getMaterialCost().size() && builder.info.getMaterialCost().get(x) != null)
+                if(x < builder.getInfo().getMaterialCost().size() && builder.getInfo().getMaterialCost().get(x) != null)
                 {
-                    ItemStack stack = builder.info.getMaterialCost().get(x);
+                    ItemStack stack = builder.getInfo().getMaterialCost().get(x);
 
                     int startX = guiLeft + ((xSize / 2) - 36) + (x * 18);
                     int startY = guiTop + 62;
@@ -195,7 +195,7 @@ public class GuiChestBuilder extends GuiContainer
 
         for(StorageInfo.Type type : StorageInfo.Type.values())
         {
-            if(!type.equals(builder.info.getType()))
+            if(!type.equals(builder.getInfo().getType()))
             {
                 drawTab(type, type.display);
             }
@@ -230,7 +230,7 @@ public class GuiChestBuilder extends GuiContainer
 
         GL11.glColor3f(1, 1, 1);
         
-        StorageInfo info = builder.info;
+        StorageInfo info = builder.getInfo();
         
         if(info == null)
         {
@@ -251,27 +251,21 @@ public class GuiChestBuilder extends GuiContainer
             
             RenderHelper.disableStandardItemLighting();
         }
-
-        if (builder.hasCustomName()) {
-            fontRenderer.drawString(builder.getName(), guiLeft + 7, guiTop + 7, 0x404040);
-        } else {
-            fontRenderer.drawString(I18n.format("tile.chestBuilder.name"), guiLeft + 7, guiTop + 7, 0x404040);
-        }
-
-        drawTab(builder.info.getType(), builder.info.getType().display);
+        fontRenderer.drawString(I18n.format("tile.chestBuilder.name"), guiLeft + 7, guiTop + 7, 0x404040);
+        drawTab(builder.getInfo().getType(), builder.getInfo().getType().display);
     }
 
     @Override
     public void actionPerformed(GuiButton button) throws IOException
     {
     	super.actionPerformed(button);
-        StorageInfo info = new StorageInfo(builder.info.getSizeX(), builder.info.getSizeY(), builder.info.getHue(), builder.info.getType());
+        StorageInfo info = builder.getInfo();
 
     	switch(button.id)
     	{
     		case 4:
     		{
-    			CompactStorage.instance.wrapper.sendToServer(new C02PacketCraftChest(pos, builder.dimension, info));
+    			CompactStorage.NETWORK.sendToServer(new MessageCraftChest(pos, info));
     			
     			break;
     		}
@@ -288,7 +282,7 @@ public class GuiChestBuilder extends GuiContainer
      */
     private void drawTab(StorageInfo.Type type, ItemStack stack)
     {
-        boolean flag = type.ordinal() == builder.info.getType().ordinal();
+        boolean flag = type.ordinal() == builder.getInfo().getType().ordinal();
         int i = type.ordinal();
         int j = i * 28;
         int k = 0;

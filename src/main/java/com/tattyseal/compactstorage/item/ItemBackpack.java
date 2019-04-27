@@ -29,7 +29,7 @@ public class ItemBackpack extends Item
     {
         super();
         setTranslationKey("backpack");
-        setCreativeTab(CompactStorage.tabCS);
+        setCreativeTab(CompactStorage.TAB);
         setMaxStackSize(1);
 
     }

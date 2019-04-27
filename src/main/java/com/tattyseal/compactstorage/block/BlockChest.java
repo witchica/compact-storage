@@ -50,7 +50,7 @@ public class BlockChest extends Block
         super(Material.WOOD);
         setTranslationKey("compactchest");
         setRegistryName("compactChest");
-        setCreativeTab(CompactStorage.tabCS);
+        setCreativeTab(CompactStorage.TAB);
 
         setHardness(2F);
         setResistance(2F);

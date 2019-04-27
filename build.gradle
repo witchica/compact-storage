@@ -12,7 +12,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 
-version = "$System.env.CIRCLE_BRANCH-$System.env.CIRCLE_BUILD_NUM"
+version = "4.0.0"
 group = "com.tattyseal.compactstorage"
 archivesBaseName = "CompactStorage"
 

@@ -2,7 +2,7 @@ package com.tattyseal.compactstorage.client.gui.responder;
 
 import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.client.gui.GuiChestBuilder;
-import com.tattyseal.compactstorage.network.packet.C01PacketUpdateBuilder;
+import com.tattyseal.compactstorage.packet.MessageUpdateBuilder;
 import com.tattyseal.compactstorage.util.StorageInfo;
 import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.util.math.MathHelper;
@@ -24,26 +24,26 @@ public class GuiChestBuilderResponder implements GuiPageButtonList.GuiResponder
     @Override
     public void setEntryValue(int id, float value)
     {
-        StorageInfo info = new StorageInfo(gui.builder.info.getSizeX(), gui.builder.info.getSizeY(), gui.builder.info.getHue(), gui.builder.info.getType());
+        StorageInfo info = new StorageInfo(gui.builder.getInfo().getSizeX(), gui.builder.getInfo().getSizeY(), gui.builder.getInfo().getHue(), gui.builder.getInfo().getType());
 
         switch(id)
         {
             case 0:
             {
                 info.setSizeX((int) MathHelper.clamp(value, 1, 24));
-                CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(gui.pos, gui.builder.dimension, info));
+                CompactStorage.NETWORK.sendToServer(new MessageUpdateBuilder(gui.pos, info));
                 break;
             }
             case 1:
             {
                 info.setSizeY((int) MathHelper.clamp(value, 1, 12));
-                CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(gui.pos, gui.builder.dimension, info));
+                CompactStorage.NETWORK.sendToServer(new MessageUpdateBuilder(gui.pos, info));
                 break;
             }
             case 2:
             {
                 info.setHue((int) MathHelper.clamp(value, -1, 360));
-                CompactStorage.instance.wrapper.sendToServer(new C01PacketUpdateBuilder(gui.pos, gui.builder.dimension, info));
+                CompactStorage.NETWORK.sendToServer(new MessageUpdateBuilder(gui.pos, info));
                 break;
             }
         }

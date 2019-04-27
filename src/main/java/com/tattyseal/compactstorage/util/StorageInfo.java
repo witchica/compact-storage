@@ -2,6 +2,7 @@ package com.tattyseal.compactstorage.util;
 
 import com.tattyseal.compactstorage.CompactStorage;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,22 +31,6 @@ public class StorageInfo
 		this.sizeY = sizeY;
 		this.hue = hue;
 		this.type = type;
-	}
-
-	public enum Type
-	{
-		CHEST("Chest", new ItemStack(CompactStorage.ModBlocks.chest, 1)),
-		BACKPACK("Backpack", new ItemStack(CompactStorage.ModItems.backpack, 1));
-
-
-		public String name;
-		public ItemStack display;
-
-		Type(String name, ItemStack display)
-		{
-			this.name = name;
-			this.display = display;
-		}
 	}
 
 	public int getSizeX() 
@@ -83,6 +68,20 @@ public class StorageInfo
 	public void setType(Type type)
 	{
 		this.type = type;
+	}
+	
+	public NBTTagCompound serialize() {
+		NBTTagCompound tag = new NBTTagCompound();
+		tag.setIntArray("data", new int[] {sizeX, sizeY, hue, type.ordinal()});
+		return tag;
+	}
+	
+	public void deserialize(NBTTagCompound tag) {
+		int[] data = tag.getIntArray("data");
+		sizeX = data[0];
+		sizeY = data[1];
+		hue = data[2];
+		type = Type.values()[data[3]];
 	}
 	
 	public List<ItemStack> getMaterialCost()
@@ -154,5 +153,21 @@ public class StorageInfo
 		stack.setCount(amount);
 
 		return stack;
+	}
+	
+	public static enum Type
+	{
+		CHEST("Chest", new ItemStack(CompactStorage.ModBlocks.chest, 1)),
+		BACKPACK("Backpack", new ItemStack(CompactStorage.ModItems.backpack, 1));
+
+
+		public String name;
+		public ItemStack display;
+
+		Type(String name, ItemStack display)
+		{
+			this.name = name;
+			this.display = display;
+		}
 	}
 }

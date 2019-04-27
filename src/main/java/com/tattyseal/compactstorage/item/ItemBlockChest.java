@@ -30,7 +30,7 @@ public class ItemBlockChest extends ItemBlock
 	@Override
     public void getSubItems(@Nonnull CreativeTabs tab, @Nonnull NonNullList<ItemStack> items)
     {
-		if(tab == CompactStorage.tabCS)
+		if(tab == CompactStorage.TAB)
 		{
 			ItemStack stack = new ItemStack(this, 1);
 

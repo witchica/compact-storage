@@ -31,7 +31,7 @@ public class BlockBarrel extends Block
         setHardness(5f);
         setHarvestLevel("pickaxe", 2);
         init();
-        setCreativeTab(CompactStorage.tabCS);
+        setCreativeTab(CompactStorage.TAB);
     }
 
     public void init()

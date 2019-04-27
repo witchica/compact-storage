@@ -17,10 +17,8 @@ import com.tattyseal.compactstorage.event.CompactStorageEventHandler;
 import com.tattyseal.compactstorage.event.ConnectionHandler;
 import com.tattyseal.compactstorage.item.ItemBackpack;
 import com.tattyseal.compactstorage.item.ItemBlockChest;
-import com.tattyseal.compactstorage.network.handler.C01HandlerUpdateBuilder;
-import com.tattyseal.compactstorage.network.handler.C02HandlerCraftChest;
-import com.tattyseal.compactstorage.network.packet.C01PacketUpdateBuilder;
-import com.tattyseal.compactstorage.network.packet.C02PacketCraftChest;
+import com.tattyseal.compactstorage.packet.MessageCraftChest;
+import com.tattyseal.compactstorage.packet.MessageUpdateBuilder;
 import com.tattyseal.compactstorage.proxy.IProxy;
 import com.tattyseal.compactstorage.tileentity.TileEntityBarrel;
 import com.tattyseal.compactstorage.tileentity.TileEntityBarrelFluid;
@@ -43,6 +41,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -59,23 +58,25 @@ import net.minecraftforge.oredict.OreDictionary;
  * Created by Toby on 06/11/2014.
  * Updated for 3.0 on the 16/02/2018
  */
-@Mod(modid = CompactStorage.ID, name = "CompactStorage", version = "3.1", guiFactory = "com.tattyseal.compactstorage.client.gui.factory.CompactStorageGuiFactory")
+@Mod(modid = CompactStorage.MODID, name = CompactStorage.NAME, version = CompactStorage.VERSION, guiFactory = "com.tattyseal.compactstorage.client.gui.factory.CompactStorageGuiFactory")
 @Mod.EventBusSubscriber
 public class CompactStorage
 {
-    @Mod.Instance(CompactStorage.ID)
+	
+	public static final String MODID = "compactstorage";
+	public static final String NAME = "Compact Storage";
+	public static final String VERSION = "4.0.0";
+    public static final CreativeTabs TAB = new CreativeTabCompactStorage();
+    public static final Logger LOGGER = LogManager.getLogger(MODID);
+    public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+    
+    @Instance
     public static CompactStorage instance;
 
-    @SidedProxy(clientSide = "com.tattyseal.compactstorage.proxy.ClientProxy", serverSide = "com.tattyseal.compactstorage.proxy.ServerProxy", modId = CompactStorage.ID)
+    @SidedProxy(clientSide = "com.tattyseal.compactstorage.proxy.ClientProxy", serverSide = "com.tattyseal.compactstorage.proxy.ServerProxy", modId = CompactStorage.MODID)
     public static IProxy proxy;
 
-    public static final CreativeTabs tabCS = new CreativeTabCompactStorage();
-    public static final Logger logger = LogManager.getLogger("CompactStorage");
-    public SimpleNetworkWrapper wrapper;
-    
-    public static final String ID = "compactstorage";
-
-    @GameRegistry.ObjectHolder(ID)
+    @GameRegistry.ObjectHolder(MODID)
     public static class ModBlocks
     {
         public static Block chest;
@@ -84,7 +85,7 @@ public class CompactStorage
         public static Block barrel_fluid;
     }
 
-    @GameRegistry.ObjectHolder(ID)
+    @GameRegistry.ObjectHolder(MODID)
     public static class ModItems
     {
         public static ItemBlock itemBlockBarrel;
@@ -103,10 +104,10 @@ public class CompactStorage
                 ModBlocks.barrel_fluid = new BlockFluidBarrel()
         );
 
-        GameRegistry.registerTileEntity(TileEntityChest.class, new ResourceLocation("tilechest"));
-        GameRegistry.registerTileEntity(TileEntityChestBuilder.class, new ResourceLocation("tilechestbuilder"));
-        GameRegistry.registerTileEntity(TileEntityBarrel.class, new ResourceLocation("tilebarrel"));
-        GameRegistry.registerTileEntity(TileEntityBarrelFluid.class, new ResourceLocation("tileBarrel_fluid"));
+        GameRegistry.registerTileEntity(TileEntityChest.class, new ResourceLocation(MODID, "chest"));
+        GameRegistry.registerTileEntity(TileEntityChestBuilder.class, new ResourceLocation(MODID, "chest_builder"));
+        GameRegistry.registerTileEntity(TileEntityBarrel.class, new ResourceLocation(MODID, "barrel"));
+        GameRegistry.registerTileEntity(TileEntityBarrelFluid.class, new ResourceLocation(MODID, "fluid_barrel"));
     }
 
     @SubscribeEvent
@@ -118,7 +119,7 @@ public class CompactStorage
 
         ItemBlock ibChestBuilder = new ItemBlock(ModBlocks.chestBuilder);
         ibChestBuilder.setRegistryName("chestBuilder");
-        ibChestBuilder.setCreativeTab(tabCS);
+        ibChestBuilder.setCreativeTab(TAB);
         e.getRegistry().register(ibChestBuilder);
 
         ModItems.backpack = new ItemBackpack();
@@ -163,9 +164,8 @@ public class CompactStorage
         OreDictionary.registerOre("string", Items.STRING);
         OreDictionary.registerOre("wool", Blocks.WOOL);
         
-        wrapper = NetworkRegistry.INSTANCE.newSimpleChannel(CompactStorage.ID);
-        wrapper.registerMessage(C01HandlerUpdateBuilder.class, C01PacketUpdateBuilder.class, 0, Side.SERVER);
-        wrapper.registerMessage(C02HandlerCraftChest.class, C02PacketCraftChest.class, 1, Side.SERVER);
+        NETWORK.registerMessage(MessageUpdateBuilder::onMessage, MessageUpdateBuilder.class, 0, Side.SERVER);
+        NETWORK.registerMessage(MessageCraftChest::onMessage, MessageCraftChest.class, 1, Side.SERVER);
 
         ConfigurationHandler.configFile = event.getSuggestedConfigurationFile();
 
