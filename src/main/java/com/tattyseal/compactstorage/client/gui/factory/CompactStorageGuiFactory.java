@@ -1,11 +1,12 @@
 package com.tattyseal.compactstorage.client.gui.factory;
 
+import java.util.Set;
+
 import com.tattyseal.compactstorage.client.gui.config.GuiCompactStorageConfig;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraftforge.fml.client.IModGuiFactory;
-
-import java.util.Set;
 
 /**
  * Created by tobystrong on 03/05/2017.

@@ -1,12 +1,5 @@
 package com.tattyseal.compactstorage.util;
 
-import com.tattyseal.compactstorage.CompactStorage;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.tattyseal.compactstorage.ConfigurationHandler.binder;
 import static com.tattyseal.compactstorage.ConfigurationHandler.binderBackpack;
 import static com.tattyseal.compactstorage.ConfigurationHandler.binderModifier;
@@ -17,6 +10,14 @@ import static com.tattyseal.compactstorage.ConfigurationHandler.secondaryModifie
 import static com.tattyseal.compactstorage.ConfigurationHandler.storage;
 import static com.tattyseal.compactstorage.ConfigurationHandler.storageBackpack;
 import static com.tattyseal.compactstorage.ConfigurationHandler.storageModifier;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.tattyseal.compactstorage.CompactStorage;
+
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class StorageInfo {
 	private int sizeX;

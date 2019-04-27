@@ -1,9 +1,14 @@
 package com.tattyseal.compactstorage.tileentity;
 
+import java.awt.Color;
+
+import javax.annotation.Nonnull;
+
 import com.tattyseal.compactstorage.ConfigurationHandler;
 import com.tattyseal.compactstorage.api.IChest;
 import com.tattyseal.compactstorage.block.BlockChest;
 import com.tattyseal.compactstorage.util.StorageInfo;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -24,9 +29,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
-
-import javax.annotation.Nonnull;
-import java.awt.Color;
 
 /**
  * Created by Toby on 06/11/2014.

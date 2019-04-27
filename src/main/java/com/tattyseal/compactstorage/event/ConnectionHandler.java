@@ -1,6 +1,7 @@
 package com.tattyseal.compactstorage.event;
 
 import com.tattyseal.compactstorage.ConfigurationHandler;
+
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

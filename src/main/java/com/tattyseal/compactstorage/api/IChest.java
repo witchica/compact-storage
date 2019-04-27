@@ -1,6 +1,7 @@
 package com.tattyseal.compactstorage.api;
 
 import com.tattyseal.compactstorage.util.StorageInfo;
+
 import net.minecraft.inventory.IInventory;
 
 /**

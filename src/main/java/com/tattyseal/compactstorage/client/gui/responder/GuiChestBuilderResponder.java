@@ -1,13 +1,14 @@
 package com.tattyseal.compactstorage.client.gui.responder;
 
+import javax.annotation.Nonnull;
+
 import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.client.gui.GuiChestBuilder;
 import com.tattyseal.compactstorage.packet.MessageUpdateBuilder;
 import com.tattyseal.compactstorage.util.StorageInfo;
+
 import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.util.math.MathHelper;
-
-import javax.annotation.Nonnull;
 
 /**
  * Created by tobystrong on 02/05/2017.

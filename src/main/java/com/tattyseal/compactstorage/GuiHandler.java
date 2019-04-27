@@ -6,6 +6,7 @@ import com.tattyseal.compactstorage.client.gui.GuiChestBuilder;
 import com.tattyseal.compactstorage.inventory.ContainerChest;
 import com.tattyseal.compactstorage.inventory.ContainerChestBuilder;
 import com.tattyseal.compactstorage.inventory.InventoryBackpack;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.EnumHand;

@@ -1,9 +1,9 @@
 package com.tattyseal.compactstorage.client.gui.slider;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.client.gui.GuiSlider;
 import net.minecraft.client.resources.I18n;
-
-import javax.annotation.Nonnull;
 
 /**
  * Created by tobystrong on 02/05/2017.

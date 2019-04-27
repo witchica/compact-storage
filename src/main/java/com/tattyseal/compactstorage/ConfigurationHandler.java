@@ -1,7 +1,11 @@
 package com.tattyseal.compactstorage;
 
+import java.io.File;
+import java.util.List;
+
 import com.google.common.collect.Lists;
 import com.tattyseal.compactstorage.exception.InvalidConfigurationException;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -10,9 +14,6 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
-
-import java.io.File;
-import java.util.List;
 
 /**
  * Created by Toby on 07/11/2014.

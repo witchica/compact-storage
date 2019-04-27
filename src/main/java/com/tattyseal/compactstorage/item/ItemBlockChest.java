@@ -1,7 +1,13 @@
 package com.tattyseal.compactstorage.item;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.exception.InvalidSizeException;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -12,10 +18,6 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Created by Toby on 06/11/2014.

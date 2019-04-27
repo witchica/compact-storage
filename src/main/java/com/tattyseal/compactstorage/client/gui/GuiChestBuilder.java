@@ -1,5 +1,10 @@
 package com.tattyseal.compactstorage.client.gui;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.lwjgl.opengl.GL11;
+
 import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.client.gui.elements.GuiSliderHue;
 import com.tattyseal.compactstorage.client.gui.responder.GuiChestBuilderResponder;
@@ -11,6 +16,7 @@ import com.tattyseal.compactstorage.packet.MessageUpdateBuilder;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
 import com.tattyseal.compactstorage.util.RenderUtil;
 import com.tattyseal.compactstorage.util.StorageInfo;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiSlider;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -25,10 +31,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
-import org.lwjgl.opengl.GL11;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by Toby on 09/11/2014.

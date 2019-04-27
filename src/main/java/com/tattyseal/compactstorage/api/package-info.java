@@ -6,4 +6,5 @@
 package com.tattyseal.compactstorage.api;
 
 import com.tattyseal.compactstorage.CompactStorage;
+
 import net.minecraftforge.fml.common.API;

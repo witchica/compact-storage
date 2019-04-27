@@ -1,11 +1,11 @@
 package com.tattyseal.compactstorage.client.gui.elements;
 
+import java.awt.Color;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.client.gui.GuiSlider;
 import net.minecraft.client.renderer.GlStateManager;
-
-import java.awt.Color;
 
 /**
  * Created by tobystrong on 02/05/2017.

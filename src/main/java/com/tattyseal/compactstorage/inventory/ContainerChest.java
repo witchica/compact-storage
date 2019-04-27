@@ -1,7 +1,10 @@
 package com.tattyseal.compactstorage.inventory;
 
+import javax.annotation.Nonnull;
+
 import com.tattyseal.compactstorage.api.IChest;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
+
 import invtweaks.api.container.ChestContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -13,8 +16,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
 
 /**
  * Created by Toby on 11/11/2014.
