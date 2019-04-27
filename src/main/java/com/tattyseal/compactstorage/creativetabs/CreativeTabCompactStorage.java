@@ -2,14 +2,17 @@ package com.tattyseal.compactstorage.creativetabs;
 
 import javax.annotation.Nonnull;
 
+import com.tattyseal.compactstorage.CompactStorage;
+import com.tattyseal.compactstorage.tileentity.TileEntityChest;
+
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 
 /**
  * Created by Toby on 07/11/2014.
  */
 public class CreativeTabCompactStorage extends CreativeTabs {
+
 	public CreativeTabCompactStorage() {
 		super("compactStorage");
 	}
@@ -17,6 +20,8 @@ public class CreativeTabCompactStorage extends CreativeTabs {
 	@Override
 	@Nonnull
 	public ItemStack createIcon() {
-		return new ItemStack(Blocks.CHEST, 1, 0);
+		ItemStack stack = new ItemStack(CompactStorage.ModItems.ibChest);
+		new TileEntityChest().writeToNBT(stack.getOrCreateSubCompound("BlockEntityTag"));
+		return stack;
 	}
 }

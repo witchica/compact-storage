@@ -24,7 +24,7 @@ public class ItemBlockChest extends ItemBlock {
 
 	public ItemBlockChest(Block block) {
 		super(block);
-		this.setMaxStackSize(64);
+		this.setMaxStackSize(1);
 	}
 
 	@Override

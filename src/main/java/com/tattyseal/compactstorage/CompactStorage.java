@@ -25,6 +25,7 @@ import com.tattyseal.compactstorage.tileentity.TileEntityBarrelFluid;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
 import com.tattyseal.compactstorage.util.ModelUtil;
+import com.tattyseal.compactstorage.util.StorageInfo;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -33,8 +34,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -184,35 +183,8 @@ public class CompactStorage {
 	}
 
 	public static int getColorFromNBT(ItemStack stack) {
-		NBTTagCompound tag = stack.getTagCompound();
-
-		if (stack.hasTagCompound() && stack.getTagCompound().hasKey("hue")) {
-			int hue = stack.getTagCompound().getInteger("hue");
-			return getColorFromHue(hue);
-		}
-
-		if (stack.hasTagCompound() && !stack.getTagCompound().hasKey("hue") && stack.getTagCompound().hasKey("color")) {
-			String color = "";
-
-			if (tag.getTag("color") instanceof NBTTagInt) {
-				color = String.format("#%06X", (0xFFFFFF & tag.getInteger("color")));
-			} else {
-				color = tag.getString("color");
-
-				if (color.startsWith("0x")) {
-					color = "#" + color.substring(2);
-				}
-			}
-
-			if (!color.isEmpty()) {
-				Color c = Color.decode(color);
-				float[] hsbVals = new float[3];
-
-				hsbVals = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsbVals);
-				tag.setInteger("hue", (int) (hsbVals[0] * 360));
-			}
-		}
-
-		return 0xFFFFFF;
+		StorageInfo info = new StorageInfo(0, 0, 0, null);
+		info.deserialize(stack.getOrCreateSubCompound("BlockEntityTag").getCompoundTag("info"));
+		return getColorFromHue(info.getHue());
 	}
 }
