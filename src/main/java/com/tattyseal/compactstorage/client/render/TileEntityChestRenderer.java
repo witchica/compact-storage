@@ -22,8 +22,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntityChest> {
-	private ModelChest model;
+
+	private ModelChest model = new ModelChest();
 	private static final ResourceLocation texture = new ResourceLocation("compactstorage", "textures/models/chest.png");
+	ItemStack stack = new ItemStack(Items.DIAMOND, 1, 0);
+	EntityItem item;
 
 	@Override
 	public void render(TileEntityChest tile, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
@@ -34,7 +37,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
 
 		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
 
-		EnumFacing direction = tile.direction;
+		EnumFacing direction = tile.getDirection();
 
 		switch (direction) {
 		case SOUTH:
@@ -57,7 +60,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
 		int color;
 
 		try {
-			color = tile.color.brighter().getRGB();
+			color = tile.getColor().brighter().getRGB();
 		} catch (Exception exception) {
 			color = Color.white.getRGB();
 		}
@@ -67,7 +70,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
 		float b = (color & 255) / 255.0F;
 		GL11.glColor4f(r, g, b, 1F);
 
-		float f = tile.prevLidAngle + (tile.lidAngle - tile.prevLidAngle) * partialTicks;
+		float f = tile.getPrevLidAngle() + (tile.getLidAngle() - tile.getPrevLidAngle()) * partialTicks;
 
 		f = 1.0F - f;
 		f = 1.0F - f * f * f;
@@ -77,14 +80,11 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
 
 		GL11.glColor3f(1f, 1f, 1f);
 
-		if (tile.getRetaining()) {
-			ItemStack stack = new ItemStack(Items.DIAMOND, 1, 0);
-			EntityItem item = new EntityItem(tile.getWorld(), 0D, 0D, 0D, stack);
+		if (tile.isRetaining()) {
+			if (item == null) item = new EntityItem(tile.getWorld(), 0D, 0D, 0D, stack);
 			item.hoverStart = 0.0F;
-
 			GL11.glRotatef(180, 0, 0, 1);
 			GL11.glTranslatef(-0.5f, -1.1f, 0.01f);
-
 			Minecraft.getMinecraft().getRenderManager().renderEntity(item, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F, false);
 		}
 

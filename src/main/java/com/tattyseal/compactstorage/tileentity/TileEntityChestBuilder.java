@@ -9,20 +9,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class TileEntityChestBuilder extends TileEntity {
 
 	protected StorageInfo info = new StorageInfo(9, 3, 180, StorageInfo.Type.CHEST);
 	protected ItemHandler items = new ItemHandler(5);
-
-	@Override
-	public NBTTagCompound getUpdateTag() {
-		NBTTagCompound tag = new NBTTagCompound();
-		tag = writeToNBT(tag);
-
-		return tag;
-	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
@@ -41,15 +36,20 @@ public class TileEntityChestBuilder extends TileEntity {
 
 	@Override
 	public SPacketUpdateTileEntity getUpdatePacket() {
-		NBTTagCompound tag = getUpdateTag();
-
-		return new SPacketUpdateTileEntity(pos, 1, tag);
+		return null;
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		super.onDataPacket(net, pkt);
-		readFromNBT(pkt.getNbtCompound());
+	}
+
+	@Override
+	public NBTTagCompound getUpdateTag() {
+		return new NBTTagCompound();
+	}
+
+	@Override
+	public void handleUpdateTag(NBTTagCompound tag) {
 	}
 
 	public StorageInfo getInfo() {
@@ -58,6 +58,17 @@ public class TileEntityChestBuilder extends TileEntity {
 
 	public ItemHandler getItems() {
 		return items;
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+	}
+
+	@Override
+	public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(items);
+		return super.getCapability(capability, facing);
 	}
 
 	public class ItemHandler extends ItemStackHandler {

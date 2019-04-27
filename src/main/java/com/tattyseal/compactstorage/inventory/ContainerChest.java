@@ -3,6 +3,7 @@ package com.tattyseal.compactstorage.inventory;
 import javax.annotation.Nonnull;
 
 import com.tattyseal.compactstorage.api.IChest;
+import com.tattyseal.compactstorage.inventory.slot.SlotImmovable;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 
 import invtweaks.api.container.ChestContainer;
@@ -16,6 +17,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.items.SlotItemHandler;
 
 /**
  * Created by Toby on 11/11/2014.
@@ -41,25 +43,19 @@ public class ContainerChest extends Container {
 	public int ySize;
 
 	public ContainerChest(World world, IChest chest, EntityPlayer player, BlockPos pos) {
-		super();
-
 		this.world = world;
 		this.player = player;
 		this.pos = pos;
 		this.chest = chest;
-
-		chest.openInventory(player);
-
+		chest.onOpened(player);
 		backpackSlot = -1;
 		if (chest instanceof InventoryBackpack) {
 			backpackSlot = player.inventory.currentItem;
 		}
-
 		this.invX = chest.getInvX();
 		this.invY = chest.getInvY();
 		this.xSize = 7 + (invX < 9 ? (9 * 18) : (invX * 18)) + 7;
 		this.ySize = 15 + (invY * 18) + 13 + 54 + 4 + 18 + 7;
-
 		setupSlots();
 	}
 
@@ -76,9 +72,7 @@ public class ContainerChest extends Container {
 
 		for (int y = 0; y < invY; y++) {
 			for (int x = 0; x < invX; x++) {
-				Slot slot = new Slot(chest, lastId, slotX + (x * 18), slotY + (y * 18));
-				addSlotToContainer(slot);
-				lastId++;
+				addSlotToContainer(new SlotItemHandler(chest.getItems(), lastId++, slotX + (x * 18), slotY + (y * 18)));
 			}
 		}
 
@@ -148,7 +142,7 @@ public class ContainerChest extends Container {
 
 	@Override
 	public void onContainerClosed(EntityPlayer player) {
-		chest.closeInventory(player);
+		chest.onClosed(player);
 
 		if (!world.isRemote) {
 			boolean isChest = chest instanceof TileEntityChest;

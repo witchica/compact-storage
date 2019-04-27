@@ -72,10 +72,12 @@ public class StorageInfo {
 
 	public void deserialize(NBTTagCompound tag) {
 		int[] data = tag.getIntArray("data");
-		sizeX = data[0];
-		sizeY = data[1];
-		hue = data[2];
-		type = Type.values()[data[3]];
+		if (data.length == 4) {
+			sizeX = data[0];
+			sizeY = data[1];
+			hue = data[2];
+			type = Type.values()[data[3]];
+		}
 	}
 
 	public List<ItemStack> getMaterialCost() {
