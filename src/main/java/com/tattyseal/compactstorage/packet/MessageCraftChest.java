@@ -3,14 +3,12 @@ package com.tattyseal.compactstorage.packet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 import com.tattyseal.compactstorage.tileentity.TileEntityChestBuilder;
 import com.tattyseal.compactstorage.util.StorageInfo;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -97,7 +95,7 @@ public class MessageCraftChest implements IMessage {
 			}
 
 			if (hasRequiredMaterials && builder.getItems().getStackInSlot(4).isEmpty()) {
-				ItemStack stack = new ItemStack(message.info.getType().equals(StorageInfo.Type.BACKPACK) ? CompactStorage.ModItems.backpack : Item.getItemFromBlock(CompactStorage.ModBlocks.chest), 1);
+				ItemStack stack = message.info.getType().display.copy();
 				TileEntityChest chest = new TileEntityChest(message.info);
 				chest.writeToNBT(stack.getOrCreateSubCompound("BlockEntityTag"));
 				builder.getItems().setStackInSlot(4, stack);

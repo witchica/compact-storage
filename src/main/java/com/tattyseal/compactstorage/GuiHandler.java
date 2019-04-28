@@ -30,7 +30,7 @@ public class GuiHandler implements IGuiHandler {
 			// chest or backpack
 			IChest chest;
 
-			if (player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(CompactStorage.ModItems.backpack)) {
+			if (player.getHeldItem(EnumHand.MAIN_HAND).getItem().equals(CompactRegistry.BACKPACK)) {
 				chest = new InventoryBackpack(player.getHeldItem(EnumHand.MAIN_HAND));
 			} else {
 				chest = (IChest) world.getTileEntity(pos);
@@ -54,7 +54,7 @@ public class GuiHandler implements IGuiHandler {
 			// chest or backpack
 			IChest chest;
 
-			if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == CompactStorage.ModItems.backpack) {
+			if (player.getHeldItem(EnumHand.MAIN_HAND).getItem() == CompactRegistry.BACKPACK) {
 				chest = new InventoryBackpack(player.getHeldItem(EnumHand.MAIN_HAND));
 			} else {
 				chest = (IChest) world.getTileEntity(pos);

@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 public class BlockFluidBarrel extends BlockBarrel {
 	@Override
 	public void init() {
-		setRegistryName("barrel_fluid");
+		setRegistryName("fluid_barrel");
 		setTranslationKey("barrel_fluid");
 	}
 

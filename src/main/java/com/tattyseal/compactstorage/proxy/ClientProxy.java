@@ -1,5 +1,6 @@
 package com.tattyseal.compactstorage.proxy;
 
+import com.tattyseal.compactstorage.CompactRegistry;
 import com.tattyseal.compactstorage.CompactStorage;
 
 import net.minecraft.client.Minecraft;
@@ -22,7 +23,7 @@ public class ClientProxy implements IProxy {
 			public int colorMultiplier(ItemStack stack, int color) {
 				return CompactStorage.getColorFromNBT(stack);
 			}
-		}, CompactStorage.ModItems.backpack, Item.getItemFromBlock(CompactStorage.ModBlocks.chest));
+		}, CompactRegistry.BACKPACK, Item.getItemFromBlock(CompactRegistry.CHEST));
 
 	}
 

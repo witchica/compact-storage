@@ -2,6 +2,7 @@ package com.tattyseal.compactstorage.block;
 
 import javax.annotation.Nonnull;
 
+import com.tattyseal.compactstorage.CompactRegistry;
 import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.tileentity.TileEntityChest;
 
@@ -38,7 +39,7 @@ public class BlockChest extends Block {
 	public BlockChest() {
 		super(Material.WOOD);
 		setTranslationKey("compactchest");
-		setRegistryName("compactChest");
+		setRegistryName("chest");
 		setCreativeTab(CompactStorage.TAB);
 		setHardness(2F);
 		setResistance(2F);
@@ -103,7 +104,7 @@ public class BlockChest extends Block {
 		TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
 
 		if (!world.isRemote && chest != null) {
-			ItemStack stack = new ItemStack(CompactStorage.ModBlocks.chest);
+			ItemStack stack = new ItemStack(CompactRegistry.CHEST);
 
 			if (chest.isRetaining()) {
 				chest.writeToNBT(stack.getOrCreateSubCompound("BlockEntityTag"));
@@ -128,7 +129,7 @@ public class BlockChest extends Block {
 	@Override
 	@Nonnull
 	public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-		ItemStack stack = new ItemStack(CompactStorage.ModBlocks.chest, 1);
+		ItemStack stack = new ItemStack(CompactRegistry.CHEST, 1);
 		TileEntityChest chest = (TileEntityChest) world.getTileEntity(pos);
 		chest.writeToNBT(stack.getOrCreateSubCompound("BlockEntityTag"));
 		return stack;

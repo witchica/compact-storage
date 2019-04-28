@@ -14,7 +14,7 @@ import static com.tattyseal.compactstorage.ConfigurationHandler.storageModifier;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tattyseal.compactstorage.CompactStorage;
+import com.tattyseal.compactstorage.CompactRegistry;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -146,8 +146,8 @@ public class StorageInfo {
 	}
 
 	public static enum Type {
-		CHEST("Chest", new ItemStack(CompactStorage.ModBlocks.chest, 1)),
-		BACKPACK("Backpack", new ItemStack(CompactStorage.ModItems.backpack, 1));
+		CHEST("Chest", new ItemStack(CompactRegistry.CHEST, 1)),
+		BACKPACK("Backpack", new ItemStack(CompactRegistry.BACKPACK, 1));
 
 		public String name;
 		public ItemStack display;

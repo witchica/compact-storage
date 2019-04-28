@@ -18,7 +18,7 @@ public class BlockChestBuilder extends Block {
 	public BlockChestBuilder() {
 		super(Material.IRON);
 		setTranslationKey("chestBuilder");
-		setRegistryName("chestBuilder");
+		setRegistryName("chest_builder");
 		setCreativeTab(CompactStorage.TAB);
 
 		setHardness(2F);
