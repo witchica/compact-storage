@@ -1,7 +1,7 @@
-tile.compactchest.name=致密箱子
-tile.chestBuilder.name=箱子构建器
+tile.compactstorage.chest.name=致密箱子
+tile.compactstorage.chest_builder.name=箱子构建器
 
-item.backpack.name=背包
+item.compactstorage.backpack.name=背包
 
 itemGroup.compactStorage=致密存储
 

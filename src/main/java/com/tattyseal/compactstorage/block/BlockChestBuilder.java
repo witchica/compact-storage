@@ -17,7 +17,7 @@ import net.minecraftforge.items.ItemStackHandler;
 public class BlockChestBuilder extends Block {
 	public BlockChestBuilder() {
 		super(Material.IRON);
-		setTranslationKey("chestBuilder");
+		setTranslationKey(CompactStorage.MODID + ".chest_builder");
 		setRegistryName("chest_builder");
 		setCreativeTab(CompactStorage.TAB);
 

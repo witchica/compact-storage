@@ -30,7 +30,7 @@ import net.minecraft.world.World;
 public class ItemBackpack extends Item {
 
 	public ItemBackpack() {
-		setTranslationKey("backpack");
+		setTranslationKey(CompactStorage.MODID + ".backpack");
 		setCreativeTab(CompactStorage.TAB);
 		setMaxStackSize(1);
 	}

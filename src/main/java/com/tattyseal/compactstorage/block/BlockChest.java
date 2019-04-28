@@ -38,7 +38,7 @@ public class BlockChest extends Block {
 
 	public BlockChest() {
 		super(Material.WOOD);
-		setTranslationKey("compactchest");
+		setTranslationKey(CompactStorage.MODID + ".chest");
 		setRegistryName("chest");
 		setCreativeTab(CompactStorage.TAB);
 		setHardness(2F);

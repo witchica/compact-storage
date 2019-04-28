@@ -1,0 +1,21 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "facing=north": {
+      "model": "compactstorage:fluid_barrel"
+    },
+    "facing=east": {
+      "model": "compactstorage:fluid_barrel"
+    },
+    "facing=south": {
+      "model": "compactstorage:fluid_barrel"
+    },
+    "facing=west": {
+      "model": "compactstorage:fluid_barrel"
+    },
+    "inventory": {
+      "model": "compactstorage:fluid_barrel",
+      "transform": "forge:default-block"
+    }
+  }
+}

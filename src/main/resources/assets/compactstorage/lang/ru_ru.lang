@@ -1,10 +1,10 @@
-tile.compactchest.name=Компактный сундук
-tile.chestBuilder.name=Конструктор сундука
+tile.compactstorage.chest.name=Компактный сундук
+tile.compactstorage.chest_builder.name=Конструктор сундука
 
-tile.barrel.name=Бочка
-tile.barrel_fluid.name=Бочка
+tile.compactstorage.barrel.name=Бочка
+tile.compactstorage.fluid_barrel.name=Бочка
 
-item.backpack.name=Рюкзак
+item.compactstorage.backpack.name=Рюкзак
 
 itemGroup.compactStorage=CompactStorage
 

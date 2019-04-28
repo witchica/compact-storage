@@ -1,5 +1,6 @@
 package com.tattyseal.compactstorage.block;
 
+import com.tattyseal.compactstorage.CompactStorage;
 import com.tattyseal.compactstorage.tileentity.TileEntityBarrelFluid;
 
 import net.minecraft.block.state.IBlockState;
@@ -11,7 +12,7 @@ public class BlockFluidBarrel extends BlockBarrel {
 	@Override
 	public void init() {
 		setRegistryName("fluid_barrel");
-		setTranslationKey("barrel_fluid");
+		setTranslationKey(CompactStorage.MODID + ".fluid_barrel");
 	}
 
 	@Override

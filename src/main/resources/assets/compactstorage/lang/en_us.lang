@@ -1,10 +1,10 @@
-tile.compactchest.name=Compact Chest
-tile.chestBuilder.name=Chest Builder
+tile.compactstorage.chest.name=Compact Chest
+tile.compactstorage.chest_builder.name=Chest Builder
 
-tile.barrel.name=Barrel
-tile.barrel_fluid.name=Drum
+tile.compactstorage.barrel.name=Barrel
+tile.compactstorage.fluid_barrel.name=Drum
 
-item.backpack.name=Backpack
+item.compactstorage.backpack.name=Backpack
 
 itemGroup.compactStorage=CompactStorage
 

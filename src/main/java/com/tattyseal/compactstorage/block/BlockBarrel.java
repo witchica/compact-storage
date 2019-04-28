@@ -34,7 +34,7 @@ public class BlockBarrel extends Block {
 
 	public void init() {
 		setRegistryName("barrel");
-		setTranslationKey("barrel");
+		setTranslationKey(CompactStorage.MODID + ".barrel");
 	}
 
 	@Override
