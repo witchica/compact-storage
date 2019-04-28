@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
@@ -73,5 +74,12 @@ public class ItemBackpack extends Item {
 				tooltip.add(TextFormatting.AQUA + "White");
 			}
 		}
+	}
+
+	@Override
+	public NBTTagCompound getNBTShareTag(ItemStack stack) {
+		NBTTagCompound tag = super.getNBTShareTag(stack).copy();
+		tag.getCompoundTag("BlockEntityTag").removeTag("items");
+		return tag;
 	}
 }

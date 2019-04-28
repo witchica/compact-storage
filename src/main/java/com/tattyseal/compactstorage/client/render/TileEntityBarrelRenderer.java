@@ -78,9 +78,9 @@ public class TileEntityBarrelRenderer extends TileEntitySpecialRenderer<TileEnti
 
 	public void renderItem(TileEntityBarrel tileEntity, double coordX, double coordY, double coordZ, float scale, float size) {
 		EnumFacing facing = (EnumFacing) tileEntity.getWorld().getBlockState(tileEntity.getPos()).getProperties().get(BlockBarrel.FACING);
-		ItemStack stack = tileEntity.item.copy();
+		ItemStack stack = tileEntity.getBarrelStack();
 
-		if (stack != null && !stack.isEmpty()) {
+		if (!stack.isEmpty()) {
 
 			if (stack.isEmpty()) { return; }
 

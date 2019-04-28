@@ -13,6 +13,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -56,5 +57,12 @@ public class ItemBlockChest extends ItemBlock {
 				list.add(TextFormatting.RED + "" + TextFormatting.ITALIC + "Non-Retaining");
 			}
 		}
+	}
+
+	@Override
+	public NBTTagCompound getNBTShareTag(ItemStack stack) {
+		NBTTagCompound tag = super.getNBTShareTag(stack).copy();
+		tag.getCompoundTag("BlockEntityTag").removeTag("items");
+		return tag;
 	}
 }

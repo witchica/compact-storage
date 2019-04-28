@@ -71,7 +71,7 @@ public class BlockBarrel extends Block {
 			IBarrel barrel = (IBarrel) worldIn.getTileEntity(pos);
 
 			if (barrel != null) {
-				ItemStack stack = barrel.dropItems(playerIn);
+				ItemStack stack = barrel.giveItems(playerIn);
 
 				if (!stack.isEmpty()) {
 					EntityItem item = new EntityItem(worldIn, playerIn.posX, playerIn.posY, playerIn.posZ);
@@ -100,9 +100,9 @@ public class BlockBarrel extends Block {
 		if (!worldIn.isRemote) {
 			IBarrel barrel = (IBarrel) worldIn.getTileEntity(pos);
 
-			if (playerIn.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
-				if (barrel != null) {
-					ItemStack stack = barrel.dropItems(playerIn);
+			if (barrel != null) {
+				if (playerIn.getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
+					ItemStack stack = barrel.giveItems(playerIn);
 
 					if (!stack.isEmpty()) {
 						EntityItem item = new EntityItem(worldIn, playerIn.posX, playerIn.posY, playerIn.posZ);
@@ -110,16 +110,33 @@ public class BlockBarrel extends Block {
 
 						worldIn.spawnEntity(item);
 					}
-				}
-			} else {
-				if (barrel != null) {
-					playerIn.setHeldItem(EnumHand.MAIN_HAND, barrel.insertItems(playerIn.getHeldItem(EnumHand.MAIN_HAND), playerIn));
+
+				} else {
+					playerIn.setHeldItem(EnumHand.MAIN_HAND, barrel.takeItems(playerIn.getHeldItem(EnumHand.MAIN_HAND), playerIn));
 					return true;
 				}
 			}
 		}
 
 		return true;
+	}
+
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		TileEntityBarrel barrel = (TileEntityBarrel) world.getTileEntity(pos);
+
+		if (!world.isRemote && barrel != null) {
+			int count = barrel.getCount();
+			ItemStack bStack = barrel.getBarrelStack();
+			while (count > 0) {
+				ItemStack s = bStack.copy();
+				s.setCount(Math.min(s.getMaxStackSize(), count));
+				count -= s.getCount();
+				Block.spawnAsEntity(world, pos, s);
+			}
+		}
+
+		super.breakBlock(world, pos, state);
 	}
 
 	@Override

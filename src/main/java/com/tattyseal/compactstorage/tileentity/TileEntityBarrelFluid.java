@@ -37,12 +37,12 @@ public class TileEntityBarrelFluid extends TileEntity implements IBarrel, ITicka
 	}
 
 	@Override
-	public ItemStack dropItems(EntityPlayer player) {
+	public ItemStack giveItems(EntityPlayer player) {
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public ItemStack insertItems(@Nonnull ItemStack stack, EntityPlayer player) {
+	public ItemStack takeItems(@Nonnull ItemStack stack, EntityPlayer player) {
 		FluidActionResult res = FluidUtil.tryEmptyContainerAndStow(stack, tank, null, tank.getCapacity(), player, true);
 
 		if (res.isSuccess()) {
