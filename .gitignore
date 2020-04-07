@@ -1,23 +1,12 @@
-## Ignore Everything
-/*
-
-*.psd
-
-## Files
-!/gradlew
-!/gradlew.bat
-!/.gitignore
-!/README
-!/*.MD
-!/build.gradle
-!/settings.gradle
-!/LICENSE
-
-!/*.png
-
-## Folders
-!/src
-!/gradle
-!/.circleci
-
-!local_build.bat
+.gradle/
+.settings/
+.vscode/
+bin/
+build/
+out/
+run/
+.classpath
+.project
+*.iml
+*.ipr
+*.iws
