@@ -1,7 +1,0 @@
-{
-	"parent": "compactstorage:block/barrel_base",
-	"textures": {
-		"side": "compactstorage:blocks/barrel_fluid_side",
-		"top": "compactstorage:blocks/barrel_top"
-	}
-}
