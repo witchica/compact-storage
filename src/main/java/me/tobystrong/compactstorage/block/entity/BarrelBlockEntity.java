@@ -18,7 +18,7 @@ import net.minecraft.util.DefaultedList;
 
 import java.util.Set;
 
-public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientSerializable
+public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Inventory
 {
     public class InsertItemsResult
     {
@@ -125,19 +125,21 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
     public DefaultedList<ItemStack> getItemsAsList() {
         DefaultedList<ItemStack> list = DefaultedList.ofSize(64, ItemStack.EMPTY);
 
-            if(!barrel_item.isEmpty()) {
-                int totalFullStacks = stack_size / barrel_item.getMaxCount();
+        if(!barrel_item.isEmpty()) {
+            int totalFullStacks = stack_size / barrel_item.getMaxCount();
 
             for(int i = 0; i < totalFullStacks; i++) {
                 ItemStack stack = barrel_item.copy();
                 stack.setCount(barrel_item.getMaxCount());
 
-                list.add(stack);
+                list.set(i, stack);
             }
 
-            ItemStack partial_stack = barrel_item.copy();
-            partial_stack.setCount(stack_size % barrel_item.getMaxCount());
-            list.add(partial_stack);
+            if(totalFullStacks < 64) {
+                ItemStack partial_stack = barrel_item.copy();
+                partial_stack.setCount(stack_size % barrel_item.getMaxCount());
+                list.set(totalFullStacks, partial_stack);
+            }
         }
 
         return list;
@@ -213,5 +215,69 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
     @Override
     public void fromClientTag(CompoundTag tag) {
         fromTag(tag);
+    }
+
+
+    /**
+     * Implemented inventory methods so that it can interface with other mods *hopefully*
+     */
+
+    @Override
+    public void clear() {
+        barrel_item = ItemStack.EMPTY;
+        stack_size = 0;
+    }
+
+    @Override
+    public boolean canPlayerUseInv(PlayerEntity player) {
+        return true;
+    }
+
+    @Override
+    public int getInvSize() {
+        return getMaxStorage();
+    }
+
+    @Override
+    public ItemStack getInvStack(int slot) {
+        if(!barrel_item.isEmpty()) {
+            ItemStack stack = barrel_item.copy();
+            stack.setCount(Math.min(stack_size, stack.getMaxCount()));
+            return stack;
+        }
+
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public boolean isInvEmpty() {
+        return barrel_item.isEmpty();
+    }
+
+    @Override
+    public ItemStack removeInvStack(int slot) {
+        if(!barrel_item.isEmpty()) {
+            ItemStack stack = barrel_item.copy();
+            stack.setCount(Math.min(stack_size, stack.getMaxCount()));
+            stack_size -= stack.getCount();
+
+            if(stack_size == 0) {
+                barrel_item = ItemStack.EMPTY;
+            }
+
+            return stack;
+        }
+
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void setInvStack(int slot, ItemStack stack) {
+        insertItems(stack, null, false);
+    }
+
+    @Override
+    public ItemStack takeInvStack(int slot, int amount) {
+        return dropItems(null, amount, false);
     }
 }
