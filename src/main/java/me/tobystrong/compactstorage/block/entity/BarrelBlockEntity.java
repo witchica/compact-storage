@@ -240,6 +240,7 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
 
     @Override
     public ItemStack getInvStack(int slot) {
+        System.out.println("get inv stack?");
         if(!barrel_item.isEmpty()) {
             ItemStack stack = barrel_item.copy();
             stack.setCount(Math.min(stack_size, stack.getMaxCount()));
@@ -273,6 +274,7 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
 
     @Override
     public void setInvStack(int slot, ItemStack stack) {
+        System.out.println("this is being called with params " + slot + " : " + stack.toString());
         insertItems(stack, null, false);
     }
 

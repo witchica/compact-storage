@@ -2,8 +2,11 @@ package me.tobystrong.compactstorage.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
+import org.lwjgl.opengl.GL11;
+
 import me.tobystrong.compactstorage.container.CompactChestContainer;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -18,13 +21,14 @@ public class CompactChestScreen extends ContainerScreen<CompactChestContainer> {
         super(container, inventory, title);
         this.container = container;
 
+        this.containerWidth = 14 + container.inventoryWidth * 18;
         this.containerHeight = 114 + container.inventoryHeight * 18 + 7;
     }
 
     @Override
     protected void drawForeground(int mouseX, int mouseY) {
         this.font.draw(this.title.asFormattedString(), 8.0F, 6.0F, 4210752);
-        this.font.draw(this.playerInventory.getDisplayName().asFormattedString(), 8.0F, (float)(this.containerHeight - 96 - 4), 4210752);
+        this.font.draw(this.playerInventory.getDisplayName().asFormattedString(), 8.0F, (float)(this.containerHeight - 96 - 3), 4210752);
 
 
         super.drawForeground(mouseX, mouseY);
@@ -66,8 +70,8 @@ public class CompactChestScreen extends ContainerScreen<CompactChestContainer> {
         //chest slots
         blit(this.x + 7, this.y + 17, 0, 0, 18 * container.inventoryWidth, 18 * container.inventoryHeight, 432, 216);
         //inv slots  
-        blit(this.x + 7, this.y + (container.inventoryHeight * 18) + 18 + 17, 0, 0, 18 * 9, 18 * 3, 432, 216);
+        blit(this.x + (containerWidth / 2) - 9 * 9, this.y + (container.inventoryHeight * 18) + 18 + 17, 0, 0, 18 * 9, 18 * 3, 432, 216);
         //hotbar slots
-        blit(this.x + 7, this.y + (container.inventoryHeight * 18) + 18 + 60 + 17, 0, 0, 18 * 9, 18 * 1, 432, 216);
+        blit(this.x + (containerWidth / 2) - 9 * 9, this.y + (container.inventoryHeight * 18) + 18 + 60 + 17, 0, 0, 18 * 9, 18 * 1, 432, 216);
     }
 }

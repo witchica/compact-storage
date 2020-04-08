@@ -47,6 +47,20 @@ public class CompactChestBlock extends BlockWithEntity {
                 ((CompactChestBlockEntity) blockEntity).setCustomName(itemStack.getName());
             }
         }
+
+        if(itemStack.hasTag() && itemStack.getTag().contains("inventory_width") && itemStack.getTag().contains("inventory_height") && !world.isClient) {
+            //get the entity
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+
+            //cast and set the name
+            if(blockEntity instanceof  CompactChestBlockEntity) {
+                ((CompactChestBlockEntity) blockEntity).inventoryWidth = itemStack.getTag().getInt("inventory_width");
+                ((CompactChestBlockEntity) blockEntity).inventoryHeight = itemStack.getTag().getInt("inventory_height");
+                ((CompactChestBlockEntity) blockEntity).test();
+                blockEntity.markDirty();
+                ((CompactChestBlockEntity) blockEntity).sync();
+            }
+        }
     }
 
     @Override

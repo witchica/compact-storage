@@ -29,7 +29,7 @@ public class CompactChestContainer extends Container {
         // Chest Inventory
         for (i = 0; i < inventoryHeight; i++) {
             for (j = 0; j < inventoryWidth; j++) {
-                this.addSlot(new Slot(inventory, i * 9 + j, 8 + j * 18, 18 + i * 18));
+                this.addSlot(new Slot(inventory, i * inventoryWidth + j, 8 + j * 18, 18 + i * 18));
             }
         }
 
@@ -38,13 +38,13 @@ public class CompactChestContainer extends Container {
         // Player Inventory (27 storage + 9 hotbar)
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 9; j++) {
-                this.addSlot(new Slot(playerInventory, i * 9 + j + 9, 8 + j * 18, 18 + i * 18 + chestInvHeight + 18));
+                this.addSlot(new Slot(playerInventory, i * 9 + j + 9, 8 + ((inventoryWidth * 18) / 2) - (9 * 9) + j * 18, 18 + i * 18 + chestInvHeight + 18));
             }
         }
 
 
         for (j = 0; j < 9; j++) {
-            this.addSlot(new Slot(playerInventory, j, 8 + j * 18, 18 + chestInvHeight + 60 + 18));
+            this.addSlot(new Slot(playerInventory, j, 8 + ((inventoryWidth * 18) / 2) - (9 * 9) + j * 18, 18 + chestInvHeight + 60 + 18));
         }
     }
 
