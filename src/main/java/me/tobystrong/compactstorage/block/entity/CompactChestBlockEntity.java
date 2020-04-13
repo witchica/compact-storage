@@ -2,6 +2,7 @@ package me.tobystrong.compactstorage.block.entity;
 
 import me.tobystrong.compactstorage.CompactStorage;
 import me.tobystrong.compactstorage.container.CompactChestContainer;
+import me.tobystrong.compactstorage.util.CompactStorageInventoryImpl;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -17,7 +18,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DefaultedList;
 
-public class CompactChestBlockEntity extends LootableContainerBlockEntity implements BlockEntityClientSerializable {
+public class CompactChestBlockEntity extends LootableContainerBlockEntity implements BlockEntityClientSerializable, CompactStorageInventoryImpl{
     private DefaultedList<ItemStack> inventory;
 
     public int inventoryWidth = 9;
@@ -110,5 +111,15 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
     @Override
     public void fromClientTag(CompoundTag tag) {
         fromTag(tag);
+    }
+
+    @Override
+    public int getInventoryWidth() {
+        return inventoryWidth;
+    }
+
+    @Override
+    public int getInventoryHeight() {
+        return inventoryHeight;
     }
 }

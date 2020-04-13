@@ -31,149 +31,119 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
         }
     }
 
-    public ItemStack barrel_item = ItemStack.EMPTY;
-    public int stack_size;
+    public DefaultedList<ItemStack> barrel_items;
 
     public BarrelBlockEntity() {
         super(CompactStorage.BARREL_ENTITY_TYPE);
+        barrel_items = DefaultedList.ofSize(64, ItemStack.EMPTY);
     }
 
+    public int getTotalItems() {
+        int count = 0;
+
+        for(int i = 0; i < 64; i++) {
+            count += getInvStack(i).getCount();
+        }
+
+        return count;
+    }
+
+    public ItemStack getBarrelItem() {
+        ItemStack barrelItem = ItemStack.EMPTY;
+
+        for(int i = 0; i < 64; i++) {
+            if(!(barrelItem = barrel_items.get(i)).isEmpty()) {
+                break;
+            }
+        }
+
+        return barrelItem;
+    }
     
-    public ItemStack dropItems(PlayerEntity player, boolean simulate) {
-        return dropItems(player, barrel_item.getMaxCount(), simulate);
-    }
 
-    public ItemStack dropItems(PlayerEntity player, int amount, boolean simulate) {
-        ItemStack stack = ItemStack.EMPTY;
-
-        if(stack_size > 0) {
-            stack = barrel_item.copy();
-
-            if(stack_size < amount) {
-                stack.setCount(stack_size);
-
-                if(!simulate) {
-                    stack_size = 0;
-                    barrel_item = ItemStack.EMPTY;
-                }
-            } else if (stack_size % barrel_item.getMaxCount() != 0) {
-                stack.setCount(stack_size % barrel_item.getMaxCount());
-
-                if(!simulate) {
-                    stack_size -= stack.getCount();
-                }
-            } else {
-                stack.setCount(amount);
-
-                if(!simulate) {
-                    stack_size -= amount;
+    public ItemStack dropItem() {
+        if(getBarrelItem().isEmpty()) {
+            return ItemStack.EMPTY;
+        } else {
+            ItemStack stack = ItemStack.EMPTY;
+            for(int i = 63; i >= 0; i--) {
+                if(!getInvStack(i).isEmpty()) {
+                    stack = takeInvStack(i, getInvStack(i).getCount());
+                    break;
                 }
             }
+
+            markDirty();
+            sync();
+
+            return stack;
+        }
+    }
+
+    public ItemStack insertItem(ItemStack barrel_item) {
+        if(!getBarrelItem().isEmpty()) {
+            int amount_left = barrel_item.getCount();
+
+            for(int i = 0; i < 64; i++) {
+                ItemStack slot_stack = getInvStack(i);
+
+                if(slot_stack.isEmpty()) {
+                    setInvStack(i, barrel_item);
+                    amount_left = 0;
+                } else {
+                    int slotCanTake = slot_stack.getMaxCount() - slot_stack.getCount();
+                    getInvStack(i).increment(slotCanTake);
+                    amount_left -= slotCanTake;
+                }
+
+                barrel_item.setCount(amount_left);
+
+                if(barrel_item.isEmpty()) {
+                    break;
+                }
+            }
+
+            barrel_item.setCount(amount_left);
+        } else {
+            setInvStack(0, barrel_item);
+            barrel_item = ItemStack.EMPTY;
         }
 
         markDirty();
         sync();
 
-        return stack;
-    }
-
-    public InsertItemsResult insertItems(ItemStack stack, PlayerEntity player, boolean simulate) {
-        ItemStack workingStack = stack.copy();
-        InsertItemsResult result = new InsertItemsResult();
-
-        if(barrel_item.isEmpty() && !workingStack.isEmpty())
-        {
-            if(!simulate)
-            {
-                barrel_item = workingStack.copy();
-                stack_size = barrel_item.getCount();
-            }
-
-            workingStack.setCount(0);
-            result.returned = workingStack;
-            result.success = true;
-        }
-        else
-        {
-            if(!workingStack.isEmpty() && ItemStack.areItemsEqual(workingStack, barrel_item))
-            {
-                    int spaceLeft = getMaxStorage() - stack_size;
-                    int willAccept = Math.min(spaceLeft, workingStack.getCount());
-                    System.out.println("Will accept " + willAccept);
-                    System.out.println("stack size " + workingStack.getCount());
-
-                    if(willAccept > 0) {
-                        workingStack.setCount(workingStack.getCount() - willAccept);
-                        System.out.println(workingStack.getCount());
-                        
-                        result.returned = workingStack;
-                        result.success = true;
-
-                        if(!simulate) {
-                            stack_size += willAccept;
-                        }
-                    }
-            }
-        }
-
-        markDirty();
-        sync();
-
-        return result;
-    }
-
-    public DefaultedList<ItemStack> getItemsAsList() {
-        DefaultedList<ItemStack> list = DefaultedList.ofSize(64, ItemStack.EMPTY);
-
-        if(!barrel_item.isEmpty()) {
-            int totalFullStacks = stack_size / barrel_item.getMaxCount();
-
-            for(int i = 0; i < totalFullStacks; i++) {
-                ItemStack stack = barrel_item.copy();
-                stack.setCount(barrel_item.getMaxCount());
-
-                list.set(i, stack);
-            }
-
-            if(totalFullStacks < 64) {
-                ItemStack partial_stack = barrel_item.copy();
-                partial_stack.setCount(stack_size % barrel_item.getMaxCount());
-                list.set(totalFullStacks, partial_stack);
-            }
-        }
-
-        return list;
+        return barrel_item;
     }
 
     public int getMaxStorage() {
-        if(barrel_item == ItemStack.EMPTY) {
+        if(getBarrelItem() == ItemStack.EMPTY) {
             return 64 * 64;
         } else {
-            return barrel_item.getMaxCount() * 64;
+            return getBarrelItem().getMaxCount() * 64;
         }
     }
 
     public String getText()
     {
-        if(barrel_item.isEmpty())
+        if(getBarrelItem().isEmpty())
         {
             return "Empty";
         }
-        else if(stack_size < barrel_item.getMaxCount())
+        else if(getTotalItems() < getBarrelItem().getMaxCount())
         {
-            return stack_size + "";
+            return getTotalItems() + "";
         }
         else
         {
-            int numOfStacks = stack_size / barrel_item.getMaxCount();
+            int numOfStacks = getTotalItems() / getBarrelItem().getMaxCount();
 
-            return numOfStacks + "x" + barrel_item.getMaxCount();
+            return numOfStacks + "x" + getBarrelItem().getMaxCount();
         }
     }
 
     public String getSubText() {
-        if(!barrel_item.isEmpty() && stack_size > barrel_item.getMaxCount()) {
-            int remainder = (stack_size % barrel_item.getMaxCount());
+        if(!getBarrelItem().isEmpty() && getTotalItems() > getBarrelItem().getMaxCount()) {
+            int remainder = (getTotalItems() % getBarrelItem().getMaxCount());
 
             if(remainder != 0) {
                 return "+ " + remainder;
@@ -185,12 +155,7 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        if(stack_size == 0) {
-            barrel_item = ItemStack.EMPTY;
-        }
-
-        tag.put("item", barrel_item.toTag(new CompoundTag()));
-        tag.putInt("stack_size", stack_size);
+        Inventories.toTag(tag, barrel_items);
 
         return super.toTag(tag);
     }
@@ -198,13 +163,7 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
-
-        barrel_item = ItemStack.fromTag(tag.getCompound("item"));
-        stack_size = tag.getInt("stack_size");
-
-        if(stack_size == 0) {
-            barrel_item = ItemStack.EMPTY;
-        }
+        Inventories.fromTag(tag, barrel_items);
     }
 
     @Override
@@ -224,8 +183,7 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
 
     @Override
     public void clear() {
-        barrel_item = ItemStack.EMPTY;
-        stack_size = 0;
+        barrel_items.clear();
     }
 
     @Override
@@ -235,51 +193,38 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
 
     @Override
     public int getInvSize() {
-        return getMaxStorage();
+        return 64;
     }
 
     @Override
     public ItemStack getInvStack(int slot) {
-        System.out.println("get inv stack?");
-        if(!barrel_item.isEmpty()) {
-            ItemStack stack = barrel_item.copy();
-            stack.setCount(Math.min(stack_size, stack.getMaxCount()));
-            return stack;
-        }
-
-        return ItemStack.EMPTY;
+        return barrel_items.get(slot);
     }
 
     @Override
     public boolean isInvEmpty() {
-        return barrel_item.isEmpty();
+        return barrel_items.isEmpty();
     }
 
     @Override
     public ItemStack removeInvStack(int slot) {
-        if(!barrel_item.isEmpty()) {
-            ItemStack stack = barrel_item.copy();
-            stack.setCount(Math.min(stack_size, stack.getMaxCount()));
-            stack_size -= stack.getCount();
-
-            if(stack_size == 0) {
-                barrel_item = ItemStack.EMPTY;
-            }
-
-            return stack;
-        }
-
-        return ItemStack.EMPTY;
+        markDirty();
+        return barrel_items.remove(slot);
     }
 
     @Override
     public void setInvStack(int slot, ItemStack stack) {
         System.out.println("this is being called with params " + slot + " : " + stack.toString());
-        insertItems(stack, null, false);
+        if(getBarrelItem().isEmpty() || ItemStack.areItemsEqual(stack, getBarrelItem())) {
+            System.out.println("setting slot");
+            barrel_items.set(slot, stack);
+        }
+
+        markDirty();
     }
 
     @Override
     public ItemStack takeInvStack(int slot, int amount) {
-        return dropItems(null, amount, false);
+        return barrel_items.get(slot).split(amount);
     }
 }

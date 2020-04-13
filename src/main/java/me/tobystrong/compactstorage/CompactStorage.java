@@ -68,9 +68,6 @@ public class CompactStorage implements ModInitializer {
         Registry.register(Registry.ITEM, BARREL_IDENTIFIER, new BlockItem(BARREL, new Item.Settings().group(COMPACT_STORAGE_ITEM_GROUP)));
 
         BARREL_ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, BARREL_IDENTIFIER, BlockEntityType.Builder.create(BarrelBlockEntity::new, BARREL).build(null));
-        System.out.println(BARREL_ENTITY_TYPE);
-
-        System.out.println("SERVER RAN");
     }
 
     public static void log(Level level, String message){

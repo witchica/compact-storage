@@ -1,5 +1,7 @@
 package me.tobystrong.compactstorage.block;
 
+import com.mojang.realmsclient.gui.RealmsWorldSlotButton.Action;
+
 import me.tobystrong.compactstorage.block.entity.BarrelBlockEntity;
 import me.tobystrong.compactstorage.block.entity.BarrelBlockEntity.InsertItemsResult;
 import net.minecraft.block.Block;
@@ -9,6 +11,7 @@ import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.ActionResult;
@@ -56,13 +59,20 @@ public class BarrelBlock extends BlockWithEntity
         if(!world.isClient && world.getBlockEntity(pos) instanceof BarrelBlockEntity) {
             BarrelBlockEntity blockEntity = (BarrelBlockEntity) world.getBlockEntity(pos);
 
-            if(!player.getStackInHand(hand).isEmpty()) {
-                InsertItemsResult result = blockEntity.insertItems(player.getStackInHand(hand), player, false);
+            if(player.isSneaking()) {
+                for(int i = 0; i < blockEntity.getInvSize(); i++) {
+                    ItemStack stack = blockEntity.getInvStack(i);
 
-                if(result.success) {
-                    player.setStackInHand(hand, result.returned);
-                    return ActionResult.SUCCESS;
-                }
+
+                    if(!stack.isEmpty()) {
+                        player.sendMessage(stack.getName());
+                    }
+                } 
+            }
+
+            if(!player.getStackInHand(hand).isEmpty()) {
+                player.setStackInHand(hand, blockEntity.insertItem(player.getStackInHand(hand)));
+                return ActionResult.SUCCESS;
             }
         }
 
@@ -73,7 +83,7 @@ public class BarrelBlock extends BlockWithEntity
     public void onBlockBreakStart(BlockState state, World world, BlockPos pos, PlayerEntity player) {
         if(!world.isClient && world.getBlockEntity(pos) instanceof BarrelBlockEntity) {
             BarrelBlockEntity blockEntity = (BarrelBlockEntity) world.getBlockEntity(pos);
-            player.giveItemStack(blockEntity.dropItems(player, false));
+            player.giveItemStack(blockEntity.dropItem());
         }
 
         super.onBlockBreakStart(state, world, pos, player);
@@ -88,7 +98,7 @@ public class BarrelBlock extends BlockWithEntity
             //and is our block then scatter items and update comparators
             if(entity instanceof  BarrelBlockEntity) {
                 BarrelBlockEntity blockEntity = (BarrelBlockEntity) entity;
-                ItemScatterer.spawn(world, pos, blockEntity.getItemsAsList());
+                ItemScatterer.spawn(world, pos, blockEntity.barrel_items);
                 world.updateHorizontalAdjacent(pos, this);
             }
         }
