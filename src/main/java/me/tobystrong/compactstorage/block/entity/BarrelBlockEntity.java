@@ -214,9 +214,7 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
 
     @Override
     public void setInvStack(int slot, ItemStack stack) {
-        System.out.println("this is being called with params " + slot + " : " + stack.toString());
         if(getBarrelItem().isEmpty() || ItemStack.areItemsEqual(stack, getBarrelItem())) {
-            System.out.println("setting slot");
             barrel_items.set(slot, stack);
         }
 

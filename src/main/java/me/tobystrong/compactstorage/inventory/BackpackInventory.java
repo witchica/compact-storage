@@ -82,7 +82,6 @@ public class BackpackInventory implements Inventory, CompactStorageInventoryImpl
     }
 
     public void fromTag(CompoundTag tag) {
-        System.out.println("helloo"  + tag.getInt("inventory_width"));
         this.inventory_width = tag.contains("inventory_width") ? tag.getInt("inventory_width") : 9;
         this.inventory_height = tag.contains("inventory_height") ? tag.getInt("inventory_height") : 6;
         

@@ -101,14 +101,13 @@ public class CompactStorage implements ModInitializer {
 
         Registry.register(Registry.ITEM, BACKPACK_IDENTIFIER, BACKPACK);
 
-        Registry.register(Registry.BLOCK, BARREL_IDENTIFIER, BARREL);
-        Registry.register(Registry.ITEM, BARREL_IDENTIFIER, new BlockItem(BARREL, new Item.Settings().group(COMPACT_STORAGE_ITEM_GROUP)));
+        // Registry.register(Registry.BLOCK, BARREL_IDENTIFIER, BARREL);
+        // Registry.register(Registry.ITEM, BARREL_IDENTIFIER, new BlockItem(BARREL, new Item.Settings().group(COMPACT_STORAGE_ITEM_GROUP)));
 
-        BARREL_ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, BARREL_IDENTIFIER, BlockEntityType.Builder.create(BarrelBlockEntity::new, BARREL).build(null));
+        // BARREL_ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, BARREL_IDENTIFIER, BlockEntityType.Builder.create(BarrelBlockEntity::new, BARREL).build(null));
     }
 
     public static void log(Level level, String message){
         LOGGER.log(level, "["+MOD_NAME+"] " + message);
     }
-
 }
