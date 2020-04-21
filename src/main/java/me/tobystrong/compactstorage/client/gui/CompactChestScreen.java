@@ -9,6 +9,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -75,5 +76,23 @@ public class CompactChestScreen extends ContainerScreen<CompactChestContainer> {
         blit(this.x + (containerWidth / 2) - 9 * 9, this.y + (container.inventoryHeight * 18) + 18 + 17, 0, 0, 18 * 9, 18 * 3, 432, 216);
         //hotbar slots
         blit(this.x + (containerWidth / 2) - 9 * 9, this.y + (container.inventoryHeight * 18) + 18 + 60 + 17, 0, 0, 18 * 9, 18 * 1, 432, 216);   
+    }
+
+    @Override
+    protected boolean handleHotbarKeyPressed(int keyCode, int scanCode) {
+        if (this.minecraft.player.inventory.getCursorStack().isEmpty() && this.focusedSlot != null) {
+            for(int i = 0; i < 9; ++i) {
+                if(i == this.minecraft.player.inventory.selectedSlot && container.blockEntity == null) {
+                    continue;
+                }
+
+                if (this.minecraft.options.keysHotbar[i].matchesKey(keyCode, scanCode)) {
+                    this.onMouseClick(this.focusedSlot, this.focusedSlot.id, i, SlotActionType.SWAP);
+                    return true;
+                }
+            }
+         }
+   
+         return false;
     }
 }

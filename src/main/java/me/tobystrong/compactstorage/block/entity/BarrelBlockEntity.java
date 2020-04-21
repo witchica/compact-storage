@@ -203,7 +203,7 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
 
     @Override
     public boolean isInvEmpty() {
-        return barrel_items.isEmpty();
+        return barrel_items.stream().allMatch(s -> s == ItemStack.EMPTY);
     }
 
     @Override
