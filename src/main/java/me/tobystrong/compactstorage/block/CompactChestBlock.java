@@ -11,7 +11,11 @@ import net.minecraft.container.Container;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
@@ -56,7 +60,7 @@ public class CompactChestBlock extends BlockWithEntity {
             if(blockEntity instanceof  CompactChestBlockEntity) {
                 ((CompactChestBlockEntity) blockEntity).inventoryWidth = itemStack.getTag().getInt("inventory_width");
                 ((CompactChestBlockEntity) blockEntity).inventoryHeight = itemStack.getTag().getInt("inventory_height");
-                ((CompactChestBlockEntity) blockEntity).test();
+                ((CompactChestBlockEntity) blockEntity).resizeInventory(false);
                 blockEntity.markDirty();
                 ((CompactChestBlockEntity) blockEntity).sync();
             }
@@ -68,7 +72,38 @@ public class CompactChestBlock extends BlockWithEntity {
         if(!world.isClient) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
-            if(blockEntity instanceof  CompactChestBlockEntity) {
+            if(blockEntity instanceof CompactChestBlockEntity) {
+                CompactChestBlockEntity compactChestBlockEntity = (CompactChestBlockEntity) blockEntity;
+                Item held_item = player.getStackInHand(hand).getItem();
+
+                if(held_item == CompactStorage.CHEST_UPGRADE_ROW && compactChestBlockEntity.inventoryWidth < 24) {
+                    compactChestBlockEntity.inventoryWidth += 1;
+                    player.getStackInHand(hand).decrement(1);
+                    player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 1f, 1f);
+
+                    compactChestBlockEntity.resizeInventory(true);
+                    compactChestBlockEntity.markDirty();
+                    compactChestBlockEntity.sync();
+
+                    return ActionResult.SUCCESS;
+                } else if (held_item == CompactStorage.CHEST_UPGRADE_ROW && compactChestBlockEntity.inventoryWidth >= 24) {
+                    player.sendMessage(new TranslatableText("compact-storage.text.too_many_rows"));
+                }
+
+                if(held_item == CompactStorage.CHEST_UPGRADE_COLUMN && compactChestBlockEntity.inventoryHeight < 12) {
+                    compactChestBlockEntity.inventoryHeight += 1;
+                    player.getStackInHand(hand).decrement(1);
+                    player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 1f, 1f);
+
+                    compactChestBlockEntity.resizeInventory(true);
+                    compactChestBlockEntity.markDirty();
+                    compactChestBlockEntity.sync();
+
+                    return ActionResult.SUCCESS;
+                } else if (held_item == CompactStorage.CHEST_UPGRADE_COLUMN && compactChestBlockEntity.inventoryHeight >= 12) {
+                    player.sendMessage(new TranslatableText("compact-storage.text.too_many_columns"));
+                }
+
                 ContainerProviderRegistry.INSTANCE.openContainer(CompactStorage.COMPACT_CHEST_IDENTIFIER, player, buf -> buf.writeBlockPos(pos));
             }
         }

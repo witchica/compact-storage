@@ -22,7 +22,7 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
     private DefaultedList<ItemStack> inventory;
 
     public int inventoryWidth = 9;
-    public int inventoryHeight = 3;
+    public int inventoryHeight = 6;
 
     public CompactChestBlockEntity() {
         super(CompactStorage.COMPACT_CHEST_ENTITY_TYPE);
@@ -54,8 +54,18 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
         return inventoryWidth * inventoryHeight;
     }
 
-    public void test() {
-        this.inventory = DefaultedList.ofSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
+    public void resizeInventory(boolean copy_contents) {
+        DefaultedList<ItemStack> new_inventory = DefaultedList.ofSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
+        
+        if(copy_contents) {
+            DefaultedList<ItemStack> list = this.inventory;
+
+            for(int i = 0; i < list.size(); i++) {
+                new_inventory.set(i, list.get(i));
+            }
+        }
+
+        this.inventory = new_inventory;
     }
 
     @Override
@@ -63,7 +73,7 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
         super.fromTag(tag);
 
         inventoryWidth = tag.contains("inventory_width") ? tag.getInt("inventory_width") : 9;
-        inventoryHeight = tag.contains("inventory_height") ? tag.getInt("inventory_height") : 3;
+        inventoryHeight = tag.contains("inventory_height") ? tag.getInt("inventory_height") : 6;
 
         this.inventory = DefaultedList.ofSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
         ListTag listTag = tag.getList("Items", 10);

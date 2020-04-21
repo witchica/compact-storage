@@ -46,6 +46,12 @@ public class CompactStorage implements ModInitializer {
     public static BlockEntityType<CompactChestBlockEntity> COMPACT_CHEST_ENTITY_TYPE;
     public static final String COMPACT_CHEST_TRANSLATION_KEY = Util.createTranslationKey("container", COMPACT_CHEST_IDENTIFIER);
 
+    public static final Item CHEST_UPGRADE_ROW = new Item(new Item.Settings().group(COMPACT_STORAGE_ITEM_GROUP));
+    public static final Identifier CHEST_UPGRADE_ROW_IDENTIFIER = new Identifier(MOD_ID, "chest_upgrade_row");
+
+    public static final Item CHEST_UPGRADE_COLUMN = new Item(new Item.Settings().group(COMPACT_STORAGE_ITEM_GROUP));
+    public static final Identifier CHEST_UPGRADE_COLUMN_IDENTIFIER = new Identifier(MOD_ID, "chest_upgrade_column");
+
     public static final Identifier BARREL_IDENTIFIER = new Identifier(MOD_ID, "barrel");
     public static final Block BARREL = new BarrelBlock(Block.Settings.of(Material.METAL).nonOpaque().strength(2f, 1f));
     public static BlockEntityType<BarrelBlockEntity> BARREL_ENTITY_TYPE;
@@ -63,6 +69,9 @@ public class CompactStorage implements ModInitializer {
 
             return world.getBlockState(pos).createContainerFactory(player.world, pos).createMenu(syncId, player.inventory, player);
         }));
+
+        Registry.register(Registry.ITEM, CHEST_UPGRADE_ROW_IDENTIFIER, CHEST_UPGRADE_ROW);
+        Registry.register(Registry.ITEM, CHEST_UPGRADE_COLUMN_IDENTIFIER, CHEST_UPGRADE_COLUMN);
 
         Registry.register(Registry.BLOCK, BARREL_IDENTIFIER, BARREL);
         Registry.register(Registry.ITEM, BARREL_IDENTIFIER, new BlockItem(BARREL, new Item.Settings().group(COMPACT_STORAGE_ITEM_GROUP)));
