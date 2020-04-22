@@ -3,31 +3,34 @@ package me.tobystrong.compactstorage.block.entity;
 import me.tobystrong.compactstorage.CompactStorage;
 import me.tobystrong.compactstorage.container.CompactChestContainer;
 import me.tobystrong.compactstorage.util.CompactStorageInventoryImpl;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.client.block.ChestAnimationProgress;
-import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.DefaultedList;
-import net.minecraft.util.Tickable;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.IChestLid;
+import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.LockableLootTileEntity;
+import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.Constants;
 
-public class CompactChestBlockEntity extends LootableContainerBlockEntity implements BlockEntityClientSerializable, CompactStorageInventoryImpl, Tickable, ChestAnimationProgress {
-    private DefaultedList<ItemStack> inventory;
+import javax.annotation.Nullable;
+
+@OnlyIn(value = Dist.CLIENT, _interface = IChestLid.class)
+public class CompactChestBlockEntity extends LockableLootTileEntity implements IChestLid, ITickableTileEntity, CompactStorageInventoryImpl {
+    private NonNullList<ItemStack> inventory;
 
     public int inventory_width = 9;
     public int inventory_height = 6;
@@ -37,61 +40,50 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
     public boolean is_open = false;
 
     public float lid_openness = 0f;
+
     public float last_lid_openness = 0f;
 
     public CompactChestBlockEntity() {
         super(CompactStorage.COMPACT_CHEST_ENTITY_TYPE);
-        this.inventory = DefaultedList.ofSize(inventory_width * inventory_height, ItemStack.EMPTY);
+        this.inventory = NonNullList.withSize(inventory_width * inventory_height, ItemStack.EMPTY);
     }
 
     @Override
-    protected Text getContainerName() {
-        return new TranslatableText("container.chest");
+    public ITextComponent getDefaultName() {
+        return new TranslationTextComponent("container.chest");
     }
 
     @Override
-    protected Container createContainer(int syncId, PlayerInventory playerInventory) {
-        return new CompactChestContainer(syncId, playerInventory, (Inventory) this, inventory_width, inventory_height, null);
+    public Container createMenu(int syncId, PlayerInventory playerInventory) {
+        System.out.println("creating container");
+        return new CompactChestContainer(CompactStorage.COMPACT_CHEST_CONTAINER_TYPE, syncId, playerInventory, (IInventory) this, inventory_width, inventory_height, null);
     }
 
     @Override
-    protected DefaultedList<ItemStack> getInvStackList() {
-        return inventory;
-    }
-
-    @Override
-    protected void setInvStackList(DefaultedList<ItemStack> list) {
-        this.inventory = list;
-    }
-
-    @Override
-    public int getInvSize() {
+    public int getSizeInventory() {
         return inventory_width * inventory_height;
     }
 
     @Override
-    public void onInvOpen(PlayerEntity player) {
-        super.onInvOpen(player);
-
+    public void openInventory(PlayerEntity player) {
         if(!player.isSpectator()) {
             players_using++;
         }
     }
 
-    @Override
-    public void onInvClose(PlayerEntity player) {
-        super.onInvClose(player);
 
+    @Override
+    public void closeInventory(PlayerEntity player) {
         if(!player.isSpectator()) {
             players_using--;
         }
     }
 
     public void resizeInventory(boolean copy_contents) {
-        DefaultedList<ItemStack> new_inventory = DefaultedList.ofSize(inventory_width * inventory_height, ItemStack.EMPTY);
+        NonNullList<ItemStack> new_inventory = NonNullList.withSize(inventory_width * inventory_height, ItemStack.EMPTY);
         
         if(copy_contents) {
-            DefaultedList<ItemStack> list = this.inventory;
+            NonNullList<ItemStack> list = this.inventory;
 
             for(int i = 0; i < list.size(); i++) {
                 new_inventory.set(i, list.get(i));
@@ -102,36 +94,27 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public CompoundNBT write(CompoundNBT tag) {
+        super.write(tag);
 
-        inventory_width = tag.contains("inventory_width") ? tag.getInt("inventory_width") : 9;
-        inventory_height = tag.contains("inventory_height") ? tag.getInt("inventory_height") : 6;
-
-        this.inventory = DefaultedList.ofSize(inventory_width * inventory_height, ItemStack.EMPTY);
-        readItemsFromTag(this.inventory, tag);
-    }
-
-    @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
-
-        writeItemsToTag(inventory, tag);
+        writeItemsToTag(this.inventory, tag);
 
         tag.putInt("inventory_width", inventory_width);
         tag.putInt("inventory_height", inventory_height);
-
         return tag;
     }
 
     @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return toTag(tag);
-    }
+    public void read(CompoundNBT tag) {
+        super.read(tag);
 
-    @Override
-    public void fromClientTag(CompoundTag tag) {
-        fromTag(tag);
+        System.out.println((world.isRemote ? "client" : " Server") + " : " + (tag.contains("inventory_width") ? tag.getInt("inventory_width") : "DID NOT CONTAIN"));
+
+        inventory_width = tag.contains("inventory_width") ? tag.getInt("inventory_width") : 9;
+        inventory_height = tag.contains("inventory_height") ? tag.getInt("inventory_height") : 6;
+
+        this.inventory = NonNullList.withSize(inventory_width * inventory_height, ItemStack.EMPTY);
+        readItemsFromTag(this.inventory, tag);
     }
 
     @Override
@@ -142,6 +125,16 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
     @Override
     public int getInventoryHeight() {
         return inventory_height;
+    }
+
+    @Override
+    protected NonNullList<ItemStack> getItems() {
+        return this.inventory;
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> nonNullList) {
+        this.inventory = nonNullList;
     }
 
     @Override
@@ -173,8 +166,43 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public float getAnimationProgress(float f) {
+    public CompoundNBT getUpdateTag() {
+        CompoundNBT tag = super.getUpdateTag();
+        tag.putInt("inventory_width", inventory_width);
+        tag.putInt("inventory_height", inventory_height);
+        return super.getUpdateTag();
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundNBT tag) {
+        this.inventory_width = tag.getInt("inventory_width");
+        this.inventory_height = tag.getInt("inventory_height");
+
+        super.handleUpdateTag(tag);
+    }
+
+    @Nullable
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(pos, 0, write(new CompoundNBT()));
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        read(pkt.getNbtCompound());
+        super.onDataPacket(net, pkt);
+    }
+
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public float getLidAngle(float f) {
         return MathHelper.lerp(f, last_lid_openness, lid_openness);
     }
 }

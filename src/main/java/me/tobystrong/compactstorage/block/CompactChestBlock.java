@@ -2,59 +2,64 @@ package me.tobystrong.compactstorage.block;
 
 import me.tobystrong.compactstorage.CompactStorage;
 import me.tobystrong.compactstorage.block.entity.CompactChestBlockEntity;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.container.Container;
-import net.minecraft.entity.EntityContext;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
-public class CompactChestBlock extends BlockWithEntity {
-    public static final DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
-    public static final VoxelShape CHEST_SHAPE = Block.createCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
+import javax.annotation.Nullable;
+import java.util.function.Consumer;
+
+public class CompactChestBlock extends ContainerBlock {
+    public static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
+    public static final VoxelShape CHEST_SHAPE = Block.makeCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
     
-    public CompactChestBlock(Settings settings) {
+    public CompactChestBlock(Properties settings) {
         super(settings);
-        setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH));
+        setDefaultState(getDefaultState().with(FACING, Direction.NORTH));
     }
 
+    @Nullable
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return getStateManager().getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+    public BlockState getStateForPlacement(BlockItemUseContext ctx) {
+        return getDefaultState().with(FACING, ctx.getPlacementHorizontalFacing().getOpposite());
     }
 
+
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        super.fillStateContainer(builder);
         builder.add(FACING);
     }
 
+    @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView view) {
+    public TileEntity createNewTileEntity(IBlockReader world) {
         return new CompactChestBlockEntity();
     }
+
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
@@ -62,21 +67,12 @@ public class CompactChestBlock extends BlockWithEntity {
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         //if the item has a custom name then name the entity the same name
-        if(itemStack.hasCustomName()) {
-            //get the entity
-            BlockEntity blockEntity = world.getBlockEntity(pos);
 
-            //cast and set the name
-            if(blockEntity instanceof  CompactChestBlockEntity) {
-                ((CompactChestBlockEntity) blockEntity).setCustomName(itemStack.getName());
-            }
-        }
-
-        if(itemStack.hasTag() && itemStack.getTag().contains("inventory_width") && itemStack.getTag().contains("inventory_height") && !world.isClient) {
+        if(itemStack.hasTag() && itemStack.getTag().contains("inventory_width") && itemStack.getTag().contains("inventory_height") && !world.isRemote) {
             //get the entity
-            BlockEntity blockEntity = world.getBlockEntity(pos);
+            TileEntity blockEntity = world.getTileEntity(pos);
 
             //cast and set the name
             if(blockEntity instanceof  CompactChestBlockEntity) {
@@ -84,83 +80,94 @@ public class CompactChestBlock extends BlockWithEntity {
                 ((CompactChestBlockEntity) blockEntity).inventory_height = itemStack.getTag().getInt("inventory_height");
                 ((CompactChestBlockEntity) blockEntity).resizeInventory(false);
                 blockEntity.markDirty();
-                ((CompactChestBlockEntity) blockEntity).sync();
             }
         }
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if(!world.isClient) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        if(!world.isRemote) {
+            TileEntity blockEntity = world.getTileEntity(pos);
 
             if(blockEntity instanceof CompactChestBlockEntity) {
                 CompactChestBlockEntity compactChestBlockEntity = (CompactChestBlockEntity) blockEntity;
-                Item held_item = player.getStackInHand(hand).getItem();
+                Item held_item = player.getHeldItem(hand).getItem();
 
                 if(held_item == CompactStorage.CHEST_UPGRADE_ROW && compactChestBlockEntity.inventory_width < 24) {
                     compactChestBlockEntity.inventory_width += 1;
-                    player.getStackInHand(hand).decrement(1);
+                    player.getHeldItem(hand).shrink(1);
                     player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 1f, 1f);
 
                     compactChestBlockEntity.resizeInventory(true);
                     compactChestBlockEntity.markDirty();
-                    compactChestBlockEntity.sync();
 
-                    return ActionResult.SUCCESS;
+                    return ActionResultType.SUCCESS;
                 } else if (held_item == CompactStorage.CHEST_UPGRADE_ROW && compactChestBlockEntity.inventory_width >= 24) {
-                    player.sendMessage(new TranslatableText("compact-storage.text.too_many_rows"));
+                    player.sendMessage(new TranslationTextComponent("compact-storage.text.too_many_rows"));
                 }
 
                 if(held_item == CompactStorage.CHEST_UPGRADE_COLUMN && compactChestBlockEntity.inventory_height < 12) {
                     compactChestBlockEntity.inventory_height += 1;
-                    player.getStackInHand(hand).decrement(1);
+                    player.getHeldItem(hand).shrink(1);
                     player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 1f, 1f);
 
                     compactChestBlockEntity.resizeInventory(true);
                     compactChestBlockEntity.markDirty();
-                    compactChestBlockEntity.sync();
 
-                    return ActionResult.SUCCESS;
+                    return ActionResultType.SUCCESS;
                 } else if (held_item == CompactStorage.CHEST_UPGRADE_COLUMN && compactChestBlockEntity.inventory_height >= 12) {
-                    player.sendMessage(new TranslatableText("compact-storage.text.too_many_columns"));
+                    player.sendMessage(new TranslationTextComponent("compact-storage.text.too_many_columns"));
                 }
 
-                ContainerProviderRegistry.INSTANCE.openContainer(CompactStorage.COMPACT_CHEST_IDENTIFIER, player, buf -> buf.writeBlockPos(pos));
+                //ContainerProviderRegistry.INSTANCE.openContainer(CompactStorage.COMPACT_CHEST_IDENTIFIER, player, buf -> buf.writeBlockPos(pos))
+                NetworkHooks.openGui((ServerPlayerEntity) player, getContainer(state, world, pos), new Consumer<PacketBuffer>() {
+                    @Override
+                    public void accept(PacketBuffer packetBuffer) {
+                        packetBuffer.writeBlockPos(pos);
+                    }
+                });
             }
         }
 
-        return ActionResult.SUCCESS;
+        return ActionResultType.SUCCESS;
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
+    @Nullable
+    public INamedContainerProvider getContainer(BlockState state, World world, BlockPos pos) {
+        TileEntity tileentity = world.getTileEntity(pos);
+        return tileentity instanceof INamedContainerProvider ? (INamedContainerProvider) tileentity : null;
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader view, BlockPos pos, ISelectionContext ctx) {
         return CHEST_SHAPE;
     }
 
+
     @Override
-    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         //if the block is actually gone
         if(state.getBlock() != newState.getBlock()) {
-            BlockEntity entity = world.getBlockEntity(pos);
+            TileEntity entity = world.getTileEntity(pos);
 
             //and is our block then scatter items and update comparators
             if(entity instanceof  CompactChestBlockEntity) {
                 CompactChestBlockEntity chestBlockEntity = (CompactChestBlockEntity) entity;
-                ItemScatterer.spawn(world, pos, (Inventory) chestBlockEntity);
-                world.updateHorizontalAdjacent(pos, this);
+                InventoryHelper.dropInventoryItems(world, pos, chestBlockEntity.getInventory());
+                world.updateComparatorOutputLevel(pos, this);
             }
         }
-        super.onBlockRemoved(state, world, pos, newState, moved);
+        super.onReplaced(state, world, pos, newState, moved);
     }
 
     @Override
-    public boolean hasComparatorOutput(BlockState state) {
+    public boolean hasComparatorInputOverride(BlockState p_149740_1_) {
         return true;
     }
 
     @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return Container.calculateComparatorOutput(world.getBlockEntity(pos));
+    public int getComparatorInputOverride(BlockState state, World world, BlockPos pos) {
+        return Container.calcRedstone(world.getTileEntity(pos));
     }
 }

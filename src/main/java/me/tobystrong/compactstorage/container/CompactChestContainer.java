@@ -1,20 +1,18 @@
 package me.tobystrong.compactstorage.container;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.tobystrong.compactstorage.block.entity.CompactChestBlockEntity;
 import me.tobystrong.compactstorage.inventory.BackpackInventory;
-import net.minecraft.container.Container;
-import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 
 public class CompactChestContainer extends Container {
-    private final Inventory inventory;
+    private final IInventory inventory;
     private final PlayerInventory playerInventory;
 
     public CompactChestBlockEntity blockEntity;
@@ -24,8 +22,8 @@ public class CompactChestContainer extends Container {
 
     private ItemStack backpack;
 
-    public CompactChestContainer(final int syncId, final PlayerInventory playerInventory, final Inventory inventory, final int inventoryWidth, final int inventoryHeight, final Hand hand) {
-        super(null, syncId);
+    public CompactChestContainer(ContainerType<CompactChestContainer> type, final int syncId, final PlayerInventory playerInventory, final IInventory inventory, final int inventoryWidth, final int inventoryHeight, final Hand hand) {
+        super(type, syncId);
         this.inventory = inventory;
         this.playerInventory = playerInventory;
         this.inventoryWidth = inventoryWidth;
@@ -35,20 +33,25 @@ public class CompactChestContainer extends Container {
             this.blockEntity = (CompactChestBlockEntity) inventory;
             this.backpack = null;
         } else if(inventory instanceof BackpackInventory) {
-            this.backpack = playerInventory.player.getStackInHand(hand);
+            this.backpack = playerInventory.player.getHeldItem(hand);
             this.blockEntity = null;
         }
 
-        checkContainerSize(inventory, inventoryWidth * inventoryHeight);
-        inventory.onInvOpen(playerInventory.player);
+        assertInventorySize(inventory, inventoryWidth * inventoryHeight);
+        inventory.openInventory(playerInventory.player);
 
         setupSlots(true);
     }
 
     @Override
-    public void close(final PlayerEntity player) {
-        super.close(player);
-        inventory.onInvClose(player);
+    public boolean canInteractWith(PlayerEntity playerIn) {
+        return true;
+    }
+
+    @Override
+    public void onContainerClosed(final PlayerEntity player) {
+        super.onContainerClosed(player);
+        inventory.closeInventory(player);
     }
 
     public void setupSlots(final boolean includeChestInventory) {
@@ -56,7 +59,7 @@ public class CompactChestContainer extends Container {
         int i;
         int j;
 
-        this.slots.clear();
+        this.inventorySlots.clear();
 
         final int chestInvHeight = inventoryHeight * 18;
 
@@ -77,13 +80,12 @@ public class CompactChestContainer extends Container {
 
 
         for (j = 0; j < 9; j++) {
-            if(this.blockEntity == null && j==playerInventory.selectedSlot) {
+            if(this.blockEntity == null && j==playerInventory.currentItem) {
                 this.addSlot(new Slot(playerInventory, j, 8 + ((inventoryWidth * 18) / 2) - (9 * 9) + j * 18, 18 + chestInvHeight + 60 + 18) {
                     @Override
-                    public boolean canTakeItems(PlayerEntity playerEntity) {
+                    public boolean canTakeStack(PlayerEntity p_82869_1_) {
                         return false;
                     }
-
                 });
             } else {
                 this.addSlot(new Slot(playerInventory, j, 8 + ((inventoryWidth * 18) / 2) - (9 * 9) + j * 18, 18 + chestInvHeight + 60 + 18));
@@ -91,32 +93,28 @@ public class CompactChestContainer extends Container {
         }
     }
 
-    @Override
-    public boolean canUse(final PlayerEntity player) {
-        return this.inventory.canPlayerUseInv(player);
-    }
 
     @Override
-    public ItemStack transferSlot(final PlayerEntity player, final int invSlot) {
+    public ItemStack transferStackInSlot(final PlayerEntity player, final int invSlot) {
         ItemStack newStack = ItemStack.EMPTY;
-        final Slot slot = this.slots.get(invSlot);
-        if (slot != null && slot.hasStack()) {
+        final Slot slot = this.inventorySlots.get(invSlot);
+        if (slot != null && slot.getHasStack()) {
 
             final ItemStack originalStack = slot.getStack();
             newStack = originalStack.copy();
 
-            if (invSlot < this.inventory.getInvSize()) {
-                if (!this.insertItem(originalStack, this.inventory.getInvSize(), this.slots.size(), true)) {
+            if (invSlot < this.inventory.getSizeInventory()) {
+                if (!this.mergeItemStack(originalStack, this.inventory.getSizeInventory(), this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(originalStack, 0, this.inventory.getInvSize(), false)) {
+            } else if (!this.mergeItemStack(originalStack, 0, this.inventory.getSizeInventory(), false)) {
                 return ItemStack.EMPTY;
             }
 
             if (originalStack.isEmpty()) {
-                slot.setStack(ItemStack.EMPTY);
+                slot.putStack(ItemStack.EMPTY);
             } else {
-                slot.markDirty();
+                slot.onSlotChanged();
             }
         }
 
