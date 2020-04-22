@@ -10,3 +10,4 @@ run/
 *.iml
 *.ipr
 *.iws
+.idea/
