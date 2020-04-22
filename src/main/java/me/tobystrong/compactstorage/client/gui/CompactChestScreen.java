@@ -28,6 +28,8 @@ public class CompactChestScreen extends ContainerScreen<CompactChestContainer> {
         this.font.drawString(this.title.getFormattedText(), 8.0F, 6.0F, 4210752);
         this.font.drawString(this.playerInventory.getDisplayName().getFormattedText(), 8.0F, (float)(this.ySize - 96 - 3), 4210752);
 
+        this.renderHoveredToolTip(mouseX - guiLeft, mouseY - guiTop);
+
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
     }
     

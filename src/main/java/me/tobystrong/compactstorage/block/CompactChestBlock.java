@@ -15,6 +15,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -155,6 +156,16 @@ public class CompactChestBlock extends ContainerBlock {
             if(entity instanceof  CompactChestBlockEntity) {
                 CompactChestBlockEntity chestBlockEntity = (CompactChestBlockEntity) entity;
                 InventoryHelper.dropInventoryItems(world, pos, chestBlockEntity.getInventory());
+
+                ItemStack chest_item = new ItemStack(CompactStorage.COMPACT_CHEST, 1);
+                
+                CompoundNBT tag = new CompoundNBT();
+                tag.putInt("inventory_width", chestBlockEntity.inventory_width);
+                tag.putInt("inventory_height", chestBlockEntity.inventory_height);
+
+                chest_item.setTag(tag);
+                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), chest_item);
+
                 world.updateComparatorOutputLevel(pos, this);
             }
         }
