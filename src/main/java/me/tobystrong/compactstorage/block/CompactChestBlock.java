@@ -11,12 +11,15 @@ import net.minecraft.block.ChestBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.entity.EntityContext;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
@@ -148,6 +151,15 @@ public class CompactChestBlock extends BlockWithEntity {
             if(entity instanceof  CompactChestBlockEntity) {
                 CompactChestBlockEntity chestBlockEntity = (CompactChestBlockEntity) entity;
                 ItemScatterer.spawn(world, pos, (Inventory) chestBlockEntity);
+
+                ItemStack chest_stack = new ItemStack(CompactStorage.COMPACT_CHEST, 1);
+
+                CompoundTag tag = new CompoundTag();
+                tag.putInt("inventory_width", chestBlockEntity.inventory_width);
+                tag.putInt("inventory_height", chestBlockEntity.inventory_height);
+
+                chest_stack.setTag(tag);
+                ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), chest_stack);
                 world.updateHorizontalAdjacent(pos, this);
             }
         }

@@ -35,6 +35,8 @@ public class CompactChestScreen extends ContainerScreen<CompactChestContainer> {
         this.font.draw(this.playerInventory.getDisplayName().asFormattedString(), 8.0F, (float)(this.containerHeight - 96 - 3), 4210752);
 
         super.drawForeground(mouseX, mouseY);
+        
+        this.drawMouseoverTooltip(mouseX - x, mouseY - y);
     }
 
     @Override
