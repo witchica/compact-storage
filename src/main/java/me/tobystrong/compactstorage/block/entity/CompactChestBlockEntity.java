@@ -94,30 +94,6 @@ public class CompactChestBlockEntity extends LockableLootTileEntity implements I
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
-        super.write(tag);
-
-        writeItemsToTag(this.inventory, tag);
-
-        tag.putInt("inventory_width", inventory_width);
-        tag.putInt("inventory_height", inventory_height);
-        return tag;
-    }
-
-    @Override
-    public void read(CompoundNBT tag) {
-        super.read(tag);
-
-        System.out.println((world.isRemote ? "client" : " Server") + " : " + (tag.contains("inventory_width") ? tag.getInt("inventory_width") : "DID NOT CONTAIN"));
-
-        inventory_width = tag.contains("inventory_width") ? tag.getInt("inventory_width") : 9;
-        inventory_height = tag.contains("inventory_height") ? tag.getInt("inventory_height") : 6;
-
-        this.inventory = NonNullList.withSize(inventory_width * inventory_height, ItemStack.EMPTY);
-        readItemsFromTag(this.inventory, tag);
-    }
-
-    @Override
     public int getInventoryWidth() {
         return inventory_width;
     }
@@ -166,18 +142,38 @@ public class CompactChestBlockEntity extends LockableLootTileEntity implements I
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT tag = super.getUpdateTag();
+    public CompoundNBT write(CompoundNBT tag) {
+        super.write(tag);
+
+        writeItemsToTag(this.inventory, tag);
+
         tag.putInt("inventory_width", inventory_width);
         tag.putInt("inventory_height", inventory_height);
-        return super.getUpdateTag();
+        return tag;
+    }
+
+    @Override
+    public void read(CompoundNBT tag) {
+        //System.out.println((world.isRemote ? "client" : " Server") + " : " + (tag.contains("inventory_width") ? tag.getInt("inventory_width") : "DID NOT CONTAIN"));
+
+        inventory_width = tag.contains("inventory_width") ? tag.getInt("inventory_width") : 9;
+        inventory_height = tag.contains("inventory_height") ? tag.getInt("inventory_height") : 6;
+
+        this.inventory = NonNullList.withSize(inventory_width * inventory_height, ItemStack.EMPTY);
+        readItemsFromTag(this.inventory, tag);
+
+        super.read(tag);
+    }
+
+    @Override
+    public CompoundNBT getUpdateTag() {
+        CompoundNBT tag = super.getUpdateTag();
+        write(tag);
+        return tag;
     }
 
     @Override
     public void handleUpdateTag(CompoundNBT tag) {
-        this.inventory_width = tag.getInt("inventory_width");
-        this.inventory_height = tag.getInt("inventory_height");
-
         super.handleUpdateTag(tag);
     }
 
