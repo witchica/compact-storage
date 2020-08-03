@@ -3,27 +3,21 @@ package me.tobystrong.compactstorage.block;
 import me.tobystrong.compactstorage.CompactStorage;
 import me.tobystrong.compactstorage.block.entity.CompactChestBlockEntity;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.ChestBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.container.Container;
-import net.minecraft.entity.EntityContext;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -111,8 +105,8 @@ public class CompactChestBlock extends BlockWithEntity {
                     compactChestBlockEntity.sync();
 
                     return ActionResult.SUCCESS;
-                } else if (held_item == CompactStorage.CHEST_UPGRADE_ROW && compactChestBlockEntity.inventory_width >= 24) {
-                    player.sendMessage(new TranslatableText("compact-storage.text.too_many_rows"));
+                } else if (held_item == CompactStorage.CHEST_UPGRADE_ROW) {
+                    player.sendMessage(new TranslatableText("compact-storage.text.too_many_rows"), true);//Todo: what
                 }
 
                 if(held_item == CompactStorage.CHEST_UPGRADE_COLUMN && compactChestBlockEntity.inventory_height < 12) {
@@ -125,8 +119,8 @@ public class CompactChestBlock extends BlockWithEntity {
                     compactChestBlockEntity.sync();
 
                     return ActionResult.SUCCESS;
-                } else if (held_item == CompactStorage.CHEST_UPGRADE_COLUMN && compactChestBlockEntity.inventory_height >= 12) {
-                    player.sendMessage(new TranslatableText("compact-storage.text.too_many_columns"));
+                } else if (held_item == CompactStorage.CHEST_UPGRADE_COLUMN) {
+                    player.sendMessage(new TranslatableText("compact-storage.text.too_many_columns"), true);
                 }
 
                 ContainerProviderRegistry.INSTANCE.openContainer(CompactStorage.COMPACT_CHEST_IDENTIFIER, player, buf -> buf.writeBlockPos(pos));
@@ -137,12 +131,12 @@ public class CompactChestBlock extends BlockWithEntity {
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, EntityContext context) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         return CHEST_SHAPE;
     }
 
     @Override
-    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         //if the block is actually gone
         if(state.getBlock() != newState.getBlock()) {
             BlockEntity entity = world.getBlockEntity(pos);
@@ -160,10 +154,10 @@ public class CompactChestBlock extends BlockWithEntity {
 
                 chest_stack.setTag(tag);
                 ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), chest_stack);
-                world.updateHorizontalAdjacent(pos, this);
+                world.updateComparators(pos, this);
             }
         }
-        super.onBlockRemoved(state, world, pos, newState, moved);
+        super.onStateReplaced(state, world, pos, newState, moved);
     }
 
     @Override
@@ -173,6 +167,6 @@ public class CompactChestBlock extends BlockWithEntity {
 
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return Container.calculateComparatorOutput(world.getBlockEntity(pos));
+        return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
     }
 }

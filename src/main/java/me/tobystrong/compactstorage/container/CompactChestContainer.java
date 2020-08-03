@@ -1,19 +1,16 @@
 package me.tobystrong.compactstorage.container;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import me.tobystrong.compactstorage.block.entity.CompactChestBlockEntity;
 import me.tobystrong.compactstorage.inventory.BackpackInventory;
-import net.minecraft.container.Container;
-import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.Hand;
 
-public class CompactChestContainer extends Container {
+public class CompactChestContainer extends ScreenHandler {
     private final Inventory inventory;
     private final PlayerInventory playerInventory;
 
@@ -39,8 +36,8 @@ public class CompactChestContainer extends Container {
             this.blockEntity = null;
         }
 
-        checkContainerSize(inventory, inventoryWidth * inventoryHeight);
-        inventory.onInvOpen(playerInventory.player);
+        checkSize(inventory, inventoryWidth * inventoryHeight);
+        inventory.onOpen(playerInventory.player);
 
         setupSlots(true);
     }
@@ -48,7 +45,7 @@ public class CompactChestContainer extends Container {
     @Override
     public void close(final PlayerEntity player) {
         super.close(player);
-        inventory.onInvClose(player);
+        inventory.onClose(player);
     }
 
     public void setupSlots(final boolean includeChestInventory) {
@@ -93,7 +90,7 @@ public class CompactChestContainer extends Container {
 
     @Override
     public boolean canUse(final PlayerEntity player) {
-        return this.inventory.canPlayerUseInv(player);
+        return this.inventory.canPlayerUse(player);
     }
 
     @Override
@@ -105,11 +102,11 @@ public class CompactChestContainer extends Container {
             final ItemStack originalStack = slot.getStack();
             newStack = originalStack.copy();
 
-            if (invSlot < this.inventory.getInvSize()) {
-                if (!this.insertItem(originalStack, this.inventory.getInvSize(), this.slots.size(), true)) {
+            if (invSlot < this.inventory.size()) {
+                if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(originalStack, 0, this.inventory.getInvSize(), false)) {
+            } else if (!this.insertItem(originalStack, 0, this.inventory.size(), false)) {
                 return ItemStack.EMPTY;
             }
 

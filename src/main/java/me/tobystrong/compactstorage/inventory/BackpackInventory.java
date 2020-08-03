@@ -8,8 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Hand;
+import net.minecraft.util.collection.DefaultedList;
 
 public class BackpackInventory implements Inventory, CompactStorageInventoryImpl {
     public DefaultedList<ItemStack> items;
@@ -42,32 +42,32 @@ public class BackpackInventory implements Inventory, CompactStorageInventoryImpl
     }
 
     @Override
-    public int getInvSize() {
+    public int size() {
         return getInventoryWidth() * getInventoryHeight();
     }
 
     @Override
-    public boolean isInvEmpty() {
+    public boolean isEmpty() {
         return this.items.stream().allMatch(ItemStack::isEmpty);
     }
 
     @Override
-    public ItemStack getInvStack(int slot) {
+    public ItemStack getStack(int slot) {
         return items.get(slot);
     }
 
     @Override
-    public ItemStack takeInvStack(int slot, int amount) {
+    public ItemStack removeStack(int slot, int amount) {
         return Inventories.splitStack(this.items, slot, amount);
     }
 
     @Override
-    public ItemStack removeInvStack(int slot) {
+    public ItemStack removeStack(int slot) {
         return Inventories.removeStack(this.items, slot);
     }
 
     @Override
-    public void setInvStack(int slot, ItemStack stack) {
+    public void setStack(int slot, ItemStack stack) {
         this.items.set(slot, stack);
     }
 
@@ -77,7 +77,7 @@ public class BackpackInventory implements Inventory, CompactStorageInventoryImpl
     }
 
     @Override
-    public boolean canPlayerUseInv(PlayerEntity player) {
+    public boolean canPlayerUse(PlayerEntity player) {
         return true;
     }
 
@@ -100,14 +100,14 @@ public class BackpackInventory implements Inventory, CompactStorageInventoryImpl
     }
 
     @Override
-    public void onInvOpen(PlayerEntity player) {
-        Inventory.super.onInvOpen(player);
+    public void onOpen(PlayerEntity player) {
+        Inventory.super.onOpen(player);
         player.playSound(SoundEvents.BLOCK_WOOL_BREAK, SoundCategory.PLAYERS, 1f, 1f);
     }
 
     @Override
-    public void onInvClose(PlayerEntity player) {
-        Inventory.super.onInvClose(player);
+    public void onClose(PlayerEntity player) {
+        Inventory.super.onClose(player);
 
         if(!player.getStackInHand(hand).hasTag()) {
             player.getStackInHand(hand).setTag(new CompoundTag());
