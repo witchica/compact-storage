@@ -57,12 +57,12 @@ public class BarrelBlockEntityRenderer extends BlockEntityRenderer<BarrelBlockEn
         matrices.translate(-0, -0.85, -0.45);
         matrices.scale(0.01f, 0.01f, 0.01f);
 
-        textRenderer.draw(text, -textRenderer.getStringWidth(text) / 2, 0, 0x000000, false, matrices.peek().getModel(), vertexConsumers, false, 0x000000, light);
+        textRenderer.draw(text, -textRenderer.getWidth(text) / 2, 0, 0x000000, false, matrices.peek().getModel(), vertexConsumers, false, 0x000000, light);
 
 
         matrices.translate(0, 10f, 0);
 
-        textRenderer.draw(text2, -textRenderer.getStringWidth(text2) / 2, 0, 0x000000, false, matrices.peek().getModel(), vertexConsumers, false, 0x000000, light);
+        textRenderer.draw(text2, -textRenderer.getWidth(text2) / 2, 0, 0x000000, false, matrices.peek().getModel(), vertexConsumers, false, 0x000000, light);
         matrices.pop();
     }
 }

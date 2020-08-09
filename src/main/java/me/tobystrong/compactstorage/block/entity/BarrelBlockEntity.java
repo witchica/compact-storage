@@ -2,21 +2,14 @@ package me.tobystrong.compactstorage.block.entity;
 
 import me.tobystrong.compactstorage.CompactStorage;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.text.Text;
-import net.minecraft.util.DefaultedList;
-
-import java.util.Set;
+import net.minecraft.util.collection.DefaultedList;
 
 public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Inventory
 {
@@ -42,7 +35,7 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
         int count = 0;
 
         for(int i = 0; i < 64; i++) {
-            count += getInvStack(i).getCount();
+            count += getStack(i).getCount();
         }
 
         return count;
@@ -67,8 +60,8 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
         } else {
             ItemStack stack = ItemStack.EMPTY;
             for(int i = 63; i >= 0; i--) {
-                if(!getInvStack(i).isEmpty()) {
-                    stack = takeInvStack(i, getInvStack(i).getCount());
+                if(!getStack(i).isEmpty()) {
+                    stack = removeStack(i, getStack(i).getCount());
                     break;
                 }
             }
@@ -85,14 +78,14 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
             int amount_left = barrel_item.getCount();
 
             for(int i = 0; i < 64; i++) {
-                ItemStack slot_stack = getInvStack(i);
+                ItemStack slot_stack = getStack(i);
 
                 if(slot_stack.isEmpty()) {
-                    setInvStack(i, barrel_item);
+                    setStack(i, barrel_item);
                     amount_left = 0;
                 } else {
                     int slotCanTake = slot_stack.getMaxCount() - slot_stack.getCount();
-                    getInvStack(i).increment(slotCanTake);
+                    getStack(i).increment(slotCanTake);
                     amount_left -= slotCanTake;
                 }
 
@@ -105,7 +98,7 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
 
             barrel_item.setCount(amount_left);
         } else {
-            setInvStack(0, barrel_item);
+            setStack(0, barrel_item);
             barrel_item = ItemStack.EMPTY;
         }
 
@@ -156,13 +149,12 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         Inventories.toTag(tag, barrel_items);
-
         return super.toTag(tag);
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
         Inventories.fromTag(tag, barrel_items);
     }
 
@@ -173,7 +165,7 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
 
     @Override
     public void fromClientTag(CompoundTag tag) {
-        fromTag(tag);
+        fromTag(null,  tag);//Fixme: soon
     }
 
 
@@ -187,33 +179,33 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
     }
 
     @Override
-    public boolean canPlayerUseInv(PlayerEntity player) {
+    public boolean canPlayerUse(PlayerEntity player) {
         return true;
     }
 
     @Override
-    public int getInvSize() {
+    public int size() {
         return 64;
     }
 
     @Override
-    public ItemStack getInvStack(int slot) {
+    public ItemStack getStack(int slot) {
         return barrel_items.get(slot);
     }
 
     @Override
-    public boolean isInvEmpty() {
+    public boolean isEmpty() {
         return barrel_items.stream().allMatch(s -> s == ItemStack.EMPTY);
     }
 
     @Override
-    public ItemStack removeInvStack(int slot) {
+    public ItemStack removeStack(int slot) {
         markDirty();
         return barrel_items.remove(slot);
     }
 
     @Override
-    public void setInvStack(int slot, ItemStack stack) {
+    public void setStack(int slot, ItemStack stack) {
         if(getBarrelItem().isEmpty() || ItemStack.areItemsEqual(stack, getBarrelItem())) {
             barrel_items.set(slot, stack);
         }
@@ -222,7 +214,7 @@ public class BarrelBlockEntity extends BlockEntity implements BlockEntityClientS
     }
 
     @Override
-    public ItemStack takeInvStack(int slot, int amount) {
+    public ItemStack removeStack(int slot, int amount) {
         return barrel_items.get(slot).split(amount);
     }
 }

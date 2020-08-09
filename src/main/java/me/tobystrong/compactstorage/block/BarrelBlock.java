@@ -60,12 +60,12 @@ public class BarrelBlock extends BlockWithEntity
             BarrelBlockEntity blockEntity = (BarrelBlockEntity) world.getBlockEntity(pos);
 
             if(player.isSneaking()) {
-                for(int i = 0; i < blockEntity.getInvSize(); i++) {
-                    ItemStack stack = blockEntity.getInvStack(i);
+                for(int i = 0; i < blockEntity.size(); i++) {
+                    ItemStack stack = blockEntity.getStack(i);
 
 
                     if(!stack.isEmpty()) {
-                        player.sendMessage(stack.getName());
+                        player.sendMessage(stack.getName(), true);//Fixme: wat
                     }
                 } 
             }
@@ -90,7 +90,7 @@ public class BarrelBlock extends BlockWithEntity
     }
 
     @Override
-    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         //if the block is actually gone
         if(state.getBlock() != newState.getBlock()) {
             BlockEntity entity = world.getBlockEntity(pos);
@@ -99,9 +99,9 @@ public class BarrelBlock extends BlockWithEntity
             if(entity instanceof  BarrelBlockEntity) {
                 BarrelBlockEntity blockEntity = (BarrelBlockEntity) entity;
                 ItemScatterer.spawn(world, pos, blockEntity.barrel_items);
-                world.updateHorizontalAdjacent(pos, this);
+                world.updateComparators(pos, this);
             }
         }
-        super.onBlockRemoved(state, world, pos, newState, moved);
+        super.onStateReplaced(state, world, pos, newState, moved);
     }
 }
