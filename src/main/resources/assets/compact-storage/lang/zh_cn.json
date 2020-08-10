@@ -1,0 +1,19 @@
+{
+    "block.compact-storage.barrel": "桶",
+    "block.compact-storage.drum": "鼓",
+    "container.compact-storage.compact_chest": "致密箱子",
+    "block.compact-storage.compact_chest": "致密箱子",
+    "item.compact-storage.backpack": "背包",
+    "item.compact-storage.chest_upgrade_row": "扩容 (排)",
+    "item.compact-storage.chest_upgrade_column": "扩容 (列)",
+    "tooltip.compact-storage.row_upgrade_descriptor": "对准一个致密箱子使用以扩增其一排容量",
+    "tooltip.compact-storage.column_upgrade_descriptor": "对准一个致密箱子使用以扩增其一列容量",
+    "tooltip.compact-storage.upgrade_backpack": "同样会作用于你副手中的背包",
+    "tooltip.compact-storage.upgrade_error": "背包必须放在副手以扩容",
+    "tooltip.compact-storage.fully_upgraded_row": "这个背包已经扩增到最大排数了",
+    "tooltip.compact-storage.fully_upgraded_column": "这个背包已经扩增到最大列数了",
+    "container.compact-storage.backpack": "背包",
+    "itemGroup.compact-storage.general": "致密存储 §7(Compact Storage)",
+    "compact-storage.text.too_many_rows": "这个箱子已经扩增到最大排数了",
+    "compact-storage.text.too_many_columns": "这个箱子已经扩增到最大列数了"
+}
