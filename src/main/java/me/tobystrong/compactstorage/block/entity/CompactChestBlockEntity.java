@@ -5,6 +5,7 @@ import me.tobystrong.compactstorage.container.CompactChestContainer;
 import me.tobystrong.compactstorage.util.CompactStorageInventoryImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -26,6 +27,10 @@ import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.MathHelper;
 
+@EnvironmentInterface(
+    itf = ChestAnimationProgress.class,
+    value = EnvType.CLIENT
+)
 public class CompactChestBlockEntity extends LootableContainerBlockEntity implements BlockEntityClientSerializable, CompactStorageInventoryImpl, Tickable, ChestAnimationProgress {
     private DefaultedList<ItemStack> inventory;
 
