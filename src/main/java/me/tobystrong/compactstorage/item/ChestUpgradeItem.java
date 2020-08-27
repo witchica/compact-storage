@@ -47,7 +47,7 @@ public class ChestUpgradeItem extends Item {
                     user.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 1f, 1f);
                     return TypedActionResult.consume(user.getStackInHand(hand));
                 } else {
-                    user.sendMessage(new TranslatableText("tooltip.compact-storage.fully_upgraded_row"));
+                    user.sendMessage(new TranslatableText("tooltip.compact-storage.fully_upgraded_row"), true);//Fixme: wat
                 }
             } else if(upgrade.getItem() == CompactStorage.CHEST_UPGRADE_COLUMN) {
                 int inventory_height = backpack.getTag().getCompound("Backpack").getInt("inventory_height");
@@ -61,11 +61,11 @@ public class ChestUpgradeItem extends Item {
                     user.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 1f, 1f);
                     return TypedActionResult.consume(user.getStackInHand(hand));
                 } else {
-                    user.sendMessage(new TranslatableText("tooltip.compact-storage.fully_upgraded_column"));
+                    user.sendMessage(new TranslatableText("tooltip.compact-storage.fully_upgraded_column"), true);
                 }
             }
         } else if(!world.isClient && user.getStackInHand(Hand.OFF_HAND).getItem() != CompactStorage.BACKPACK) {
-            user.sendMessage(new TranslatableText("tooltip.compact-storage.upgrade_error"));
+            user.sendMessage(new TranslatableText("tooltip.compact-storage.upgrade_error"), true);
         }
 
         return TypedActionResult.consume(user.getStackInHand(hand));
@@ -76,11 +76,11 @@ public class ChestUpgradeItem extends Item {
         super.appendTooltip(stack, world, tooltip, context);
 
         if(stack.getItem() == CompactStorage.CHEST_UPGRADE_ROW) {
-            tooltip.add(new TranslatableText("tooltip.compact-storage.row_upgrade_descriptor").setStyle(new Style().setColor(Formatting.GRAY)));
+            tooltip.add(new TranslatableText("tooltip.compact-storage.row_upgrade_descriptor").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         } else if(stack.getItem() == CompactStorage.CHEST_UPGRADE_COLUMN) {
-            tooltip.add(new TranslatableText("tooltip.compact-storage.column_upgrade_descriptor").setStyle(new Style().setColor(Formatting.GRAY)));
+            tooltip.add(new TranslatableText("tooltip.compact-storage.column_upgrade_descriptor").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         }
 
-        tooltip.add(new TranslatableText("tooltip.compact-storage.upgrade_backpack").setStyle(new Style().setColor(Formatting.GRAY)));
+        tooltip.add(new TranslatableText("tooltip.compact-storage.upgrade_backpack").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
     }
 }

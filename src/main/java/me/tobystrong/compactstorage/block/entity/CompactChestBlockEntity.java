@@ -7,24 +7,21 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.client.block.ChestAnimationProgress;
-import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Tickable;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.MathHelper;
 
 @EnvironmentInterface(
@@ -55,7 +52,7 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
     }
 
     @Override
-    protected Container createContainer(int syncId, PlayerInventory playerInventory) {
+    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory){
         return new CompactChestContainer(syncId, playerInventory, (Inventory) this, inventory_width, inventory_height, null);
     }
 
@@ -70,13 +67,13 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
     }
 
     @Override
-    public int getInvSize() {
+    public int size() {
         return inventory_width * inventory_height;
     }
 
     @Override
-    public void onInvOpen(PlayerEntity player) {
-        super.onInvOpen(player);
+    public void onOpen(PlayerEntity player) {
+        super.onOpen(player);
 
         if(!player.isSpectator()) {
             players_using++;
@@ -84,8 +81,8 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
     }
 
     @Override
-    public void onInvClose(PlayerEntity player) {
-        super.onInvClose(player);
+    public void onClose(PlayerEntity player) {
+        super.onClose(player);
 
         if(!player.isSpectator()) {
             players_using--;
@@ -107,8 +104,8 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);//
 
         inventory_width = tag.contains("inventory_width") ? tag.getInt("inventory_width") : 9;
         inventory_height = tag.contains("inventory_height") ? tag.getInt("inventory_height") : 6;
@@ -136,7 +133,7 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
 
     @Override
     public void fromClientTag(CompoundTag tag) {
-        fromTag(tag);
+        fromTag(null, tag);//Fixme: what
     }
 
     @Override
