@@ -1,6 +1,5 @@
 package me.tobystrong.compactstorage.block;
 
-import com.mojang.realmsclient.gui.RealmsWorldSlotButton.Action;
 
 import me.tobystrong.compactstorage.block.entity.BarrelBlockEntity;
 import me.tobystrong.compactstorage.block.entity.BarrelBlockEntity.InsertItemsResult;
