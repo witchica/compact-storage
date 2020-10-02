@@ -1,0 +1,19 @@
+ {
+    "block.compact-storage.barrel": "Barril",
+    "block.compact-storage.drum": "Tonel",
+    "container.compact-storage.compact_chest": "Baú Compacto",
+    "block.compact-storage.compact_chest": "Baú Compacto",
+    "item.compact-storage.backpack": "Mochila",
+    "item.compact-storage.chest_upgrade_row": "Melhoria de Armazenamento (Linha)",
+    "item.compact-storage.chest_upgrade_column": "Melhoria de Armazenamento (Coluna)",
+    "tooltip.compact-storage.row_upgrade_descriptor": "Use isso num Baú Compacto para adicionar uma nova linha",
+    "tooltip.compact-storage.column_upgrade_descriptor": "Use isso num Baú Compacto para adicionar uma nova coluna",
+    "tooltip.compact-storage.upgrade_backpack": "Também pode ser aplicado à mochilas na sua off-hand",
+    "tooltip.compact-storage.upgrade_error": "Para melhorar uma mochila, ela precisa estar na sua off-hand",
+    "tooltip.compact-storage.fully_upgraded_row": "Essa mochila atingiu o número máximo de linhas",
+    "tooltip.compact-storage.fully_upgraded_column": "Essa mochila atingiu o número máximo de colunas",
+    "container.compact-storage.backpack": "Mochila",
+    "itemGroup.compact-storage.general": "Compact Storage",
+    "compact-storage.text.too_many_rows": "Esse baú atingiu o número máximo de linhas",
+    "compact-storage.text.too_many_columns": "Esse baú atingiu o número máximo de colunas"
+}
