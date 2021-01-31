@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "compactstorage:block/barrel"
+    },
+    "facing=east": {
+      "model": "compactstorage:block/barrel"
+    },
+    "facing=south": {
+      "model": "compactstorage:block/barrel"
+    },
+    "facing=west": {
+      "model": "compactstorage:block/barrel"
+    }
+  }
+}

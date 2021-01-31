@@ -5,6 +5,7 @@ bin/
 build/
 out/
 run/
+logs/
 .classpath
 .project
 *.iml

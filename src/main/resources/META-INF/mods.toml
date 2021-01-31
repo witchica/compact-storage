@@ -1,26 +1,28 @@
-# The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
 modLoader="javafml"
-# A version range to match for said mod loader - for regular FML @Mod it will be the forge version
-# Forge for 1.14.4 is version 28
-loaderVersion="[31,)"
-# A URL to refer people to when problems occur with this mod
-issueTrackerURL="https://github.com/deletey/compact-storage/issues"
-# If the mods defined in this file should show as seperate resource packs
-showAsResourcePack=false
-
+loaderVersion="[35,)"
+license="All rights reserved"
+issueTrackerURL="http://my.issue.tracker/"
 [[mods]]
-  modId="compact-storage"
-  version="4.0.0"
-  displayName="Compact Storage"
-  credits="deletey"
-  authors="deletey"
-  description='''
-  24x12 chests and backpacks!
-  '''
-
-  [[dependencies.compact-storage]]
+modId="compactstorage"
+version="${file.jarVersion}"
+displayName="Compact Storage"
+updateJSONURL="http://myurl.me/"
+displayURL="http://tobystrong.me/compactstorage/"
+logoFile="compactstorage.png"
+credits="Thanks for this example mod goes to Java"
+authors="Toby Strong"
+description='''
+Bringing chests and backpacks of all sizes right to your Minecraft world
+'''
+[[dependencies.compactstorage]]
     modId="forge"
     mandatory=true
-    versionRange="[31,)"
+    versionRange="[35,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.compactstorage]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.4,1.17)"
     ordering="NONE"
     side="BOTH"
