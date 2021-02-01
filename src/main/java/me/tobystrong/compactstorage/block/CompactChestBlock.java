@@ -39,17 +39,21 @@ public class CompactChestBlock extends ContainerBlock {
             return ActionResultType.SUCCESS;
         }
 
+        if(player.isSneaking()) {
+            CompactChestTileEntity chest = (CompactChestTileEntity) worldIn.getTileEntity(pos);
+            chest.width += 1;
+            worldIn.notifyBlockUpdate(pos, state, state, 2);
+
+            return ActionResultType.SUCCESS;
+        }
+
         INamedContainerProvider namedContainerProvider = this.getContainer(state, worldIn, pos);
         if(namedContainerProvider != null) {
-            player.sendMessage(new StringTextComponent("container not null"), UUID.randomUUID());
             ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) player;
             NetworkHooks.openGui(serverPlayerEntity, namedContainerProvider, (packetBuffer -> {
                 //write the chest size here !
-                packetBuffer.writeInt(9);
-                packetBuffer.writeInt(3);
+                packetBuffer.writeBlockPos(pos);
             }));
-        } else {
-            player.sendMessage(new StringTextComponent("container  null"), UUID.randomUUID());
         }
 
         return ActionResultType.SUCCESS;

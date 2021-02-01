@@ -33,5 +33,7 @@
   "item.compactstorage.backpack_brown": "Brown Backpack",
   "item.compactstorage.backpack_green": "Green Backpack",
   "item.compactstorage.backpack_red": "Red Backpack",
-  "item.compactstorage.backpack_black": "Black Backpack"
+  "item.compactstorage.backpack_black": "Black Backpack",
+
+  "container.compactstorage.compact_chest": "Compact Chest"
 }
