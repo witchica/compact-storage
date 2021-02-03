@@ -19,6 +19,7 @@ import java.util.List;
 
 public class CompactChestContainer extends CompactStorageBaseContainer {
     public static CompactChestContainer createContainerClientSide(int windowID, PlayerInventory playerInventory, net.minecraft.network.PacketBuffer extraData) {
+        //get the data from the block pos
         CompactChestTileEntity tile = (CompactChestTileEntity) playerInventory.player.world.getTileEntity(extraData.readBlockPos());
 
         return new CompactChestContainer(windowID, playerInventory, tile.width, tile.height, tile, tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(NullPointerException::new));

@@ -34,6 +34,7 @@ public class CompactStorage
 {
     private static final Logger LOGGER = LogManager.getLogger();
 
+    //make a creative tab with a chest icon
     public static final ItemGroup compactStorageItemGroup = new ItemGroup("compact_storage") {
         @Override
         public ItemStack createIcon() {
@@ -41,6 +42,9 @@ public class CompactStorage
         }
     };
 
+    /*
+        Variable storage in arrays for the coloured blocks, might change this later down the line
+     */
     public static Block[] chest_blocks = new Block[DyeColor.values().length];
 
     public static TileEntityType<CompactChestTileEntity> COMPACT_CHEST_TILE_TYPE;
@@ -59,6 +63,7 @@ public class CompactStorage
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
         MinecraftForge.EVENT_BUS.register(this);
 
+        //create chest blocks and backpacks using the DyeColours class to conform to vanilla colours
         for(int i = 0; i < DyeColor.values().length; i++) {
             chest_blocks[i] = new CompactChestBlock().setRegistryName(new ResourceLocation("compactstorage", "compact_chest_" + DyeColor.values()[i].name().toLowerCase()));
         }
@@ -67,6 +72,7 @@ public class CompactStorage
             backpack_items[i] = new BackpackItem().setRegistryName(new ResourceLocation("compactstorage", "backpack_" + DyeColor.values()[i].name().toLowerCase()));
         }
 
+        //upgrade items
         upgrade_column = new Item(new Item.Properties().maxStackSize(64).group(compactStorageItemGroup)).setRegistryName("compactstorage", "upgrade_column");
         upgrade_row = new Item(new Item.Properties().maxStackSize(64).group(compactStorageItemGroup)).setRegistryName("compactstorage", "upgrade_row");
     }
@@ -75,7 +81,9 @@ public class CompactStorage
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
+        //bind renderers and gui factories
         ClientRegistry.bindTileEntityRenderer(COMPACT_CHEST_TILE_TYPE, CompactChestTileEntityRenderer::new);
+
         ScreenManager.registerFactory(COMPACT_CHEST_CONTAINER_TYPE, CompactChestContainerScreen::new);
         ScreenManager.registerFactory(BACKPACK_CONTAINER_TYPE, CompactChestContainerScreen::new);
     }
@@ -85,11 +93,6 @@ public class CompactStorage
     }
 
     private void processIMC(final InterModProcessEvent event) {
-
-    }
-
-    @SubscribeEvent
-    public void onServerStarting(FMLServerStartingEvent event) {
 
     }
 
@@ -105,6 +108,7 @@ public class CompactStorage
         @SubscribeEvent
         public static void onItemsRegistry(final RegistryEvent.Register<Item> itemRegistryEvent) {
             for(int i = 0; i < DyeColor.values().length; i++) {
+                //register block items for the blocks, using our item group
                 itemRegistryEvent.getRegistry().register(new BlockItem(CompactStorage.chest_blocks[i], new Item.Properties().group(compactStorageItemGroup)).setRegistryName(CompactStorage.chest_blocks[i].getRegistryName()));
             }
 
@@ -114,6 +118,7 @@ public class CompactStorage
 
         @SubscribeEvent
         public static void onTileEntityTypeRegistry(final RegistryEvent.Register<TileEntityType<?>> tileTypeRegistryEvent) {
+            //create tile type for compact chest
             COMPACT_CHEST_TILE_TYPE = TileEntityType.Builder.create(CompactChestTileEntity::new, chest_blocks).build(null);
             COMPACT_CHEST_TILE_TYPE.setRegistryName("compactstorage", "compact_chest");
             tileTypeRegistryEvent.getRegistry().register(COMPACT_CHEST_TILE_TYPE);
@@ -121,6 +126,7 @@ public class CompactStorage
 
         @SubscribeEvent
         public static void onContainerRegistry(final RegistryEvent.Register<ContainerType<?>> containerTypeRegister) {
+            //create container types, linking to the client size creation
             COMPACT_CHEST_CONTAINER_TYPE = IForgeContainerType.create(CompactChestContainer::createContainerClientSide);
             COMPACT_CHEST_CONTAINER_TYPE.setRegistryName("compactstorage", "compact_chest");
 

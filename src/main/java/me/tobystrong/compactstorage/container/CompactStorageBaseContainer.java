@@ -30,6 +30,7 @@ public class CompactStorageBaseContainer extends Container {
         this.chestHeight = chestHeight;
         this.chestInventory = inventory;
 
+        //add chest slots
         for(int y = 0; y < chestHeight; y++) {
             for(int x = 0; x < chestWidth; x++) {
                 int index = x + y * chestWidth;
@@ -37,8 +38,10 @@ public class CompactStorageBaseContainer extends Container {
             }
         }
 
+        //get the centered position of the player inventory
         int playerInvX = (int)(8 + ((chestWidth > 9 ? ((chestWidth - 9) * 18) / 2f : 0)));
 
+        //add main inv slots
         for(int y = 0; y < 3; y++) {
             for(int x = 0; x < 9; x++) {
                 int index = x + y * 9;
@@ -46,7 +49,9 @@ public class CompactStorageBaseContainer extends Container {
             }
         }
 
+        //add hotbar
         for(int x = 0; x < 9; x++) {
+            //if the inventory is a backpack and the current slot contains said backpack - make it unusable to prevent backpacks going missing
             if(type == CompactStorage.BACKPACK_CONTAINER_TYPE && x == playerInventory.currentItem) {
                 addSlot(new Slot(playerInventory, x, playerInvX + (x * 18), 17 + (3 * 18) + (chestHeight * 18) + 17) {
                     @Override
@@ -55,11 +60,15 @@ public class CompactStorageBaseContainer extends Container {
                     }
                 });
             } else {
+                //otherwise just proceed as usual
                 addSlot(new Slot(playerInventory, x, playerInvX + (x * 18), 17 + (3 * 18) + (chestHeight * 18) + 17));
             }
         }
     }
 
+    /*
+        Copied from ChestBlock
+     */
     @Override
     public ItemStack transferStackInSlot(PlayerEntity player, int index) {
         ItemStack itemstack = ItemStack.EMPTY;

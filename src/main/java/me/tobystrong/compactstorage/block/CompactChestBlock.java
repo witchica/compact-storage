@@ -42,6 +42,7 @@ import java.util.UUID;
 
 public class CompactChestBlock extends ContainerBlock {
     public static EnumProperty<Direction> PROPERTY_FACING = EnumProperty.create("facing", Direction.class, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);
+
     public CompactChestBlock() {
         super(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f, 5f).harvestLevel(1).harvestTool(ToolType.PICKAXE).notSolid().sound(SoundType.METAL));
         setDefaultState(this.stateContainer.getBaseState().
@@ -57,6 +58,11 @@ public class CompactChestBlock extends ContainerBlock {
 
         ItemStack heldItem = player.getHeldItem(handIn);
 
+        /*
+            Handles the upgrades by using the TileEntity to check if upgradable, then uses the status to do the following
+            SUCESS = spawn the particles and play the sound, then notify of block update as tile entity handles the change itself, decrements the stack size
+            MAX_WIDTH, MAX_HEIGHT - displays particles and plays sound as well as displays a message
+         */
         if(heldItem.getItem() == CompactStorage.upgrade_column || heldItem.getItem() == CompactStorage.upgrade_row) {
             TileEntity entity = worldIn.getTileEntity(pos);
 
@@ -78,6 +84,11 @@ public class CompactChestBlock extends ContainerBlock {
 
                 return ActionResultType.SUCCESS;
             }
+
+            /*
+                This handles the dyeing of chests in world.
+                We get the current dye item and the colour from it, retrieve the right chest and change the block state
+             */
         } else if(player.getHeldItem(handIn).getItem() instanceof DyeItem) {
             ServerWorld serverWorld = (ServerWorld) worldIn;
 
@@ -85,20 +96,23 @@ public class CompactChestBlock extends ContainerBlock {
             Direction dir = state.get(PROPERTY_FACING);
             Block newBlock = CompactStorage.chest_blocks[item.getDyeColor().getId()];
 
+            //if the dyed block is not the same colour
             if(newBlock != this) {
+                //get the new block and set the state with a client update (flag 2)
                 BlockState newState = CompactStorage.chest_blocks[item.getDyeColor().getId()].getDefaultState().with(PROPERTY_FACING, dir);
                 worldIn.setBlockState(pos, newState, 2);
 
+                //play a sound and decrement stack size
                 serverWorld.playSound(null, pos, SoundEvents.BLOCK_SLIME_BLOCK_PLACE, SoundCategory.BLOCKS, 1f, 1f);
-
                 player.getHeldItem(handIn).setCount(player.getHeldItem(handIn).getCount() - 1);
             }
         } else {
+            //get the container provider and open the GUI and container for this block
             INamedContainerProvider namedContainerProvider = this.getContainer(state, worldIn, pos);
             if (namedContainerProvider != null) {
                 ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) player;
                 NetworkHooks.openGui(serverPlayerEntity, namedContainerProvider, (packetBuffer -> {
-                    //write the chest size here !
+                    //write the chest pos here !
                     packetBuffer.writeBlockPos(pos);
                 }));
             }
@@ -108,6 +122,7 @@ public class CompactChestBlock extends ContainerBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
+        //gets the player direction and flips it for placement facing the player
         return getDefaultState().with(PROPERTY_FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
 
@@ -139,19 +154,25 @@ public class CompactChestBlock extends ContainerBlock {
 
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        //if not being replaced by another chest (aka dyed)
         if(!(newState.getBlock() instanceof CompactChestBlock)) {
             if (!state.isIn(newState.getBlock())) {
+                //get the tile entity
                 TileEntity tile = worldIn.getTileEntity(pos);
 
                 if(tile instanceof CompactChestTileEntity) {
                     CompactChestTileEntity chestTile = (CompactChestTileEntity) tile;
                     ItemStack chestItem = new ItemStack(state.getBlock(), 1);
 
+                    //this creates a block with the right NBT to keep the upgrades that have been applied
+
                     if(!(chestTile.width == 9 && chestTile.width == 3)) {
                         CompoundNBT tag = chestItem.getOrCreateChildTag("BlockEntityTag");
                         tag.putInt("width", chestTile.width);
                         tag.putInt("height", chestTile.height);
                     }
+
+                    //make a list of all the chest contents using the capability
 
                     NonNullList<ItemStack> drops = NonNullList.create();
                     IItemHandler itemHandler = chestTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(NullPointerException::new);
@@ -162,9 +183,12 @@ public class CompactChestBlock extends ContainerBlock {
 
                     drops.add(chestItem);
 
+                    //drop all the items in the world
                     InventoryHelper.dropItems(worldIn, pos, drops);
                 }
             }
+
+            //remove the tile entity
             super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
     }
@@ -176,11 +200,13 @@ public class CompactChestBlock extends ContainerBlock {
         boolean upgraded = false;
         boolean retaining = false;
 
-        if(stack.getChildTag("BlockEntityTag") != null) {
+        //this is used to store the data for placement eg: width and height
+        if(stack.hasTag() && stack.getChildTag("BlockEntityTag") != null) {
             upgraded = true;
 
             CompoundNBT tag = stack.getChildTag("BlockEntityTag");
 
+            //if we don't have a width default to 9, height to 3
             width = tag.contains("width") ? tag.getInt("width") : 9;
             height = tag.contains("height") ? tag.getInt("height") : 3;
 

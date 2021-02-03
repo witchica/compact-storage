@@ -28,6 +28,9 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.List;
 
+/*
+Only include on the client size
+ */
 @OnlyIn(
         value = Dist.CLIENT,
         _interface = IChestLid.class
@@ -41,6 +44,9 @@ public class CompactChestTileEntity extends TileEntity implements INamedContaine
     public float prevLidAngle = 0f;
     private int playersUsing = 0;
 
+    /*
+        This is used to let the Block know what message to send the client once upgraded
+     */
     public enum UpgradeStatus {
         SUCCESS,
         MAX_WIDTH,
@@ -54,6 +60,9 @@ public class CompactChestTileEntity extends TileEntity implements INamedContaine
         inventory = LazyOptional.of(() -> new ItemStackHandler(9 * 3));
     }
 
+    /*
+        Provides capability information to other blocks and allow them to interact with us
+     */
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap) {
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
@@ -63,6 +72,9 @@ public class CompactChestTileEntity extends TileEntity implements INamedContaine
         return super.getCapability(cap);
     }
 
+    /*
+        Update the size of our ItemStackHandler to handle upgrades
+     */
     public void updateItemStackHandlerSize(int w, int h) {
         ItemStackHandler handler = inventory.orElseThrow(NullPointerException::new);
         ItemStackHandler newHandler = new ItemStackHandler(w * h);
@@ -78,6 +90,7 @@ public class CompactChestTileEntity extends TileEntity implements INamedContaine
     public CompoundNBT write(CompoundNBT compound) {
         super.write(compound);
 
+        //writes the data from ItemStack handler to NBT
         this.inventory.ifPresent(inv -> compound.put("Inventory", inv.serializeNBT()));
 
         compound.putInt("width", width);
@@ -90,6 +103,7 @@ public class CompactChestTileEntity extends TileEntity implements INamedContaine
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
 
+        //reads the data from nbt to our ItemStackHandler
         this.inventory.ifPresent(inv -> inv.deserializeNBT(nbt.getCompound("Inventory")));
 
         this.width = nbt.contains("width") ? nbt.getInt("width") : 9;
@@ -98,7 +112,11 @@ public class CompactChestTileEntity extends TileEntity implements INamedContaine
         updateItemStackHandlerSize(width, height);
     }
 
+    /*
+        This function is used by the block to determine if an upgrade is allowed
+     */
     public UpgradeStatus handleUpgradeItem(ItemStack upgrade) {
+        //make sure not in use to prevent weird behaviour
         if(playersUsing == 0) {
             if(upgrade.getItem() == CompactStorage.upgrade_row) {
                 if(width == 24) {
@@ -124,6 +142,9 @@ public class CompactChestTileEntity extends TileEntity implements INamedContaine
         return UpgradeStatus.ERROR;
     }
 
+    /*
+        Checks if the player is within a 5 block radius of the chest
+     */
     public boolean canPlayerAccess(PlayerEntity entity) {
         if(entity.getPosX() > pos.getX() - 5 && entity.getPosY() > pos.getY() - 5 && entity.getPosZ() > pos.getZ() - 5) {
             if(entity.getPosX() < pos.getX() + 5 && entity.getPosY() < pos.getY() + 5 && entity.getPosZ() < pos.getZ() + 5) {
@@ -161,7 +182,7 @@ public class CompactChestTileEntity extends TileEntity implements INamedContaine
 
     @Override
     public Container createMenu(int windowId, PlayerInventory playerInventory, PlayerEntity player) {
-
+        // checks that the size matches before opening the container so we don't throw an exception
         inventory.ifPresent(inv -> {
             if(inv.getSlots() != width * height) {
                 updateItemStackHandlerSize(width, height);
@@ -175,6 +196,7 @@ public class CompactChestTileEntity extends TileEntity implements INamedContaine
     public void tick() {
         this.playersUsing = 0;
 
+        //checks for entities within the AABB defined and adds them to the playersUsing if they have this chest open
         float d = 5f;
         List<PlayerEntity> players = world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos.add(-d, -d, -d), pos.add(d, d, d)));
         for(PlayerEntity p : players) {
@@ -186,6 +208,7 @@ public class CompactChestTileEntity extends TileEntity implements INamedContaine
             }
         }
 
+        // sets the lid angle for animation
         this.prevLidAngle = lidAngle;
 
         if(playersUsing > 0 && lidAngle == 0f) {
