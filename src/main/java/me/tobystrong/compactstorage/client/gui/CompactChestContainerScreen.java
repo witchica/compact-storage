@@ -2,19 +2,20 @@ package me.tobystrong.compactstorage.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import me.tobystrong.compactstorage.container.CompactChestContainer;
+import me.tobystrong.compactstorage.container.CompactStorageBaseContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
-public class CompactChestContainerScreen extends ContainerScreen<CompactChestContainer> {
+public class CompactChestContainerScreen extends ContainerScreen<CompactStorageBaseContainer> {
     public static ResourceLocation CHEST_GUI_TEXTURE = new ResourceLocation("compactstorage", "textures/gui/chest.png");
     public static ResourceLocation CHEST_GUI_SLOTS_TEXTURE = new ResourceLocation("compactstorage", "textures/gui/chest_slots.png");
 
     public int chestWidth;
     public int chestHeight;
 
-    public CompactChestContainerScreen(CompactChestContainer chestContainer, PlayerInventory inv, ITextComponent titleIn) {
+    public CompactChestContainerScreen(CompactStorageBaseContainer chestContainer, PlayerInventory inv, ITextComponent titleIn) {
         super(chestContainer, inv, titleIn);
 
         this.chestWidth = chestContainer.chestWidth;

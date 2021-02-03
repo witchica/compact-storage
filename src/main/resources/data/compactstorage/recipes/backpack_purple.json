@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "IWI",
+        "WCW",
+        "IWI"
+    ],
+    "key": {
+        "I": {
+            "item": "minecraft:iron_ingot"
+        },
+        "C": {
+            "item": "minecraft:chest"
+        },
+        "W": {
+            "item": "minecraft:purple_wool"
+        }
+    },
+    "result": {
+        "item": "compactstorage:backpack_purple",
+        "count": 1
+    }
+}

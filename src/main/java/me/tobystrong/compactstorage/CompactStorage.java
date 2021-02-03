@@ -4,6 +4,7 @@ import me.tobystrong.compactstorage.block.CompactChestBlock;
 import me.tobystrong.compactstorage.block.tile.CompactChestTileEntity;
 import me.tobystrong.compactstorage.client.gui.CompactChestContainerScreen;
 import me.tobystrong.compactstorage.client.renderer.CompactChestTileEntityRenderer;
+import me.tobystrong.compactstorage.container.BackpackContainer;
 import me.tobystrong.compactstorage.container.CompactChestContainer;
 import me.tobystrong.compactstorage.item.BackpackItem;
 import net.minecraft.block.Block;
@@ -36,13 +37,16 @@ public class CompactStorage
     public static final ItemGroup compactStorageItemGroup = new ItemGroup("compact_storage") {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(Blocks.CHEST, 1);
+            return new ItemStack(chest_blocks[0], 1);
         }
     };
 
     public static Block[] chest_blocks = new Block[DyeColor.values().length];
+
     public static TileEntityType<CompactChestTileEntity> COMPACT_CHEST_TILE_TYPE;
+
     public static ContainerType<CompactChestContainer> COMPACT_CHEST_CONTAINER_TYPE;
+    public static ContainerType<BackpackContainer> BACKPACK_CONTAINER_TYPE;
 
     public static Item[] backpack_items = new Item[DyeColor.values().length];
     public static Item upgrade_row;
@@ -73,6 +77,7 @@ public class CompactStorage
     private void doClientStuff(final FMLClientSetupEvent event) {
         ClientRegistry.bindTileEntityRenderer(COMPACT_CHEST_TILE_TYPE, CompactChestTileEntityRenderer::new);
         ScreenManager.registerFactory(COMPACT_CHEST_CONTAINER_TYPE, CompactChestContainerScreen::new);
+        ScreenManager.registerFactory(BACKPACK_CONTAINER_TYPE, CompactChestContainerScreen::new);
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
@@ -118,7 +123,11 @@ public class CompactStorage
         public static void onContainerRegistry(final RegistryEvent.Register<ContainerType<?>> containerTypeRegister) {
             COMPACT_CHEST_CONTAINER_TYPE = IForgeContainerType.create(CompactChestContainer::createContainerClientSide);
             COMPACT_CHEST_CONTAINER_TYPE.setRegistryName("compactstorage", "compact_chest");
-            containerTypeRegister.getRegistry().registerAll(COMPACT_CHEST_CONTAINER_TYPE);
+
+            BACKPACK_CONTAINER_TYPE = IForgeContainerType.create(BackpackContainer::createContainerFromItemstack);
+            BACKPACK_CONTAINER_TYPE.setRegistryName("compactstorage", "backpack");
+
+            containerTypeRegister.getRegistry().registerAll(COMPACT_CHEST_CONTAINER_TYPE, BACKPACK_CONTAINER_TYPE);
         }
     }
 }

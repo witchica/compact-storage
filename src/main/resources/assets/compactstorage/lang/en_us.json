@@ -41,7 +41,10 @@
   "message.compactstorage.upgrade.in_use": "Chest currently in use, upgrade cannot be applied",
   "message.compactstorage.upgrade.max_width": "Chest is already the maximum width of 24",
   "message.compactstorage.upgrade.max_height": "Chest is already the maximum height of 12",
+  "message.compactstorage.upgrade.max_width_backpack": "Backpack is already the maximum width of 24",
+  "message.compactstorage.upgrade.max_height_backpack": "Backpack is already the maximum height of 12",
   "message.compactstorage.upgrade.error": "Unknown error applying upgrade",
 
-  "container.compactstorage.compact_chest": "Compact Chest"
+  "container.compactstorage.compact_chest": "Compact Chest",
+  "container.compactstorage.backpack": "Backpack"
 }

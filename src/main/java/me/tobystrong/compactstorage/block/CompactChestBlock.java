@@ -1,16 +1,21 @@
 package me.tobystrong.compactstorage.block;
 
+import com.sun.org.apache.xpath.internal.operations.String;
 import me.tobystrong.compactstorage.CompactStorage;
 import me.tobystrong.compactstorage.block.tile.CompactChestTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.audio.Sound;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.EnumProperty;
@@ -19,14 +24,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
+import javax.xml.soap.Text;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CompactChestBlock extends ContainerBlock {
@@ -109,5 +118,75 @@ public class CompactChestBlock extends ContainerBlock {
     @Override
     public TileEntity createNewTileEntity(IBlockReader world) {
         return new CompactChestTileEntity();
+    }
+
+    @Override
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.isIn(newState.getBlock())) {
+            TileEntity tile = worldIn.getTileEntity(pos);
+
+            if(tile instanceof CompactChestTileEntity) {
+                CompactChestTileEntity chestTile = (CompactChestTileEntity) tile;
+                ItemStack chestItem = new ItemStack(state.getBlock(), 1);
+
+                if(!(chestTile.width == 9 && chestTile.width == 3)) {
+                    CompoundNBT tag = chestItem.getOrCreateChildTag("BlockEntityTag");
+                    tag.putInt("width", chestTile.width);
+                    tag.putInt("height", chestTile.height);
+                }
+
+                NonNullList<ItemStack> drops = NonNullList.create();
+                IItemHandler itemHandler = chestTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(NullPointerException::new);
+
+                for(int i = 0; i < itemHandler.getSlots(); i++) {
+                    drops.add(itemHandler.getStackInSlot(i));
+                }
+
+                drops.add(chestItem);
+
+                InventoryHelper.dropItems(worldIn, pos, drops);
+            }
+        }
+        super.onReplaced(state, worldIn, pos, newState, isMoving);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        int width = 9;
+        int height = 3;
+        boolean upgraded = false;
+        boolean retaining = false;
+
+        if(stack.getChildTag("BlockEntityTag") != null) {
+            upgraded = true;
+
+            CompoundNBT tag = stack.getChildTag("BlockEntityTag");
+
+            width = tag.contains("width") ? tag.getInt("width") : 9;
+            height = tag.contains("height") ? tag.getInt("height") : 3;
+
+            upgraded = (width != 9) && (height != 3);
+
+            retaining = tag.contains("Inventory");
+        }
+
+        StringTextComponent widthComponent = new StringTextComponent("Width: ");
+        widthComponent.append(new StringTextComponent(width + "").mergeStyle(TextFormatting.LIGHT_PURPLE));
+
+        StringTextComponent heightComponent = new StringTextComponent("Height: ");
+        heightComponent.append(new StringTextComponent(height + "").mergeStyle(TextFormatting.LIGHT_PURPLE));
+
+        tooltip.add(widthComponent);
+        tooltip.add(heightComponent);
+
+        if(retaining) {
+            tooltip.add(new StringTextComponent("Retaining").mergeStyle(TextFormatting.AQUA));
+        }
+
+        if(upgraded) {
+            tooltip.add(new StringTextComponent("Upgraded").mergeStyle(TextFormatting.RED));
+        }
+
+        super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 }

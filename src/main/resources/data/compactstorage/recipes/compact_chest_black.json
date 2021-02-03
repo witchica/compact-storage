@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "IWI",
+        "ICI",
+        "III"
+    ],
+    "key": {
+        "I": {
+            "item": "minecraft:iron_nugget"
+        },
+        "C": {
+            "item": "minecraft:chest"
+        },
+        "W": {
+            "item": "minecraft:black_dye"
+        }
+    },
+    "result": {
+        "item": "compactstorage:compact_chest_black",
+        "count": 1
+    }
+}
