@@ -13,6 +13,8 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.nbt.CompoundNBT;
@@ -76,6 +78,21 @@ public class CompactChestBlock extends ContainerBlock {
 
                 return ActionResultType.SUCCESS;
             }
+        } else if(player.getHeldItem(handIn).getItem() instanceof DyeItem) {
+            ServerWorld serverWorld = (ServerWorld) worldIn;
+
+            DyeItem item = (DyeItem) player.getHeldItem(handIn).getItem();
+            Direction dir = state.get(PROPERTY_FACING);
+            Block newBlock = CompactStorage.chest_blocks[item.getDyeColor().getId()];
+
+            if(newBlock != this) {
+                BlockState newState = CompactStorage.chest_blocks[item.getDyeColor().getId()].getDefaultState().with(PROPERTY_FACING, dir);
+                worldIn.setBlockState(pos, newState, 2);
+
+                serverWorld.playSound(null, pos, SoundEvents.BLOCK_SLIME_BLOCK_PLACE, SoundCategory.BLOCKS, 1f, 1f);
+
+                player.getHeldItem(handIn).setCount(player.getHeldItem(handIn).getCount() - 1);
+            }
         } else {
             INamedContainerProvider namedContainerProvider = this.getContainer(state, worldIn, pos);
             if (namedContainerProvider != null) {
@@ -122,32 +139,34 @@ public class CompactChestBlock extends ContainerBlock {
 
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.isIn(newState.getBlock())) {
-            TileEntity tile = worldIn.getTileEntity(pos);
+        if(!(newState.getBlock() instanceof CompactChestBlock)) {
+            if (!state.isIn(newState.getBlock())) {
+                TileEntity tile = worldIn.getTileEntity(pos);
 
-            if(tile instanceof CompactChestTileEntity) {
-                CompactChestTileEntity chestTile = (CompactChestTileEntity) tile;
-                ItemStack chestItem = new ItemStack(state.getBlock(), 1);
+                if(tile instanceof CompactChestTileEntity) {
+                    CompactChestTileEntity chestTile = (CompactChestTileEntity) tile;
+                    ItemStack chestItem = new ItemStack(state.getBlock(), 1);
 
-                if(!(chestTile.width == 9 && chestTile.width == 3)) {
-                    CompoundNBT tag = chestItem.getOrCreateChildTag("BlockEntityTag");
-                    tag.putInt("width", chestTile.width);
-                    tag.putInt("height", chestTile.height);
+                    if(!(chestTile.width == 9 && chestTile.width == 3)) {
+                        CompoundNBT tag = chestItem.getOrCreateChildTag("BlockEntityTag");
+                        tag.putInt("width", chestTile.width);
+                        tag.putInt("height", chestTile.height);
+                    }
+
+                    NonNullList<ItemStack> drops = NonNullList.create();
+                    IItemHandler itemHandler = chestTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(NullPointerException::new);
+
+                    for(int i = 0; i < itemHandler.getSlots(); i++) {
+                        drops.add(itemHandler.getStackInSlot(i));
+                    }
+
+                    drops.add(chestItem);
+
+                    InventoryHelper.dropItems(worldIn, pos, drops);
                 }
-
-                NonNullList<ItemStack> drops = NonNullList.create();
-                IItemHandler itemHandler = chestTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(NullPointerException::new);
-
-                for(int i = 0; i < itemHandler.getSlots(); i++) {
-                    drops.add(itemHandler.getStackInSlot(i));
-                }
-
-                drops.add(chestItem);
-
-                InventoryHelper.dropItems(worldIn, pos, drops);
             }
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
         }
-        super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
