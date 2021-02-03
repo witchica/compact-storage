@@ -11,14 +11,12 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.*;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -29,8 +27,6 @@ import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.stream.Collectors;
 
 @Mod("compactstorage")
 public class CompactStorage
@@ -44,10 +40,13 @@ public class CompactStorage
         }
     };
 
-    public static Item[] backpackItems = new Item[DyeColor.values().length];
-    public static Block[] chestBlocks = new Block[DyeColor.values().length];
+    public static Block[] chest_blocks = new Block[DyeColor.values().length];
     public static TileEntityType<CompactChestTileEntity> COMPACT_CHEST_TILE_TYPE;
     public static ContainerType<CompactChestContainer> COMPACT_CHEST_CONTAINER_TYPE;
+
+    public static Item[] backpack_items = new Item[DyeColor.values().length];
+    public static Item upgrade_row;
+    public static Item upgrade_column;
 
     public CompactStorage() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -57,12 +56,15 @@ public class CompactStorage
         MinecraftForge.EVENT_BUS.register(this);
 
         for(int i = 0; i < DyeColor.values().length; i++) {
-            chestBlocks[i] = new CompactChestBlock().setRegistryName(new ResourceLocation("compactstorage", "compact_chest_" + DyeColor.values()[i].name().toLowerCase()));
+            chest_blocks[i] = new CompactChestBlock().setRegistryName(new ResourceLocation("compactstorage", "compact_chest_" + DyeColor.values()[i].name().toLowerCase()));
         }
 
         for(int i = 0; i < DyeColor.values().length; i++) {
-            backpackItems[i] = new BackpackItem().setRegistryName(new ResourceLocation("compactstorage", "backpack_" + DyeColor.values()[i].name().toLowerCase()));
+            backpack_items[i] = new BackpackItem().setRegistryName(new ResourceLocation("compactstorage", "backpack_" + DyeColor.values()[i].name().toLowerCase()));
         }
+
+        upgrade_column = new Item(new Item.Properties().maxStackSize(64).group(compactStorageItemGroup)).setRegistryName("compactstorage", "upgrade_column");
+        upgrade_row = new Item(new Item.Properties().maxStackSize(64).group(compactStorageItemGroup)).setRegistryName("compactstorage", "upgrade_row");
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -91,22 +93,23 @@ public class CompactStorage
         @SubscribeEvent
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             for(int i = 0; i < DyeColor.values().length; i++) {
-                blockRegistryEvent.getRegistry().register(CompactStorage.chestBlocks[i]);
+                blockRegistryEvent.getRegistry().register(CompactStorage.chest_blocks[i]);
             }
         }
 
         @SubscribeEvent
         public static void onItemsRegistry(final RegistryEvent.Register<Item> itemRegistryEvent) {
             for(int i = 0; i < DyeColor.values().length; i++) {
-                itemRegistryEvent.getRegistry().register(new BlockItem(CompactStorage.chestBlocks[i], new Item.Properties().group(compactStorageItemGroup)).setRegistryName(CompactStorage.chestBlocks[i].getRegistryName()));
+                itemRegistryEvent.getRegistry().register(new BlockItem(CompactStorage.chest_blocks[i], new Item.Properties().group(compactStorageItemGroup)).setRegistryName(CompactStorage.chest_blocks[i].getRegistryName()));
             }
 
-            itemRegistryEvent.getRegistry().registerAll(backpackItems);
+            itemRegistryEvent.getRegistry().registerAll(backpack_items);
+            itemRegistryEvent.getRegistry().registerAll(upgrade_column, upgrade_row);
         }
 
         @SubscribeEvent
         public static void onTileEntityTypeRegistry(final RegistryEvent.Register<TileEntityType<?>> tileTypeRegistryEvent) {
-            COMPACT_CHEST_TILE_TYPE = TileEntityType.Builder.create(CompactChestTileEntity::new, chestBlocks).build(null);
+            COMPACT_CHEST_TILE_TYPE = TileEntityType.Builder.create(CompactChestTileEntity::new, chest_blocks).build(null);
             COMPACT_CHEST_TILE_TYPE.setRegistryName("compactstorage", "compact_chest");
             tileTypeRegistryEvent.getRegistry().register(COMPACT_CHEST_TILE_TYPE);
         }

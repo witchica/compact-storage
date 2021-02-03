@@ -64,7 +64,7 @@ public class CompactChestTileEntityRenderer extends TileEntityRenderer<CompactCh
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(-f));
         matrixStackIn.translate(-0.5D, -0.5D, -0.5D);
 
-        float lidAngle = 0f; //chest lid rotation
+        float lidAngle = tileEntityIn.getLidAngle(partialTicks); //chest lid rotation
         lidAngle = 1.0F - lidAngle;
         lidAngle = 1.0F - lidAngle * lidAngle * lidAngle;
 

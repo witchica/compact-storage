@@ -17,18 +17,22 @@ public class CompactChestContainer extends Container {
     public static CompactChestContainer createContainerClientSide(int windowID, PlayerInventory playerInventory, net.minecraft.network.PacketBuffer extraData) {
         CompactChestTileEntity tile = (CompactChestTileEntity) playerInventory.player.world.getTileEntity(extraData.readBlockPos());
 
-        return new CompactChestContainer(windowID, playerInventory, tile.width, tile.height, tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(NullPointerException::new));
+        return new CompactChestContainer(windowID, playerInventory, tile.width, tile.height, tile, tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElseThrow(NullPointerException::new));
     }
 
     private PlayerInventory playerInventory;
+    public IItemHandler chestInventory;
+    private CompactChestTileEntity chestTile;
     public int chestWidth;
     public int chestHeight;
 
-    public CompactChestContainer(int windowID, PlayerInventory playerInventory, int chestWidth, int chestHeight, IItemHandler inventory) {
+    public CompactChestContainer(int windowID, PlayerInventory playerInventory, int chestWidth, int chestHeight, CompactChestTileEntity tile, IItemHandler inventory) {
         super(CompactStorage.COMPACT_CHEST_CONTAINER_TYPE, windowID);
         this.playerInventory = playerInventory;
         this.chestWidth = chestWidth;
         this.chestHeight = chestHeight;
+        this.chestInventory = inventory;
+        this.chestTile = tile;
 
         for(int y = 0; y < chestHeight; y++) {
             for(int x = 0; x < chestWidth; x++) {
@@ -53,6 +57,6 @@ public class CompactChestContainer extends Container {
 
     @Override
     public boolean canInteractWith(PlayerEntity playerIn) {
-        return true;
+        return chestTile.canPlayerAccess(playerIn);
     }
 }

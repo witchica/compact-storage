@@ -5,32 +5,49 @@ import me.tobystrong.compactstorage.container.CompactChestContainer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.tileentity.*;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class CompactChestTileEntity extends TileEntity implements INamedContainerProvider, ICapabilitySerializable<CompoundNBT> {
+import java.util.List;
+
+@OnlyIn(
+        value = Dist.CLIENT,
+        _interface = IChestLid.class
+)
+public class CompactChestTileEntity extends TileEntity implements INamedContainerProvider, ICapabilitySerializable<CompoundNBT>, ITickableTileEntity, IChestLid {
     private LazyOptional<ItemStackHandler> inventory;
     public int width = 9;
     public int height = 3;
+
+    public float lidAngle = 0f;
+    public float prevLidAngle = 0f;
+    private int playersUsing = 0;
+
+    public enum UpgradeStatus {
+        SUCCESS,
+        MAX_WIDTH,
+        MAX_HEIGHT,
+        IN_USE,
+        ERROR;
+    }
 
     public CompactChestTileEntity() {
         super(CompactStorage.COMPACT_CHEST_TILE_TYPE);
@@ -81,6 +98,42 @@ public class CompactChestTileEntity extends TileEntity implements INamedContaine
         updateItemStackHandlerSize(width, height);
     }
 
+    public UpgradeStatus handleUpgradeItem(ItemStack upgrade) {
+        if(playersUsing == 0) {
+            if(upgrade.getItem() == CompactStorage.upgrade_row) {
+                if(width == 24) {
+                    return UpgradeStatus.MAX_WIDTH;
+                } else {
+                    width += 1;
+                    return UpgradeStatus.SUCCESS;
+                }
+            }
+
+            if(upgrade.getItem() == CompactStorage.upgrade_column) {
+                if(height == 12) {
+                    return UpgradeStatus.MAX_HEIGHT;
+                } else {
+                    height += 1;
+                    return UpgradeStatus.SUCCESS;
+                }
+            }
+        } else {
+            return UpgradeStatus.IN_USE;
+        }
+
+        return UpgradeStatus.ERROR;
+    }
+
+    public boolean canPlayerAccess(PlayerEntity entity) {
+        if(entity.getPosX() > pos.getX() - 5 && entity.getPosY() > pos.getY() - 5 && entity.getPosZ() > pos.getZ() - 5) {
+            if(entity.getPosX() < pos.getX() + 5 && entity.getPosY() < pos.getY() + 5 && entity.getPosZ() < pos.getZ() + 5) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
         return new SUpdateTileEntityPacket(getPos(), 0, this.write(new CompoundNBT()));
@@ -115,6 +168,56 @@ public class CompactChestTileEntity extends TileEntity implements INamedContaine
             }
         });
 
-        return new CompactChestContainer(windowId, playerInventory, width, height, inventory.orElseThrow(NullPointerException::new));
+        return new CompactChestContainer(windowId, playerInventory, width, height, this, inventory.orElseThrow(NullPointerException::new));
+    }
+
+    @Override
+    public void tick() {
+        this.playersUsing = 0;
+
+        float d = 5f;
+        List<PlayerEntity> players = world.getEntitiesWithinAABB(PlayerEntity.class, new AxisAlignedBB(pos.add(-d, -d, -d), pos.add(d, d, d)));
+        for(PlayerEntity p : players) {
+            if(p.openContainer instanceof CompactChestContainer) {
+                CompactChestContainer container = (CompactChestContainer) p.openContainer;
+                if(container.chestInventory == inventory.orElseThrow(NullPointerException::new)) {
+                    playersUsing++;
+                }
+            }
+        }
+
+        this.prevLidAngle = lidAngle;
+
+        if(playersUsing > 0 && lidAngle == 0f) {
+            world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_CHEST_OPEN, SoundCategory.BLOCKS, 1f, 1f, false);
+        }
+
+        if (playersUsing == 0 && this.lidAngle > 0.0F || playersUsing > 0 && this.lidAngle < 1.0F) {
+            float f1 = this.lidAngle;
+            if (playersUsing > 0) {
+                this.lidAngle += 0.1F;
+            } else {
+                this.lidAngle -= 0.1F;
+            }
+
+            if (this.lidAngle > 1.0F) {
+                this.lidAngle = 1.0F;
+            }
+
+            float f2 = 0.5F;
+            if (this.lidAngle < 0.5F && f1 >= 0.5F) {
+                world.playSound(pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BLOCK_CHEST_CLOSE, SoundCategory.BLOCKS, 1f, 1f, false);
+            }
+
+            if (this.lidAngle < 0.0F) {
+                this.lidAngle = 0.0F;
+            }
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public float getLidAngle(float partialTicks) {
+        return MathHelper.lerp(partialTicks, prevLidAngle, lidAngle);
     }
 }
