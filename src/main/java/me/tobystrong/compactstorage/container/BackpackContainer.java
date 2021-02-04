@@ -1,17 +1,12 @@
 package me.tobystrong.compactstorage.container;
 
 import me.tobystrong.compactstorage.CompactStorage;
-import me.tobystrong.compactstorage.block.tile.CompactChestTileEntity;
-import me.tobystrong.compactstorage.util.ItemStackHandlerUtil;
+import me.tobystrong.compactstorage.util.CompactStorageUtilMethods;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class BackpackContainer extends CompactStorageBaseContainer {
@@ -47,7 +42,7 @@ public class BackpackContainer extends CompactStorageBaseContainer {
             //read in the data from the backpack
             inventoryHandler.deserializeNBT(tag.getCompound("Inventory"));
             //fix the size if need be
-            inventoryHandler = ItemStackHandlerUtil.validateHandlerSize(inventoryHandler, inventoryWidth, inventoryHeight);
+            inventoryHandler = CompactStorageUtilMethods.validateHandlerSize(inventoryHandler, inventoryWidth, inventoryHeight);
         }
 
         return new BackpackContainer(windowID, playerInventory, inventoryWidth, inventoryHeight, inventoryHandler, hand);

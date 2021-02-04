@@ -2,7 +2,7 @@ package me.tobystrong.compactstorage.item;
 
 import me.tobystrong.compactstorage.CompactStorage;
 import me.tobystrong.compactstorage.container.BackpackContainer;
-import me.tobystrong.compactstorage.util.ItemStackHandlerUtil;
+import me.tobystrong.compactstorage.util.CompactStorageUtilMethods;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -21,11 +21,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fml.network.NetworkHooks;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.List;
@@ -180,7 +176,7 @@ public class BackpackItem extends Item {
                 //read from nbt!
                 inventoryHandler.deserializeNBT(tag.getCompound("Inventory"));
                 //check the size just in case
-                inventoryHandler = ItemStackHandlerUtil.validateHandlerSize(inventoryHandler, inventoryWidth, inventoryHeight);
+                inventoryHandler = CompactStorageUtilMethods.validateHandlerSize(inventoryHandler, inventoryWidth, inventoryHeight);
             }
 
             //save all this data so our container can use it

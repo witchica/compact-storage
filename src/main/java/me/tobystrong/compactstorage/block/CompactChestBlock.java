@@ -67,6 +67,10 @@ public class CompactChestBlock extends ContainerBlock implements IWaterLoggable 
             return ActionResultType.SUCCESS;
         }
 
+        if(worldIn.getBlockState(pos.add(0, 1, 0)).isSolid()) {
+            return ActionResultType.FAIL;
+        }
+
         ItemStack heldItem = player.getHeldItem(handIn);
 
         /*
