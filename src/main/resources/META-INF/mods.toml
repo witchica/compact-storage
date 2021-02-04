@@ -1,15 +1,15 @@
 modLoader="javafml"
 loaderVersion="[35,)"
 license="All rights reserved"
-issueTrackerURL="http://my.issue.tracker/"
+issueTrackerURL="http://github.com/deletey/compact-storage/issues"
 [[mods]]
 modId="compactstorage"
 version="${file.jarVersion}"
 displayName="Compact Storage"
-updateJSONURL="http://myurl.me/"
+updateJSONURL="http://tobystrong.me/compactstorage/version.json"
 displayURL="http://tobystrong.me/compactstorage/"
 logoFile="compactstorage.png"
-credits="Thanks for this example mod goes to Java"
+credits="To all of the nice resoures that helped me figure out Forge again!"
 authors="Toby Strong"
 description='''
 Bringing chests and backpacks of all sizes right to your Minecraft world
