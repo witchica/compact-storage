@@ -18,6 +18,23 @@
   "block.compactstorage.compact_chest_red": "Red Compact Chest",
   "block.compactstorage.compact_chest_black": "Black Compact Chest",
 
+  "block.compactstorage.compact_barrel_white": "White Compact Barrel",
+  "block.compactstorage.compact_barrel_orange": "Orange Compact Barrel",
+  "block.compactstorage.compact_barrel_magenta": "Magenta Compact Barrel",
+  "block.compactstorage.compact_barrel_light_blue": "Light Blue Compact Barrel",
+  "block.compactstorage.compact_barrel_yellow": "Yellow Compact Barrel",
+  "block.compactstorage.compact_barrel_lime": "Lime Compact Barrel",
+  "block.compactstorage.compact_barrel_pink": "Pink Compact Barrel",
+  "block.compactstorage.compact_barrel_gray": "Gray Compact Barrel",
+  "block.compactstorage.compact_barrel_light_gray": "Light Gray Compact Barrel",
+  "block.compactstorage.compact_barrel_cyan": "Cyan Compact Barrel",
+  "block.compactstorage.compact_barrel_purple": "Purple Compact Barrel",
+  "block.compactstorage.compact_barrel_blue": "Blue Compact Barrel",
+  "block.compactstorage.compact_barrel_brown": "Brown Compact Barrel",
+  "block.compactstorage.compact_barrel_green": "Green Compact Barrel",
+  "block.compactstorage.compact_barrel_red": "Red Compact Barrel",
+  "block.compactstorage.compact_barrel_black": "Black Compact Barrel",
+
   "item.compactstorage.backpack_white": "White Backpack",
   "item.compactstorage.backpack_orange": "Orange Backpack",
   "item.compactstorage.backpack_magenta": "Magenta Backpack",
@@ -33,7 +50,6 @@
   "item.compactstorage.backpack_brown": "Brown Backpack",
   "item.compactstorage.backpack_green": "Green Backpack",
   "item.compactstorage.backpack_red": "Red Backpack",
-  "item.compactstorage.backpack_black": "Black Backpack",
 
   "item.compactstorage.upgrade_row": "Storage Row Upgrade",
   "item.compactstorage.upgrade_column": "Storage Column Upgrade",
@@ -46,5 +62,6 @@
   "message.compactstorage.upgrade.error": "Unknown error applying upgrade",
 
   "container.compactstorage.compact_chest": "Compact Chest",
-  "container.compactstorage.backpack": "Backpack"
+  "container.compactstorage.backpack": "Backpack",
+  "container.compactstorage.barrel": "Compact Barrel"
 }

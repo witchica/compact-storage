@@ -19,7 +19,7 @@ public class CompactBarrelContainer extends CompactStorageBaseContainer {
     private CompactBarrelTileEntity barrelTile;
 
     public CompactBarrelContainer(int windowID, PlayerInventory playerInventory, int chestWidth, int chestHeight, CompactBarrelTileEntity tile, IItemHandler inventory) {
-        super(CompactStorage.COMPACT_CHEST_CONTAINER_TYPE, windowID, playerInventory, chestWidth, chestHeight, inventory);
+        super(CompactStorage.BARREL_CONTAINER_TYPE, windowID, playerInventory, chestWidth, chestHeight, inventory);
         this.barrelTile = tile;
     }
 

@@ -1,12 +1,10 @@
 package me.tobystrong.compactstorage.block;
 
-import com.sun.org.apache.xpath.internal.operations.String;
 import me.tobystrong.compactstorage.CompactStorage;
 import me.tobystrong.compactstorage.block.tile.CompactChestTileEntity;
+import me.tobystrong.compactstorage.util.CompactStorageUtilMethods;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.client.audio.Sound;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -15,12 +13,9 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.DyeColor;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
@@ -42,8 +37,6 @@ import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
-import javax.xml.soap.Text;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -84,9 +77,9 @@ public class CompactChestBlock extends ContainerBlock implements IWaterLoggable 
             if(entity != null && worldIn instanceof ServerWorld) {
                 ServerWorld serverWorld = (ServerWorld) worldIn;
                 CompactChestTileEntity chestTile = (CompactChestTileEntity) entity;
-                CompactChestTileEntity.UpgradeStatus status = chestTile.handleUpgradeItem(heldItem);
+                CompactStorageUtilMethods.UpgradeStatus status = chestTile.handleUpgradeItem(heldItem);
 
-                if(status == CompactChestTileEntity.UpgradeStatus.SUCCESS) {
+                if(status == CompactStorageUtilMethods.UpgradeStatus.SUCCESS) {
                     serverWorld.spawnParticle(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 5,0.25,0, 0.25, 0);
                     worldIn.playSound(null, pos, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 0.25f, 1f);
                     worldIn.notifyBlockUpdate(pos, state, state, 2);

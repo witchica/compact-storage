@@ -7,11 +7,17 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
+import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.List;
 
 public class CompactStorageUtilMethods {
+
+    public static LazyOptional<ItemStackHandler> validateHandlerSize(LazyOptional<ItemStackHandler> handler, int width, int height) {
+        return LazyOptional.of(() -> validateHandlerSize(handler.orElseThrow(NullPointerException::new), width, height));
+    }
     public static ItemStackHandler validateHandlerSize(ItemStackHandler handler, int width, int height) {
         //check if the size matches
         if(handler.getSlots() != width * height) {
@@ -70,4 +76,14 @@ public class CompactStorageUtilMethods {
         }
     }
 
+    /*
+            This is used to let the Block know what message to send the client once upgraded
+         */
+    public enum UpgradeStatus {
+        SUCCESS,
+        MAX_WIDTH,
+        MAX_HEIGHT,
+        IN_USE,
+        ERROR;
+    }
 }
