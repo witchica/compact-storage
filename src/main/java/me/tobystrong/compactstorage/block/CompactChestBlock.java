@@ -10,6 +10,8 @@ import net.minecraft.client.audio.Sound;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
@@ -20,14 +22,19 @@ import net.minecraft.loot.LootContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.*;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
@@ -40,13 +47,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CompactChestBlock extends ContainerBlock {
+public class CompactChestBlock extends ContainerBlock implements IWaterLoggable {
     public static EnumProperty<Direction> PROPERTY_FACING = EnumProperty.create("facing", Direction.class, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST);
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
+    protected static final VoxelShape SHAPE = Block.makeCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
 
     public CompactChestBlock() {
         super(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(2f, 5f).harvestLevel(1).harvestTool(ToolType.PICKAXE).notSolid().sound(SoundType.METAL));
         setDefaultState(this.stateContainer.getBaseState().
                 with(PROPERTY_FACING, Direction.NORTH)
+                .with(WATERLOGGED, false)
         );
     }
 
@@ -94,12 +105,13 @@ public class CompactChestBlock extends ContainerBlock {
 
             DyeItem item = (DyeItem) player.getHeldItem(handIn).getItem();
             Direction dir = state.get(PROPERTY_FACING);
+            boolean waterlogged = state.get(WATERLOGGED);
             Block newBlock = CompactStorage.chest_blocks[item.getDyeColor().getId()];
 
             //if the dyed block is not the same colour
             if(newBlock != this) {
                 //get the new block and set the state with a client update (flag 2)
-                BlockState newState = CompactStorage.chest_blocks[item.getDyeColor().getId()].getDefaultState().with(PROPERTY_FACING, dir);
+                BlockState newState = CompactStorage.chest_blocks[item.getDyeColor().getId()].getDefaultState().with(PROPERTY_FACING, dir).with(WATERLOGGED, waterlogged);
                 worldIn.setBlockState(pos, newState, 2);
 
                 //play a sound and decrement stack size
@@ -122,14 +134,30 @@ public class CompactChestBlock extends ContainerBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
+        FluidState fluidstate = context.getWorld().getFluidState(context.getPos());
         //gets the player direction and flips it for placement facing the player
-        return getDefaultState().with(PROPERTY_FACING, context.getPlacementHorizontalFacing().getOpposite());
+        return getDefaultState().with(PROPERTY_FACING, context.getPlacementHorizontalFacing().getOpposite()).with(WATERLOGGED, fluidstate.getFluid() == Fluids.WATER);
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         super.fillStateContainer(builder);
         builder.add(PROPERTY_FACING);
+        builder.add(WATERLOGGED);
+    }
+
+    @Override
+    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.get(WATERLOGGED)) {
+            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
+        }
+
+        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     @Override
@@ -233,5 +261,10 @@ public class CompactChestBlock extends ContainerBlock {
         }
 
         super.addInformation(stack, worldIn, tooltip, flagIn);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return SHAPE;
     }
 }
