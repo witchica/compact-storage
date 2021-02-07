@@ -9,7 +9,7 @@ displayName="Compact Storage"
 updateJSONURL="http://tobystrong.me/compactstorage/version.json"
 displayURL="http://tobystrong.me/compactstorage/"
 logoFile="compactstorage.png"
-credits="To all of the nice resoures that helped me figure out Forge again!"
+credits="To all of the nice resoures that helped me figure out Forge again! Translations for Brazilian Portugese by Mikeliro"
 authors="Toby Strong"
 description='''
 Bringing chests and backpacks of all sizes right to your Minecraft world
