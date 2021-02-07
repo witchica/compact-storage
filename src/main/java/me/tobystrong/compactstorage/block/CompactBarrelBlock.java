@@ -41,7 +41,7 @@ public class CompactBarrelBlock extends ContainerBlock {
     public static BooleanProperty PROPERTY_OPEN = BooleanProperty.create("open");
 
     public CompactBarrelBlock() {
-        super(Properties.create(Material.IRON).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(1));
+        super(Properties.create(Material.IRON).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).harvestLevel(1).hardnessAndResistance(2f));
         setDefaultState(this.getStateContainer().getBaseState().with(PROPERTY_FACING, Direction.NORTH).with(PROPERTY_OPEN, false));
     }
 
