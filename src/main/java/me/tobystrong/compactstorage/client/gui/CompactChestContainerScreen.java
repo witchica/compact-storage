@@ -64,6 +64,7 @@ public class CompactChestContainerScreen extends ContainerScreen<CompactStorageB
         drawSlots(matrixStack, playerInvX, 16 + (chestHeight * 18 + 13 + (3 * 18) + 4), 9, 1);
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
+        this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
     }
 
     public void drawSlots(MatrixStack matrixStack, int x, int y, int w, int h) {
