@@ -17,6 +17,7 @@ import net.minecraft.tileentity.IChestLid;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
@@ -56,7 +57,7 @@ public abstract class BaseTileEntity extends TileEntity implements INamedContain
         Provides capability information to other blocks and allow them to interact with us
      */
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap) {
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return inventory.cast();
         }
