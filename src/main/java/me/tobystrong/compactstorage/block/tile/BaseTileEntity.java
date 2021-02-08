@@ -62,7 +62,7 @@ public abstract class BaseTileEntity extends TileEntity implements INamedContain
             return inventory.cast();
         }
 
-        return super.getCapability(cap);
+        return super.getCapability(cap, side);
     }
 
     @Override
