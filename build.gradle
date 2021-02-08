@@ -13,7 +13,9 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = minecraft_version + '-5.1'
+String build_number = System.env.BUILD_NUMBER == null ? "0" : System.env.BUILD_NUMBER
+
+version = minecraft_version + '-5.1b' + build_number
 group = 'me.tobystrong.compactstorage' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'compactstorage'
 
