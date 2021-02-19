@@ -30,24 +30,8 @@ public class CompactStorageBaseContainer extends Container {
         this.chestHeight = chestHeight;
         this.chestInventory = inventory;
 
-        //add chest slots
-        for(int y = 0; y < chestHeight; y++) {
-            for(int x = 0; x < chestWidth; x++) {
-                int index = x + y * chestWidth;
-                addSlot(new SlotItemHandler(inventory, index, 8 + (x * 18), 17 + (y * 18)));
-            }
-        }
-
         //get the centered position of the player inventory
         int playerInvX = (int)(8 + ((chestWidth > 9 ? ((chestWidth - 9) * 18) / 2f : 0)));
-
-        //add main inv slots
-        for(int y = 0; y < 3; y++) {
-            for(int x = 0; x < 9; x++) {
-                int index = x + y * 9;
-                addSlot(new Slot(playerInventory, 9 + index, playerInvX + (x * 18), 17 + (y * 18) + (chestHeight * 18) + 13));
-            }
-        }
 
         //add hotbar
         for(int x = 0; x < 9; x++) {
@@ -64,6 +48,22 @@ public class CompactStorageBaseContainer extends Container {
                 addSlot(new Slot(playerInventory, x, playerInvX + (x * 18), 17 + (3 * 18) + (chestHeight * 18) + 17));
             }
         }
+
+        //add main inv slots
+        for(int y = 0; y < 3; y++) {
+            for(int x = 0; x < 9; x++) {
+                int index = x + y * 9;
+                addSlot(new Slot(playerInventory, 9 + index, playerInvX + (x * 18), 17 + (y * 18) + (chestHeight * 18) + 13));
+            }
+        }
+
+        //add chest slots
+        for(int y = 0; y < chestHeight; y++) {
+            for(int x = 0; x < chestWidth; x++) {
+                int index = x + y * chestWidth;
+                addSlot(new SlotItemHandler(inventory, index, 8 + (x * 18), 17 + (y * 18)));
+            }
+        }
     }
 
     /*
@@ -78,11 +78,11 @@ public class CompactStorageBaseContainer extends Container {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index < this.chestWidth * chestHeight) {
-                if (!this.mergeItemStack(itemstack1, this.chestHeight * this.chestWidth, this.inventorySlots.size(), true)) {
+            if (index > 36) {
+                if (!this.mergeItemStack(itemstack1, 0, 36, true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, this.chestWidth * chestHeight, false)) {
+            } else if (!this.mergeItemStack(itemstack1, 36, this.inventorySlots.size(), false)) {
                 return ItemStack.EMPTY;
             }
 
