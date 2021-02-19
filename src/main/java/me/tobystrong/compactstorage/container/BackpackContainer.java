@@ -49,16 +49,22 @@ public class BackpackContainer extends CompactStorageBaseContainer {
     }
 
     public Hand hand;
+    private PlayerInventory playerInventory;
 
     public BackpackContainer(int windowID, PlayerInventory playerInventory, int inventoryWidth, int inventoryHeight, ItemStackHandler inventoryHandler, Hand hand) {
         super(CompactStorage.BACKPACK_CONTAINER_TYPE, windowID, playerInventory, inventoryWidth, inventoryHeight, inventoryHandler);
         this.hand = hand;
+        this.playerInventory = playerInventory;
     }
 
     @Override
     public void onContainerClosed(PlayerEntity playerIn) {
         //save the data to the backpack
-        ItemStackHandler handler = (ItemStackHandler) this.chestInventory;
-        playerIn.getHeldItem(hand).getTag().put("Inventory", handler.serializeNBT());
+        if(this.chestInventory instanceof ItemStackHandler && playerIn != null) {
+            ItemStackHandler handler = (ItemStackHandler) this.chestInventory;
+            if(!playerIn.getHeldItem(hand).isEmpty()) {
+                playerIn.getHeldItem(hand).getTag().put("Inventory", handler.serializeNBT());
+            }
+        }
     }
 }
