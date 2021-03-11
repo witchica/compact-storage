@@ -94,7 +94,11 @@ public class BackpackItem extends Item {
                         worldIn.playSound(null, pos, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f);
 
                         //decrement the upgrade and return
-                        offHand.setCount(offHand.getCount() - 1);
+
+                        if(!playerIn.isCreative()) {
+                            offHand.setCount(offHand.getCount() - 1);
+                        }
+
                         return ActionResult.resultPass(mainHand);
                     } else {
                         //if not play the angry particles and send a message

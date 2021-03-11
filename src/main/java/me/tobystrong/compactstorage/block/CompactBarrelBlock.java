@@ -71,7 +71,9 @@ public class CompactBarrelBlock extends ContainerBlock {
                     serverWorld.spawnParticle(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 5,0.25,0, 0.25, 0);
                     worldIn.playSound(null, pos, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 0.25f, 1f);
                     worldIn.notifyBlockUpdate(pos, state, state, 2);
-                    player.getHeldItem(handIn).setCount(heldItem.getCount() - 1);
+                    if(!player.isCreative()) {
+                        player.getHeldItem(handIn).setCount(heldItem.getCount() - 1);
+                    }
                 } else {
                     serverWorld.spawnParticle(ParticleTypes.ANGRY_VILLAGER, pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5, 5,0.25,0, 0.25, 0);
                     worldIn.playSound(null, pos, SoundEvents.UI_TOAST_OUT, SoundCategory.BLOCKS, 0.25f, 1f);
@@ -100,7 +102,9 @@ public class CompactBarrelBlock extends ContainerBlock {
 
                 //play a sound and decrement stack size
                 serverWorld.playSound(null, pos, SoundEvents.BLOCK_SLIME_BLOCK_PLACE, SoundCategory.BLOCKS, 1f, 1f);
-                player.getHeldItem(handIn).setCount(player.getHeldItem(handIn).getCount() - 1);
+                if(!player.isCreative()) {
+                    player.getHeldItem(handIn).setCount(player.getHeldItem(handIn).getCount() - 1);
+                }
             }
         } else {
             //get the container provider and open the GUI and container for this block
