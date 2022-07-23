@@ -1,5 +1,5 @@
 {
-    "parent": "compact-storage:block/barrel",
+    "parent": "compact_storage:block/barrel",
     "display": {
         "gui": {
             "rotation": [ 30, 45, 0 ],

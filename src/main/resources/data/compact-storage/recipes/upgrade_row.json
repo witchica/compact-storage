@@ -14,7 +14,7 @@
       }
     },
     "result": {
-      "item": "compact-storage:chest_upgrade_row",
+      "item": "compact_storage:upgrade_row",
       "count": 1
     }
   }

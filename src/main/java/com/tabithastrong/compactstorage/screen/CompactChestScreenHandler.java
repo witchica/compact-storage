@@ -4,6 +4,7 @@ import com.tabithastrong.compactstorage.CompactStorage;
 import com.tabithastrong.compactstorage.block.entity.CompactChestBlockEntity;
 import com.tabithastrong.compactstorage.inventory.BackpackInventory;
 
+import com.tabithastrong.compactstorage.inventory.BackpackInventoryHandlerFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -13,39 +14,41 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class CompactChestScreenHandler extends ScreenHandler {
-    private final Inventory inventory;
-    private final PlayerInventory playerInventory;
+    private Inventory inventory;
+    private PlayerInventory playerInventory;
 
     public CompactChestBlockEntity blockEntity;
 
-    public final int inventoryWidth;
-    public final int inventoryHeight;
+    public int inventoryWidth;
+    public int inventoryHeight;
 
     private ItemStack backpack;
 
     public CompactChestScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(syncId, playerInventory, (CompactChestBlockEntity) playerInventory.player.world.getBlockEntity(buf.readBlockPos()));
-    }
-
-    public CompactChestScreenHandler(int syncId, PlayerInventory playerInventory, CompactChestBlockEntity compactChestBlockEntity) {
-        this(syncId, playerInventory, (Inventory) compactChestBlockEntity, compactChestBlockEntity.inventoryWidth, compactChestBlockEntity.inventoryHeight, null);
-    }
-
-    public CompactChestScreenHandler(final int syncId, final PlayerInventory playerInventory, final Inventory inventory, final int inventoryWidth, final int inventoryHeight, final Hand hand) {
         super(CompactStorage.COMPACT_CHEST_SCREEN_HANDLER, syncId);
-        
-        this.inventory = inventory;
-        this.playerInventory = playerInventory;
-        this.inventoryWidth = inventoryWidth;
-        this.inventoryHeight = inventoryHeight;
+        int inventoryType = buf.readInt();
 
-        if(inventory instanceof CompactChestBlockEntity) {
-            this.blockEntity = (CompactChestBlockEntity) inventory;
+        this.playerInventory = playerInventory;
+
+        if(inventoryType == 0) {
+            BlockPos pos = buf.readBlockPos();
+            CompactChestBlockEntity inv = (CompactChestBlockEntity) playerInventory.player.world.getBlockEntity(pos);
+            this.inventory = (Inventory) inv;
+            this.inventoryWidth = inv.inventoryWidth;
+            this.inventoryHeight = inv.inventoryHeight;
+            this.blockEntity = inv;
             this.backpack = null;
-        } else if(inventory instanceof BackpackInventory) {
+        } else {
+            Hand hand = buf.readInt() == 0 ? Hand.MAIN_HAND : Hand.OFF_HAND;
+            BackpackInventory backpackInventory = BackpackInventoryHandlerFactory.getBackpackInventory(playerInventory.player, hand);
+            this.inventory = (Inventory) backpackInventory;
+            this.inventoryWidth = backpackInventory.inventoryWidth;
+            this.inventoryHeight = backpackInventory.inventoryHeight;
             this.backpack = playerInventory.player.getStackInHand(hand);
             this.blockEntity = null;
         }
@@ -54,6 +57,10 @@ public class CompactChestScreenHandler extends ScreenHandler {
         inventory.onOpen(playerInventory.player);
 
         setupSlots(true);
+    }
+
+    protected CompactChestScreenHandler(@Nullable ScreenHandlerType<?> type, int syncId) {
+        super(type, syncId);
     }
 
     @Override

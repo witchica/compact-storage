@@ -13,8 +13,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class CompactChestScreen extends HandledScreen<CompactChestScreenHandler> {
-    public static final Identifier CHEST_SLOTS_TEXTURE = new Identifier("compact-storage", "textures/gui/chest_slots.png");
-    public static final Identifier CHEST_BACKGROUND_TEXTURE = new Identifier("compact-storage", "textures/gui/chest.png");
+    public static final Identifier CHEST_SLOTS_TEXTURE = new Identifier("compact_storage", "textures/gui/chest_slots.png");
+    public static final Identifier CHEST_BACKGROUND_TEXTURE = new Identifier("compact_storage", "textures/gui/chest.png");
     
     private CompactChestScreenHandler container;
     private PlayerInventory playerInventory;

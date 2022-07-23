@@ -2,17 +2,24 @@ package com.tabithastrong.compactstorage.inventory;
 
 import com.tabithastrong.compactstorage.util.CompactStorageInventoryImpl;
 
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
+import org.jetbrains.annotations.Nullable;
 
-public class BackpackInventory implements Inventory, CompactStorageInventoryImpl {
+public class BackpackInventory implements Inventory, CompactStorageInventoryImpl  {
     public DefaultedList<ItemStack> items;
     public int inventoryWidth;
     public int inventoryHeight;

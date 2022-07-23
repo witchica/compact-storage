@@ -18,10 +18,15 @@ import net.minecraft.client.render.block.entity.ChestBlockEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3d;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<CompactChestBlockEntity> {
@@ -29,7 +34,13 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
     private final ModelPart chestLid;
     private final ModelPart chestLock;
 
-    public static final Identifier CHEST_TEXTURE = new Identifier("compact-storage", "textures/entities/chest.png");
+    public static final Map<Block, Identifier> CHEST_TEXTURES = new HashMap<Block, Identifier>();
+
+    static {
+        for(int i = 0; i < 16; i++) {
+            CHEST_TEXTURES.put(CompactStorage.COMPACT_CHEST_BLOCKS[i], new Identifier("compact_storage", String.format("textures/entities/compact_chest_%s.png", DyeColor.byId(i).name().toLowerCase())));
+        }
+    }
     
     public CompactChestBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
         super();
@@ -45,7 +56,8 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
         World world = compactChestBlockEntity.getWorld();
         boolean bl = world != null;
 
-        BlockState blockState = bl ? compactChestBlockEntity.getCachedState() : CompactStorage.COMPACT_CHEST.getDefaultState().with(CompactChestBlock.FACING, Direction.SOUTH);
+
+        BlockState blockState = bl ? compactChestBlockEntity.getCachedState() : CompactStorage.COMPACT_CHEST_BLOCKS[0].getDefaultState().with(CompactChestBlock.FACING, Direction.SOUTH);
         Block block = blockState.getBlock();
 
         matrixStack.push();
@@ -56,14 +68,9 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
         matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-y_rotation));
         matrixStack.translate(-0.5D, -0.5D, -0.5D);
 
-        float lid_openness = compactChestBlockEntity.getAnimationProgress(delta); 
-
-        //MinecraftClient.getInstance().getTextureManager().bindTexture(CHEST_TEXTURE);
-
-        //SpriteIdentifier spriteIdentifier = TexturedRenderLayers.getChestTexture(blockEntity, ChestType.SINGLE, false);
-        //VertexConsumer vertexConsumer = spriteIdentifier.getVertexConsumer(vertexConsumers, RenderLayer::getEntityCutout);
-
-        VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(CHEST_TEXTURE));
+        float lid_openness = compactChestBlockEntity.getAnimationProgress(delta);
+        
+        VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(RenderLayer.getEntitySolid(CHEST_TEXTURES.get(block)));
 
         chestLid.pitch = -(lid_openness * 1.5707964F);
         chestLock.pitch = chestLid.pitch;

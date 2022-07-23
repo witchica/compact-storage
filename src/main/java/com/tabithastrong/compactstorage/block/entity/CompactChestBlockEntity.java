@@ -4,12 +4,14 @@ import com.tabithastrong.compactstorage.CompactStorage;
 import com.tabithastrong.compactstorage.screen.CompactChestScreenHandler;
 import com.tabithastrong.compactstorage.util.CompactStorageInventoryImpl;
 
+import io.netty.buffer.ByteBuf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.EnvironmentInterface;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.LidOpenable;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.client.block.ChestAnimationProgress;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -25,7 +27,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -33,10 +34,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 @EnvironmentInterface(
-    itf = ChestAnimationProgress.class,
+    itf = LidOpenable.class,
     value = EnvType.CLIENT
 )
-public class CompactChestBlockEntity extends LootableContainerBlockEntity implements ExtendedScreenHandlerFactory, CompactStorageInventoryImpl, ChestAnimationProgress {
+public class CompactChestBlockEntity extends LootableContainerBlockEntity implements ExtendedScreenHandlerFactory, CompactStorageInventoryImpl, LidOpenable {
     private DefaultedList<ItemStack> inventory;
 
     public int inventoryWidth = 9;
@@ -76,12 +77,12 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
 
     @Override
     protected Text getContainerName() {
-        return new TranslatableText("container.chest");
+        return Text.translatable("container.chest");
     }
 
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new CompactChestScreenHandler(syncId, playerInventory, (Inventory) this, inventoryWidth, inventoryHeight, Hand.MAIN_HAND);
+        return new CompactChestScreenHandler(syncId, playerInventory, writeToByteBuf());
     }
 
     @Override
@@ -183,9 +184,17 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
         compactChestBlockEntity.playersUsingOld = compactChestBlockEntity.playersUsing;
     }
 
+    public PacketByteBuf writeToByteBuf() {
+        PacketByteBuf packetByteBuf = PacketByteBufs.create();
+        packetByteBuf.writeInt(0);
+        packetByteBuf.writeBlockPos(getPos());
+
+        return packetByteBuf;
+    }
+
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        return new CompactChestScreenHandler(syncId, playerInventory, this);
+        return new CompactChestScreenHandler(syncId, playerInventory, writeToByteBuf());
     }
 
     @Override
@@ -195,6 +204,22 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
 
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+        buf.writeInt(0);
         buf.writeBlockPos(this.pos);
+    }
+
+    public boolean increaseSize(int x, int y) {
+        if((inventoryWidth > 23 && x > 0) || (inventoryHeight > 11 && y > 0)) {
+            return false;
+        }
+
+        inventoryWidth += x;
+        inventoryHeight += y;
+
+        resizeInventory(true);
+        markDirty();
+        world.updateListeners(pos, getCachedState(), getCachedState(), 1);
+
+        return true;
     }
 }

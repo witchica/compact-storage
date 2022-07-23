@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "compact-storage",
+  "id": "compact_storage",
   "version": "${version}",
 
   "name": "Compact Storage",
@@ -10,11 +10,11 @@
   ],
   "contact": {
     "homepage": "https://tabithastrong.com/minecraft/",
-    "sources": "https://github.com/tabithastrong/compact-storage"
+    "sources": "https://github.com/tabithastrong/compact_storage"
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/compact-storage/icon.png",
+  "icon": "assets/compact_storage/icon.png",
 
   "environment": "*",
   "entrypoints": {
@@ -31,10 +31,7 @@
   "depends": {
     "fabricloader": ">=0.13.3",
     "fabric": "*",
-    "minecraft": "1.18.x",
+    "minecraft": "~1.19",
     "java": ">=17"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }
