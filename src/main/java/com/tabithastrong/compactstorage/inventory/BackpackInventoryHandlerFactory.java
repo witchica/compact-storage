@@ -35,7 +35,7 @@ public class BackpackInventoryHandlerFactory implements ExtendedScreenHandlerFac
     }
 
     public static BackpackInventory getBackpackInventory(PlayerEntity player, Hand hand) {
-        ItemStack backpackStack = player.getMainHandStack();
+        ItemStack backpackStack = player.getStackInHand(hand);
 
         if(backpackStack.hasNbt() && backpackStack.getNbt().contains("Backpack")) {
             NbtCompound backpackTag = backpackStack.getNbt().getCompound("Backpack");

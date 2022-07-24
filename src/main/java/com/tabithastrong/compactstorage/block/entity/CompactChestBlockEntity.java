@@ -41,7 +41,7 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
     private DefaultedList<ItemStack> inventory;
 
     public int inventoryWidth = 9;
-    public int inventoryHeight = 3;
+    public int inventoryHeight = 6;
 
     public int playersUsing = 0;
     public int playersUsingOld = 0;

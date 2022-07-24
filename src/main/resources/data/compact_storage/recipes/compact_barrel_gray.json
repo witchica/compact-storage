@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "WSW",
+        "IDI",
+        "WSW"
+    ],
+    "key": {
+        "W": {
+            "tag": "minecraft:planks"
+        },
+        "S": {
+            "tag": "minecraft:wooden_slabs"
+        },
+        "I": {
+            "item": "minecraft:iron_ingot"
+        },
+        "D": {
+            "item": "minecraft:gray_dye"
+        }
+    },
+    "result": {
+        "item": "compact_storage:compact_barrel_gray",
+        "count": 1
+    }
+}

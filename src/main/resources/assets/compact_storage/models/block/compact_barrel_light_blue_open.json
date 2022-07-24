@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "top": "compact_storage:blocks/barrel/compact_barrel_light_blue_top_open",
+    "bottom": "compact_storage:blocks/barrel/compact_barrel_light_blue_bottom",
+    "side": "compact_storage:blocks/barrel/compact_barrel_light_blue_side"
+  }
+}

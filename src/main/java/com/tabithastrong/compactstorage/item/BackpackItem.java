@@ -4,11 +4,14 @@ import com.tabithastrong.compactstorage.CompactStorage;
 import com.tabithastrong.compactstorage.inventory.BackpackInventory;
 import com.tabithastrong.compactstorage.inventory.BackpackInventoryHandlerFactory;
 import com.tabithastrong.compactstorage.screen.CompactChestScreenHandler;
+import com.tabithastrong.compactstorage.util.CompactStorageUtil;
+import net.minecraft.block.Block;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.StackReference;
+import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -16,11 +19,10 @@ import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.ClickType;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,29 +34,65 @@ public class BackpackItem extends Item {
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         if (!world.isClient) {
-            user.openHandledScreen(new BackpackInventoryHandlerFactory(user, hand));
+            Hand oppositeHand = hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND;
+            ItemStack oppositeHandStack = player.getStackInHand(oppositeHand);
+            ItemStack heldItem = player.getStackInHand(hand);
+
+            if(!heldItem.hasNbt()) {
+                CompactStorage.LOGGER.warn("no nbt");
+                heldItem.setNbt(new NbtCompound());
+            }
+
+            if(!oppositeHandStack.isEmpty()) {
+                Item oppositeHandItem = oppositeHandStack.getItem();
+                BackpackInventory inventory = new BackpackInventory(heldItem.getNbt().getCompound("Backpack"), hand, player);
+
+                if(oppositeHandItem == CompactStorage.UPGRADE_ROW_ITEM) {
+                    if(inventory.increaseSize(1, 0)) {
+                        player.getStackInHand(oppositeHand).decrement(1);
+                        heldItem.getNbt().put("Backpack", inventory.toTag());
+
+                        player.sendMessage(Text.translatable("text.compact_storage.upgrade_success").formatted(Formatting.GREEN), true);
+                        player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1f, 1f);
+                        return TypedActionResult.pass(heldItem);
+                    } else {
+                        player.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1f, 1f);
+                        player.sendMessage(Text.translatable("text.compact_storage.upgrade_fail_maxsize").formatted(Formatting.RED), true);
+                        return TypedActionResult.fail(heldItem);
+                    }
+                } else if(oppositeHandItem == CompactStorage.UPGRADE_COLUMN_ITEM) {
+                    if(inventory.increaseSize(0, 1)) {
+                        player.getStackInHand(oppositeHand).decrement(1);
+                        heldItem.getNbt().put("Backpack", inventory.toTag());
+
+                        player.sendMessage(Text.translatable("text.compact_storage.upgrade_success").formatted(Formatting.GREEN), true);
+                        player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1f, 1f);
+                        return TypedActionResult.pass(heldItem);
+                    } else {
+                        player.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1f, 1f);
+                        player.sendMessage(Text.translatable("text.compact_storage.upgrade_fail_maxsize").formatted(Formatting.RED), true);
+                        return TypedActionResult.fail(heldItem);
+                    }
+                } else if(oppositeHandItem instanceof DyeItem dyeItem) {
+                    ItemStack newStack = new ItemStack(CompactStorage.DYE_COLOR_TO_BACKPACK_MAP.get(dyeItem.getColor()), 1);
+                    newStack.setNbt(heldItem.getNbt());
+
+                    player.playSound(SoundEvents.BLOCK_SLIME_BLOCK_PLACE, SoundCategory.BLOCKS, 1f, 1f);
+                    player.getStackInHand(oppositeHand).decrement(1);
+                    return TypedActionResult.pass(newStack);
+                }
+            }
+
+            player.openHandledScreen(new BackpackInventoryHandlerFactory(player, hand));
         }
-        return super.use(world, user, hand);
+        return super.use(world, player, hand);
     }
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-
-        int inventoryX = 9;
-        int inventoryY = 6;
-
-        if(stack.hasNbt() && stack.getNbt().contains("Backpack")) {
-            inventoryX = stack.getNbt().getCompound("Backpack").getInt("inventory_width");
-            inventoryY = stack.getNbt().getCompound("Backpack").getInt("inventory_height");
-        }
-
-        int slots = inventoryX * inventoryY;
-
-        tooltip.add(Text.translatable("text.compact_storage.tooltip.size_x", inventoryX).formatted(Formatting.GRAY, Formatting.ITALIC));
-        tooltip.add(Text.translatable("text.compact_storage.tooltip.size_y", inventoryY).formatted(Formatting.GRAY, Formatting.ITALIC));
-        tooltip.add(Text.translatable("text.compact_storage.tooltip.slots", slots).formatted(Formatting.DARK_PURPLE, Formatting.ITALIC));
+        CompactStorageUtil.appendTooltip(stack, world, tooltip, context, true);
     }
 }

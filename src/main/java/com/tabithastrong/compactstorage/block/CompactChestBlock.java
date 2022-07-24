@@ -3,6 +3,7 @@ package com.tabithastrong.compactstorage.block;
 import com.tabithastrong.compactstorage.CompactStorage;
 import com.tabithastrong.compactstorage.block.entity.CompactChestBlockEntity;
 
+import com.tabithastrong.compactstorage.util.CompactStorageUtil;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -205,7 +206,14 @@ public class CompactChestBlock extends BlockWithEntity {
             NbtCompound chestTag = new NbtCompound();
             chestTag.putInt("inventory_width", compactChestBlockEntity.inventoryWidth);
             chestTag.putInt("inventory_height", compactChestBlockEntity.inventoryHeight);
-            chestStack.setNbt(chestTag);
+
+            if(compactChestBlockEntity.inventoryWidth != 9 || compactChestBlockEntity.inventoryHeight != 6) {
+                chestStack.setNbt(chestTag);
+            }
+
+            if(compactChestBlockEntity.hasCustomName()) {
+                chestStack.setCustomName(compactChestBlockEntity.getCustomName());
+            }
 
             ItemScatterer.spawn(world, pos, (Inventory) compactChestBlockEntity);
             ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), chestStack);
@@ -218,19 +226,7 @@ public class CompactChestBlock extends BlockWithEntity {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options) {
         super.appendTooltip(stack, world, tooltip, options);
-        int inventoryX = 9;
-        int inventoryY = 3;
-
-        if(stack.hasNbt() && stack.getNbt().contains("inventory_width")) {
-            inventoryX = stack.getNbt().getInt("inventory_width");
-            inventoryY = stack.getNbt().getInt("inventory_height");
-        }
-
-        int slots = inventoryX * inventoryY;
-
-        tooltip.add(Text.translatable("text.compact_storage.tooltip.size_x", inventoryX).formatted(Formatting.GRAY, Formatting.ITALIC));
-        tooltip.add(Text.translatable("text.compact_storage.tooltip.size_y", inventoryY).formatted(Formatting.GRAY, Formatting.ITALIC));
-        tooltip.add(Text.translatable("text.compact_storage.tooltip.slots", slots).formatted(Formatting.DARK_PURPLE, Formatting.ITALIC));
+        CompactStorageUtil.appendTooltip(stack, world, tooltip, options, false);
     }
 
     @Override

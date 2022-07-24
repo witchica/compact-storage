@@ -20,6 +20,23 @@
     "block.compact_storage.compact_chest_red": "Red Compact Chest",
     "block.compact_storage.compact_chest_black": "Black Compact Chest",
 
+    "block.compact_storage.compact_barrel_white": "White Compact Barrel",
+    "block.compact_storage.compact_barrel_orange": "Orange Compact Barrel",
+    "block.compact_storage.compact_barrel_magenta": "Magenta Compact Barrel",
+    "block.compact_storage.compact_barrel_light_blue": "Light Blue Compact Barrel",
+    "block.compact_storage.compact_barrel_yellow": "Yellow Compact Barrel",
+    "block.compact_storage.compact_barrel_lime": "Lime Compact Barrel",
+    "block.compact_storage.compact_barrel_pink": "Pink Compact Barrel",
+    "block.compact_storage.compact_barrel_gray": "Gray Compact Barrel",
+    "block.compact_storage.compact_barrel_light_gray": "Light Gray Compact Barrel",
+    "block.compact_storage.compact_barrel_cyan": "Cyan Compact Barrel",
+    "block.compact_storage.compact_barrel_purple": "Purple Compact Barrel",
+    "block.compact_storage.compact_barrel_blue": "Blue Compact Barrel",
+    "block.compact_storage.compact_barrel_brown": "Brown Compact Barrel",
+    "block.compact_storage.compact_barrel_green": "Green Compact Barrel",
+    "block.compact_storage.compact_barrel_red": "Red Compact Barrel",
+    "block.compact_storage.compact_barrel_black": "Black Compact Barrel",
+
     "container.compact_storage.compact_chest": "Compact Chest",
     "container.compact_storage.backpack": "Backpack",
 
@@ -46,19 +63,14 @@
 
     "tooltip.compact_storage.row_upgrade_descriptor": "Use this on a Compact Storage block to add an extra row",
     "tooltip.compact_storage.column_upgrade_descriptor": "Use this on a Compact Storage block to add an extra column",
-    "tooltip.compact_storage.upgrade_backpack": "Can also be applied to backpacks in your off-hand",
-    "tooltip.compact_storage.upgrade_error": "To upgrade a backpack, it must be placed in your off-hand",
-    "tooltip.compact_storage.fully_upgraded_row": "This backpack has reached the maximum number of rows",
-    "tooltip.compact_storage.fully_upgraded_column": "This backpack has reached the maximum number of columns",
+    "tooltip.compact_storage.upgrade_backpack": "Can also be applied to backpacks by placing in your off-hand",
 
     "text.compact_storage.upgrade_success": "Upgrade successfully applied!",
     "text.compact_storage.upgrade_fail_maxsize": "Maximum size already reached, upgrade failed!",
-    "text.compact_storage.tooltip.size_x": "Inventory Width: %d",
-    "text.compact_storage.tooltip.size_y": "Inventory Height: %d",
+
+    "text.compact_storage.tooltip.size_x": "Inventory Width: ",
+    "text.compact_storage.tooltip.size_y": "Inventory Height: ",
     "text.compact_storage.tooltip.slots": "Has %d slots",
 
-    "itemGroup.compact_storage.general": "Compact Storage",
-
-    "compact_storage.text.too_many_rows": "This chest has reached the maximum amount of rows",
-    "compact_storage.text.too_many_columns": "This chest has reached the maximum amount of columns"
+    "itemGroup.compact_storage.general": "Compact Storage"
 }

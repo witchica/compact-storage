@@ -34,6 +34,21 @@ public class BackpackInventory implements Inventory, CompactStorageInventoryImpl
         this.fromTag(itemsNbt);
     }
 
+
+    public void resizeInventory(boolean copy_contents) {
+        DefaultedList<ItemStack> newInventory = DefaultedList.ofSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
+
+        if(copy_contents) {
+            DefaultedList<ItemStack> list = this.items;
+
+            for(int i = 0; i < list.size(); i++) {
+                newInventory.set(i, list.get(i));
+            }
+        }
+
+        this.items = newInventory;
+    }
+
     @Override
     public void clear() {
         this.items.clear();
@@ -97,6 +112,20 @@ public class BackpackInventory implements Inventory, CompactStorageInventoryImpl
         readItemsFromTag(this.items, tag);
     }
 
+    public boolean increaseSize(int x, int y) {
+        if((inventoryWidth > 23 && x > 0) || (inventoryHeight > 11 && y > 0)) {
+            return false;
+        }
+
+        inventoryWidth += x;
+        inventoryHeight += y;
+
+        resizeInventory(true);
+        markDirty();
+
+        return true;
+    }
+
     public NbtCompound toTag() {
         NbtCompound tag = new NbtCompound();
         tag.putInt("inventory_width", inventoryWidth);
@@ -117,6 +146,7 @@ public class BackpackInventory implements Inventory, CompactStorageInventoryImpl
     public void onClose(PlayerEntity player) {
         Inventory.super.onClose(player);
 
+        System.out.println(hand == Hand.MAIN_HAND ? "Main" : "offhand");
         if(!player.getStackInHand(hand).hasNbt()) {
             player.getStackInHand(hand).setNbt(new NbtCompound());
         }

@@ -5,6 +5,7 @@ import com.tabithastrong.compactstorage.block.entity.CompactChestBlockEntity;
 import com.tabithastrong.compactstorage.inventory.BackpackInventory;
 
 import com.tabithastrong.compactstorage.inventory.BackpackInventoryHandlerFactory;
+import com.tabithastrong.compactstorage.util.CompactStorageInventoryImpl;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -22,7 +23,7 @@ public class CompactChestScreenHandler extends ScreenHandler {
     private Inventory inventory;
     private PlayerInventory playerInventory;
 
-    public CompactChestBlockEntity blockEntity;
+    public CompactStorageInventoryImpl blockEntity;
 
     public int inventoryWidth;
     public int inventoryHeight;
@@ -37,10 +38,10 @@ public class CompactChestScreenHandler extends ScreenHandler {
 
         if(inventoryType == 0) {
             BlockPos pos = buf.readBlockPos();
-            CompactChestBlockEntity inv = (CompactChestBlockEntity) playerInventory.player.world.getBlockEntity(pos);
+            CompactStorageInventoryImpl inv = (CompactStorageInventoryImpl) playerInventory.player.world.getBlockEntity(pos);
             this.inventory = (Inventory) inv;
-            this.inventoryWidth = inv.inventoryWidth;
-            this.inventoryHeight = inv.inventoryHeight;
+            this.inventoryWidth = inv.getInventoryWidth();
+            this.inventoryHeight = inv.getInventoryHeight();
             this.blockEntity = inv;
             this.backpack = null;
         } else {

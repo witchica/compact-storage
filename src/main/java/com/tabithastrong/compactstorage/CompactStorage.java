@@ -1,12 +1,16 @@
 package com.tabithastrong.compactstorage;
 
+import com.tabithastrong.compactstorage.block.CompactBarrelBlock;
+import com.tabithastrong.compactstorage.block.entity.CompactBarrelBlockEntity;
 import com.tabithastrong.compactstorage.item.BackpackItem;
+import com.tabithastrong.compactstorage.item.StorageUpgradeItem;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
@@ -43,7 +47,9 @@ public class CompactStorage implements ModInitializer {
 	 * Blocks
 	 */
 	public static Identifier COMPACT_CHEST_GENERIC_IDENTIFIER = new Identifier(MOD_ID, "compact_chest");
-    public static BlockEntityType<CompactChestBlockEntity> COMPACT_CHEST_ENTITY_TYPE;
+	public static Identifier COMPACT_BARREL_GENERIC_IDENTIFIER = new Identifier(MOD_ID, "compact_barrel");
+	public static BlockEntityType<CompactChestBlockEntity> COMPACT_CHEST_ENTITY_TYPE;
+	public static BlockEntityType<CompactBarrelBlockEntity> COMPACT_BARREL_ENTITY_TYPE;
     public static final String COMPACT_CHEST_TRANSLATION_KEY = Util.createTranslationKey("container", COMPACT_CHEST_GENERIC_IDENTIFIER);
 	public static final ExtendedScreenHandlerType<CompactChestScreenHandler> COMPACT_CHEST_SCREEN_HANDLER = new  ExtendedScreenHandlerType<CompactChestScreenHandler>(CompactChestScreenHandler::new);
 
@@ -51,6 +57,11 @@ public class CompactStorage implements ModInitializer {
 	public static final Identifier[] COMPACT_CHEST_IDENTIFIERS = new Identifier[16];
 
 	public static final HashMap<DyeColor, Block> DYE_COLOR_TO_COMPACT_CHEST_MAP = new HashMap<DyeColor, Block>();
+
+	public static final Block[] COMPACT_BARREL_BLOCKS = new Block[16];
+	public static final Identifier[] COMPACT_BARREL_IDENTIFIERS = new Identifier[16];
+
+	public static final HashMap<DyeColor, Block> DYE_COLOR_TO_COMPACT_BARREL_MAP = new HashMap<DyeColor, Block>();
 
 	public static final ItemGroup COMPACT_STORAGE_ITEM_GROUP = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "general"), () -> {
 		return new ItemStack(COMPACT_CHEST_BLOCKS[1], 1);
@@ -60,9 +71,9 @@ public class CompactStorage implements ModInitializer {
 	 * Items
 	 */
 
-	public static final Item UPGRADE_ROW_ITEM = new Item(new FabricItemSettings().group(COMPACT_STORAGE_ITEM_GROUP));
+	public static final Item UPGRADE_ROW_ITEM = new StorageUpgradeItem(new FabricItemSettings().group(COMPACT_STORAGE_ITEM_GROUP));
 	public static final Identifier UPGRADE_ROW_ITEM_IDENTIFIER = new Identifier(MOD_ID, "upgrade_row");
-	public static final Item UPGRADE_COLUMN_ITEM = new Item(new FabricItemSettings().group(COMPACT_STORAGE_ITEM_GROUP));
+	public static final Item UPGRADE_COLUMN_ITEM = new StorageUpgradeItem(new FabricItemSettings().group(COMPACT_STORAGE_ITEM_GROUP));
 	public static final Identifier UPGRADE_COLUMN_ITEM_IDENTIFIER = new Identifier(MOD_ID, "upgrade_column");
 
 	public static Identifier BACKPACK_GENERIC_IDENTIFIER = new Identifier(MOD_ID, "backpack");
@@ -81,6 +92,10 @@ public class CompactStorage implements ModInitializer {
 			BACKPACK_ITEMS[i] = new BackpackItem(new FabricItemSettings().maxCount(1).group(COMPACT_STORAGE_ITEM_GROUP));
 			BACKPACK_ITEM_IDENTIFIERS[i] = new Identifier(MOD_ID, "backpack_" + dyeName);
 			DYE_COLOR_TO_BACKPACK_MAP.put(DyeColor.byId(i), BACKPACK_ITEMS[i]);
+
+			COMPACT_BARREL_BLOCKS[i] = new CompactBarrelBlock(AbstractBlock.Settings.copy(Blocks.BARREL).strength(2f, 5f));
+			COMPACT_BARREL_IDENTIFIERS[i] = new Identifier(MOD_ID, "compact_barrel_" + dyeName);
+			DYE_COLOR_TO_COMPACT_BARREL_MAP.put(DyeColor.byId(i), COMPACT_BARREL_BLOCKS[i]);
 		}
 	}
 
@@ -93,10 +108,14 @@ public class CompactStorage implements ModInitializer {
 			Registry.register(Registry.ITEM, COMPACT_CHEST_IDENTIFIERS[i], new BlockItem(COMPACT_CHEST_BLOCKS[i], new FabricItemSettings().group(COMPACT_STORAGE_ITEM_GROUP)));
 
 			Registry.register(Registry.ITEM, BACKPACK_ITEM_IDENTIFIERS[i], BACKPACK_ITEMS[i]);
+
+			Registry.register(Registry.BLOCK, COMPACT_BARREL_IDENTIFIERS[i], COMPACT_BARREL_BLOCKS[i]);
+			Registry.register(Registry.ITEM, COMPACT_BARREL_IDENTIFIERS[i], new BlockItem(COMPACT_BARREL_BLOCKS[i], new FabricItemSettings().group(COMPACT_STORAGE_ITEM_GROUP)));
 		}
 
 		Registry.register(Registry.SCREEN_HANDLER, COMPACT_CHEST_GENERIC_IDENTIFIER, COMPACT_CHEST_SCREEN_HANDLER);
 		COMPACT_CHEST_ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, COMPACT_CHEST_GENERIC_IDENTIFIER, FabricBlockEntityTypeBuilder.create(CompactChestBlockEntity::new, COMPACT_CHEST_BLOCKS).build(null));
+		COMPACT_BARREL_ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, COMPACT_BARREL_GENERIC_IDENTIFIER, FabricBlockEntityTypeBuilder.create(CompactBarrelBlockEntity::new, COMPACT_BARREL_BLOCKS).build(null));
 
 		Registry.register(Registry.ITEM, UPGRADE_ROW_ITEM_IDENTIFIER, UPGRADE_ROW_ITEM);
 		Registry.register(Registry.ITEM, UPGRADE_COLUMN_ITEM_IDENTIFIER, UPGRADE_COLUMN_ITEM);
