@@ -1,6 +1,8 @@
 {
     "pack": {
-        "description": "compactstorage resources",
-        "pack_format": 6
-     }
+        "description": "examplemod resources",
+        "pack_format": 9,
+        "forge:resource_pack_format": 8,
+        "forge:data_pack_format": 9
+    }
 }

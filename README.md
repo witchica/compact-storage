@@ -1,3 +1,8 @@
-# compact-storage
-![Build Status](http://159.65.90.205:8080/job/compact-storage/badge/icon)
-Minecraft mod for 1.16.5 which adds chests, barrels and backpacks that can be up to 18x9 in size
+![CompactStorage Logo](https://i.imgur.com/QY6VKau.jpg)
+# Compact Storage for Minecraft Fabric 1.19
+Welcome to the new version of Compact Storage, here for Fabric 1.19! This update is primarily focused
+on brining the mod up to the latest version of Minecraft with no features added. This also focuses on creating feature parity
+between the Forge and Fabric versions of the mod. Forge 1.19 is in the works and will
+hopefully be released shortly after 1.19 Fabric. 
+
+You can find the mod on [Curse Forge](https://www.curseforge.com/minecraft/mc-mods/compactstorage) and [Modrinth](https://modrinth.com/mod/compact_storage)
