@@ -22,6 +22,7 @@ import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -54,12 +55,12 @@ public class BackpackItem extends Item {
                         player.getStackInHand(oppositeHand).decrement(1);
                         heldItem.getNbt().put("Backpack", inventory.toTag());
 
-                        player.sendMessage(Text.translatable("text.compact_storage.upgrade_success").formatted(Formatting.GREEN), true);
+                        player.sendMessage(new TranslatableText("text.compact_storage.upgrade_success").formatted(Formatting.GREEN), true);
                         player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1f, 1f);
                         return TypedActionResult.pass(heldItem);
                     } else {
                         player.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1f, 1f);
-                        player.sendMessage(Text.translatable("text.compact_storage.upgrade_fail_maxsize").formatted(Formatting.RED), true);
+                        player.sendMessage(new TranslatableText("text.compact_storage.upgrade_fail_maxsize").formatted(Formatting.RED), true);
                         return TypedActionResult.fail(heldItem);
                     }
                 } else if(oppositeHandItem == CompactStorage.UPGRADE_COLUMN_ITEM) {
@@ -67,12 +68,12 @@ public class BackpackItem extends Item {
                         player.getStackInHand(oppositeHand).decrement(1);
                         heldItem.getNbt().put("Backpack", inventory.toTag());
 
-                        player.sendMessage(Text.translatable("text.compact_storage.upgrade_success").formatted(Formatting.GREEN), true);
+                        player.sendMessage(new TranslatableText("text.compact_storage.upgrade_success").formatted(Formatting.GREEN), true);
                         player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.BLOCKS, 1f, 1f);
                         return TypedActionResult.pass(heldItem);
                     } else {
                         player.playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 1f, 1f);
-                        player.sendMessage(Text.translatable("text.compact_storage.upgrade_fail_maxsize").formatted(Formatting.RED), true);
+                        player.sendMessage(new TranslatableText("text.compact_storage.upgrade_fail_maxsize").formatted(Formatting.RED), true);
                         return TypedActionResult.fail(heldItem);
                     }
                 } else if(oppositeHandItem instanceof DyeItem dyeItem) {

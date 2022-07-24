@@ -11,6 +11,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,7 +32,7 @@ public class BackpackInventoryHandlerFactory implements ExtendedScreenHandlerFac
 
     @Override
     public Text getDisplayName() {
-        return backpackStack.hasCustomName() ? backpackStack.getName() : Text.translatable("container.compact_storage.backpack");
+        return backpackStack.hasCustomName() ? backpackStack.getName() : new TranslatableText("container.compact_storage.backpack");
     }
 
     public static BackpackInventory getBackpackInventory(PlayerEntity player, Hand hand) {

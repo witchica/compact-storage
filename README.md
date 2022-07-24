@@ -5,4 +5,4 @@ on brining the mod up to the latest version of Minecraft with no features added.
 between the Forge and Fabric versions of the mod. Forge 1.19 is in the works and will
 hopefully be released shortly after 1.19 Fabric. 
 
-You can find the mod on [Curse Forge](https://www.curseforge.com/minecraft/mc-mods/compactstorage) and [Modrinth]()
+You can find the mod on [Curse Forge](https://www.curseforge.com/minecraft/mc-mods/compactstorage) and [Modrinth](https://modrinth.com/mod/compact_storage)

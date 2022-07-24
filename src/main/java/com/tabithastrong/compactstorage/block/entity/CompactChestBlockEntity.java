@@ -10,8 +10,10 @@ import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.LidOpenable;
+import net.minecraft.block.ChestBlock;
+import net.minecraft.block.entity.ChestLidAnimator;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
+import net.minecraft.client.block.ChestAnimationProgress;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -27,6 +29,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -34,10 +37,10 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 @EnvironmentInterface(
-    itf = LidOpenable.class,
+    itf = ChestAnimationProgress.class,
     value = EnvType.CLIENT
 )
-public class CompactChestBlockEntity extends LootableContainerBlockEntity implements ExtendedScreenHandlerFactory, CompactStorageInventoryImpl, LidOpenable {
+public class CompactChestBlockEntity extends LootableContainerBlockEntity implements ExtendedScreenHandlerFactory, CompactStorageInventoryImpl, ChestAnimationProgress {
     private DefaultedList<ItemStack> inventory;
 
     public int inventoryWidth = 9;
@@ -77,7 +80,7 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
 
     @Override
     protected Text getContainerName() {
-        return Text.translatable("container.chest");
+        return new TranslatableText("container.chest");
     }
 
     @Override

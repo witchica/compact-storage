@@ -3,7 +3,9 @@ package com.tabithastrong.compactstorage.util;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
@@ -29,8 +31,8 @@ public class CompactStorageUtil {
 
         int slots = inventoryX * inventoryY;
 
-        tooltip.add(Text.translatable("text.compact_storage.tooltip.size_x").formatted(Formatting.WHITE).append(Text.literal("" + inventoryX).formatted(Formatting.DARK_PURPLE)));
-        tooltip.add(Text.translatable("text.compact_storage.tooltip.size_y").formatted(Formatting.WHITE).append(Text.literal("" + inventoryY).formatted(Formatting.DARK_PURPLE)));
-        tooltip.add(Text.translatable("text.compact_storage.tooltip.slots", slots).formatted(Formatting.DARK_PURPLE, Formatting.ITALIC));
+        tooltip.add(new TranslatableText("text.compact_storage.tooltip.size_x").formatted(Formatting.WHITE).append(new LiteralText("" + inventoryX).formatted(Formatting.DARK_PURPLE)));
+        tooltip.add(new TranslatableText("text.compact_storage.tooltip.size_y").formatted(Formatting.WHITE).append(new LiteralText("" + inventoryY).formatted(Formatting.DARK_PURPLE)));
+        tooltip.add(new TranslatableText("text.compact_storage.tooltip.slots", slots).formatted(Formatting.DARK_PURPLE, Formatting.ITALIC));
     }
 }

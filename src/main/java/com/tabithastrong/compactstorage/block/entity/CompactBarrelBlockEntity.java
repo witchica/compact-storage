@@ -11,7 +11,6 @@ import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.LidOpenable;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -28,6 +27,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -67,7 +67,7 @@ public class CompactBarrelBlockEntity extends LootableContainerBlockEntity imple
 
     @Override
     protected Text getContainerName() {
-        return Text.translatable("container.barrel");
+        return new TranslatableText("container.barrel");
     }
 
     @Override
