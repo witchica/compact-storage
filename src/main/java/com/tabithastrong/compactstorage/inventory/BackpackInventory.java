@@ -139,7 +139,6 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
     public void stopOpen(Player player) {
         Container.super.stopOpen(player);
 
-        System.out.println(hand == InteractionHand.MAIN_HAND ? "Main" : "offhand");
         if(!player.getItemInHand(hand).hasTag()) {
             player.getItemInHand(hand).setTag(new CompoundTag());
         }

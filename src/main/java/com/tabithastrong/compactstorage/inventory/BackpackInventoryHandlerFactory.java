@@ -5,6 +5,7 @@ import io.netty.buffer.Unpooled;;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
@@ -30,7 +31,7 @@ public class BackpackInventoryHandlerFactory implements MenuProvider {
 
     @Override
     public Component getDisplayName() {
-        return backpackStack.hasCustomHoverName() ? backpackStack.getHoverName() : Component.translatable("container.compact_storage.backpack");
+        return backpackStack.hasCustomHoverName() ? backpackStack.getHoverName() : new TranslatableComponent("container.compact_storage.backpack");
     }
 
     public static BackpackInventory getBackpackInventory(Player player, InteractionHand hand) {

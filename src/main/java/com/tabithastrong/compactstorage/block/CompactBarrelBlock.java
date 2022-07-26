@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -104,23 +105,23 @@ public class CompactBarrelBlock extends BaseEntityBlock {
                     if(heldItem == CompactStorage.UPGRADE_ROW_ITEM.get()) {
                         if(compactBarrelBlockEntity.increaseSize(1, 0)) {
                             player.getItemInHand(hand).shrink(1);
-                            player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
+                            player.displayClientMessage(new TranslatableComponent("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
                             player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
                             return InteractionResult.CONSUME_PARTIAL;
                         } else {
                             player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                            player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
+                            player.displayClientMessage(new TranslatableComponent("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
                             return InteractionResult.FAIL;
                         }
                     } else if(heldItem == CompactStorage.UPGRADE_COLUMN_ITEM.get()) {
                         if(compactBarrelBlockEntity.increaseSize(0, 1)) {
                             player.getItemInHand(hand).shrink(1);
-                            player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
+                            player.displayClientMessage(new TranslatableComponent("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
                             player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
                             return InteractionResult.CONSUME_PARTIAL;
                         } else {
                             player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                            player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
+                            player.displayClientMessage(new TranslatableComponent("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
                             return InteractionResult.FAIL;
                         }
                     } else if(heldItem instanceof DyeItem dyeItem) {
@@ -133,7 +134,7 @@ public class CompactBarrelBlock extends BaseEntityBlock {
 
 
                     MenuProvider screenHandlerFactory = state.getMenuProvider(world, pos);
-                    NetworkHooks.openScreen((ServerPlayer) player, screenHandlerFactory, compactBarrelBlockEntity::writeScreenOpeningData);
+                    NetworkHooks.openGui((ServerPlayer) player, screenHandlerFactory, compactBarrelBlockEntity::writeScreenOpeningData);
                 }
             }
         }

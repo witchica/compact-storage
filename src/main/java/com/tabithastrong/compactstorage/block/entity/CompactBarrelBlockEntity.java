@@ -13,6 +13,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -69,7 +70,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable("container.barrel");
+        return new TranslatableComponent("container.barrel");
     }
 
     @Override

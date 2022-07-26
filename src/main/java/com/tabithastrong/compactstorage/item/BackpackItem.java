@@ -7,6 +7,7 @@ import com.tabithastrong.compactstorage.util.CompactStorageUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -50,12 +51,12 @@ public class BackpackItem extends Item {
                         player.getItemInHand(oppositeHand).shrink(1);
                         heldItem.getTag().put("Backpack", inventory.toTag());
 
-                        player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
+                        player.displayClientMessage(new TranslatableComponent("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
                         player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
                         return InteractionResultHolder.pass(heldItem);
                     } else {
                         player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                        player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
+                        player.displayClientMessage(new TranslatableComponent("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
                         return InteractionResultHolder.fail(heldItem);
                     }
                 } else if(oppositeHandItem == CompactStorage.UPGRADE_COLUMN_ITEM.get()) {
@@ -63,12 +64,12 @@ public class BackpackItem extends Item {
                         player.getItemInHand(oppositeHand).shrink(1);
                         heldItem.getTag().put("Backpack", inventory.toTag());
 
-                        player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
+                        player.displayClientMessage(new TranslatableComponent("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
                         player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
                         return InteractionResultHolder.pass(heldItem);
                     } else {
                         player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                        player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
+                        player.displayClientMessage(new TranslatableComponent("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
                         return InteractionResultHolder.fail(heldItem);
                     }
                 } else if(oppositeHandItem instanceof DyeItem dyeItem) {
@@ -82,7 +83,7 @@ public class BackpackItem extends Item {
             }
 
             BackpackInventoryHandlerFactory backpackInventoryHandlerFactory = new BackpackInventoryHandlerFactory(player, hand);
-            NetworkHooks.openScreen((ServerPlayer) player, backpackInventoryHandlerFactory, backpackInventoryHandlerFactory::writeScreenOpeningData);
+            NetworkHooks.openGui((ServerPlayer) player, backpackInventoryHandlerFactory, backpackInventoryHandlerFactory::writeScreenOpeningData);
         }
         return super.use(world, player, hand);
     }

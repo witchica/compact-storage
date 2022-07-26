@@ -1,5 +1,7 @@
 package com.tabithastrong.compactstorage.util;
 
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -29,8 +31,8 @@ public class CompactStorageUtil {
 
         int slots = inventoryX * inventoryY;
 
-        tooltip.add(Component.translatable("text.compact_storage.tooltip.size_x").withStyle(ChatFormatting.WHITE).append(Component.literal("" + inventoryX).withStyle(ChatFormatting.DARK_PURPLE)));
-        tooltip.add(Component.translatable("text.compact_storage.tooltip.size_y").withStyle(ChatFormatting.WHITE).append(Component.literal("" + inventoryY).withStyle(ChatFormatting.DARK_PURPLE)));
-        tooltip.add(Component.translatable("text.compact_storage.tooltip.slots", slots).withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
+        tooltip.add(new TranslatableComponent("text.compact_storage.tooltip.size_x").withStyle(ChatFormatting.WHITE).append(new TextComponent("" + inventoryX).withStyle(ChatFormatting.DARK_PURPLE)));
+        tooltip.add(new TranslatableComponent("text.compact_storage.tooltip.size_y").withStyle(ChatFormatting.WHITE).append(new TextComponent("" + inventoryY).withStyle(ChatFormatting.DARK_PURPLE)));
+        tooltip.add(new TranslatableComponent("text.compact_storage.tooltip.slots", slots).withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
     }
 }
