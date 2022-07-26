@@ -90,7 +90,7 @@ public class CompactChestBlock extends BaseEntityBlock {
                     CompactChestBlockEntity compactChestBlockEntity = (CompactChestBlockEntity) blockEntity;
                     compactChestBlockEntity.inventoryWidth = nbt.getInt("inventory_width");
                     compactChestBlockEntity.inventoryHeight = nbt.getInt("inventory_height");
-                    compactChestBlockEntity.resizeInventory(false);
+                    compactChestBlockEntity.resizeInventory();
                     compactChestBlockEntity.setChanged();
                 }
             }

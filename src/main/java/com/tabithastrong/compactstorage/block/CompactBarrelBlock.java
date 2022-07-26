@@ -84,7 +84,7 @@ public class CompactBarrelBlock extends BaseEntityBlock {
                     CompactBarrelBlockEntity compactBarrelBlockEntity = (CompactBarrelBlockEntity) blockEntity;
                     compactBarrelBlockEntity.inventoryWidth = nbt.getInt("inventory_width");
                     compactBarrelBlockEntity.inventoryHeight = nbt.getInt("inventory_height");
-                    compactBarrelBlockEntity.resizeInventory(false);
+                    compactBarrelBlockEntity.resizeInventory();
                     compactBarrelBlockEntity.setChanged();
                 }
             }

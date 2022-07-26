@@ -3,10 +3,12 @@ package com.tabithastrong.compactstorage.block.entity;
 import com.tabithastrong.compactstorage.CompactStorage;
 import com.tabithastrong.compactstorage.block.CompactBarrelBlock;
 
+import com.tabithastrong.compactstorage.inventory.CompactStorageItemHandler;
 import com.tabithastrong.compactstorage.screen.CompactChestScreenHandler;
 import com.tabithastrong.compactstorage.util.CompactStorageInventoryImpl;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -24,10 +26,19 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Lazy;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 
 public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity implements CompactStorageInventoryImpl {
-    private NonNullList<ItemStack> inventory;
+    private CompactStorageItemHandler inventory;
+    private LazyOptional<IItemHandler> inventoryHandlerLazyOptional = LazyOptional.of(()-> inventory);
 
     public int inventoryWidth = 9;
     public int inventoryHeight = 6;
@@ -38,7 +49,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
 
     public CompactBarrelBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CompactStorage.COMPACT_BARREL_ENTITY_TYPE.get(), blockPos, blockState);
-        this.inventory = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
+        this.inventory = new CompactStorageItemHandler(inventoryWidth * inventoryHeight);
     }
 
     @Override
@@ -48,12 +59,12 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
 
     @Override
     protected NonNullList<ItemStack> getItems() {
-        return inventory;
+        return inventory.getStacks();
     }
 
     @Override
     protected void setItems(NonNullList<ItemStack> stackList) {
-        inventory = stackList;
+        inventory = new CompactStorageItemHandler(stackList);
     }
 
     @Override
@@ -94,18 +105,13 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
         }
     }
 
-    public void resizeInventory(boolean copy_contents) {
-        NonNullList<ItemStack> newInventory = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
+    public void resizeInventory() {
+        NonNullList<ItemStack> stacks = inventory.getStacks();
+        inventory.setSize(inventoryWidth * inventoryHeight);
 
-        if(copy_contents) {
-            NonNullList<ItemStack> list = this.inventory;
-
-            for(int i = 0; i < list.size(); i++) {
-                newInventory.set(i, list.get(i));
-            }
+        for(int i = 0; i < stacks.size(); i++) {
+            inventory.setStackInSlot(i, stacks.get(i));
         }
-
-        this.inventory = newInventory;
     }
 
     @Override
@@ -115,15 +121,21 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
         this.inventoryWidth = nbt.contains("inventory_width") ? nbt.getInt("inventory_width") : 9;
         this.inventoryHeight = nbt.contains("inventory_height") ? nbt.getInt("inventory_height") : 3;
 
-        this.inventory = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
-        readItemsFromTag(inventory, nbt);
+        this.inventory = new CompactStorageItemHandler(inventoryWidth * inventoryHeight);
+
+        // Backwards compat
+        if(nbt.contains("Inventory")) {
+            this.inventory.deserializeNBT(nbt.getCompound("Inventory"));
+        } else if (nbt.contains("Items")){
+            this.inventory.deserializeNBT(nbt);
+        }
     }
 
     @Override
     protected void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
-        writeItemsToTag(inventory, nbt);
 
+        nbt.put("Inventory", inventory.serializeNBT());
         nbt.putInt("inventory_width", inventoryWidth);
         nbt.putInt("inventory_height", inventoryHeight);
     }
@@ -182,10 +194,21 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
         inventoryWidth += x;
         inventoryHeight += y;
 
-        resizeInventory(true);
+        resizeInventory();
         setChanged();
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 1);
 
         return true;
+    }
+
+    /** IItemHandler **/
+
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
+        if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return inventoryHandlerLazyOptional.cast();
+        }
+
+        return super.getCapability(cap, side);
     }
 }
