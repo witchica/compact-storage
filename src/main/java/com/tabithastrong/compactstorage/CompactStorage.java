@@ -1,5 +1,6 @@
 package com.tabithastrong.compactstorage;
 
+import com.google.common.collect.ImmutableSet;
 import com.tabithastrong.compactstorage.block.CompactBarrelBlock;
 import com.tabithastrong.compactstorage.block.entity.CompactBarrelBlockEntity;
 import com.tabithastrong.compactstorage.item.BackpackItem;
@@ -12,6 +13,7 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
@@ -31,11 +33,12 @@ import com.tabithastrong.compactstorage.block.CompactChestBlock;
 import com.tabithastrong.compactstorage.block.entity.CompactChestBlockEntity;
 import com.tabithastrong.compactstorage.screen.CompactChestScreenHandler;
 
+import net.minecraft.world.poi.PointOfInterestType;
+import net.minecraft.world.poi.PointOfInterestTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CompactStorage implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("compact_storage");
@@ -119,5 +122,23 @@ public class CompactStorage implements ModInitializer {
 
 		Registry.register(Registry.ITEM, UPGRADE_ROW_ITEM_IDENTIFIER, UPGRADE_ROW_ITEM);
 		Registry.register(Registry.ITEM, UPGRADE_COLUMN_ITEM_IDENTIFIER, UPGRADE_COLUMN_ITEM);
+
+		/** POI Fisherman **/
+
+		PointOfInterestType fishermanType = Registry.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.FISHERMAN);
+		List<BlockState> fishermanStates = new ArrayList<BlockState>(fishermanType.blockStates);
+
+		for(Block block : COMPACT_BARREL_BLOCKS) {
+			fishermanStates.addAll(block.getStateManager().getStates());
+		}
+
+		fishermanType.blockStates = ImmutableSet.copyOf(fishermanStates);
+
+		for(Block block : COMPACT_BARREL_BLOCKS) {
+			block.getStateManager().getStates().forEach((state) -> {
+				PointOfInterestTypes.POI_STATES_TO_TYPE.put(state, Registry.POINT_OF_INTEREST_TYPE.getEntry(PointOfInterestTypes.FISHERMAN).get());
+			});
+		}
+
 	}
 }
