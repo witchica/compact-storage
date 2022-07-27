@@ -36,6 +36,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.poi.PointOfInterestType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

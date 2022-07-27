@@ -27,6 +27,7 @@
   },
   "mixins": [
   ],
+  "accessWidener": "compact_storage.accesswidener",
 
   "depends": {
     "fabricloader": ">=0.13.3",

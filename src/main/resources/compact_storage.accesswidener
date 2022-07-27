@@ -1,0 +1,5 @@
+accessWidener v1 named
+
+accessible  field net/minecraft/world/poi/PointOfInterestType   blockStates Ljava/util/Set;
+accessible  field net/minecraft/world/poi/PointOfInterestType   BLOCK_STATE_TO_POINT_OF_INTEREST_TYPE Ljava/util/Map;
+mutable field net/minecraft/world/poi/PointOfInterestType   blockStates Ljava/util/Set;
