@@ -1,5 +1,7 @@
 package com.tabithastrong.compactstorage;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.mojang.logging.LogUtils;
 import com.tabithastrong.compactstorage.block.CompactBarrelBlock;
 import com.tabithastrong.compactstorage.block.CompactChestBlock;
@@ -9,35 +11,35 @@ import com.tabithastrong.compactstorage.item.BackpackItem;
 import com.tabithastrong.compactstorage.item.StorageUpgradeItem;
 import com.tabithastrong.compactstorage.screen.CompactChestScreenHandler;
 import net.minecraft.Util;
+import net.minecraft.client.Game;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
-import java.awt.*;
 import java.util.HashMap;
-import java.util.stream.Collectors;
+import java.util.HashSet;
 
 @Mod("compact_storage")
 public class CompactStorage
@@ -54,6 +56,7 @@ public class CompactStorage
     public static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPE_REGISTER = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
     public static final DeferredRegister<MenuType<?>> MENU_TYPE_REGISTER = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MOD_ID);
+    public static final DeferredRegister<PoiType> POI_TYPE_DEFERRED_REGISTER = DeferredRegister.create(ForgeRegistries.POI_TYPES, MOD_ID);
 
     /**
      * Blocks
@@ -148,6 +151,7 @@ public class CompactStorage
     public CompactStorage()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        //FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupFinished);
 
         MinecraftForge.EVENT_BUS.register(this);
 
@@ -162,6 +166,23 @@ public class CompactStorage
     {
 
     }
+
+    //private void setupFinished(final FMLLoadCompleteEvent event) {
+//        PoiType FISHERMAN = ForgeRegistries.POI_TYPES.getDelegate(PoiTypes.FISHERMAN).get().get();
+//        LOGGER.error("Is null? " + (FISHERMAN == null));
+//
+//        HashSet<BlockState> statesForFisherman = new HashSet<BlockState>(FISHERMAN.matchingStates());
+//
+//        for(RegistryObject<Block> block : COMPACT_BARREL_BLOCKS) {
+//            block.get().getStateDefinition().getPossibleStates().forEach((state) -> {
+//                statesForFisherman.add(state);
+//                GameData.getBlockStatePointOfInterestTypeMap().put(state, FISHERMAN);
+//            });
+//        }
+//
+//        PoiType newFisherman = new PoiType(ImmutableSet.copyOf(statesForFisherman), 1,1);
+//        ForgeRegistries.POI_TYPES.register(PoiTypes.FISHERMAN.registry(), newFisherman);
+//    }
 
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
