@@ -146,7 +146,6 @@ public class BackpackInventory implements Inventory, CompactStorageInventoryImpl
     public void onClose(PlayerEntity player) {
         Inventory.super.onClose(player);
 
-        System.out.println(hand == Hand.MAIN_HAND ? "Main" : "offhand");
         if(!player.getStackInHand(hand).hasNbt()) {
             player.getStackInHand(hand).setNbt(new NbtCompound());
         }
