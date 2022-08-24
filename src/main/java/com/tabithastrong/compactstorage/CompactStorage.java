@@ -27,6 +27,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.World;
 
 import com.tabithastrong.compactstorage.block.CompactChestBlock;
@@ -39,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class CompactStorage implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("compact_storage");
@@ -100,6 +102,7 @@ public class CompactStorage implements ModInitializer {
 			COMPACT_BARREL_IDENTIFIERS[i] = new Identifier(MOD_ID, "compact_barrel_" + dyeName);
 			DYE_COLOR_TO_COMPACT_BARREL_MAP.put(DyeColor.byId(i), COMPACT_BARREL_BLOCKS[i]);
 		}
+
 	}
 
 	@Override
