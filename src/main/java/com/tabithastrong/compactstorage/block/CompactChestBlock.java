@@ -155,7 +155,7 @@ public class CompactChestBlock extends BlockWithEntity {
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if(newState.getBlock() instanceof CompactChestBlock && newState.get(FACING) == state.get(FACING)) {
+        if(newState.getBlock() instanceof CompactChestBlock) {
             return;
         }
 
