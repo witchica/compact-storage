@@ -146,7 +146,7 @@ public class CompactBarrelBlock extends BlockWithEntity {
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if(newState.getBlock() instanceof CompactBarrelBlock && newState.get(FACING) == state.get(FACING)) {
+        if(newState.getBlock() instanceof CompactBarrelBlock) {
             return;
         }
 
