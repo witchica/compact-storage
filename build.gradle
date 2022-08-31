@@ -16,7 +16,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 
 
-version = '5.0_lts_1.19.2'
+version = '5.0_lts_1.19.2b2'
 group = 'com.tabithastrong.compactstorage' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'compact_storage_forge'
 

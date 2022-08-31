@@ -152,7 +152,7 @@ public class CompactBarrelBlock extends BaseEntityBlock {
 
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
-        if(newState.getBlock() instanceof CompactBarrelBlock && newState.getValue(FACING) == state.getValue(FACING)) {
+        if(newState.getBlock() instanceof CompactBarrelBlock) {
             return;
         }
 
