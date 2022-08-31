@@ -16,9 +16,9 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 
 
-version = '5.0.1-1.18.2'
+version = '5.0-lts-1.18.2b2'
 group = 'com.tabithastrong.compactstorage' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'compact_storage'
+archivesBaseName = 'compact_storage_forge'
 
 // Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
