@@ -2,7 +2,7 @@ package com.tabithastrong.compactstorage.client.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import com.tabithastrong.compactstorage.CompactStorage;
 import com.tabithastrong.compactstorage.block.CompactChestBlock;
 import com.tabithastrong.compactstorage.block.entity.CompactChestBlockEntity;
@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.joml.Vector3fc;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -35,7 +37,7 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
 
     static {
         for(int i = 0; i < 16; i++) {
-            CHEST_TEXTURES.put(CompactStorage.COMPACT_CHEST_BLOCKS[i].get(), new ResourceLocation("compact_storage", String.format("textures/entities/compact_chest_%s.png", DyeColor.byId(i).name().toLowerCase())));
+            CHEST_TEXTURES.put(CompactStorage.COMPACT_CHEST_BLOCKS[i].get(), new ResourceLocation("compact_storage", String.format("textures/block/compact_chest_%s.png", DyeColor.byId(i).name().toLowerCase())));
         }
     }
     
@@ -62,7 +64,7 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
         float y_rotation = ((Direction) blockState.getValue(CompactChestBlock.FACING)).toYRot();
 
         matrixStack.translate(0.5D, 0.5D, 0.5D);
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-y_rotation));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(-y_rotation));
         matrixStack.translate(-0.5D, -0.5D, -0.5D);
 
         float lid_openness = compactChestBlockEntity.getOpenNess(delta);

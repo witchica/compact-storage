@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "compact_storage:items/chest_upgrade_column"
+        "layer0": "compact_storage:item/chest_upgrade_column"
     }
 }

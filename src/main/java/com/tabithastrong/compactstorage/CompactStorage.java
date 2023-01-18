@@ -13,6 +13,7 @@ import com.tabithastrong.compactstorage.screen.CompactChestScreenHandler;
 import net.minecraft.Util;
 import net.minecraft.client.Game;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -56,8 +58,6 @@ public class CompactStorage
     public static final DeferredRegister<Item> ITEM_REGISTER = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPE_REGISTER = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
     public static final DeferredRegister<MenuType<?>> MENU_TYPE_REGISTER = DeferredRegister.create(ForgeRegistries.MENU_TYPES, MOD_ID);
-    public static final DeferredRegister<PoiType> POI_TYPE_DEFERRED_REGISTER = DeferredRegister.create(ForgeRegistries.POI_TYPES, MOD_ID);
-
     /**
      * Blocks
      */
@@ -98,17 +98,11 @@ public class CompactStorage
 
     public static final HashMap<DyeColor, RegistryObject<Block>> DYE_COLOR_TO_COMPACT_BARREL_MAP = new HashMap<DyeColor, RegistryObject<Block>>();
 
-    public static final CreativeModeTab COMPACT_STORAGE_ITEM_GROUP = new CreativeModeTab("compact_storage.general") {
-        @Override
-        public ItemStack makeIcon() {
-            return new ItemStack(COMPACT_CHEST_BLOCKS[1].get(), 1);
-        }
-    };
     /**
      * Items
      */
-    public static final RegistryObject<Item> UPGRADE_ROW_ITEM = ITEM_REGISTER.register("upgrade_row", () -> new StorageUpgradeItem(new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP)));
-    public static final RegistryObject<Item> UPGRADE_COLUMN_ITEM = ITEM_REGISTER.register("upgrade_column", () -> new StorageUpgradeItem(new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP)));
+    public static final RegistryObject<Item> UPGRADE_ROW_ITEM = ITEM_REGISTER.register("upgrade_row", () -> new StorageUpgradeItem(new Item.Properties()));
+    public static final RegistryObject<Item> UPGRADE_COLUMN_ITEM = ITEM_REGISTER.register("upgrade_column", () -> new StorageUpgradeItem(new Item.Properties()));
 
     public static ResourceLocation BACKPACK_GENERIC_IDENTIFIER = new ResourceLocation(MOD_ID, "backpack");
     public static final RegistryObject<Item>[] BACKPACK_ITEMS = new RegistryObject[16];
@@ -125,7 +119,7 @@ public class CompactStorage
             );
 
             ITEM_REGISTER.register("compact_chest_" + dyeName, () ->
-                new BlockItem(COMPACT_CHEST_BLOCKS[id].get(), new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP))
+                new BlockItem(COMPACT_CHEST_BLOCKS[id].get(), new Item.Properties())
             );
 
             DYE_COLOR_TO_COMPACT_CHEST_MAP.put(color, COMPACT_CHEST_BLOCKS[i]);
@@ -133,7 +127,7 @@ public class CompactStorage
 
 
             BACKPACK_ITEMS[i] = ITEM_REGISTER.register("backpack_" + dyeName, () ->
-                    new BackpackItem(new Item.Properties().stacksTo(1).tab(COMPACT_STORAGE_ITEM_GROUP)));
+                    new BackpackItem(new Item.Properties().stacksTo(1)));
             DYE_COLOR_TO_BACKPACK_MAP.put(color, BACKPACK_ITEMS[i]);
 
 
@@ -143,7 +137,7 @@ public class CompactStorage
             DYE_COLOR_TO_COMPACT_BARREL_MAP.put(color, COMPACT_BARREL_BLOCKS[i]);
 
             ITEM_REGISTER.register("compact_barrel_" + dyeName, () ->
-                    new BlockItem(COMPACT_BARREL_BLOCKS[id].get(), new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP))
+                    new BlockItem(COMPACT_BARREL_BLOCKS[id].get(), new Item.Properties())
             );
         }
     }
@@ -151,7 +145,7 @@ public class CompactStorage
     public CompactStorage()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        //FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupFinished);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::buildContents);
 
         MinecraftForge.EVENT_BUS.register(this);
 
@@ -167,22 +161,23 @@ public class CompactStorage
 
     }
 
-    //private void setupFinished(final FMLLoadCompleteEvent event) {
-//        PoiType FISHERMAN = ForgeRegistries.POI_TYPES.getDelegate(PoiTypes.FISHERMAN).get().get();
-//        LOGGER.error("Is null? " + (FISHERMAN == null));
-//
-//        HashSet<BlockState> statesForFisherman = new HashSet<BlockState>(FISHERMAN.matchingStates());
-//
-//        for(RegistryObject<Block> block : COMPACT_BARREL_BLOCKS) {
-//            block.get().getStateDefinition().getPossibleStates().forEach((state) -> {
-//                statesForFisherman.add(state);
-//                GameData.getBlockStatePointOfInterestTypeMap().put(state, FISHERMAN);
-//            });
-//        }
-//
-//        PoiType newFisherman = new PoiType(ImmutableSet.copyOf(statesForFisherman), 1,1);
-//        ForgeRegistries.POI_TYPES.register(PoiTypes.FISHERMAN.registry(), newFisherman);
-//    }
+    @SubscribeEvent
+    public void buildContents(CreativeModeTabEvent.Register event) {
+        event.registerCreativeModeTab(new ResourceLocation(MOD_ID, "general"), builder -> {
+            builder.title(Component.translatable("itemGroup.compact_storage.general"))
+                .icon(() -> new ItemStack(COMPACT_CHEST_BLOCKS[0].get(), 1))
+                .displayItems((enabledFlags, populator, hasPermissions) -> {
+                    for(int i = 0; i < 16; i++) {
+                        populator.accept(COMPACT_CHEST_BLOCKS[i].get());
+                        populator.accept(COMPACT_BARREL_BLOCKS[i].get());
+                        populator.accept(BACKPACK_ITEMS[i].get());
+                    }
+
+                    populator.accept(UPGRADE_COLUMN_ITEM.get());
+                    populator.accept(UPGRADE_ROW_ITEM.get());
+                });
+        });
+    }
 
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
