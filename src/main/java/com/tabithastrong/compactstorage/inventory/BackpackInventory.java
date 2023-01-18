@@ -9,20 +9,24 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.checkerframework.checker.units.qual.C;
 
 public class BackpackInventory implements Container, CompactStorageInventoryImpl  {
     public NonNullList<ItemStack> items;
     public int inventoryWidth;
     public int inventoryHeight;
 
-    private final InteractionHand hand;
+    private final boolean isInOffhand;
+    private final int backpackSlot;
     private final Player player;
 
-    public BackpackInventory(CompoundTag itemsNbt, InteractionHand hand, Player player) {
-        this.hand = hand;
+    public BackpackInventory(CompoundTag itemsNbt, Player player, boolean isInOffhand) {
         this.player = player;
+        this.isInOffhand = isInOffhand;
+        this.backpackSlot = player.getInventory().selected;
 
         this.fromTag(itemsNbt);
     }
@@ -138,12 +142,22 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
     @Override
     public void stopOpen(Player player) {
         Container.super.stopOpen(player);
+        Inventory inventory = player.getInventory();
 
-        if(!player.getItemInHand(hand).hasTag()) {
-            player.getItemInHand(hand).setTag(new CompoundTag());
+        if(isInOffhand) {
+            if(!player.getItemInHand(InteractionHand.OFF_HAND).hasTag()) {
+                player.getItemInHand(InteractionHand.OFF_HAND).setTag(new CompoundTag());
+            }
+
+            player.getItemInHand(InteractionHand.OFF_HAND).getTag().put("Backpack", toTag());
+        } else {
+            if(!inventory.getItem(backpackSlot).hasTag()) {
+                inventory.getItem(backpackSlot).setTag(new CompoundTag());
+            }
+
+            inventory.getItem(backpackSlot).getTag().put("Backpack", toTag());
         }
 
-        player.getItemInHand(hand).getTag().put("Backpack", toTag());
         player.playNotifySound(SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 1f, 1f);
     }
 }

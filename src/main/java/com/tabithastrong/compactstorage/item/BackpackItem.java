@@ -3,6 +3,7 @@ package com.tabithastrong.compactstorage.item;
 import com.tabithastrong.compactstorage.CompactStorage;
 import com.tabithastrong.compactstorage.inventory.BackpackInventory;
 import com.tabithastrong.compactstorage.inventory.BackpackInventoryHandlerFactory;
+import com.tabithastrong.compactstorage.screen.CompactChestScreenHandler;
 import com.tabithastrong.compactstorage.util.CompactStorageUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
@@ -32,18 +33,24 @@ public class BackpackItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         if (!world.isClientSide) {
+            boolean isInOffhand = hand == InteractionHand.OFF_HAND;
+
             InteractionHand oppositeHand = hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
             ItemStack oppositeHandStack = player.getItemInHand(oppositeHand);
             ItemStack heldItem = player.getItemInHand(hand);
 
             if(!heldItem.hasTag()) {
-                CompactStorage.LOGGER.warn("no nbt");
                 heldItem.setTag(new CompoundTag());
             }
 
             if(!oppositeHandStack.isEmpty()) {
                 Item oppositeHandItem = oppositeHandStack.getItem();
-                BackpackInventory inventory = new BackpackInventory(heldItem.getTag().getCompound("Backpack"), hand, player);
+
+                if(hand == InteractionHand.MAIN_HAND && oppositeHandItem instanceof BackpackItem) {
+                    return super.use(world, player, hand);
+                }
+
+                BackpackInventory inventory = new BackpackInventory(heldItem.getTag().getCompound("Backpack"), player, isInOffhand);
 
                 if(oppositeHandItem == CompactStorage.UPGRADE_ROW_ITEM.get()) {
                     if(inventory.increaseSize(1, 0)) {
@@ -72,17 +79,27 @@ public class BackpackItem extends Item {
                         return InteractionResultHolder.fail(heldItem);
                     }
                 } else if(oppositeHandItem instanceof DyeItem dyeItem) {
-                    ItemStack newStack = new ItemStack(CompactStorage.DYE_COLOR_TO_BACKPACK_MAP.get(dyeItem.getDyeColor()).get(), 1);
-                    newStack.setTag(heldItem.getTag());
+                    Item newBackpackItem = CompactStorage.DYE_COLOR_TO_BACKPACK_MAP.get(dyeItem.getDyeColor()).get();
 
-                    player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
-                    player.getItemInHand(oppositeHand).shrink(1);
-                    return InteractionResultHolder.pass(newStack);
+                    if(newBackpackItem != heldItem.getItem()) {
+                        ItemStack newStack = new ItemStack(newBackpackItem, 1);
+                        newStack.setTag(heldItem.getTag());
+
+                        player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
+                        player.getItemInHand(oppositeHand).shrink(1);
+                        return InteractionResultHolder.pass(newStack);
+                    }
                 }
             }
 
-            BackpackInventoryHandlerFactory backpackInventoryHandlerFactory = new BackpackInventoryHandlerFactory(player, hand);
-            NetworkHooks.openScreen((ServerPlayer) player, backpackInventoryHandlerFactory, backpackInventoryHandlerFactory::writeScreenOpeningData);
+            if(player.containerMenu instanceof CompactChestScreenHandler) {
+                player.closeContainer();
+                return super.use(world, player, hand);
+            } else {
+                BackpackInventoryHandlerFactory backpackInventoryHandlerFactory = new BackpackInventoryHandlerFactory(player, hand);
+                NetworkHooks.openScreen((ServerPlayer) player, backpackInventoryHandlerFactory, backpackInventoryHandlerFactory::writeScreenOpeningData);
+            }
+
         }
         return super.use(world, player, hand);
     }
