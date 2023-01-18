@@ -28,6 +28,7 @@ public class CompactChestScreenHandler extends AbstractContainerMenu {
     public int inventoryHeight;
 
     private ItemStack backpack;
+    private boolean isBackpackInOffhand;
 
     public CompactChestScreenHandler(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
         super(CompactStorage.COMPACT_CHEST_SCREEN_HANDLER.get(), syncId);
@@ -50,6 +51,7 @@ public class CompactChestScreenHandler extends AbstractContainerMenu {
             this.inventoryWidth = backpackInventory.inventoryWidth;
             this.inventoryHeight = backpackInventory.inventoryHeight;
             this.backpack = playerInventory.player.getItemInHand(hand);
+            this.isBackpackInOffhand = hand == InteractionHand.OFF_HAND;
             this.blockEntity = null;
         }
 
@@ -95,7 +97,7 @@ public class CompactChestScreenHandler extends AbstractContainerMenu {
 
 
         for (j = 0; j < 9; j++) {
-            if(this.blockEntity == null && j==playerInventory.selected) {
+            if(this.blockEntity == null && j==playerInventory.selected && !isBackpackInOffhand) {
                 this.addSlot(new Slot(playerInventory, j, 8 + ((inventoryWidth * 18) / 2) - (9 * 9) + j * 18, 18 + chestInvHeight + 60 + 18) {
                     @Override
                     public boolean mayPickup(Player playerEntity) {
