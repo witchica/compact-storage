@@ -1,5 +1,6 @@
 package com.tabithastrong.compactstorage.inventory;
 
+import com.tabithastrong.compactstorage.CompactStorage;
 import com.tabithastrong.compactstorage.util.CompactStorageInventoryImpl;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -24,12 +25,14 @@ public class BackpackInventory implements Inventory, CompactStorageInventoryImpl
     public int inventoryWidth;
     public int inventoryHeight;
 
-    private final Hand hand;
     private final PlayerEntity player;
+    private final int backpackSlot;
+    private final boolean isInOffhand;
 
-    public BackpackInventory(NbtCompound itemsNbt, Hand hand, PlayerEntity player) {
-        this.hand = hand;
+    public BackpackInventory(NbtCompound itemsNbt, PlayerEntity player, boolean isInOffhand) {
+        this.backpackSlot = player.getInventory().selectedSlot;
         this.player = player;
+        this.isInOffhand = isInOffhand;
 
         this.fromTag(itemsNbt);
     }
@@ -145,12 +148,23 @@ public class BackpackInventory implements Inventory, CompactStorageInventoryImpl
     @Override
     public void onClose(PlayerEntity player) {
         Inventory.super.onClose(player);
+        PlayerInventory inventory = player.getInventory();
 
-        if(!player.getStackInHand(hand).hasNbt()) {
-            player.getStackInHand(hand).setNbt(new NbtCompound());
+        if(isInOffhand) {
+            if(!player.getStackInHand(Hand.OFF_HAND).hasNbt()) {
+                player.getStackInHand(Hand.OFF_HAND).setNbt(new NbtCompound());
+            }
+
+            player.getStackInHand(Hand.OFF_HAND).getNbt().put("Backpack", toTag());
+            CompactStorage.LOGGER.warn("CLOSED BACKPACK AND SAVED TO OFFHAND");
+        } else {
+            if(!inventory.getStack(backpackSlot).hasNbt()) {
+                inventory.getStack(backpackSlot).setNbt(new NbtCompound());
+            }
+
+            inventory.getStack(backpackSlot).getNbt().put("Backpack", toTag());
+            CompactStorage.LOGGER.warn("CLOSED BACKPACK AND SAVED TO SLOT " + backpackSlot);
         }
-
-        player.getStackInHand(hand).getNbt().put("Backpack", toTag());
         player.playSound(SoundEvents.BLOCK_WOOL_BREAK, SoundCategory.PLAYERS, 1f, 1f);
     }
 }
