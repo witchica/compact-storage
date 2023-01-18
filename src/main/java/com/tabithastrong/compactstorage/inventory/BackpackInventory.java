@@ -156,14 +156,12 @@ public class BackpackInventory implements Inventory, CompactStorageInventoryImpl
             }
 
             player.getStackInHand(Hand.OFF_HAND).getNbt().put("Backpack", toTag());
-            CompactStorage.LOGGER.warn("CLOSED BACKPACK AND SAVED TO OFFHAND");
         } else {
             if(!inventory.getStack(backpackSlot).hasNbt()) {
                 inventory.getStack(backpackSlot).setNbt(new NbtCompound());
             }
 
             inventory.getStack(backpackSlot).getNbt().put("Backpack", toTag());
-            CompactStorage.LOGGER.warn("CLOSED BACKPACK AND SAVED TO SLOT " + backpackSlot);
         }
         player.playSound(SoundEvents.BLOCK_WOOL_BREAK, SoundCategory.PLAYERS, 1f, 1f);
     }
