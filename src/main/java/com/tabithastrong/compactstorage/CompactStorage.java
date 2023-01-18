@@ -12,13 +12,8 @@ import com.tabithastrong.compactstorage.item.StorageUpgradeItem;
 import com.tabithastrong.compactstorage.screen.CompactChestScreenHandler;
 import net.minecraft.Util;
 import net.minecraft.client.Game;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.data.tags.PoiTypeTagsProvider;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.datafix.fixes.PoiTypeRemoveFix;
-import net.minecraft.world.entity.ai.village.poi.PoiManager;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.player.Inventory;
@@ -43,8 +38,8 @@ import net.minecraftforge.registries.GameData;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.HashMap;
+import java.util.HashSet;
 
 @Mod("compact_storage")
 public class CompactStorage
@@ -112,20 +107,8 @@ public class CompactStorage
     /**
      * Items
      */
-    public static final RegistryObject<Item> COPPER_UPGRADE_ROW_ITEM = ITEM_REGISTER.register("copper_upgrade_row", () -> new StorageUpgradeItem(new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP), StorageUpgradeItem.StorageUpgradeLevel.COPPER, StorageUpgradeItem.StorageUpgradeDirection.ROW));
-    public static final RegistryObject<Item> COPPER_UPGRADE_COLUMN_ITEM = ITEM_REGISTER.register("copper_upgrade_column", () -> new StorageUpgradeItem(new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP), StorageUpgradeItem.StorageUpgradeLevel.COPPER, StorageUpgradeItem.StorageUpgradeDirection.COLUMN));
-
-    public static final RegistryObject<Item> IRON_UPGRADE_ROW_ITEM = ITEM_REGISTER.register("iron_upgrade_row", () -> new StorageUpgradeItem(new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP), StorageUpgradeItem.StorageUpgradeLevel.IRON, StorageUpgradeItem.StorageUpgradeDirection.ROW));
-    public static final RegistryObject<Item> IRON_UPGRADE_COLUMN_ITEM = ITEM_REGISTER.register("iron_upgrade_column", () -> new StorageUpgradeItem(new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP), StorageUpgradeItem.StorageUpgradeLevel.IRON, StorageUpgradeItem.StorageUpgradeDirection.COLUMN));
-
-    public static final RegistryObject<Item> GOLD_UPGRADE_ROW_ITEM = ITEM_REGISTER.register("gold_upgrade_row", () -> new StorageUpgradeItem(new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP), StorageUpgradeItem.StorageUpgradeLevel.GOLD, StorageUpgradeItem.StorageUpgradeDirection.ROW));
-    public static final RegistryObject<Item> GOLD_UPGRADE_COLUMN_ITEM = ITEM_REGISTER.register("gold_upgrade_column", () -> new StorageUpgradeItem(new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP), StorageUpgradeItem.StorageUpgradeLevel.GOLD, StorageUpgradeItem.StorageUpgradeDirection.COLUMN));
-
-    public static final RegistryObject<Item> DIAMOND_UPGRADE_ROW_ITEM = ITEM_REGISTER.register("diamond_upgrade_row", () -> new StorageUpgradeItem(new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP), StorageUpgradeItem.StorageUpgradeLevel.DIAMOND, StorageUpgradeItem.StorageUpgradeDirection.ROW));
-    public static final RegistryObject<Item> DIAMOND_UPGRADE_COLUMN_ITEM = ITEM_REGISTER.register("diamond_upgrade_column", () -> new StorageUpgradeItem(new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP), StorageUpgradeItem.StorageUpgradeLevel.DIAMOND, StorageUpgradeItem.StorageUpgradeDirection.COLUMN));
-
-    public static final RegistryObject<Item> EMERALD_UPGRADE_ROW_ITEM = ITEM_REGISTER.register("emerald_upgrade_row", () -> new StorageUpgradeItem(new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP), StorageUpgradeItem.StorageUpgradeLevel.EMERALD, StorageUpgradeItem.StorageUpgradeDirection.ROW));
-    public static final RegistryObject<Item> EMERALD_UPGRADE_COLUMN_ITEM = ITEM_REGISTER.register("emerald_upgrade_column", () -> new StorageUpgradeItem(new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP), StorageUpgradeItem.StorageUpgradeLevel.EMERALD, StorageUpgradeItem.StorageUpgradeDirection.COLUMN));
+    public static final RegistryObject<Item> UPGRADE_ROW_ITEM = ITEM_REGISTER.register("upgrade_row", () -> new StorageUpgradeItem(new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP)));
+    public static final RegistryObject<Item> UPGRADE_COLUMN_ITEM = ITEM_REGISTER.register("upgrade_column", () -> new StorageUpgradeItem(new Item.Properties().tab(COMPACT_STORAGE_ITEM_GROUP)));
 
     public static ResourceLocation BACKPACK_GENERIC_IDENTIFIER = new ResourceLocation(MOD_ID, "backpack");
     public static final RegistryObject<Item>[] BACKPACK_ITEMS = new RegistryObject[16];
@@ -168,6 +151,7 @@ public class CompactStorage
     public CompactStorage()
     {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        //FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupFinished);
 
         MinecraftForge.EVENT_BUS.register(this);
 
@@ -182,6 +166,23 @@ public class CompactStorage
     {
 
     }
+
+    //private void setupFinished(final FMLLoadCompleteEvent event) {
+//        PoiType FISHERMAN = ForgeRegistries.POI_TYPES.getDelegate(PoiTypes.FISHERMAN).get().get();
+//        LOGGER.error("Is null? " + (FISHERMAN == null));
+//
+//        HashSet<BlockState> statesForFisherman = new HashSet<BlockState>(FISHERMAN.matchingStates());
+//
+//        for(RegistryObject<Block> block : COMPACT_BARREL_BLOCKS) {
+//            block.get().getStateDefinition().getPossibleStates().forEach((state) -> {
+//                statesForFisherman.add(state);
+//                GameData.getBlockStatePointOfInterestTypeMap().put(state, FISHERMAN);
+//            });
+//        }
+//
+//        PoiType newFisherman = new PoiType(ImmutableSet.copyOf(statesForFisherman), 1,1);
+//        ForgeRegistries.POI_TYPES.register(PoiTypes.FISHERMAN.registry(), newFisherman);
+//    }
 
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
