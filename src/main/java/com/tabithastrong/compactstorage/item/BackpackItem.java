@@ -33,6 +33,9 @@ public class BackpackItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
         if (!world.isClientSide) {
+
+            boolean isInOffhand = hand == InteractionHand.OFF_HAND;
+
             InteractionHand oppositeHand = hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
             ItemStack oppositeHandStack = player.getItemInHand(oppositeHand);
             ItemStack heldItem = player.getItemInHand(hand);
@@ -44,7 +47,12 @@ public class BackpackItem extends Item {
 
             if(!oppositeHandStack.isEmpty()) {
                 Item oppositeHandItem = oppositeHandStack.getItem();
-                BackpackInventory inventory = new BackpackInventory(heldItem.getTag().getCompound("Backpack"), hand, player);
+
+                if(hand == InteractionHand.MAIN_HAND && oppositeHandItem instanceof BackpackItem) {
+                    return super.use(world, player, hand);
+                }
+
+                BackpackInventory inventory = new BackpackInventory(heldItem.getTag().getCompound("Backpack"), player, isInOffhand);
 
                 if(oppositeHandItem == CompactStorage.UPGRADE_ROW_ITEM.get()) {
                     if(inventory.increaseSize(1, 0)) {
@@ -76,7 +84,7 @@ public class BackpackItem extends Item {
                     Item newBackpackItem = CompactStorage.DYE_COLOR_TO_BACKPACK_MAP.get(dyeItem.getDyeColor()).get();
 
                     if(newBackpackItem != heldItem.getItem()) {
-                        ItemStack newStack = new ItemStack(, 1);
+                        ItemStack newStack = new ItemStack(newBackpackItem, 1);
                         newStack.setTag(heldItem.getTag());
 
                         player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);

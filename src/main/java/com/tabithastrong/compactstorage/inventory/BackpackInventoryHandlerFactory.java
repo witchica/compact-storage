@@ -36,12 +36,13 @@ public class BackpackInventoryHandlerFactory implements MenuProvider {
 
     public static BackpackInventory getBackpackInventory(Player player, InteractionHand hand) {
         ItemStack backpackStack = player.getItemInHand(hand);
+        boolean isInOffHand = hand == InteractionHand.OFF_HAND;
 
         if(backpackStack.hasTag() && backpackStack.getTag().contains("Backpack")) {
             CompoundTag backpackTag = backpackStack.getTag().getCompound("Backpack");
-            return new BackpackInventory(backpackTag, hand, player);
+            return new BackpackInventory(backpackTag, player, isInOffHand);
         } else {
-            return new BackpackInventory(new CompoundTag(), hand, player);
+            return new BackpackInventory(new CompoundTag(), player, isInOffHand);
         }
     }
 
