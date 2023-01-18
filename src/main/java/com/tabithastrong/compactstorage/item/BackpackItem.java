@@ -73,12 +73,16 @@ public class BackpackItem extends Item {
                         return InteractionResultHolder.fail(heldItem);
                     }
                 } else if(oppositeHandItem instanceof DyeItem dyeItem) {
-                    ItemStack newStack = new ItemStack(CompactStorage.DYE_COLOR_TO_BACKPACK_MAP.get(dyeItem.getDyeColor()).get(), 1);
-                    newStack.setTag(heldItem.getTag());
+                    Item newBackpackItem = CompactStorage.DYE_COLOR_TO_BACKPACK_MAP.get(dyeItem.getDyeColor()).get();
 
-                    player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
-                    player.getItemInHand(oppositeHand).shrink(1);
-                    return InteractionResultHolder.pass(newStack);
+                    if(newBackpackItem != heldItem.getItem()) {
+                        ItemStack newStack = new ItemStack(, 1);
+                        newStack.setTag(heldItem.getTag());
+
+                        player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
+                        player.getItemInHand(oppositeHand).shrink(1);
+                        return InteractionResultHolder.pass(newStack);
+                    }
                 }
             }
 
