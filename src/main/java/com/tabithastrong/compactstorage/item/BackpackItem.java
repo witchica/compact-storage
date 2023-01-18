@@ -42,7 +42,8 @@ public class BackpackItem extends Item {
             boolean isInOffhand = hand == Hand.OFF_HAND;
 
             ItemStack heldItemStack = player.getStackInHand(hand);
-            ItemStack oppositeItemStack = player.getStackInHand(hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
+            Hand oppositeHand = (hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND);
+            ItemStack oppositeItemStack = player.getStackInHand(oppositeHand);
 
             if(!heldItemStack.hasNbt()) {
                 heldItemStack.setNbt(new NbtCompound());
@@ -58,7 +59,7 @@ public class BackpackItem extends Item {
 
                 if(oppositeItem == CompactStorage.UPGRADE_ROW_ITEM) {
                     if(inventory.increaseSize(1, 0)) {
-                        player.getStackInHand(Hand.OFF_HAND).decrement(1);
+                        player.getStackInHand(oppositeHand).decrement(1);
                         heldItemStack.getNbt().put("Backpack", inventory.toTag());
 
                         player.sendMessage(Text.translatable("text.compact_storage.upgrade_success").formatted(Formatting.GREEN), true);
@@ -71,7 +72,7 @@ public class BackpackItem extends Item {
                     }
                 } else if(oppositeItem == CompactStorage.UPGRADE_COLUMN_ITEM) {
                     if(inventory.increaseSize(0, 1)) {
-                        player.getStackInHand(Hand.OFF_HAND).decrement(1);
+                        player.getStackInHand(oppositeHand).decrement(1);
                         heldItemStack.getNbt().put("Backpack", inventory.toTag());
 
                         player.sendMessage(Text.translatable("text.compact_storage.upgrade_success").formatted(Formatting.GREEN), true);
@@ -83,12 +84,16 @@ public class BackpackItem extends Item {
                         return TypedActionResult.fail(heldItemStack);
                     }
                 } else if(oppositeItem instanceof DyeItem dyeItem) {
-                    ItemStack newStack = new ItemStack(CompactStorage.DYE_COLOR_TO_BACKPACK_MAP.get(dyeItem.getColor()), 1);
-                    newStack.setNbt(heldItemStack.getNbt());
+                    Item newBackpackItem = CompactStorage.DYE_COLOR_TO_BACKPACK_MAP.get(dyeItem.getColor());
 
-                    player.playSound(SoundEvents.BLOCK_SLIME_BLOCK_PLACE, SoundCategory.BLOCKS, 1f, 1f);
-                    player.getStackInHand(Hand.OFF_HAND).decrement(1);
-                    return TypedActionResult.pass(newStack);
+                    if(newBackpackItem != heldItemStack.getItem()) {
+                        ItemStack newStack = new ItemStack(CompactStorage.DYE_COLOR_TO_BACKPACK_MAP.get(dyeItem.getColor()), 1);
+                        newStack.setNbt(heldItemStack.getNbt());
+
+                        player.playSound(SoundEvents.BLOCK_SLIME_BLOCK_PLACE, SoundCategory.BLOCKS, 1f, 1f);
+                        player.getStackInHand(oppositeHand).decrement(1);
+                        return TypedActionResult.pass(newStack);
+                    }
                 }
             }
 
