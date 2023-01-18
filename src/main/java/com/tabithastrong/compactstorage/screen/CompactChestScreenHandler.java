@@ -29,6 +29,7 @@ public class CompactChestScreenHandler extends ScreenHandler {
     public int inventoryHeight;
 
     private ItemStack backpack;
+    private boolean isBackpackInOffhand;
 
     public CompactChestScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
         super(CompactStorage.COMPACT_CHEST_SCREEN_HANDLER, syncId);
@@ -52,6 +53,7 @@ public class CompactChestScreenHandler extends ScreenHandler {
             this.inventoryHeight = backpackInventory.inventoryHeight;
             this.backpack = playerInventory.player.getStackInHand(hand);
             this.blockEntity = null;
+            this.isBackpackInOffhand = hand == Hand.OFF_HAND;
         }
 
         checkSize(inventory, inventoryWidth * inventoryHeight);
@@ -96,7 +98,7 @@ public class CompactChestScreenHandler extends ScreenHandler {
 
 
         for (j = 0; j < 9; j++) {
-            if(this.blockEntity == null && j==playerInventory.selectedSlot) {
+            if(this.blockEntity == null && j==playerInventory.selectedSlot && !isBackpackInOffhand) {
                 this.addSlot(new Slot(playerInventory, j, 8 + ((inventoryWidth * 18) / 2) - (9 * 9) + j * 18, 18 + chestInvHeight + 60 + 18) {
                     @Override
                     public boolean canTakeItems(PlayerEntity playerEntity) {
