@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "compact_storage:items/backpack_light_blue"
+        "layer0": "compact_storage:item/backpack_light_blue"
     }
 }

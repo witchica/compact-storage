@@ -42,7 +42,7 @@ public class CompactChestScreen extends HandledScreen<CompactChestScreenHandler>
         this.renderBackground(matrixStack);
         //RenderSystem.disableLighting();
 
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.setShaderTexture(0, CHEST_BACKGROUND_TEXTURE);
 

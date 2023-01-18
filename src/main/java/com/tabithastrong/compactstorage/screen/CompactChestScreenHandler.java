@@ -117,7 +117,7 @@ public class CompactChestScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public ItemStack transferSlot(final PlayerEntity player, final int invSlot) {
+    public ItemStack quickMove(final PlayerEntity player, final int invSlot) {
         ItemStack newStack = ItemStack.EMPTY;
         final Slot slot = this.slots.get(invSlot);
         if (slot != null && slot.hasStack()) {

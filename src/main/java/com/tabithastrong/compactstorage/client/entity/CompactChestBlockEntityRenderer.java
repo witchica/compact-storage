@@ -17,11 +17,11 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.block.entity.ChestBlockEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3d;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -38,7 +38,7 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
 
     static {
         for(int i = 0; i < 16; i++) {
-            CHEST_TEXTURES.put(CompactStorage.COMPACT_CHEST_BLOCKS[i], new Identifier("compact_storage", String.format("textures/entities/compact_chest_%s.png", DyeColor.byId(i).name().toLowerCase())));
+            CHEST_TEXTURES.put(CompactStorage.COMPACT_CHEST_BLOCKS[i], new Identifier("compact_storage", String.format("textures/block/compact_chest_%s.png", DyeColor.byId(i).name().toLowerCase())));
         }
     }
     
@@ -65,7 +65,7 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
         float y_rotation = ((Direction) blockState.get(CompactChestBlock.FACING)).asRotation();
 
         matrixStack.translate(0.5D, 0.5D, 0.5D);
-        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-y_rotation));
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-y_rotation));
         matrixStack.translate(-0.5D, -0.5D, -0.5D);
 
         float lid_openness = compactChestBlockEntity.getAnimationProgress(delta);

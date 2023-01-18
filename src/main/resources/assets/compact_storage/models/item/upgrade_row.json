@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "compact_storage:items/upgrade_row"
+        "layer0": "compact_storage:item/upgrade_row"
     }
 }
