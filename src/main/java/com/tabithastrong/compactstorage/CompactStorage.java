@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -158,5 +159,8 @@ public class CompactStorage implements ModInitializer {
 			content.add(UPGRADE_COLUMN_ITEM);
 			content.add(UPGRADE_ROW_ITEM);
 		});
+
+		ItemStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> blockEntity.inventoryStorage, COMPACT_CHEST_ENTITY_TYPE);
+		ItemStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> blockEntity.inventoryStorage, COMPACT_BARREL_ENTITY_TYPE);
 	}
 }

@@ -9,6 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LidOpenable;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
@@ -40,6 +41,8 @@ import net.minecraft.world.World;
 public class CompactChestBlockEntity extends LootableContainerBlockEntity implements ExtendedScreenHandlerFactory, CompactStorageInventoryImpl, LidOpenable {
     private DefaultedList<ItemStack> inventory;
 
+    public InventoryStorage inventoryStorage;
+
     public int inventoryWidth = 9;
     public int inventoryHeight = 6;
 
@@ -53,6 +56,7 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
     public CompactChestBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CompactStorage.COMPACT_CHEST_ENTITY_TYPE, blockPos, blockState);
         this.inventory = DefaultedList.ofSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
+        this.inventoryStorage = InventoryStorage.of(this, null);
     }
 
     @Override
@@ -125,6 +129,7 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
         }
 
         this.inventory = newInventory;
+        this.inventoryStorage = InventoryStorage.of(this, null);
     }
 
     @Override
