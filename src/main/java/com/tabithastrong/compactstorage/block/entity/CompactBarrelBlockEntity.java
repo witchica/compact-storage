@@ -10,6 +10,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,9 +46,12 @@ public class CompactBarrelBlockEntity extends LootableContainerBlockEntity imple
     public int playersUsingOld = 0;
     public boolean isOpen = false;
 
+    public InventoryStorage inventoryStorage;
+
     public CompactBarrelBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CompactStorage.COMPACT_BARREL_ENTITY_TYPE, blockPos, blockState);
         this.inventory = DefaultedList.ofSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
+        inventoryStorage = InventoryStorage.of(this, null);
     }
 
     @Override
@@ -115,6 +119,7 @@ public class CompactBarrelBlockEntity extends LootableContainerBlockEntity imple
         }
 
         this.inventory = newInventory;
+        inventoryStorage = InventoryStorage.of(this, null);
     }
 
     @Override

@@ -9,6 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.entity.ChestLidAnimator;
@@ -53,9 +54,12 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
     public float lidOpenness = 0f;
     public float lastLidOpenness = 0f;
 
+    public InventoryStorage inventoryStorage;
+
     public CompactChestBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CompactStorage.COMPACT_CHEST_ENTITY_TYPE, blockPos, blockState);
         this.inventory = DefaultedList.ofSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
+        inventoryStorage = InventoryStorage.of(this, null);
     }
 
     @Override
@@ -128,6 +132,7 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
         }
 
         this.inventory = newInventory;
+        inventoryStorage = InventoryStorage.of(this, null);
     }
 
     @Override
