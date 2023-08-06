@@ -38,7 +38,7 @@ public class CompactChestScreenHandler extends AbstractContainerMenu {
 
         if(inventoryType == 0) {
             BlockPos pos = buf.readBlockPos();
-            CompactStorageInventoryImpl inv = (CompactStorageInventoryImpl) playerInventory.player.level.getBlockEntity(pos);
+            CompactStorageInventoryImpl inv = (CompactStorageInventoryImpl) playerInventory.player.level().getBlockEntity(pos);
             this.inventory = (Container) inv;
             this.inventoryWidth = inv.getInventoryWidth();
             this.inventoryHeight = inv.getInventoryHeight();
