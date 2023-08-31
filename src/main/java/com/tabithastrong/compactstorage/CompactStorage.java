@@ -5,16 +5,22 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.logging.LogUtils;
 import com.tabithastrong.compactstorage.block.CompactBarrelBlock;
 import com.tabithastrong.compactstorage.block.CompactChestBlock;
+import com.tabithastrong.compactstorage.block.DrumBlock;
 import com.tabithastrong.compactstorage.block.entity.CompactBarrelBlockEntity;
 import com.tabithastrong.compactstorage.block.entity.CompactChestBlockEntity;
+import com.tabithastrong.compactstorage.block.entity.DrumBlockEntity;
 import com.tabithastrong.compactstorage.item.BackpackItem;
 import com.tabithastrong.compactstorage.item.StorageUpgradeItem;
 import com.tabithastrong.compactstorage.screen.CompactChestScreenHandler;
+import com.tabithastrong.compactstorage.util.CompactStorageUtil;
 import net.minecraft.Util;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.player.Inventory;
@@ -69,6 +75,9 @@ public class CompactStorage
 
     public static final RegistryObject<Block>[] COMPACT_CHEST_BLOCKS = new RegistryObject[16];
     public static final RegistryObject<Block>[] COMPACT_BARREL_BLOCKS = new RegistryObject[16];
+
+    public static final RegistryObject<Block>[] DRUM_BLOCKS = new RegistryObject[CompactStorageUtil.WOOD_TYPES.length];
+
     public static Block[] mapRegistryObjectToBlocks(RegistryObject<Block>[] array) {
         Block[] mapped = new Block[array.length];
 
@@ -84,6 +93,9 @@ public class CompactStorage
 
     public static RegistryObject<BlockEntityType<CompactChestBlockEntity> > COMPACT_CHEST_ENTITY_TYPE =
             BLOCK_ENTITY_TYPE_REGISTER.register("compact_chest", () -> BlockEntityType.Builder.of(CompactChestBlockEntity::new, mapRegistryObjectToBlocks(COMPACT_CHEST_BLOCKS)).build(null));
+
+    public static RegistryObject<BlockEntityType<DrumBlockEntity>> DRUM_ENTITY_TYPE =
+            BLOCK_ENTITY_TYPE_REGISTER.register("drum", () -> BlockEntityType.Builder.of(DrumBlockEntity::new, mapRegistryObjectToBlocks(DRUM_BLOCKS)).build(null));
 
     public static final String COMPACT_CHEST_TRANSLATION_KEY = Util.makeDescriptionId("container", COMPACT_CHEST_GENERIC_IDENTIFIER);
 
@@ -121,6 +133,10 @@ public class CompactStorage
                     populator.accept(BACKPACK_ITEMS[i].get());
                 }
 
+                for(int i = 0; i < CompactStorageUtil.WOOD_TYPES.length; i++) {
+                    populator.accept(DRUM_BLOCKS[i].get());
+                }
+
                 populator.accept(UPGRADE_COLUMN_ITEM.get());
                 populator.accept(UPGRADE_ROW_ITEM.get());
             }).build());
@@ -156,6 +172,15 @@ public class CompactStorage
             ITEM_REGISTER.register("compact_barrel_" + dyeName, () ->
                     new BlockItem(COMPACT_BARREL_BLOCKS[id].get(), new Item.Properties())
             );
+        }
+
+        for(int i = 0; i < CompactStorageUtil.WOOD_TYPES.length; i++) {
+            final int id = i;
+
+            DRUM_BLOCKS[id] = BLOCK_REGISTER.register( CompactStorageUtil.WOOD_TYPES[id] + "_drum", () ->
+                new DrumBlock(BlockBehaviour.Properties.copy(Blocks.BARREL).strength(2f, 2f)));
+
+            ITEM_REGISTER.register(CompactStorageUtil.WOOD_TYPES[i] + "_drum", () -> new BlockItem(DRUM_BLOCKS[id].get(), new Item.Properties()));
         }
     }
 

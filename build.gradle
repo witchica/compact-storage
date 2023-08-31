@@ -4,7 +4,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '5.1.+'
 }
 
-version = '5.0.1-1.20.1'
+version = '5.1.0-1.20.1'
 group = 'com.witchica.compactstorage' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'compact_storage_forge'
 
@@ -123,6 +123,10 @@ repositories {
     // flatDir {
     //     dir 'libs'
     // }
+
+    maven {
+        url "https://cursemaven.com"
+    }
 }
 
 dependencies {
@@ -133,7 +137,8 @@ dependencies {
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // implementation fg.deobf("com.tterrag.registrate:Registrate:MC${mc_version}-${registrate_version}") // Adds registrate as a dependency
-
+    implementation fg.deobf("curse.maven:pipez-443900:4713656")
+    implementation fg.deobf("curse.maven:jei-238222:4712868")
     // Examples using mod jars from ./libs
     // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
 

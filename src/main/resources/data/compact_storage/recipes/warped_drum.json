@@ -1,0 +1,47 @@
+{
+
+    "type": "minecraft:crafting_shaped",
+
+    "category": "misc",
+
+    "key": {
+
+      "P": {
+
+        "item": "minecraft:warped_planks"
+
+      },
+
+      "L": {
+
+        "tag": "minecraft:warped_stems"
+
+      },
+
+      "C": {
+
+        "tag": "compact_storage:compact_chest"
+
+      }
+
+    },
+
+    "pattern": [
+
+      "PLP",
+
+      "PCP",
+
+      "PLP"
+
+    ],
+
+    "result": {
+
+      "item": "compact_storage:warped_drum"
+
+    },
+
+    "show_notification": true
+
+  }

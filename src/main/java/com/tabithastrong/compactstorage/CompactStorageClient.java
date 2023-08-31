@@ -1,6 +1,7 @@
 package com.tabithastrong.compactstorage;
 
 import com.tabithastrong.compactstorage.client.entity.CompactChestBlockEntityRenderer;
+import com.tabithastrong.compactstorage.client.entity.DrumBlockEntityRenderer;
 import com.tabithastrong.compactstorage.client.screen.CompactChestScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,5 +22,6 @@ public class CompactStorageClient {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers registerRenderers) {
         registerRenderers.registerBlockEntityRenderer(CompactStorage.COMPACT_CHEST_ENTITY_TYPE.get(), CompactChestBlockEntityRenderer::new);
+        registerRenderers.registerBlockEntityRenderer(CompactStorage.DRUM_ENTITY_TYPE.get(), DrumBlockEntityRenderer::new);
     }
 }

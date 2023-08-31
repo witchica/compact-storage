@@ -61,6 +61,7 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
 
         matrixStack.pushPose();
 
+
         float y_rotation = ((Direction) blockState.getValue(CompactChestBlock.FACING)).toYRot();
 
         matrixStack.translate(0.5D, 0.5D, 0.5D);

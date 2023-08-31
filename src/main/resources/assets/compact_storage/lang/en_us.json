@@ -37,6 +37,17 @@
     "block.compact_storage.compact_barrel_red": "Red Compact Barrel",
     "block.compact_storage.compact_barrel_black": "Black Compact Barrel",
 
+    "block.compact_storage.acacia_drum": "Acacia Item Drum",
+    "block.compact_storage.birch_drum": "Birch Item Drum",
+    "block.compact_storage.cherry_drum": "Cherry Item Drum",
+    "block.compact_storage.crimson_drum": "Crimson Item Drum",
+    "block.compact_storage.jungle_drum": "Jungle Item Drum",
+    "block.compact_storage.mangrove_drum": "Mangrove Item Drum",
+    "block.compact_storage.oak_drum": "Oak Item Drum",
+    "block.compact_storage.spruce_drum": "Spruce Item Drum",
+    "block.compact_storage.dark_oak_drum": "Dark Oak Item Drum",
+    "block.compact_storage.warped_drum": "Warped Item Drum",
+
     "container.compact_storage.compact_chest": "Compact Chest",
     "container.compact_storage.backpack": "Backpack",
 
@@ -71,6 +82,8 @@
     "text.compact_storage.tooltip.size_x": "Inventory Width: ",
     "text.compact_storage.tooltip.size_y": "Inventory Height: ",
     "text.compact_storage.tooltip.slots": "Has %d slots",
+    "text.compact_storage.drum.tooltip_1": "Can store 64 stacks of one item type",
+    "text.compact_storage.drum.tooltip_2": "Right-click to add items, left click to remove",
 
     "itemGroup.compact_storage.general": "Compact Storage"
 }

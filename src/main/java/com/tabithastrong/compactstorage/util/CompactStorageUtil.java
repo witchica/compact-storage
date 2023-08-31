@@ -12,6 +12,19 @@ import net.minecraft.world.level.BlockGetter;
 
 public class CompactStorageUtil {
 
+    public static final String[] WOOD_TYPES = new String[] {
+        "acacia",
+        "birch",
+        "cherry",
+        "crimson",
+        "jungle",
+        "mangrove",
+        "oak",
+        "spruce",
+        "dark_oak",
+        "warped"
+    };
+
     public static void appendTooltip(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag options, boolean isBackpack) {
         int inventoryX = 9;
         int inventoryY = 6;
