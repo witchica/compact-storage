@@ -40,7 +40,7 @@ public class DrumItemStackHandler extends ItemStackHandler {
             }
         }
 
-        return 0;
+        return stacks.size() - 1;
     }
 
     public int getFirstSlotWithStack() {

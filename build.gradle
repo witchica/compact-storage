@@ -4,7 +4,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '5.1.+'
 }
 
-version = '5.1.0-1.20.1'
+version = '5.1.2-1.20.1'
 group = 'com.witchica.compactstorage' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'compact_storage_forge'
 

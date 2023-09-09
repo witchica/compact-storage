@@ -31,7 +31,7 @@ logoFile="compact_storage.png" #optional
 # A text field displayed in the mod UI
 credits="Here since 2014" #optional
 # A text field displayed in the mod UI
-authors="Tabitha Strong" #optional
+authors="witchica" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 Adds upgradable backpacks, chests and barrels. Go from 9 x 6 to 24 x 12!

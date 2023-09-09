@@ -73,7 +73,11 @@ public class DrumBlockEntity extends BlockEntity {
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return getCapability(cap);
+        if(cap == ForgeCapabilities.ITEM_HANDLER) {
+            return inventoryHandlerLazyOptional.cast();
+        }
+
+        return super.getCapability(cap, side);
     }
 
     @Override
