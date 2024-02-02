@@ -41,8 +41,8 @@
     "container.compact_storage.backpack": "Backpack",
 
     "item.compact_storage.backpack": "Backpack",
-    "item.compact_storage.upgrade_row": "Storage Upgrade (+1 Row)",
-    "item.compact_storage.upgrade_column": "Storage Upgrade (+1 Column)",
+    "item.compact_storage.upgrade_column": "Storage Upgrade (+1 Row)",
+    "item.compact_storage.upgrade_row": "Storage Upgrade (+1 Column)",
 
     "item.compact_storage.backpack_white": "White Backpack",
     "item.compact_storage.backpack_orange": "Orange Backpack",

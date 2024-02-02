@@ -1,5 +1,7 @@
 package com.tabithastrong.compactstorage.block;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.tabithastrong.compactstorage.CompactStorage;
 import com.tabithastrong.compactstorage.block.entity.CompactChestBlockEntity;
 
@@ -10,7 +12,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.sound.Sound;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -44,6 +45,9 @@ import java.util.List;
 public class CompactChestBlock extends BlockWithEntity {
     public static final DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.EAST,
             Direction.SOUTH, Direction.WEST);
+
+
+    public static final MapCodec<CompactChestBlock> CODEC = createCodec(CompactChestBlock::new);
     public static final VoxelShape CHEST_SHAPE = Block.createCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
 
     public CompactChestBlock(Settings settings) {
@@ -52,8 +56,13 @@ public class CompactChestBlock extends BlockWithEntity {
     }
 
     @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
+    }
+
+    @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return getStateManager().getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+        return getStateManager().getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
     }
 
     @Override
@@ -245,6 +254,10 @@ public class CompactChestBlock extends BlockWithEntity {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, CompactStorage.COMPACT_CHEST_ENTITY_TYPE, (world1, pos, state1, be) -> CompactChestBlockEntity.tick(world1, pos, state1, be));
+        if(type == CompactStorage.COMPACT_CHEST_ENTITY_TYPE) {
+            return  (world1, pos, state1, be) -> CompactChestBlockEntity.tick(world1, pos, state1, (CompactChestBlockEntity) be);
+        } else {
+            return null;
+        }
     }
 }

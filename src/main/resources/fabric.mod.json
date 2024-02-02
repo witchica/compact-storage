@@ -6,13 +6,12 @@
   "name": "Compact Storage",
   "description": "CompactStorage adds various forms of storage to Minecraft, all of which allow you to store lots of stuff!",
   "authors": [
-    "Tabitha Strong"
+    "Jesica Strong"
   ],
   "contact": {
     "homepage": "https://tabithastrong.com/minecraft/",
     "sources": "https://github.com/tabithastrong/compact_storage"
   },
-  "accessWidener": "compact_storage.accesswidener",
 
   "license": "CC0-1.0",
   "icon": "assets/compact_storage/icon.png",
@@ -32,7 +31,7 @@
   "depends": {
     "fabricloader": ">=0.14.10",
     "fabric": "*",
-    "minecraft": "~1.19",
+    "minecraft": "~1.20",
     "java": ">=17"
   }
 }

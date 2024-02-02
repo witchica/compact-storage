@@ -39,7 +39,7 @@ public class CompactChestScreenHandler extends ScreenHandler {
 
         if(inventoryType == 0) {
             BlockPos pos = buf.readBlockPos();
-            CompactStorageInventoryImpl inv = (CompactStorageInventoryImpl) playerInventory.player.world.getBlockEntity(pos);
+            CompactStorageInventoryImpl inv = (CompactStorageInventoryImpl) playerInventory.player.getWorld().getBlockEntity(pos);
             this.inventory = (Inventory) inv;
             this.inventoryWidth = inv.getInventoryWidth();
             this.inventoryHeight = inv.getInventoryHeight();
@@ -67,8 +67,8 @@ public class CompactChestScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public void close(final PlayerEntity player) {
-        super.close(player);
+    public void onClosed(final PlayerEntity player) {
+        super.onClosed(player);
         inventory.onClose(player);
     }
 

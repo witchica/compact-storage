@@ -18,7 +18,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -26,6 +25,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.text.Text;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -70,8 +70,6 @@ public class CompactStorage implements ModInitializer {
 
 	public static final HashMap<DyeColor, Block> DYE_COLOR_TO_COMPACT_BARREL_MAP = new HashMap<DyeColor, Block>();
 
-	public static final ItemGroup COMPACT_STORAGE_ITEM_GROUP = FabricItemGroup.builder(new Identifier(MOD_ID, "general")).icon(() -> new ItemStack(COMPACT_CHEST_BLOCKS[0], 1)).build();
-
 	/**
 	 * Items
 	 */
@@ -105,6 +103,18 @@ public class CompactStorage implements ModInitializer {
 
 	}
 
+	public static final ItemGroup COMPACT_STORAGE_ITEM_GROUP = FabricItemGroup.builder()
+			.displayName(Text.translatable("itemGroup.compact_storage.general"))
+			.icon(() -> new ItemStack(COMPACT_CHEST_BLOCKS[0], 1))
+			.entries(((displayContext, entries) -> {
+				entries.addAll(Arrays.stream(COMPACT_CHEST_BLOCKS).map((block) -> new ItemStack(block, 1)).toList());
+				entries.addAll(Arrays.stream(COMPACT_BARREL_BLOCKS).map((block) -> new ItemStack(block, 1)).toList());
+				entries.addAll(Arrays.stream(BACKPACK_ITEMS).map((block) -> new ItemStack(block, 1)).toList());
+				entries.add(UPGRADE_COLUMN_ITEM);
+				entries.add(UPGRADE_ROW_ITEM);
+			}))
+			.build();
+
 	@Override
 	public void onInitialize() {
 		LOGGER.info("Welcome to Compact Storage!");
@@ -125,40 +135,7 @@ public class CompactStorage implements ModInitializer {
 
 		Registry.register(Registries.ITEM, UPGRADE_ROW_ITEM_IDENTIFIER, UPGRADE_ROW_ITEM);
 		Registry.register(Registries.ITEM, UPGRADE_COLUMN_ITEM_IDENTIFIER, UPGRADE_COLUMN_ITEM);
-
-		/** POI Fisherman **/
-
-		PointOfInterestType fishermanType = Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.FISHERMAN);
-		List<BlockState> fishermanStates = new ArrayList<BlockState>(fishermanType.blockStates);
-
-		for (Block block : COMPACT_BARREL_BLOCKS) {
-			fishermanStates.addAll(block.getStateManager().getStates());
-		}
-
-		fishermanType.blockStates = ImmutableSet.copyOf(fishermanStates);
-
-		for (Block block : COMPACT_BARREL_BLOCKS) {
-			block.getStateManager().getStates().forEach((state) -> {
-				PointOfInterestTypes.POI_STATES_TO_TYPE.put(state, Registries.POINT_OF_INTEREST_TYPE.getEntry(PointOfInterestTypes.FISHERMAN).get());
-			});
-		}
-
-		ItemGroupEvents.modifyEntriesEvent(COMPACT_STORAGE_ITEM_GROUP).register(content -> {
-			for (Block block : COMPACT_CHEST_BLOCKS) {
-				content.add(new ItemStack(block, 1));
-			}
-
-			for (Block block : COMPACT_BARREL_BLOCKS) {
-				content.add(new ItemStack(block, 1));
-			}
-
-			for (Item item : BACKPACK_ITEMS) {
-				content.add(new ItemStack(item, 1));
-			}
-
-			content.add(UPGRADE_COLUMN_ITEM);
-			content.add(UPGRADE_ROW_ITEM);
-		});
+		Registry.register(Registries.ITEM_GROUP, new Identifier(MOD_ID, "general"), COMPACT_STORAGE_ITEM_GROUP);
 
 		ItemStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> blockEntity.inventoryStorage, COMPACT_CHEST_ENTITY_TYPE);
 		ItemStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> blockEntity.inventoryStorage, COMPACT_BARREL_ENTITY_TYPE);

@@ -1,5 +1,6 @@
 package com.tabithastrong.compactstorage.block;
 
+import com.mojang.serialization.MapCodec;
 import com.tabithastrong.compactstorage.CompactStorage;
 import com.tabithastrong.compactstorage.block.entity.CompactBarrelBlockEntity;
 import com.tabithastrong.compactstorage.block.entity.CompactChestBlockEntity;
@@ -43,9 +44,16 @@ public class CompactBarrelBlock extends BlockWithEntity {
     public static final DirectionProperty FACING = DirectionProperty.of("facing");
     public static final BooleanProperty OPEN = BooleanProperty.of("open");
 
+    public static final MapCodec<CompactBarrelBlock> CODEC = createCodec(CompactBarrelBlock::new);
+
     public CompactBarrelBlock(AbstractBlock.Settings settings) {
         super(settings);
         setDefaultState(getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false));
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
     }
 
     @Override
@@ -199,6 +207,10 @@ public class CompactBarrelBlock extends BlockWithEntity {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, CompactStorage.COMPACT_BARREL_ENTITY_TYPE, (world1, pos, state1, be) -> CompactBarrelBlockEntity.tick(world1, pos, state1, be));
+        if(type == CompactStorage.COMPACT_BARREL_ENTITY_TYPE) {
+            return (world1, pos, state1, be) -> CompactBarrelBlockEntity.tick(world1, pos, state1, (CompactBarrelBlockEntity)  be);
+        } else {
+            return null;
+        }
     }
 }

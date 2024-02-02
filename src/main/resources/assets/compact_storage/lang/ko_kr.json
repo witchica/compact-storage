@@ -41,8 +41,8 @@
     "container.compact_storage.backpack": "배낭",
 
     "item.compact_storage.backpack": "배낭",
-    "item.compact_storage.upgrade_row": "보관함 업그레이드 (+1 행)",
-    "item.compact_storage.upgrade_column": "보관함 업그레이드 (+1 열)",
+    "item.compact_storage.upgrade_column": "보관함 업그레이드 (+1 행)",
+    "item.compact_storage.upgrade_row": "보관함 업그레이드 (+1 열)",
 
     "item.compact_storage.backpack_white": "하얀색 배낭",
     "item.compact_storage.backpack_orange": "주황색 배낭",

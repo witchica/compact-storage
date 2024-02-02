@@ -41,8 +41,8 @@
   "container.compact_storage.backpack": "Plecak",
 
   "item.compact_storage.backpack": "Plecak",
-  "item.compact_storage.upgrade_row": "Ulepszenie Ekwipunku (+1 Rząd)",
-  "item.compact_storage.upgrade_column": "Ulepszenie Ekwipunku (+1 Kolumna)",
+  "item.compact_storage.upgrade_column": "Ulepszenie Ekwipunku (+1 Rząd)",
+  "item.compact_storage.upgrade_row": "Ulepszenie Ekwipunku (+1 Kolumna)",
 
   "item.compact_storage.backpack_white": "Biały Plecak",
   "item.compact_storage.backpack_orange": "Pomarańczowy Plecak",

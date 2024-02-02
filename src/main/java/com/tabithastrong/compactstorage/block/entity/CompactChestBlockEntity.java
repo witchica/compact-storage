@@ -4,7 +4,6 @@ import com.tabithastrong.compactstorage.CompactStorage;
 import com.tabithastrong.compactstorage.screen.CompactChestScreenHandler;
 import com.tabithastrong.compactstorage.util.CompactStorageInventoryImpl;
 
-import io.netty.buffer.ByteBuf;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.EnvironmentInterface;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -15,20 +14,17 @@ import net.minecraft.block.entity.LidOpenable;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -69,9 +65,14 @@ public class CompactChestBlockEntity extends LootableContainerBlockEntity implem
         return MathHelper.lerp(delta, lastLidOpenness, lidOpenness);
     }
 
-    @Override
+
     protected DefaultedList<ItemStack> getInvStackList() {
         return inventory;
+    }
+
+    @Override
+    protected DefaultedList<ItemStack> method_11282() {
+        return getInvStackList();
     }
 
     @Override
