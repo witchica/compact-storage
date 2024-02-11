@@ -1,0 +1,47 @@
+{
+
+    "type": "minecraft:crafting_shaped",
+
+    "category": "misc",
+
+    "key": {
+
+      "P": {
+
+        "item": "minecraft:acacia_planks"
+
+      },
+
+      "L": {
+
+        "tag": "minecraft:acacia_logs"
+
+      },
+
+      "C": {
+
+        "tag": "compact_storage:compact_chest"
+
+      }
+
+    },
+
+    "pattern": [
+
+      "PLP",
+
+      "PCP",
+
+      "PLP"
+
+    ],
+
+    "result": {
+
+      "item": "compact_storage:acacia_drum"
+
+    },
+
+    "show_notification": true
+
+  }

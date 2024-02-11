@@ -1,0 +1,47 @@
+{
+
+    "type": "minecraft:crafting_shaped",
+
+    "category": "misc",
+
+    "key": {
+
+      "P": {
+
+        "item": "minecraft:jungle_planks"
+
+      },
+
+      "L": {
+
+        "tag": "minecraft:jungle_logs"
+
+      },
+
+      "C": {
+
+        "tag": "compact_storage:compact_chest"
+
+      }
+
+    },
+
+    "pattern": [
+
+      "PLP",
+
+      "PCP",
+
+      "PLP"
+
+    ],
+
+    "result": {
+
+      "item": "compact_storage:jungle_drum"
+
+    },
+
+    "show_notification": true
+
+  }

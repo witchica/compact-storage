@@ -1,0 +1,59 @@
+{
+
+    "variants": {
+
+      "facing=down": {
+
+        "model": "compact_storage:block/birch_drum",
+
+        "x": 180
+
+      },
+
+      "facing=east": {
+
+        "model": "compact_storage:block/birch_drum",
+
+        "x": 90,
+
+        "y": 90
+
+      },
+
+      "facing=north": {
+
+        "model": "compact_storage:block/birch_drum",
+
+        "x": 90
+
+      },
+
+      "facing=south": {
+
+        "model": "compact_storage:block/birch_drum",
+
+        "x": 90,
+
+        "y": 180
+
+      },
+
+      "facing=up": {
+
+        "model": "compact_storage:block/birch_drum"
+
+      },
+
+      "facing=west": {
+
+        "model": "compact_storage:block/birch_drum",
+
+        "x": 90,
+
+        "y": 270
+
+      }
+
+    }
+
+}

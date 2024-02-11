@@ -19,10 +19,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.tabithastrong.compactstorage.CompactStorage"
+      "com.witchica.compactstorage.CompactStorage"
     ],
     "client": [
-      "com.tabithastrong.compactstorage.CompactStorageClient"
+      "com.witchica.compactstorage.CompactStorageClient"
     ]
   },
   "mixins": [

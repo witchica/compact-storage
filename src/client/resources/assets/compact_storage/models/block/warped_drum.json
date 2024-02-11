@@ -1,0 +1,15 @@
+{
+
+    "parent": "minecraft:block/cube_bottom_top",
+
+    "textures": {
+
+        "bottom": "compact_storage:block/drum/warped_drum_top",
+
+        "top": "compact_storage:block/drum/warped_drum_front",
+
+        "side": "compact_storage:block/drum/warped_drum_side"
+
+    }
+
+}
