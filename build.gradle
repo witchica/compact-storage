@@ -3,11 +3,17 @@ plugins {
 	id 'maven-publish'
 }
 
-version = project.mod_version
+var buildNumber = project.findProperty("BUILD_NUMBER")
+
+if(buildNumber == null) {
+	buildNumber = "999"
+}
+
+version = project.mod_version + "." + buildNumber
 group = project.maven_group
 
 base {
-	archivesName = project.archives_base_name
+	archivesName = project.archives_base_name + "-" + project.minecraft_version + "-fabric"
 }
 
 repositories {
