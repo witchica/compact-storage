@@ -41,8 +41,8 @@
     "container.compact_storage.backpack": "Backpack",
 
     "item.compact_storage.backpack": "Backpack",
-    "item.compact_storage.upgrade_column": "Storage Upgrade (+1 Height)",
-    "item.compact_storage.upgrade_row": "Storage Upgrade (+1 Width)",
+    "item.compact_storage.upgrade_column": "Storage Upgrade (Height)",
+    "item.compact_storage.upgrade_row": "Storage Upgrade (Width)",
 
     "item.compact_storage.backpack_white": "White Backpack",
     "item.compact_storage.backpack_orange": "Orange Backpack",
@@ -72,8 +72,8 @@
     "block.compact_storage.dark_oak_drum": "Dark Oak Item Drum",
     "block.compact_storage.warped_drum": "Warped Item Drum",
 
-    "tooltip.compact_storage.row_upgrade_descriptor": "Use this on a Compact Storage block to add an extra row",
-    "tooltip.compact_storage.column_upgrade_descriptor": "Use this on a Compact Storage block to add an extra column",
+    "tooltip.compact_storage.row_upgrade_descriptor": "Use this on a Compact Storage block to add extra width",
+    "tooltip.compact_storage.column_upgrade_descriptor": "Use this on a Compact Storage block to add extra height",
     "tooltip.compact_storage.upgrade_backpack": "Can also be applied to backpacks by placing in your off-hand",
 
     "text.compact_storage.upgrade_success": "Upgrade successfully applied!",

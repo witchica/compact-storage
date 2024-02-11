@@ -34,9 +34,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class CompactBarrelBlock extends BlockWithEntity {
     public static final DirectionProperty FACING = DirectionProperty.of("facing");
@@ -151,35 +153,15 @@ public class CompactBarrelBlock extends BlockWithEntity {
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if(newState.getBlock() instanceof CompactBarrelBlock) {
-            return;
-        }
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        CompactStorageUtil.dropContents(world, pos, state.getBlock(), player);
+        return super.onBreak(world, pos, state, player);
+    }
 
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-
-        if(blockEntity instanceof CompactBarrelBlockEntity compactBarrelBlockEntity) {
-            ItemStack chestStack = new ItemStack(this, 1);
-
-            NbtCompound chestTag = new NbtCompound();
-            chestTag.putInt("inventory_width", compactBarrelBlockEntity.inventoryWidth);
-            chestTag.putInt("inventory_height", compactBarrelBlockEntity.inventoryHeight);
-
-            if(compactBarrelBlockEntity.inventoryWidth != 9 || compactBarrelBlockEntity.inventoryHeight != 6) {
-                chestStack.setNbt(chestTag);
-            }
-
-
-            if(compactBarrelBlockEntity.hasCustomName()) {
-                chestStack.setCustomName(compactBarrelBlockEntity.getCustomName());
-            }
-
-            ItemScatterer.spawn(world, pos, (Inventory) compactBarrelBlockEntity);
-            ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), chestStack);
-            world.updateComparators(pos, this);
-        }
-
-        super.onStateReplaced(state, world, pos, newState, moved);
+    @Override
+    public void onExploded(BlockState state, World world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
+        CompactStorageUtil.dropContents(world, pos, this, null);
+        super.onExploded(state, world, pos, explosion, stackMerger);
     }
 
     @Override
