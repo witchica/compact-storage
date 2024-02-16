@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "authors": [
+    "Jessica Strong"
+  ],
+  "contact": {
+    "homepage": "https://witchica.com/",
+    "sources": "https://github.com/witchica/compact-storage"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/compact_storage/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.witchica.compactstorage.CompactStorage"
+    ],
+    "client": [
+      "com.witchica.compactstorage.CompactStorageClient"
+    ]
+  },
+  "mixins": [
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.10",
+    "fabric": "*",
+    "minecraft": "~1.20",
+    "java": ">=17"
+  }
+}
