@@ -1,8 +1,8 @@
 package com.witchica.compactstorage;
 
-import com.witchica.compactstorage.client.entity.CompactChestBlockEntityRenderer;
-import com.witchica.compactstorage.client.entity.DrumBlockEntityRenderer;
-import com.witchica.compactstorage.client.screen.CompactChestScreen;
+import com.witchica.compactstorage.common.client.entity.CompactChestBlockEntityRenderer;
+import com.witchica.compactstorage.common.client.entity.DrumBlockEntityRenderer;
+import com.witchica.compactstorage.common.client.screen.CompactChestScreen;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
