@@ -1,3 +1,8 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+
 architectury {
     platformSetupLoomIde()
     neoForge()
@@ -9,6 +14,7 @@ base {
 
 configurations {
     common
+    shadowCommon
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
     developmentNeoForge.extendsFrom common
@@ -22,10 +28,29 @@ dependencies {
     modImplementation "curse.maven:ae2-223794:5119040"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
+}
+
+shadowJar {
+    exclude "fabric.mod.json"
+
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = "dev-shadow"
+}
+
+remapJar {
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
 }
 
 sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
 }

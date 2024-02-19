@@ -86,12 +86,3 @@ allprojects {
     }
 }
 
-task removeOldBuilds(type: Delete) {
-    allprojects {
-        def buildFolder = it.buildDir
-        buildFolder.deleteDir()
-    }
-}
-
-
-build.dependsOn(removeOldBuilds)
