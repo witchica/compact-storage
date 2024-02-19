@@ -52,6 +52,6 @@ public class CompactStoragePlatformImpl {
     }
 
     public static BackpackInventoryHandlerFactory getBackpackInventoryHandlerFactory(Player player, InteractionHand hand) {
-        throw new AssertionError("Method not implemented on this platform.");
+        return new BackpackInventoryHandlerFactory(player, hand);
     }
 }

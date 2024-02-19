@@ -10,6 +10,7 @@ import com.witchica.compactstorage.fabric.block.FabricDrumBlock;
 import com.witchica.compactstorage.fabric.block.entity.FabricCompactBarrelBlockEntity;
 import com.witchica.compactstorage.fabric.block.entity.FabricCompactChestBlockEntity;
 import com.witchica.compactstorage.fabric.block.entity.FabricDrumBlockEntity;
+import com.witchica.compactstorage.fabric.item.FabricBackpackItem;
 import com.witchica.compactstorage.util.RegistryHolder;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -78,7 +79,7 @@ public class CompactStorage implements ModInitializer {
 			COMPACT_CHEST_BLOCKS[i] = new RegistryHolder.Blocks("compact_chest_" + dyeName, new FabricCompactChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().strength(2f, 5f)));
 			DYE_COLOR_TO_COMPACT_CHEST_MAP.put(DyeColor.byId(i), COMPACT_CHEST_BLOCKS[i]);
 
-			BACKPACK_ITEMS[i] = new RegistryHolder.Items("backpack_" + dyeName, new BackpackItem(new FabricItemSettings().stacksTo(1)));
+			BACKPACK_ITEMS[i] = new RegistryHolder.Items("backpack_" + dyeName, new FabricBackpackItem(new FabricItemSettings().stacksTo(1)));
 			DYE_COLOR_TO_BACKPACK_MAP.put(DyeColor.byId(i), BACKPACK_ITEMS[i]);
 
 			COMPACT_BARREL_BLOCKS[i] = new RegistryHolder.Blocks("compact_barrel_" + dyeName, new FabricCompactBarrelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL).strength(2f, 5f)));

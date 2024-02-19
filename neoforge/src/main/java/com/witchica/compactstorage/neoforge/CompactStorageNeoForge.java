@@ -7,6 +7,7 @@ import com.witchica.compactstorage.common.block.DrumBlock;
 import com.witchica.compactstorage.common.block.entity.CompactBarrelBlockEntity;
 import com.witchica.compactstorage.common.block.entity.CompactChestBlockEntity;
 import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
+import com.witchica.compactstorage.common.inventory.BackpackInventoryHandlerFactory;
 import com.witchica.compactstorage.common.item.BackpackItem;
 import com.witchica.compactstorage.common.item.StorageUpgradeItem;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
@@ -27,8 +28,14 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import net.neoforged.neoforge.network.IContainerFactory;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -36,8 +43,10 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.witchica.compactstorage.neoforge.CompactStorageNeoForge.MOD_ID;
 
@@ -78,20 +87,16 @@ public class CompactStorageNeoForge {
     public static final DeferredItem<Item> UPGRADE_ROW_ITEM = ITEMS.register("upgrade_row", () -> new StorageUpgradeItem(new Item.Properties()));
     public static final DeferredItem<Item> UPGRADE_COLUMN_ITEM = ITEMS.register("upgrade_column", () -> new StorageUpgradeItem(new Item.Properties()));
 
-    public static final DeferredHolder<MenuType<?>, MenuType<CompactChestScreenHandler>> COMPACT_CHEST_SCREEN_HANDLER = MENU_TYPES.register("compact_chest", () -> new MenuType<CompactChestScreenHandler>((IContainerFactory<CompactChestScreenHandler>) (windowId, inv, data) -> new CompactChestScreenHandler(windowId, inv, data), FeatureFlags.DEFAULT_FLAGS));
+    public static final DeferredHolder<MenuType<?>, MenuType<CompactChestScreenHandler>> COMPACT_CHEST_SCREEN_HANDLER = MENU_TYPES.register("compact_chest", () -> IMenuTypeExtension.create(CompactChestScreenHandler::new));
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> COMPACT_STORAGE_TAB = CREATIVE_MODE_TABS.register("compact_storage_tab", () -> CreativeModeTab.builder()
         .title(Component.translatable("itemGroup.compact_storage.general"))
         .icon(() -> new ItemStack(COMPACT_CHEST_BLOCKS[0].get(), 1))
         .displayItems((params, populator) -> {
-            for(int i = 0; i < 16; i++) {
-                populator.accept(COMPACT_CHEST_BLOCKS[i].get());
-                populator.accept(COMPACT_BARREL_BLOCKS[i].get());
-                populator.accept(BACKPACK_ITEMS[i].get());
-            }
 
-            for(int i = 0; i < CompactStorageUtil.DRUM_TYPES.length; i++) {
-                populator.accept(DRUM_BLOCKS[i].get());
-            }
+            Arrays.stream(COMPACT_CHEST_BLOCKS).forEach(populator::accept);
+            Arrays.stream(COMPACT_BARREL_BLOCKS).forEach(populator::accept);
+            Arrays.stream(BACKPACK_ITEMS).forEach(populator::accept);
+            Arrays.stream(DRUM_BLOCKS).forEach(populator::accept);
 
             populator.accept(UPGRADE_COLUMN_ITEM.get());
             populator.accept(UPGRADE_ROW_ITEM.get());
@@ -116,7 +121,7 @@ public class CompactStorageNeoForge {
 
 
             BACKPACK_ITEMS[i] = ITEMS.register("backpack_" + dyeName, () ->
-                    new BackpackItem(new Item.Properties().stacksTo(1)));
+                    new NeoForgeBackpackItem(new Item.Properties().stacksTo(1)));
             DYE_COLOR_TO_BACKPACK_MAP.put(color, BACKPACK_ITEMS[i]);
 
 
@@ -140,14 +145,25 @@ public class CompactStorageNeoForge {
         }
     }
     public CompactStorageNeoForge(IEventBus eventBus) {
-        //FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-
-        //NeoForge.EVENT_BUS.register(this);
+        eventBus.register(this);
 
         BLOCKS.register(eventBus);
         ITEMS.register(eventBus);
         BLOCK_ENTITY_TYPES.register(eventBus);
         MENU_TYPES.register(eventBus);
         CREATIVE_MODE_TABS.register(eventBus);
+    }
+
+    @SubscribeEvent
+    public void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, COMPACT_CHEST_ENTITY_TYPE.get(), (blockEntity, direction) -> {
+            return new InvWrapper(blockEntity.getInventory());
+        });
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, COMPACT_BARREL_ENTITY_TYPE.get(), (blockEntity, direction) -> {
+            return new InvWrapper(blockEntity.getInventory());
+        });
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, DRUM_ENTITY_TYPE.get(), (blockEntity, direction) -> {
+            return new InvWrapper(blockEntity.inventory);
+        });
     }
 }

@@ -1,6 +1,7 @@
 {
-    "parent": "item/generated",
+    "parent": "compact_storage:item/backpack_base",
     "textures": {
-        "layer0": "compact_storage:item/backpack_blue"
+        "primary": "minecraft:block/blue_wool",
+        "straps": "minecraft:block/gray_wool"
     }
 }

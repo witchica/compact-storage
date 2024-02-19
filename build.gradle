@@ -52,6 +52,9 @@ allprojects {
             name = 'ParchmentMC'
             url = 'https://maven.parchmentmc.org'
         }
+        maven {
+            url "https://cursemaven.com"
+        }
     }
 
     tasks.withType(JavaCompile) {
@@ -75,8 +78,10 @@ allprojects {
                     "mod_website": rootProject.mod_website,
                     "mod_sources": rootProject.mod_sources,
                     "mod_fabric_loader_minimum": rootProject.mod_fabric_loader_minimum,
-                    "mod_forge_loader_version": rootProject.mod_forge_loader_version,
-                    "mod_forge_version": rootProject.mod_forge_version
+                    "mod_neo_loader_version": rootProject.mod_neo_loader_version,
+                    "mod_neo_version": rootProject.mod_neo_version,
+                    "mod_neo_minecraft_range": rootProject.mod_neo_minecraft_range,
+                    "logo_file": rootProject.logo_file
         }
     }
 }

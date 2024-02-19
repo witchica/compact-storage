@@ -131,16 +131,14 @@ public abstract class CompactBarrelBlock extends BaseEntityBlock {
                     }
                 }
 
-                MenuProvider screenHandlerFactory = state.getMenuProvider(world, pos);
-
-                if (screenHandlerFactory != null) {
-                    player.openMenu(screenHandlerFactory);
-                }
+                openMenu(world, player, pos, state, hand);
             }
         }
 
         return InteractionResult.SUCCESS;
     }
+
+    public abstract void openMenu(Level level, Player player, BlockPos pos, BlockState state, InteractionHand hand);
 
     @Override
     public RenderShape getRenderShape(BlockState state) {

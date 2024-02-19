@@ -2,7 +2,6 @@ package com.witchica.compactstorage.common.item;
 
 import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.inventory.BackpackInventory;
-import com.witchica.compactstorage.common.inventory.BackpackInventoryHandlerFactory;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import net.minecraft.ChatFormatting;
@@ -23,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class BackpackItem extends Item {
+public abstract class BackpackItem extends Item {
     public BackpackItem(Properties settings) {
         super(settings);
     }
@@ -93,11 +92,13 @@ public class BackpackItem extends Item {
                 ((ServerPlayer) player).closeContainer();
                 return super.use(world, player, hand);
             } else {
-                player.openMenu(CompactStoragePlatform.getBackpackInventoryHandlerFactory(player, hand));
+                openMenu(player, hand);
             }
         }
         return super.use(world, player, hand);
     }
+
+    public abstract void openMenu(Player player, InteractionHand hand);
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {

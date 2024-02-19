@@ -43,14 +43,12 @@ public class BackpackInventoryHandlerFactory implements MenuProvider {
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
         BackpackInventory backpackInventory = getBackpackInventory(player, hand);
-        return new CompactChestScreenHandler(syncId, inv, writeToByteBuf());
+        return new CompactChestScreenHandler(syncId, inv, writeToByteBuf(new FriendlyByteBuf(Unpooled.buffer())));
     }
 
-    private FriendlyByteBuf writeToByteBuf() {
-        FriendlyByteBuf packetByteBuf = new FriendlyByteBuf(Unpooled.buffer());
-        packetByteBuf.writeInt(1);
-        packetByteBuf.writeInt(hand == InteractionHand.MAIN_HAND ? 0 : 1);
-
-        return packetByteBuf;
+    public FriendlyByteBuf writeToByteBuf(FriendlyByteBuf buf) {
+        buf.writeInt(1);
+        buf.writeInt(hand == InteractionHand.MAIN_HAND ? 0 : 1);
+        return buf;
     }
 }
