@@ -1,35 +1,29 @@
 modLoader = "javafml"
-loaderVersion = "[47,)"
+loaderVersion = "${mod_forge_loader_version}"
 #issueTrackerURL = ""
 license = "Insert License Here"
 
 [[mods]]
-modId = "examplemod"
+modId = "${mod_id}"
 version = "${version}"
-displayName = "Example Mod"
-authors = "Me!"
+displayName = "${mod_name}"
+authors = "${mod_author}"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+${mod_description}
 '''
-#logoFile = ""
+displayURL="${mod_website}"
+logoFile = "assets/compact_storage/icon.png"
 
-[[dependencies.examplemod]]
-modId = "forge"
-mandatory = true
-versionRange = "[47,)"
+[[dependencies.compact_storage]]
+modId = "neoforge"
+type = "required"
+versionRange = "${mod_forge_version}"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.examplemod]]
+[[dependencies.compact_storage]]
 modId = "minecraft"
-mandatory = true
-versionRange = "[1.20.1,)"
+type = "required"
+versionRange = "[1.20.4,)"
 ordering = "NONE"
-side = "BOTH"
-
-[[dependencies.examplemod]]
-modId = "architectury"
-mandatory = true
-versionRange = "[9.1.12,)"
-ordering = "AFTER"
 side = "BOTH"

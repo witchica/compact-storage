@@ -1,13 +1,6 @@
 architectury {
     platformSetupLoomIde()
-    forge()
-}
-
-loom {
-//    accessWidenerPath = project(":common").loom.accessWidenerPath
-    mixin {
-        useLegacyMixinAp = true
-    }
+    neoForge()
 }
 
 base {
@@ -18,7 +11,7 @@ configurations {
     common
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
-    developmentForge.extendsFrom common
+    developmentNeoForge.extendsFrom common
 }
 
 dependencies {
@@ -27,14 +20,6 @@ dependencies {
     //modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-}
-
-processResources {
-    inputs.property "version", project.version
-
-    filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
-    }
 }
 
 sourcesJar {

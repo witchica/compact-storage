@@ -1,7 +1,6 @@
-package com.witchica.compactstorage;
+package com.witchica.compactstorage.neoforge;
 
 import com.witchica.compactstorage.common.inventory.BackpackInventoryHandlerFactory;
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
@@ -10,62 +9,48 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-public class CompactStoragePlatform {
-    @ExpectPlatform
+public class CompactStoragePlatformImpl {
     public static Block getCompactChestBlock(int index) {
-        throw new AssertionError("Method not implemented on this platform.");
+        return CompactStorageNeoForge.COMPACT_CHEST_BLOCKS[index].get();
     }
-    @ExpectPlatform
     public static Block getCompactBarrelBlock(int index) {
-        throw new AssertionError("Method not implemented on this platform.");
+        return CompactStorageNeoForge.COMPACT_BARREL_BLOCKS[index].get();
     }
-    @ExpectPlatform
     public static Block getDrumBlock(int index) {
-        throw new AssertionError("Method not implemented on this platform.");
+        return CompactStorageNeoForge.DRUM_BLOCKS[index].get();
     }
-    @ExpectPlatform
     public static Item getBackpackItem(int index) {
-        throw new AssertionError("Method not implemented on this platform.");
+        return CompactStorageNeoForge.BACKPACK_ITEMS[index].get();
     }
-    @ExpectPlatform
     public static Item getStorageRowUpgradeItem() {
-        throw new AssertionError("Method not implemented on this platform.");
+        return CompactStorageNeoForge.UPGRADE_ROW_ITEM.get();
     }
-    @ExpectPlatform
     public static Item getStorageColumnUpgradeItem() {
-        throw new AssertionError("Method not implemented on this platform.");
+        return CompactStorageNeoForge.UPGRADE_COLUMN_ITEM.get();
     }
-    @ExpectPlatform
     public static Block getCompactChestFromDyeColor(DyeColor dyeColor) {
-        throw new AssertionError("Method not implemented on this platform.");
+        return CompactStorageNeoForge.DYE_COLOR_TO_COMPACT_CHEST_MAP.get(dyeColor).get();
     }
-    @ExpectPlatform
     public static Block getCompactBarrelFromDyeColor(DyeColor dyeColor) {
-        throw new AssertionError("Method not implemented on this platform.");
+        return CompactStorageNeoForge.DYE_COLOR_TO_COMPACT_BARREL_MAP.get(dyeColor).get();
     }
-    @ExpectPlatform
     public static Item getBackpackFromDyeColor(DyeColor dyeColor) {
-        throw new AssertionError("Method not implemented on this platform.");
+        return CompactStorageNeoForge.DYE_COLOR_TO_BACKPACK_MAP.get(dyeColor).get();
     }
-    @ExpectPlatform
     public static MenuType<?> getCompactStorageScreenHandler() {
-        throw new AssertionError("Method not implemented on this platform.");
+        return CompactStorageNeoForge.COMPACT_CHEST_SCREEN_HANDLER.get();
     }
-    @ExpectPlatform
     public static BlockEntityType<?> getCompactChestBlockEntityType() {
-        throw new AssertionError("Method not implemented on this platform.");
+        return CompactStorageNeoForge.COMPACT_CHEST_ENTITY_TYPE.get();
     }
-    @ExpectPlatform
     public static BlockEntityType<?> getCompactBarrelBlockEntityType() {
-        throw new AssertionError("Method not implemented on this platform.");
+        return CompactStorageNeoForge.COMPACT_BARREL_ENTITY_TYPE.get();
     }
 
-    @ExpectPlatform
     public static BlockEntityType<?> getDrumBlockEntityType() {
-        throw new AssertionError("Method not implemented on this platform.");
+        return CompactStorageNeoForge.DRUM_ENTITY_TYPE.get();
     }
 
-    @ExpectPlatform
     public static BackpackInventoryHandlerFactory getBackpackInventoryHandlerFactory(Player player, InteractionHand hand) {
         throw new AssertionError("Method not implemented on this platform.");
     }

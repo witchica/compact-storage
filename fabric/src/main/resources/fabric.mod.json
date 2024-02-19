@@ -6,11 +6,11 @@
   "name": "${mod_name}",
   "description": "${mod_description}",
   "authors": [
-    "Jessica Strong"
+    "${mod_author}"
   ],
   "contact": {
-    "homepage": "https://witchica.com/",
-    "sources": "https://github.com/witchica/compact-storage"
+    "homepage": "${mod_website}",
+    "sources": "${mod_sources}"
   },
 
   "license": "CC0-1.0",
@@ -29,7 +29,7 @@
   ],
 
   "depends": {
-    "fabricloader": ">=0.14.10",
+    "fabricloader": "${mod_fabric_loader_minimum}",
     "fabric": "*",
     "minecraft": "~1.20",
     "java": ">=17"

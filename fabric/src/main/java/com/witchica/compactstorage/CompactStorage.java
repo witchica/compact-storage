@@ -6,6 +6,7 @@ import com.witchica.compactstorage.common.item.StorageUpgradeItem;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import com.witchica.compactstorage.fabric.block.FabricCompactBarrelBlock;
 import com.witchica.compactstorage.fabric.block.FabricCompactChestBlock;
+import com.witchica.compactstorage.fabric.block.FabricDrumBlock;
 import com.witchica.compactstorage.fabric.block.entity.FabricCompactBarrelBlockEntity;
 import com.witchica.compactstorage.fabric.block.entity.FabricCompactChestBlockEntity;
 import com.witchica.compactstorage.fabric.block.entity.FabricDrumBlockEntity;
@@ -85,7 +86,7 @@ public class CompactStorage implements ModInitializer {
 		}
 
 		for(int i = 0; i < CompactStorageUtil.DRUM_TYPES.length; i++) {
-			DRUM_BLOCKS[i] = new RegistryHolder.Blocks(CompactStorageUtil.DRUM_TYPES[i] + "_drum", new DrumBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)));
+			DRUM_BLOCKS[i] = new RegistryHolder.Blocks(CompactStorageUtil.DRUM_TYPES[i] + "_drum", new FabricDrumBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)));
 		}
 
 	}

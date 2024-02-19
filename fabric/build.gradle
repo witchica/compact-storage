@@ -27,17 +27,6 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
 }
 
-processResources {
-    inputs.property "version", project.version
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version,
-         "mod_id": rootProject.mod_id,
-         "mod_name": rootProject.mod_name,
-         "mod_description": rootProject.mod_description
-    }
-}
-
 remapJar {
     injectAccessWidener = true
 }

@@ -29,7 +29,7 @@ subprojects {
 var buildNumber = System.getenv("BUILD_NUMBER")
 
 if(buildNumber == null) {
-    buildNumber = "999"
+    buildNumber = "dev"
 }
 
 allprojects {
@@ -61,6 +61,23 @@ allprojects {
 
     java {
         withSourcesJar()
+    }
+
+    processResources {
+        inputs.property "version", project.version
+
+        filesMatching(["fabric.mod.json", "META-INF/mods.toml"]) {
+            expand "version": project.version,
+                    "mod_id": rootProject.mod_id,
+                    "mod_name": rootProject.mod_name,
+                    "mod_description": rootProject.mod_description,
+                    "mod_author": rootProject.mod_author,
+                    "mod_website": rootProject.mod_website,
+                    "mod_sources": rootProject.mod_sources,
+                    "mod_fabric_loader_minimum": rootProject.mod_fabric_loader_minimum,
+                    "mod_forge_loader_version": rootProject.mod_forge_loader_version,
+                    "mod_forge_version": rootProject.mod_forge_version
+        }
     }
 }
 
