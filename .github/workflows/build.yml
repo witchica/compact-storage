@@ -27,9 +27,15 @@ jobs:
         run: chmod +x ./gradlew
       - name: build
         run: ./gradlew build
+      - name: Copy together artifacts
+        shell: bash
+        run: |
+          mkdir dist
+          cp fabric/build/libs/*.jar dist
+          cp neoforge/build/libs/*.jar dist
       - name: capture build artifacts
         uses: actions/upload-artifact@v3
         with:
           if-no-files-found: error
-          path: build/libs/*
+          path: dist/*
           
