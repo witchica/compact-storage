@@ -1,0 +1,41 @@
+{
+  "display": {
+    "icon": {
+      "item": "compact_storage:compact_chest_red"
+    },
+    "title": {
+      "translate": "text.compact_storage.advancements.compacting_your_storage",
+      "fallback": "Compacting your storage!"
+    },
+    "description": {
+      "translate": "text.compact_storage.advancements.compacting_your_storage_description",
+      "fallback": "Unlocking the potential of great item storage!"
+    },
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "got_chest": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "compact_storage:compact_chest"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got_chest"
+    ]
+  ],
+  "rewards": {
+    "experience": 10
+  },
+  "sends_telemetry_event": false
+}

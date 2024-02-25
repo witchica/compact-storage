@@ -85,5 +85,14 @@
 
     "itemGroup.compact_storage.general": "Compact Storage",
     "text.compact_storage.drum.tooltip_1": "Can store 64 stacks of one item type",
-    "text.compact_storage.drum.tooltip_2": "Right-click to add items, left click to remove"
+    "text.compact_storage.drum.tooltip_2": "Right-click to add items, left click to remove",
+
+    "text.compact_storage.advancements.barrel_me_this": "Barrel me this...",
+    "text.compact_storage.advancements.barrel_me_this_description": "As a famous man once said... Barrels!!",
+    "text.compact_storage.advancements.compacting_your_storage": "Compacting your storage!",
+    "text.compact_storage.advancements.compacting_your_storage_description": "Making your storage... well.. compact!",
+    "text.compact_storage.advancements.drum_me_up": "Drum me up!",
+    "text.compact_storage.advancements.drum_me_up_description": "Drumming up a storm!",
+    "text.compact_storage.advancements.storage_on_the_move": "Storage, now on the move!",
+    "text.compact_storage.advancements.storage_on_the_move_description": "Think of all the things that you can take with you now!"
 }

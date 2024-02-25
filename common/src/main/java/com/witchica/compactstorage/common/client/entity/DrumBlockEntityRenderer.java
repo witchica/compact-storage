@@ -5,6 +5,7 @@ import com.mojang.math.Axis;
 import com.witchica.compactstorage.common.block.DrumBlock;
 import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -39,11 +40,20 @@ public class DrumBlockEntityRenderer implements BlockEntityRenderer<DrumBlockEnt
             matrices.mulPose(Axis.YP.rotationDegrees(direction.toYRot()));
 
             if(direction == Direction.UP || direction == Direction.DOWN) {
-                matrices.mulPose(Axis.YP.rotationDegrees(direction == Direction.UP ? 90f : 270f));
+                matrices.mulPose(Axis.YP.rotationDegrees(direction == Direction.UP ? -90f : 90f));
+                matrices.mulPose(Axis.XP.rotationDegrees(direction == Direction.UP ? 90f : 270f));
             }
-            matrices.mulPose(Axis.YP.rotationDegrees(direction.toYRot()));
+            matrices.mulPose(Axis.YP.rotationDegrees(-direction.toYRot() * 2));
+            matrices.mulPose(Axis.YP.rotationDegrees(180));
 
-            context.getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, 15728880, OverlayTexture.NO_OVERLAY, matrices, vertexConsumers, drumBlock.getLevel(), drumBlock.hashCode());
+
+
+            if(drumBlock.getLevel() != null) {
+                int lightLevel = LevelRenderer.getLightColor(drumBlock.getLevel(), drumBlock.getBlockPos().relative(direction));
+                context.getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, lightLevel, OverlayTexture.NO_OVERLAY, matrices, vertexConsumers, drumBlock.getLevel(), drumBlock.hashCode());
+
+            }
+
             matrices.popPose();
         }
 

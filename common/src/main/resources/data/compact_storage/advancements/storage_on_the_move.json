@@ -1,0 +1,42 @@
+{
+  "parent": "compact_storage:barrel_me_this",
+  "display": {
+    "icon": {
+      "item": "compact_storage:backpack_yellow"
+    },
+    "title": {
+      "translate": "text.compact_storage.advancements.storage_on_the_move",
+      "fallback": "Storage on the move!"
+    },
+    "description": {
+      "translate": "text.compact_storage.advancements.storage_on_the_move_description",
+      "fallback": "Keeping things safe on the move!"
+    },
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "got_backpack": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "compact_storage:backpack"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got_backpack"
+    ]
+  ],
+  "rewards": {
+    "experience": 10
+  },
+  "sends_telemetry_event": false
+}

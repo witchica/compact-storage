@@ -1,0 +1,42 @@
+{
+  "parent": "compact_storage:storage_on_the_move",
+  "display": {
+    "icon": {
+      "item": "compact_storage:cherry_drum"
+    },
+    "title": {
+      "translate": "text.compact_storage.advancements.drum_me_up",
+      "fallback": "Drum me up!"
+    },
+    "description": {
+      "translate": "text.compact_storage.advancements.drum_me_up_description",
+      "fallback": "Drumming up a storm!"
+    },
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "got_drum": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "compact_storage:drum"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got_drum"
+    ]
+  ],
+  "rewards": {
+    "experience": 10
+  },
+  "sends_telemetry_event": false
+}

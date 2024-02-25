@@ -1,0 +1,42 @@
+{
+  "parent": "compact_storage:compacting_your_storage",
+  "display": {
+    "icon": {
+      "item": "compact_storage:compact_barrel_blue"
+    },
+    "title": {
+      "translate": "text.compact_storage.advancements.barrel_me_this",
+      "fallback": "Barrel me this..."
+    },
+    "description": {
+      "translate": "text.compact_storage.advancements.barrel_me_this_description",
+      "fallback": "Barrels!"
+    },
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png",
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "got_barrel": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "tag": "compact_storage:compact_barrel"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "got_barrel"
+    ]
+  ],
+  "rewards": {
+    "experience": 10
+  },
+  "sends_telemetry_event": false
+}
