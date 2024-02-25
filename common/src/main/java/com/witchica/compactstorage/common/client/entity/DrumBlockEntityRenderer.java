@@ -41,8 +41,7 @@ public class DrumBlockEntityRenderer implements BlockEntityRenderer<DrumBlockEnt
             if(direction == Direction.UP || direction == Direction.DOWN) {
                 matrices.mulPose(Axis.YP.rotationDegrees(direction == Direction.UP ? 90f : 270f));
             }
-
-            matrices.translate(0f, -0.15f, 0f);
+            matrices.mulPose(Axis.YP.rotationDegrees(direction.toYRot()));
 
             context.getItemRenderer().renderStatic(stack, ItemDisplayContext.FIXED, 15728880, OverlayTexture.NO_OVERLAY, matrices, vertexConsumers, drumBlock.getLevel(), drumBlock.hashCode());
             matrices.popPose();

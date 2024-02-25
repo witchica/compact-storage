@@ -17,7 +17,7 @@ configurations {
     shadowCommon
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
-    developmentNeoForge.extendsFrom common
+    developmentForge.extendsFrom common
 }
 
 dependencies {

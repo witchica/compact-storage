@@ -8,8 +8,10 @@ import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import com.witchica.compactstorage.forge.block.ForgeCompactBarrelBlock;
 import com.witchica.compactstorage.forge.block.ForgeCompactChestBlock;
+import com.witchica.compactstorage.forge.block.ForgeDrumBlock;
 import com.witchica.compactstorage.forge.block.entity.ForgeCompactBarrelBlockEntity;
 import com.witchica.compactstorage.forge.block.entity.ForgeCompactChestBlockEntity;
+import com.witchica.compactstorage.forge.block.entity.ForgeDrumBlockEntity;
 import com.witchica.compactstorage.forge.item.ForgeBackpackItem;
 import net.minecraft.Util;
 import net.minecraft.core.registries.Registries;
@@ -50,7 +52,7 @@ public class CompactStorageForge {
 
     public static final RegistryObject<ForgeCompactChestBlock>[] COMPACT_CHEST_BLOCKS = new RegistryObject[16];
     public static final RegistryObject<ForgeCompactBarrelBlock>[] COMPACT_BARREL_BLOCKS = new RegistryObject[16];
-    public static final RegistryObject<DrumBlock>[] DRUM_BLOCKS = new RegistryObject[CompactStorageUtil.DRUM_TYPES.length];
+    public static final RegistryObject<ForgeDrumBlock>[] DRUM_BLOCKS = new RegistryObject[CompactStorageUtil.DRUM_TYPES.length];
     public static final RegistryObject<ForgeBackpackItem>[] BACKPACK_ITEMS = new RegistryObject[16];
 
     public static final String COMPACT_CHEST_TRANSLATION_KEY = Util.makeDescriptionId("container", COMPACT_CHEST_GENERIC_IDENTIFIER);
@@ -61,8 +63,8 @@ public class CompactStorageForge {
     public static RegistryObject<BlockEntityType<ForgeCompactChestBlockEntity>> COMPACT_CHEST_ENTITY_TYPE =
             BLOCK_ENTITY_TYPES.register("compact_chest", () -> BlockEntityType.Builder.of(ForgeCompactChestBlockEntity::new, Arrays.stream(COMPACT_CHEST_BLOCKS).map(RegistryObject::get).toArray(Block[]::new)).build(null));
 
-    public static RegistryObject<BlockEntityType<DrumBlockEntity>> DRUM_ENTITY_TYPE =
-            BLOCK_ENTITY_TYPES.register("drum", () -> BlockEntityType.Builder.of(DrumBlockEntity::new, Arrays.stream(DRUM_BLOCKS).map(RegistryObject::get).toArray(Block[]::new)).build(null));
+    public static RegistryObject<BlockEntityType<ForgeDrumBlockEntity>> DRUM_ENTITY_TYPE =
+            BLOCK_ENTITY_TYPES.register("drum", () -> BlockEntityType.Builder.of(ForgeDrumBlockEntity::new, Arrays.stream(DRUM_BLOCKS).map(RegistryObject::get).toArray(Block[]::new)).build(null));
 
     public static final HashMap<DyeColor, RegistryObject<ForgeCompactChestBlock>> DYE_COLOR_TO_COMPACT_CHEST_MAP = new HashMap<DyeColor, RegistryObject<ForgeCompactChestBlock>>();
     public static final HashMap<DyeColor, RegistryObject<ForgeCompactBarrelBlock>> DYE_COLOR_TO_COMPACT_BARREL_MAP = new HashMap<DyeColor, RegistryObject<ForgeCompactBarrelBlock>>();
@@ -123,7 +125,7 @@ public class CompactStorageForge {
             final int id = i;
 
             DRUM_BLOCKS[id] = BLOCKS.register( CompactStorageUtil.DRUM_TYPES[id] + "_drum", () ->
-                    new DrumBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL).strength(2f, 2f)));
+                    new ForgeDrumBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL).strength(2f, 2f)));
 
             ITEMS.register(CompactStorageUtil.DRUM_TYPES[i] + "_drum", () -> new BlockItem(DRUM_BLOCKS[id].get(), new Item.Properties()));
         }
