@@ -81,6 +81,9 @@ allprojects {
                     "mod_neo_loader_version": rootProject.mod_neo_loader_version,
                     "mod_neo_version": rootProject.mod_neo_version,
                     "mod_neo_minecraft_range": rootProject.mod_neo_minecraft_range,
+                    "mod_forge_loader_version": rootProject.mod_neo_loader_version,
+                    "mod_forge_version": rootProject.mod_neo_version,
+                    "mod_forge_minecraft_range": rootProject.mod_neo_minecraft_range,
                     "logo_file": rootProject.logo_file
         }
     }

@@ -1,0 +1,29 @@
+modLoader = "javafml"
+loaderVersion = "${mod_forge_loader_version}"
+issueTrackerURL = "${mod_sources}"
+license = "LGPLv3"
+logoFile = "${logo_file}"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${version}"
+displayName = "${mod_name}"
+authors = "${mod_author}"
+description = '''
+${mod_description}
+'''
+displayURL="${mod_website}"
+
+[[dependencies.compact_storage]]
+modId = "forge"
+mandatory = true
+versionRange = "${mod_forge_version}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.compact_storage]]
+modId = "minecraft"
+mandatory = true
+versionRange = "${mod_forge_minecraft_range}"
+ordering = "NONE"
+side = "BOTH"
