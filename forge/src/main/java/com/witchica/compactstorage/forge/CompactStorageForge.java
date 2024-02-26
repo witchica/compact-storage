@@ -1,10 +1,9 @@
 package com.witchica.compactstorage.forge;
 
 import com.mojang.logging.LogUtils;
-import com.witchica.compactstorage.common.block.DrumBlock;
-import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
 import com.witchica.compactstorage.common.item.StorageUpgradeItem;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
+import com.witchica.compactstorage.common.util.CompactStorageUpgradeType;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import com.witchica.compactstorage.forge.block.ForgeCompactBarrelBlock;
 import com.witchica.compactstorage.forge.block.ForgeCompactChestBlock;
@@ -70,8 +69,9 @@ public class CompactStorageForge {
     public static final HashMap<DyeColor, RegistryObject<ForgeCompactBarrelBlock>> DYE_COLOR_TO_COMPACT_BARREL_MAP = new HashMap<DyeColor, RegistryObject<ForgeCompactBarrelBlock>>();
     public static final HashMap<DyeColor, RegistryObject<ForgeBackpackItem>> DYE_COLOR_TO_BACKPACK_MAP = new HashMap<DyeColor, RegistryObject<ForgeBackpackItem>>();
 
-    public static final RegistryObject<StorageUpgradeItem> UPGRADE_ROW_ITEM = ITEMS.register("upgrade_row", () -> new StorageUpgradeItem(new Item.Properties()));
-    public static final RegistryObject<StorageUpgradeItem> UPGRADE_COLUMN_ITEM = ITEMS.register("upgrade_column", () -> new StorageUpgradeItem(new Item.Properties()));
+    public static final RegistryObject<StorageUpgradeItem> UPGRADE_ROW_ITEM = ITEMS.register("upgrade_row", () -> new StorageUpgradeItem(new Item.Properties(), CompactStorageUpgradeType.WIDTH_INCREASE));
+    public static final RegistryObject<StorageUpgradeItem> UPGRADE_COLUMN_ITEM = ITEMS.register("upgrade_column", () -> new StorageUpgradeItem(new Item.Properties(), CompactStorageUpgradeType.HEIGHT_INCREASE));
+    public static final RegistryObject<StorageUpgradeItem> UPGRADE_RETAINER_ITEM = ITEMS.register("upgrade_retainer", () -> new StorageUpgradeItem(new Item.Properties(), CompactStorageUpgradeType.RETAINING));
 
     public static final RegistryObject<MenuType<CompactChestScreenHandler>> COMPACT_CHEST_SCREEN_HANDLER = MENU_TYPES.register("compact_chest", () -> IForgeMenuType.create(CompactChestScreenHandler::new));
     public static final RegistryObject<CreativeModeTab> COMPACT_STORAGE_TAB = CREATIVE_MODE_TABS.register("compact_storage_tab", () -> CreativeModeTab.builder()
@@ -86,6 +86,7 @@ public class CompactStorageForge {
 
                 populator.accept(UPGRADE_COLUMN_ITEM.get());
                 populator.accept(UPGRADE_ROW_ITEM.get());
+                populator.accept(UPGRADE_RETAINER_ITEM.get());
             }).build());
 
     static {

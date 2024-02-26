@@ -78,6 +78,7 @@
 
     "text.compact_storage.upgrade_success": "Upgrade successfully applied!",
     "text.compact_storage.upgrade_fail_maxsize": "Maximum size already reached, upgrade failed!",
+    "text.compact_storage.retainer_applied": "Retainer Upgrade already applied",
 
     "text.compact_storage.tooltip.size_x": "Inventory Width: ",
     "text.compact_storage.tooltip.size_y": "Inventory Height: ",
@@ -94,5 +95,12 @@
     "text.compact_storage.advancements.drum_me_up": "Drum me up!",
     "text.compact_storage.advancements.drum_me_up_description": "Drumming up a storm!",
     "text.compact_storage.advancements.storage_on_the_move": "Storage, now on the move!",
-    "text.compact_storage.advancements.storage_on_the_move_description": "Think of all the things that you can take with you now!"
+    "text.compact_storage.advancements.storage_on_the_move_description": "Think of all the things that you can take with you now!",
+
+    "item.compact_storage.upgrade_retainer": "Storage Retainer Upgrade",
+    "tooltip.compact_storage.upgrade_retainer_description": "Keep items stored in the block even after breaking!",
+    "tooltip.compact_storage.new_item_description": "New!",
+    "tooltip.compact_storage.storage_size": "%d x %d = %d slots",
+    "tooltip.compact_storage.retaining": "Retaining",
+    "tooltip.compact_storage.drum_contains": "Contains %d x %s"
 }

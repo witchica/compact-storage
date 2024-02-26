@@ -19,6 +19,7 @@ public class DrumBlockEntity extends BlockEntity {
     public ItemStack clientItem = ItemStack.EMPTY;
     public int clientStackSize;
     public int clientStoredItems;
+    private boolean retaining;
 
     public DrumBlockEntity(BlockPos pos, BlockState state) {
         super(CompactStoragePlatform.getDrumBlockEntityType(), pos, state);
@@ -97,6 +98,7 @@ public class DrumBlockEntity extends BlockEntity {
         nbt.put("ClientItem", new ItemStack(getStoredType(), 1).save(new CompoundTag()));
         nbt.putInt("ClientStackSize", getStoredType().getMaxStackSize());
         nbt.putInt("ClientStoredItems", getTotalItemCount());
+        nbt.putBoolean("Retaining", retaining);
     }
 
     @Override
@@ -107,6 +109,7 @@ public class DrumBlockEntity extends BlockEntity {
         this.clientItem = ItemStack.of(nbt.getCompound("ClientItem"));
         this.clientStackSize = nbt.getInt("ClientStackSize");
         this.clientStoredItems = nbt.getInt("ClientStoredItems");
+        this.retaining = nbt.getBoolean("Retaining");
     }
 
     @Nullable
@@ -145,5 +148,20 @@ public class DrumBlockEntity extends BlockEntity {
         } else {
             return (clientStackSize + " x " + numStacks + " + " + leftover);
         }
+    }
+
+    public boolean applyRetainingUpgrade() {
+        if(!this.retaining) {
+            this.retaining = true;
+            setChanged();
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean getRetaining() {
+        return retaining;
     }
 }

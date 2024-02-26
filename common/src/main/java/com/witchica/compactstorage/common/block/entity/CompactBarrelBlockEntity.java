@@ -5,6 +5,8 @@ import com.witchica.compactstorage.common.block.CompactBarrelBlock;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
 
+import com.witchica.compactstorage.common.util.CompactStorageUpgradeType;
+import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -34,6 +36,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
     public int playersUsing = 0;
     public int playersUsingOld = 0;
     public boolean isOpen = false;
+    private boolean retaining = false;
 
     public CompactBarrelBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CompactStoragePlatform.getCompactBarrelBlockEntityType(), blockPos, blockState);
@@ -119,18 +122,20 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
 
         this.inventoryWidth = nbt.contains("inventory_width") ? nbt.getInt("inventory_width") : 9;
         this.inventoryHeight = nbt.contains("inventory_height") ? nbt.getInt("inventory_height") : 3;
+        this.retaining = nbt.contains("retaining") && nbt.getBoolean("retaining");
 
         this.inventory = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
-        readItemsFromTag(inventory, nbt);
+        CompactStorageUtil.readItemsFromTag(inventory, nbt);
     }
 
     @Override
     protected void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
-        writeItemsToTag(inventory, nbt);
+        CompactStorageUtil.writeItemsToTag(inventory, nbt);
 
         nbt.putInt("inventory_width", inventoryWidth);
         nbt.putInt("inventory_height", inventoryHeight);
+        nbt.putBoolean("retaining", retaining);
     }
 
     @Override
@@ -176,6 +181,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
         return getName();
     }
 
+    @Override
     public boolean increaseSize(int x, int y) {
         if((inventoryWidth > 23 && x > 0) || (inventoryHeight > 11 && y > 0)) {
             return false;
@@ -189,5 +195,69 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 1);
 
         return true;
+    }
+
+    @Override
+    public boolean canUpgradeTypeBeApplied(CompactStorageUpgradeType upgradeType) {
+        switch(upgradeType) {
+            case RETAINING -> {
+                return !this.retaining;
+            }
+            case WIDTH_INCREASE -> {
+                return inventoryWidth < 24;
+            }
+            case HEIGHT_INCREASE -> {
+                return inventoryHeight < 12;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public void applyRetainingUpgrade() {
+        this.retaining = true;
+        setChanged();
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 1);
+    }
+
+    @Override
+    public boolean hasUpgrade(CompactStorageUpgradeType upgradeTypes) {
+        if(upgradeTypes == CompactStorageUpgradeType.WIDTH_INCREASE) {
+            return inventoryWidth > 9;
+        } else if(upgradeTypes == CompactStorageUpgradeType.HEIGHT_INCREASE) {
+            return inventoryHeight > 6;
+        } else if(upgradeTypes == CompactStorageUpgradeType.RETAINING) {
+            return retaining;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean applyUpgrade(CompactStorageUpgradeType upgradeType) {
+        if(canUpgradeTypeBeApplied(upgradeType)) {
+            switch(upgradeType) {
+                case WIDTH_INCREASE -> {
+                    increaseSize(1, 0);
+                    return true;
+                }
+                case HEIGHT_INCREASE -> {
+                    increaseSize(0, 1);
+                    return true;
+                }
+                case RETAINING -> {
+                    applyRetainingUpgrade();
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public NonNullList<ItemStack> getItemList() {
+        return inventory;
     }
 }

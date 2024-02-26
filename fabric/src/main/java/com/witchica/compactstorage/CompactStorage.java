@@ -1,8 +1,7 @@
 package com.witchica.compactstorage;
 
-import com.witchica.compactstorage.common.block.DrumBlock;
-import com.witchica.compactstorage.common.item.BackpackItem;
 import com.witchica.compactstorage.common.item.StorageUpgradeItem;
+import com.witchica.compactstorage.common.util.CompactStorageUpgradeType;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import com.witchica.compactstorage.fabric.block.FabricCompactBarrelBlock;
 import com.witchica.compactstorage.fabric.block.FabricCompactChestBlock;
@@ -68,8 +67,9 @@ public class CompactStorage implements ModInitializer {
 	 * Items
 	 */
 
-	public static final RegistryHolder.Items UPGRADE_ROW_ITEM = new RegistryHolder.Items("upgrade_row", new StorageUpgradeItem(new FabricItemSettings()));
-	public static final RegistryHolder.Items UPGRADE_COLUMN_ITEM = new RegistryHolder.Items("upgrade_column", new StorageUpgradeItem(new FabricItemSettings()));
+	public static final RegistryHolder.Items UPGRADE_ROW_ITEM = new RegistryHolder.Items("upgrade_row", new StorageUpgradeItem(new FabricItemSettings(), CompactStorageUpgradeType.WIDTH_INCREASE));
+	public static final RegistryHolder.Items UPGRADE_COLUMN_ITEM = new RegistryHolder.Items("upgrade_column", new StorageUpgradeItem(new FabricItemSettings(), CompactStorageUpgradeType.HEIGHT_INCREASE));
+	public static final RegistryHolder.Items UPGRADE_RETAINER_ITEM = new RegistryHolder.Items("upgrade_retainer", new StorageUpgradeItem(new FabricItemSettings(), CompactStorageUpgradeType.RETAINING));
 
 	public static final HashMap<DyeColor, RegistryHolder.Items> DYE_COLOR_TO_BACKPACK_MAP = new HashMap<DyeColor, RegistryHolder.Items>();
 
@@ -102,6 +102,7 @@ public class CompactStorage implements ModInitializer {
 				entries.acceptAll(Arrays.stream(BACKPACK_ITEMS).map((block) -> new ItemStack(block.get(), 1)).toList());
 				entries.accept(UPGRADE_COLUMN_ITEM.get());
 				entries.accept(UPGRADE_ROW_ITEM.get());
+				entries.accept(UPGRADE_RETAINER_ITEM.get());
 			}))
 			.build();
 

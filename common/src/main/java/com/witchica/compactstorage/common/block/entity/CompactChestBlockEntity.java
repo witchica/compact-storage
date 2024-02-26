@@ -4,6 +4,8 @@ import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
 
+import com.witchica.compactstorage.common.util.CompactStorageUpgradeType;
+import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.EnvironmentInterface;
@@ -44,6 +46,7 @@ public class CompactChestBlockEntity extends RandomizableContainerBlockEntity im
 
     public float lidOpenness = 0f;
     public float lastLidOpenness = 0f;
+    private boolean retaining;
 
     public CompactChestBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CompactStoragePlatform.getCompactChestBlockEntityType(), blockPos, blockState);
@@ -133,18 +136,20 @@ public class CompactChestBlockEntity extends RandomizableContainerBlockEntity im
 
         this.inventoryWidth = nbt.contains("inventory_width") ? nbt.getInt("inventory_width") : 9;
         this.inventoryHeight = nbt.contains("inventory_height") ? nbt.getInt("inventory_height") : 3;
+        this.retaining = nbt.contains("retaining") && nbt.getBoolean("retaining");
 
         this.inventory = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
-        readItemsFromTag(inventory, nbt);
+        CompactStorageUtil.readItemsFromTag(inventory, nbt);
     }
 
     @Override
     protected void saveAdditional(CompoundTag nbt) {
         super.saveAdditional(nbt);
-        writeItemsToTag(inventory, nbt);
+        CompactStorageUtil.writeItemsToTag(inventory, nbt);
 
         nbt.putInt("inventory_width", inventoryWidth);
         nbt.putInt("inventory_height", inventoryHeight);
+        nbt.putBoolean("retaining", retaining);
     }
 
     @Override
@@ -215,5 +220,73 @@ public class CompactChestBlockEntity extends RandomizableContainerBlockEntity im
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 1);
 
         return true;
+    }
+
+    @Override
+    public void applyRetainingUpgrade() {
+        this.retaining = true;
+        setChanged();
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 1);
+    }
+
+    @Override
+    public boolean canUpgradeTypeBeApplied(CompactStorageUpgradeType upgradeType) {
+        switch(upgradeType) {
+            case RETAINING -> {
+                return !this.retaining;
+            }
+            case WIDTH_INCREASE -> {
+                return inventoryWidth < 24;
+            }
+            case HEIGHT_INCREASE -> {
+                return inventoryHeight < 12;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean hasUpgrade(CompactStorageUpgradeType upgradeTypes) {
+        switch(upgradeTypes) {
+            case RETAINING -> {
+                return  retaining;
+            }
+            case WIDTH_INCREASE -> {
+                return inventoryWidth > 9;
+            }
+            case HEIGHT_INCREASE -> {
+                return inventoryHeight > 6;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean applyUpgrade(CompactStorageUpgradeType upgradeType) {
+        if(canUpgradeTypeBeApplied(upgradeType)) {
+            switch(upgradeType) {
+                case WIDTH_INCREASE -> {
+                    increaseSize(1, 0);
+                    return true;
+                }
+                case HEIGHT_INCREASE -> {
+                    increaseSize(0, 1);
+                    return true;
+                }
+                case RETAINING -> {
+                    applyRetainingUpgrade();
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public NonNullList<ItemStack> getItemList() {
+        return inventory;
     }
 }

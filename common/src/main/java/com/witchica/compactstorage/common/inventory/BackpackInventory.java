@@ -1,6 +1,8 @@
 package com.witchica.compactstorage.common.inventory;
 
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
+import com.witchica.compactstorage.common.util.CompactStorageUpgradeType;
+import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -47,6 +49,11 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
     @Override
     public void clearContent() {
         this.items.clear();
+    }
+
+    @Override
+    public NonNullList<ItemStack> getItemList() {
+        return items;
     }
 
     @Override
@@ -104,9 +111,10 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
         this.inventoryHeight = tag.contains("inventory_height") ? tag.getInt("inventory_height") : 6;
         
         this.items = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
-        readItemsFromTag(this.items, tag);
+        CompactStorageUtil.readItemsFromTag(this.items, tag);
     }
 
+    @Override
     public boolean increaseSize(int x, int y) {
         if((inventoryWidth > 23 && x > 0) || (inventoryHeight > 11 && y > 0)) {
             return false;
@@ -121,12 +129,51 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
         return true;
     }
 
+    @Override
+    public void applyRetainingUpgrade() {
+
+    }
+
+    @Override
+    public boolean canUpgradeTypeBeApplied(CompactStorageUpgradeType upgradeType) {
+        switch(upgradeType) {
+            case RETAINING -> {
+                return false;
+            }
+            case WIDTH_INCREASE -> {
+                return inventoryWidth < 24;
+            }
+            case HEIGHT_INCREASE -> {
+                return inventoryHeight < 12;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean hasUpgrade(CompactStorageUpgradeType upgradeTypes) {
+        switch(upgradeTypes) {
+            case RETAINING -> {
+                return false;
+            }
+            case WIDTH_INCREASE -> {
+                return inventoryWidth > 9;
+            }
+            case HEIGHT_INCREASE -> {
+                return inventoryHeight > 6;
+            }
+        }
+
+        return false;
+    }
+
     public CompoundTag toTag() {
         CompoundTag tag = new CompoundTag();
         tag.putInt("inventory_width", inventoryWidth);
         tag.putInt("inventory_height", inventoryHeight);
 
-        writeItemsToTag(this.items, tag);
+        CompactStorageUtil.writeItemsToTag(this.items, tag);
 
         return tag;
     }
@@ -156,5 +203,23 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
             inventory.getItem(backpackSlot).getTag().put("Backpack", toTag());
         }
         player.playNotifySound(SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 1f, 1f);
+    }
+
+    @Override
+    public boolean applyUpgrade(CompactStorageUpgradeType upgradeType) {
+        if(canUpgradeTypeBeApplied(upgradeType)) {
+            switch(upgradeType) {
+                case WIDTH_INCREASE -> {
+                    increaseSize(1, 0);
+                    return true;
+                }
+                case HEIGHT_INCREASE -> {
+                    increaseSize(0, 1);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

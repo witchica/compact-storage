@@ -1,8 +1,6 @@
 package com.witchica.compactstorage.common.util;
 
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 
@@ -11,34 +9,17 @@ public interface CompactStorageInventoryImpl {
         return (Container) this;
     }
 
+    public NonNullList<ItemStack> getItemList();
+
     public int getInventoryWidth();
     public int getInventoryHeight();
 
-    default void writeItemsToTag(NonNullList<ItemStack> inventory, CompoundTag tag) {
-        ListTag listTag = new ListTag();
+    public boolean increaseSize(int x, int y);
+    public void applyRetainingUpgrade();
+    public boolean canUpgradeTypeBeApplied(CompactStorageUpgradeType upgradeType);
 
-        for(int i = 0; i < inventory.size(); ++i) {
-            ItemStack itemStack = (ItemStack)inventory.get(i);
-            if (!itemStack.isEmpty()) {
-                CompoundTag nbt = new CompoundTag();
-                nbt.putInt("Slot", i);
-                itemStack.save(nbt);
-                listTag.add(nbt);
-            }
-        }
+    public boolean hasUpgrade(CompactStorageUpgradeType upgradeType);
 
-        tag.put("Items", listTag);
-    }
+    public boolean applyUpgrade(CompactStorageUpgradeType upgradeType);
 
-    default void readItemsFromTag(NonNullList<ItemStack> inventory, CompoundTag tag) {
-        ListTag listTag = tag.getList("Items", 10);
-
-        for(int i = 0; i < listTag.size(); ++i) {
-            CompoundTag compoundTag = listTag.getCompound(i);
-            int j = compoundTag.getInt("Slot");
-            if (j >= 0 && j < inventory.size()) {
-                inventory.set(j, ItemStack.of(compoundTag));
-            }
-        }
-    }
 }

@@ -36,6 +36,10 @@ public class CompactStoragePlatform {
         throw new AssertionError("Method not implemented on this platform.");
     }
     @ExpectPlatform
+    public static Item getStorageRetainerUpgradeItem() {
+        throw new AssertionError("Method not implemented on this platform.");
+    }
+    @ExpectPlatform
     public static Block getCompactChestFromDyeColor(DyeColor dyeColor) {
         throw new AssertionError("Method not implemented on this platform.");
     }

@@ -2,6 +2,7 @@ package com.witchica.compactstorage.common.block;
 
 import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.entity.CompactBarrelBlockEntity;
+import com.witchica.compactstorage.common.item.StorageUpgradeItem;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -75,17 +76,10 @@ public abstract class CompactBarrelBlock extends BaseEntityBlock {
 
         if (!world.isClientSide && itemStack.hasTag()) {
             CompoundTag nbt = itemStack.getTag();
+            BlockEntity blockEntity = world.getBlockEntity(pos);
 
-            if (nbt.contains("inventory_width") && nbt.contains("inventory_height")) {
-                BlockEntity blockEntity = world.getBlockEntity(pos);
-
-                if (blockEntity instanceof CompactBarrelBlockEntity) {
-                    CompactBarrelBlockEntity compactBarrelBlockEntity = (CompactBarrelBlockEntity) blockEntity;
-                    compactBarrelBlockEntity.inventoryWidth = nbt.getInt("inventory_width");
-                    compactBarrelBlockEntity.inventoryHeight = nbt.getInt("inventory_height");
-                    compactBarrelBlockEntity.resizeInventory(false);
-                    compactBarrelBlockEntity.setChanged();
-                }
+            if (blockEntity instanceof CompactBarrelBlockEntity compactBarrelBlockEntity) {
+                compactBarrelBlockEntity.load(nbt);
             }
         }
     }
@@ -100,26 +94,15 @@ public abstract class CompactBarrelBlock extends BaseEntityBlock {
                 if(blockEntity instanceof CompactBarrelBlockEntity compactBarrelBlockEntity) {
                     Item heldItem = player.getItemInHand(hand).getItem();
 
-                    if(heldItem == CompactStoragePlatform.getStorageRowUpgradeItem()) {
-                        if(compactBarrelBlockEntity.increaseSize(1, 0)) {
+                    if(heldItem instanceof StorageUpgradeItem storageUpgradeItem) {
+                        if(compactBarrelBlockEntity.applyUpgrade(storageUpgradeItem.getUpgradeType())) {
                             player.getItemInHand(hand).shrink(1);
-                            player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
+                            player.displayClientMessage(Component.translatable(storageUpgradeItem.getUpgradeType().upgradeSuccess).withStyle(ChatFormatting.GREEN), true);
                             player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
                             return InteractionResult.CONSUME_PARTIAL;
                         } else {
                             player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                            player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
-                            return InteractionResult.FAIL;
-                        }
-                    } else if(heldItem == CompactStoragePlatform.getStorageColumnUpgradeItem()) {
-                        if(compactBarrelBlockEntity.increaseSize(0, 1)) {
-                            player.getItemInHand(hand).shrink(1);
-                            player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
-                            player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
-                            return InteractionResult.CONSUME_PARTIAL;
-                        } else {
-                            player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                            player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
+                            player.displayClientMessage(Component.translatable(storageUpgradeItem.getUpgradeType().upgradeFail).withStyle(ChatFormatting.RED), true);
                             return InteractionResult.FAIL;
                         }
                     } else if(heldItem instanceof DyeItem dyeItem) {

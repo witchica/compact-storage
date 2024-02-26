@@ -1,26 +1,21 @@
 package com.witchica.compactstorage.neoforge;
 
 import com.mojang.logging.LogUtils;
-import com.witchica.compactstorage.common.block.CompactBarrelBlock;
-import com.witchica.compactstorage.common.block.CompactChestBlock;
 import com.witchica.compactstorage.common.block.DrumBlock;
 import com.witchica.compactstorage.common.block.entity.CompactBarrelBlockEntity;
 import com.witchica.compactstorage.common.block.entity.CompactChestBlockEntity;
 import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
-import com.witchica.compactstorage.common.inventory.BackpackInventoryHandlerFactory;
 import com.witchica.compactstorage.common.item.BackpackItem;
 import com.witchica.compactstorage.common.item.StorageUpgradeItem;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
+import com.witchica.compactstorage.common.util.CompactStorageUpgradeType;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import com.witchica.compactstorage.neoforge.block.NeoForgeCompactBarrelBlock;
 import com.witchica.compactstorage.neoforge.block.NeoForgeCompactChestBlock;
 import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
@@ -30,23 +25,18 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
-import net.neoforged.neoforge.network.IContainerFactory;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 import static com.witchica.compactstorage.neoforge.CompactStorageNeoForge.MOD_ID;
 
@@ -84,8 +74,9 @@ public class CompactStorageNeoForge {
     public static final HashMap<DyeColor, DeferredBlock<NeoForgeCompactBarrelBlock>> DYE_COLOR_TO_COMPACT_BARREL_MAP = new HashMap<DyeColor, DeferredBlock<NeoForgeCompactBarrelBlock>>();
     public static final HashMap<DyeColor, DeferredItem<BackpackItem>> DYE_COLOR_TO_BACKPACK_MAP = new HashMap<DyeColor, DeferredItem<BackpackItem>>();
 
-    public static final DeferredItem<Item> UPGRADE_ROW_ITEM = ITEMS.register("upgrade_row", () -> new StorageUpgradeItem(new Item.Properties()));
-    public static final DeferredItem<Item> UPGRADE_COLUMN_ITEM = ITEMS.register("upgrade_column", () -> new StorageUpgradeItem(new Item.Properties()));
+    public static final DeferredItem<Item> UPGRADE_ROW_ITEM = ITEMS.register("upgrade_row", () -> new StorageUpgradeItem(new Item.Properties(), CompactStorageUpgradeType.WIDTH_INCREASE));
+    public static final DeferredItem<Item> UPGRADE_COLUMN_ITEM = ITEMS.register("upgrade_column", () -> new StorageUpgradeItem(new Item.Properties(), CompactStorageUpgradeType.HEIGHT_INCREASE));
+    public static final DeferredItem<Item> UPGRADE_RETAINER_ITEM = ITEMS.register("upgrade_retainer", () -> new StorageUpgradeItem(new Item.Properties(), CompactStorageUpgradeType.RETAINING));
 
     public static final DeferredHolder<MenuType<?>, MenuType<CompactChestScreenHandler>> COMPACT_CHEST_SCREEN_HANDLER = MENU_TYPES.register("compact_chest", () -> IMenuTypeExtension.create(CompactChestScreenHandler::new));
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> COMPACT_STORAGE_TAB = CREATIVE_MODE_TABS.register("compact_storage_tab", () -> CreativeModeTab.builder()
@@ -100,6 +91,7 @@ public class CompactStorageNeoForge {
 
             populator.accept(UPGRADE_COLUMN_ITEM.get());
             populator.accept(UPGRADE_ROW_ITEM.get());
+            populator.accept(UPGRADE_RETAINER_ITEM.get());
         }).build());
 
     static {
