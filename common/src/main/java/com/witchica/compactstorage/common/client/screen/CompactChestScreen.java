@@ -36,6 +36,7 @@ public class CompactChestScreen extends AbstractContainerScreen<CompactChestScre
     @Override
     protected void renderBg(GuiGraphics matrixStack, float delta, int mouseX, int mouseY) {
         //RenderSystem.disableLighting();
+        this.renderBackground(matrixStack);
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);

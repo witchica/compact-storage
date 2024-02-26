@@ -12,10 +12,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class ForgeCompactChestBlock extends CompactChestBlock {
-    private static MapCodec<ForgeCompactChestBlock> CODEC = simpleCodec(ForgeCompactChestBlock::new);
     public ForgeCompactChestBlock(Properties settings) {
         super(settings);
     }
@@ -25,16 +25,11 @@ public class ForgeCompactChestBlock extends CompactChestBlock {
         MenuProvider screenHandlerFactory = state.getMenuProvider(level, pos);
 
         if (screenHandlerFactory != null && player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.openMenu(screenHandlerFactory, buf -> {
+            NetworkHooks.openScreen(serverPlayer, screenHandlerFactory, buf -> {
                 buf.writeInt(0);
                 buf.writeBlockPos(pos);
             });
         }
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     @Nullable

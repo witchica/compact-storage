@@ -76,18 +76,18 @@ public class CompactStorage implements ModInitializer {
 	static {
 		for(int i = 0; i < 16; i++) {
 			String dyeName = DyeColor.byId(i).getName().toLowerCase();
-			COMPACT_CHEST_BLOCKS[i] = new RegistryHolder.Blocks("compact_chest_" + dyeName, new FabricCompactChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().strength(2f, 5f)));
+			COMPACT_CHEST_BLOCKS[i] = new RegistryHolder.Blocks("compact_chest_" + dyeName, new FabricCompactChestBlock(BlockBehaviour.Properties.copy(Blocks.CHEST).noOcclusion().strength(2f, 5f)));
 			DYE_COLOR_TO_COMPACT_CHEST_MAP.put(DyeColor.byId(i), COMPACT_CHEST_BLOCKS[i]);
 
 			BACKPACK_ITEMS[i] = new RegistryHolder.Items("backpack_" + dyeName, new FabricBackpackItem(new FabricItemSettings().stacksTo(1)));
 			DYE_COLOR_TO_BACKPACK_MAP.put(DyeColor.byId(i), BACKPACK_ITEMS[i]);
 
-			COMPACT_BARREL_BLOCKS[i] = new RegistryHolder.Blocks("compact_barrel_" + dyeName, new FabricCompactBarrelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL).strength(2f, 5f)));
+			COMPACT_BARREL_BLOCKS[i] = new RegistryHolder.Blocks("compact_barrel_" + dyeName, new FabricCompactBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL).strength(2f, 5f)));
 			DYE_COLOR_TO_COMPACT_BARREL_MAP.put(DyeColor.byId(i), COMPACT_BARREL_BLOCKS[i]);
 		}
 
 		for(int i = 0; i < CompactStorageUtil.DRUM_TYPES.length; i++) {
-			DRUM_BLOCKS[i] = new RegistryHolder.Blocks(CompactStorageUtil.DRUM_TYPES[i] + "_drum", new FabricDrumBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)));
+			DRUM_BLOCKS[i] = new RegistryHolder.Blocks(CompactStorageUtil.DRUM_TYPES[i] + "_drum", new FabricDrumBlock(BlockBehaviour.Properties.copy(Blocks.BARREL)));
 		}
 
 	}

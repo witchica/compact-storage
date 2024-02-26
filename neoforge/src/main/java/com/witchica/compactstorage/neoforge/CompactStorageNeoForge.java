@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraftforge.registries.DeferredRegister;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -55,7 +56,7 @@ public class CompactStorageNeoForge {
     public static final String MOD_ID = "compact_storage";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private static final DeferredRegister.Blocks BLOCKS = DeferredRegister.Blocks.createBlocks(MOD_ID);
+    private static final DeferredRegister<Block> BLOCKS = DeferredRegister.Blocks.createBlocks(MOD_ID);
     private static final DeferredRegister.Items ITEMS = DeferredRegister.Items.createItems(MOD_ID);
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, MOD_ID);
     private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(BuiltInRegistries.MENU, MOD_ID);

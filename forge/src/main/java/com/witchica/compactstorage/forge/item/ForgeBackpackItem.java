@@ -6,6 +6,7 @@ import com.witchica.compactstorage.common.item.BackpackItem;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.NetworkHooks;
 
 public class ForgeBackpackItem extends BackpackItem {
     public ForgeBackpackItem(Properties settings) {
@@ -17,7 +18,7 @@ public class ForgeBackpackItem extends BackpackItem {
         BackpackInventoryHandlerFactory backpackInventoryHandlerFactory = CompactStoragePlatform.getBackpackInventoryHandlerFactory(player, hand);
 
         if(player instanceof ServerPlayer serverPlayer) {
-            serverPlayer.openMenu(backpackInventoryHandlerFactory, backpackInventoryHandlerFactory::writeToByteBuf);
+            NetworkHooks.openScreen(serverPlayer, backpackInventoryHandlerFactory, backpackInventoryHandlerFactory::writeToByteBuf);
         }
     }
 }

@@ -17,14 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 public class ForgeDrumBlock extends DrumBlock {
-    private static MapCodec<ForgeDrumBlock> CODEC = simpleCodec(ForgeDrumBlock::new);
     public ForgeDrumBlock(Properties settings) {
         super(settings);
-    }
-
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
     }
 
     @Nullable

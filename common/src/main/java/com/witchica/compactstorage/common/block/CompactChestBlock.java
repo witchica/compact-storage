@@ -157,17 +157,19 @@ public abstract class CompactChestBlock extends BaseEntityBlock {
         return CHEST_SHAPE;
     }
 
+
     @Override
-    public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
         CompactStorageUtil.dropContents(world, pos, state.getBlock(), player);
-        return super.playerWillDestroy(world, pos, state, player);
+        super.playerWillDestroy(world, pos, state, player);
     }
 
     @Override
-    public void onExplosionHit(BlockState state, Level world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
-        CompactStorageUtil.dropContents(world, pos, this, null);
-        super.onExplosionHit(state, world, pos, explosion, stackMerger);
+    public void wasExploded(Level level, BlockPos pos, Explosion explosion) {
+        super.wasExploded(level, pos, explosion);
+        CompactStorageUtil.dropContents(level, pos, this, null);
     }
+
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag options) {

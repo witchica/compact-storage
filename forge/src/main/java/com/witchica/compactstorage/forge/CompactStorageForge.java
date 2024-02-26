@@ -95,7 +95,7 @@ public class CompactStorageForge {
             final int id = i;
 
             COMPACT_CHEST_BLOCKS[i] = BLOCKS.register("compact_chest_" + dyeName, () ->
-                    new ForgeCompactChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().strength(2f, 5f))
+                    new ForgeCompactChestBlock(BlockBehaviour.Properties.copy(Blocks.CHEST).noOcclusion().strength(2f, 5f))
             );
 
             ITEMS.register("compact_chest_" + dyeName, () ->
@@ -113,7 +113,7 @@ public class CompactStorageForge {
 
 
             COMPACT_BARREL_BLOCKS[i] = BLOCKS.register("compact_barrel_" + color, () ->
-                    new ForgeCompactBarrelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL).strength(2f, 5f)));
+                    new ForgeCompactBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL).strength(2f, 5f)));
             DYE_COLOR_TO_COMPACT_BARREL_MAP.put(color, COMPACT_BARREL_BLOCKS[i]);
 
             ITEMS.register("compact_barrel_" + dyeName, () ->
@@ -125,7 +125,7 @@ public class CompactStorageForge {
             final int id = i;
 
             DRUM_BLOCKS[id] = BLOCKS.register( CompactStorageUtil.DRUM_TYPES[id] + "_drum", () ->
-                    new ForgeDrumBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL).strength(2f, 2f)));
+                    new ForgeDrumBlock(BlockBehaviour.Properties.copy(Blocks.BARREL).strength(2f, 2f)));
 
             ITEMS.register(CompactStorageUtil.DRUM_TYPES[i] + "_drum", () -> new BlockItem(DRUM_BLOCKS[id].get(), new Item.Properties()));
         }

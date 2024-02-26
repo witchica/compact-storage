@@ -16,16 +16,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 public class FabricCompactBarrelBlock extends CompactBarrelBlock {
-
-    public static MapCodec<FabricCompactBarrelBlock> CODEC = simpleCodec(FabricCompactBarrelBlock::new);
     public FabricCompactBarrelBlock(Properties settings) {
         super(settings);
     }
 
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
 
     @Nullable
     @Override
