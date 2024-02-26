@@ -83,7 +83,7 @@
     "text.compact_storage.tooltip.size_y": "Inventory Height: ",
     "text.compact_storage.tooltip.slots": "Has %d slots",
 
-    "itemGroup.compact_storage.general": "Compact Storage",
+    "itemGroup.compact_storage.general": "CompactStorage",
     "text.compact_storage.drum.tooltip_1": "Can store 64 stacks of one item type",
     "text.compact_storage.drum.tooltip_2": "Right-click to add items, left click to remove",
 
