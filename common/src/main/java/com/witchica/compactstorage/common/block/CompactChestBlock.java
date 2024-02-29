@@ -125,6 +125,14 @@ public abstract class CompactChestBlock extends BaseEntityBlock {
 
         return InteractionResult.SUCCESS;
     }
+
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if(state.hasBlockEntity() && !(newState.getBlock() instanceof CompactChestBlock)) {
+            level.removeBlockEntity(pos);
+        }
+    }
+
     public abstract void openMenu(Level level, Player player, BlockPos pos, BlockState state, InteractionHand hand);
 
 
