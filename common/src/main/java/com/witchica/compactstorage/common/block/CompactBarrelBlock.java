@@ -182,4 +182,11 @@ public abstract class CompactBarrelBlock extends BaseEntityBlock {
             return null;
         }
     }
+
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if(state.hasBlockEntity() && !(newState.getBlock() instanceof CompactBarrelBlock)) {
+            level.removeBlockEntity(pos);
+        }
+    }
 }

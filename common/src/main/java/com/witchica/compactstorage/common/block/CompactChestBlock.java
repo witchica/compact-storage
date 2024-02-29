@@ -196,5 +196,12 @@ public abstract class CompactChestBlock extends BaseEntityBlock {
         }
     }
 
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if(state.hasBlockEntity() && !(newState.getBlock() instanceof CompactChestBlock)) {
+            level.removeBlockEntity(pos);
+        }
+    }
+
 
 }
