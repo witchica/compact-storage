@@ -122,11 +122,12 @@ public class CompactStorage implements ModInitializer {
 		COMPACT_CHEST_ENTITY_TYPE = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, COMPACT_CHEST_GENERIC_IDENTIFIER, FabricBlockEntityTypeBuilder.create(FabricCompactChestBlockEntity::new, Arrays.stream(COMPACT_CHEST_BLOCKS).map(RegistryHolder::get).toArray(Block[]::new)).build(null));
 		COMPACT_BARREL_ENTITY_TYPE = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, COMPACT_BARREL_GENERIC_IDENTIFIER, FabricBlockEntityTypeBuilder.create(FabricCompactBarrelBlockEntity::new, Arrays.stream(COMPACT_BARREL_BLOCKS).map(RegistryHolder::get).toArray(Block[]::new)).build(null));
 
-		DRUM_BLOCK_ENTITY_TYPE = new RegistryHolder<BlockEntityType<FabricDrumBlockEntity>>("drum", FabricBlockEntityTypeBuilder.create(FabricDrumBlockEntity::new, Arrays.stream(DRUM_BLOCKS).map(RegistryHolder::get).toArray(Block[]::new)).build(null));
+		DRUM_BLOCK_ENTITY_TYPE = new RegistryHolder<>("drum", FabricBlockEntityTypeBuilder.create(FabricDrumBlockEntity::new, Arrays.stream(DRUM_BLOCKS).map(RegistryHolder::get).toArray(Block[]::new)).build(null));
 		DRUM_BLOCK_ENTITY_TYPE.register(BuiltInRegistries.BLOCK_ENTITY_TYPE);
 
 		UPGRADE_ROW_ITEM.register(BuiltInRegistries.ITEM);
 		UPGRADE_COLUMN_ITEM.register(BuiltInRegistries.ITEM);
+		UPGRADE_RETAINER_ITEM.register(BuiltInRegistries.ITEM);
 
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(MOD_ID, "general"), COMPACT_STORAGE_ITEM_GROUP);
 
