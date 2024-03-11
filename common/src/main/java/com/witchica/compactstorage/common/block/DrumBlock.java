@@ -1,6 +1,7 @@
 package com.witchica.compactstorage.common.block;
 
 import com.mojang.serialization.MapCodec;
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
 import com.witchica.compactstorage.common.item.StorageUpgradeItem;
@@ -105,7 +106,7 @@ public class DrumBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new DrumBlockEntity(pos, state);
+        return CompactStoragePlatform.drumBlockEntitySupplier().create(pos, state);
     }
 
     public void extractItem(Level world, BlockPos pos, Player player) {
@@ -167,7 +168,7 @@ public class DrumBlock extends BaseEntityBlock {
             if(player.isShiftKeyDown()) {
                extractItem(world, pos, player);
             } else {
-                if(player.getItemInHand(hand).getItem() == CompactStoragePlatform.getStorageRetainerUpgradeItem()) {
+                if(player.getItemInHand(hand).getItem() == CompactStorage.UPGRADE_RETAINER_ITEM.get()) {
                     StorageUpgradeItem storageUpgradeItem = (StorageUpgradeItem) player.getItemInHand(hand).getItem();
                     if(world.getBlockEntity(pos) instanceof DrumBlockEntity drumBlockEntity) {
                         if(drumBlockEntity.applyRetainingUpgrade()) {

@@ -39,6 +39,7 @@
 
     "container.compact_storage.compact_chest": "Compact Chest",
     "container.compact_storage.backpack": "Backpack",
+    "container.compact_storage.compact_barrel": "Compact Barrel",
 
     "item.compact_storage.backpack": "Backpack",
     "item.compact_storage.upgrade_column": "Storage Upgrade (Height)",

@@ -1,20 +1,28 @@
 package com.witchica.compactstorage.common.block;
 
+import com.mojang.serialization.MapCodec;
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.entity.CompactBarrelBlockEntity;
 import com.witchica.compactstorage.common.item.StorageUpgradeItem;
+import com.witchica.compactstorage.common.screen.CompactStorageMenuProvider;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
+import dev.architectury.registry.menu.ExtendedMenuProvider;
+import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.DyeItem;
@@ -42,14 +50,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public abstract class CompactBarrelBlock extends BaseEntityBlock {
+public class CompactBarrelBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
     public static final BooleanProperty OPEN = BooleanProperty.create("open");
+    public static final MapCodec<CompactBarrelBlock> CODEC = simpleCodec(CompactBarrelBlock::new);
 
 
     public CompactBarrelBlock(BlockBehaviour.Properties settings) {
         super(settings);
         registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(OPEN, false));
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -113,7 +127,7 @@ public abstract class CompactBarrelBlock extends BaseEntityBlock {
                             return InteractionResult.FAIL;
                         }
                     } else if(heldItem instanceof DyeItem dyeItem) {
-                        Block newBlock = CompactStoragePlatform.getCompactBarrelFromDyeColor(dyeItem.getDyeColor());
+                        Block newBlock = CompactStorage.getCompactBarrelFromDyeColor(dyeItem.getDyeColor());
                         world.setBlockAndUpdate(pos, newBlock.defaultBlockState().setValue(FACING, state.getValue(FACING)));
                         player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
                         player.getItemInHand(hand).shrink(1);
@@ -128,7 +142,9 @@ public abstract class CompactBarrelBlock extends BaseEntityBlock {
         return InteractionResult.SUCCESS;
     }
 
-    public abstract void openMenu(Level level, Player player, BlockPos pos, BlockState state, InteractionHand hand);
+    public void openMenu(Level level, Player player, BlockPos pos, BlockState state, InteractionHand hand) {
+        MenuRegistry.openExtendedMenu((ServerPlayer) player, CompactStorageMenuProvider.ofBlock(pos, Component.translatable("container.compact_storage.compact_barrel")));
+    }
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
@@ -163,9 +179,15 @@ public abstract class CompactBarrelBlock extends BaseEntityBlock {
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
     }
 
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return CompactStoragePlatform.compactBarrelBlockEntitySupplier().create(pos, state);
+    }
+
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        if(type == CompactStoragePlatform.getCompactBarrelBlockEntityType()) {
+        if(type == CompactStorage.COMPACT_BARREL_ENTITY_TYPE.get()) {
             return (world1, pos, state1, be) -> CompactBarrelBlockEntity.tick(world1, pos, state1, (CompactBarrelBlockEntity)  be);
         } else {
             return null;

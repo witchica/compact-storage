@@ -27,3 +27,10 @@ type = "required"
 versionRange = "${mod_neo_minecraft_range}"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.compact_storage]]
+modId = "architectury"
+type = "required"
+versionRange = ">= [${architectury_version},)"
+ordering = "AFTER"
+side = "BOTH"

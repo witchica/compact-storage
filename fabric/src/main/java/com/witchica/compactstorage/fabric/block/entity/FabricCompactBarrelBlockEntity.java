@@ -9,17 +9,11 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FabricCompactBarrelBlockEntity extends CompactBarrelBlockEntity implements ExtendedScreenHandlerFactory {
+public class FabricCompactBarrelBlockEntity extends CompactBarrelBlockEntity {
     public InventoryStorage inventoryStorage;
     public FabricCompactBarrelBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(blockPos, blockState);
         this.inventoryStorage = InventoryStorage.of(this, null);
-    }
-
-    @Override
-    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
-        buf.writeInt(0);
-        buf.writeBlockPos(this.worldPosition);
     }
 
     @Override

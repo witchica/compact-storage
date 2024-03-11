@@ -27,3 +27,10 @@ mandatory = true
 versionRange = "${mod_forge_minecraft_range}"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.compact_storage]]
+modId = "architectury"
+mandatory = true
+versionRange = "[${architectury_version},)"
+ordering = "AFTER"
+side = "BOTH"

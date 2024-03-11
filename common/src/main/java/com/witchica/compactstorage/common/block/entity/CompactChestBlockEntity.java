@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.common.block.entity;
 
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
@@ -49,7 +50,7 @@ public class CompactChestBlockEntity extends RandomizableContainerBlockEntity im
     private boolean retaining;
 
     public CompactChestBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(CompactStoragePlatform.getCompactChestBlockEntityType(), blockPos, blockState);
+        super(CompactStorage.COMPACT_CHEST_ENTITY_TYPE.get(), blockPos, blockState);
         this.inventory = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
     }
 

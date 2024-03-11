@@ -1,9 +1,12 @@
 package com.witchica.compactstorage.common.item;
 
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.inventory.BackpackInventory;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
+import com.witchica.compactstorage.common.screen.CompactStorageMenuProvider;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
+import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -22,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class BackpackItem extends Item {
+public class BackpackItem extends Item {
     public BackpackItem(Properties settings) {
         super(settings);
     }
@@ -48,7 +51,7 @@ public abstract class BackpackItem extends Item {
                     return super.use(world, player, hand);
                 }
 
-                if(oppositeItem == CompactStoragePlatform.getStorageRowUpgradeItem()) {
+                if(oppositeItem == CompactStorage.UPGRADE_ROW_ITEM.get()) {
                     if(inventory.increaseSize(1, 0)) {
                         player.getItemInHand(oppositeHand).shrink(1);
                         heldItemStack.getTag().put("Backpack", inventory.toTag());
@@ -61,7 +64,7 @@ public abstract class BackpackItem extends Item {
                         player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
                         return InteractionResultHolder.fail(heldItemStack);
                     }
-                } else if(oppositeItem == CompactStoragePlatform.getStorageColumnUpgradeItem()) {
+                } else if(oppositeItem == CompactStorage.UPGRADE_COLUMN_ITEM.get()) {
                     if(inventory.increaseSize(0, 1)) {
                         player.getItemInHand(oppositeHand).shrink(1);
                         heldItemStack.getTag().put("Backpack", inventory.toTag());
@@ -75,7 +78,7 @@ public abstract class BackpackItem extends Item {
                         return InteractionResultHolder.fail(heldItemStack);
                     }
                 } else if(oppositeItem instanceof DyeItem dyeItem) {
-                    Item newBackpackItem = CompactStoragePlatform.getBackpackFromDyeColor(dyeItem.getDyeColor());
+                    Item newBackpackItem = CompactStorage.getBackpackFromDyeColor(dyeItem.getDyeColor());
 
                     if(newBackpackItem != heldItemStack.getItem()) {
                         ItemStack newStack = new ItemStack(newBackpackItem, 1);
@@ -98,7 +101,9 @@ public abstract class BackpackItem extends Item {
         return super.use(world, player, hand);
     }
 
-    public abstract void openMenu(Player player, InteractionHand hand);
+    public void openMenu(Player player, InteractionHand hand) {
+        MenuRegistry.openExtendedMenu((ServerPlayer) player, CompactStorageMenuProvider.ofBackpack(hand));
+    }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {

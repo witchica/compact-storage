@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.common.screen;
 
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.inventory.BackpackInventory;
 
@@ -30,7 +31,7 @@ public class CompactChestScreenHandler extends AbstractContainerMenu {
     private boolean isBackpackInOffhand;
 
     public CompactChestScreenHandler(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
-        super(CompactStoragePlatform.getCompactStorageScreenHandler(), syncId);
+        super(CompactStorage.COMPACT_CHEST_SCREEN_HANDLER.get(), syncId);
         int inventoryType = buf.readInt();
 
         this.playerInventory = playerInventory;
