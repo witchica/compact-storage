@@ -8,6 +8,7 @@ import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.CompactChestBlock;
 import com.witchica.compactstorage.common.block.entity.CompactChestBlockEntity;
 
+import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -37,6 +38,10 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
     static {
         for(int i = 0; i < 16; i++) {
             CHEST_TEXTURES.put(CompactStorage.COMPACT_CHEST_BLOCKS[i].get(), new ResourceLocation("compact_storage", String.format("textures/block/compact_chest_%s.png", DyeColor.byId(i).name().toLowerCase())));
+        }
+
+        for(int i = 0; i < CompactStorageUtil.DRUM_TYPES.length; i++) {
+            CHEST_TEXTURES.put(CompactStorage.COMPACT_CHEST_WOOD_BLOCKS[i].get(), new ResourceLocation("compact_storage", String.format("textures/block/chest/%s_chest.png", CompactStorageUtil.DRUM_TYPES[i])));
         }
     }
     

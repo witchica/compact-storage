@@ -33,8 +33,10 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class CompactStorage {
     public static final String MOD_ID = "compact_storage";
@@ -61,7 +63,15 @@ public class CompactStorage {
             BLOCK_ENTITY_TYPES.register("compact_barrel", () -> BlockEntityType.Builder.of(CompactStoragePlatform.compactBarrelBlockEntitySupplier(), Arrays.stream(COMPACT_BARREL_BLOCKS).map(RegistrySupplier::get).toArray(Block[]::new)).build(null));
 
     public static RegistrySupplier<BlockEntityType<CompactChestBlockEntity>> COMPACT_CHEST_ENTITY_TYPE =
-            BLOCK_ENTITY_TYPES.register("compact_chest", () -> BlockEntityType.Builder.of(CompactStoragePlatform.compactChestBlockEntitySupplier(), Arrays.stream(COMPACT_CHEST_BLOCKS).map(RegistrySupplier::get).toArray(Block[]::new)).build(null));
+            BLOCK_ENTITY_TYPES.register("compact_chest", () -> BlockEntityType.Builder.of(CompactStoragePlatform.compactChestBlockEntitySupplier(), getAllCompactChests()).build(null));
+
+    private static Block[] getAllCompactChests() {
+        List<Block> blocks = new ArrayList<Block>();
+        Arrays.stream(COMPACT_CHEST_BLOCKS).forEach(block -> blocks.add(block.get()));
+        Arrays.stream(COMPACT_CHEST_WOOD_BLOCKS).forEach(block -> blocks.add(block.get()));
+
+        return blocks.toArray(Block[]::new);
+    }
 
     public static RegistrySupplier<BlockEntityType<DrumBlockEntity>> DRUM_ENTITY_TYPE =
             BLOCK_ENTITY_TYPES.register("drum", () -> BlockEntityType.Builder.of(CompactStoragePlatform.drumBlockEntitySupplier(), Arrays.stream(DRUM_BLOCKS).map(RegistrySupplier::get).toArray(Block[]::new)).build(null));
