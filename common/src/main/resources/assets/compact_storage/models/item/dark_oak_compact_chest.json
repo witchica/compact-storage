@@ -1,0 +1,6 @@
+{
+  "parent": "compact_storage:block/compact_chest",
+  "textures": {
+    "0": "compact_storage:block/chest/dark_oak_chest"
+  }
+}

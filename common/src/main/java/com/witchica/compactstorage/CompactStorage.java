@@ -50,6 +50,7 @@ public class CompactStorage {
     public static ResourceLocation COMPACT_BARREL_GENERIC_IDENTIFIER = new ResourceLocation(MOD_ID, "compact_barrel");
 
     public static final RegistrySupplier<CompactChestBlock>[] COMPACT_CHEST_BLOCKS = new RegistrySupplier[16];
+    public static final RegistrySupplier<CompactChestBlock>[] COMPACT_CHEST_WOOD_BLOCKS = new RegistrySupplier[CompactStorageUtil.DRUM_TYPES.length];
     public static final RegistrySupplier<CompactBarrelBlock>[] COMPACT_BARREL_BLOCKS = new RegistrySupplier[16];
     public static final RegistrySupplier<DrumBlock>[] DRUM_BLOCKS = new RegistrySupplier[CompactStorageUtil.DRUM_TYPES.length];
     public static final RegistrySupplier<BackpackItem>[] BACKPACK_ITEMS = new RegistrySupplier[16];
@@ -83,6 +84,7 @@ public class CompactStorage {
                         Arrays.stream(COMPACT_BARREL_BLOCKS).forEach(item-> populator.accept(item.get()));
                         Arrays.stream(BACKPACK_ITEMS).forEach(item-> populator.accept(item.get()));
                         Arrays.stream(DRUM_BLOCKS).forEach(item-> populator.accept(item.get()));
+                        Arrays.stream(COMPACT_CHEST_WOOD_BLOCKS).forEach(item -> populator.accept(item.get()));
 
                         populator.accept(UPGRADE_COLUMN_ITEM.get());
                         populator.accept(UPGRADE_ROW_ITEM.get());
@@ -130,6 +132,9 @@ public class CompactStorage {
                     new DrumBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL).strength(2f, 2f)));
 
             ITEMS.register(CompactStorageUtil.DRUM_TYPES[i] + "_drum", () -> new BlockItem(DRUM_BLOCKS[id].get(), new Item.Properties()));
+
+            COMPACT_CHEST_WOOD_BLOCKS[id] = BLOCKS.register(CompactStorageUtil.DRUM_TYPES[i] + "_compact_chest", () -> new CompactChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST)));
+            ITEMS.register(CompactStorageUtil.DRUM_TYPES[i] + "_compact_chest", () -> new BlockItem(COMPACT_CHEST_WOOD_BLOCKS[id].get(), new Item.Properties()));
         }
     }
     public static void onInitialize() {
