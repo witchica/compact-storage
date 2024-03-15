@@ -54,11 +54,17 @@ public class CompactBarrelBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
     public static final BooleanProperty OPEN = BooleanProperty.create("open");
     public static final MapCodec<CompactBarrelBlock> CODEC = simpleCodec(CompactBarrelBlock::new);
+    private boolean canDye;
 
 
     public CompactBarrelBlock(BlockBehaviour.Properties settings) {
         super(settings);
         registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(OPEN, false));
+    }
+
+    public CompactBarrelBlock setCanDye() {
+        this.canDye = true;
+        return this;
     }
 
     @Override
@@ -126,12 +132,15 @@ public class CompactBarrelBlock extends BaseEntityBlock {
                             player.displayClientMessage(Component.translatable(storageUpgradeItem.getUpgradeType().upgradeFail).withStyle(ChatFormatting.RED), true);
                             return InteractionResult.FAIL;
                         }
-                    } else if(heldItem instanceof DyeItem dyeItem) {
+                    } else if(canDye && heldItem instanceof DyeItem dyeItem) {
                         Block newBlock = CompactStorage.getCompactBarrelFromDyeColor(dyeItem.getDyeColor());
-                        world.setBlockAndUpdate(pos, newBlock.defaultBlockState().setValue(FACING, state.getValue(FACING)));
-                        player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
-                        player.getItemInHand(hand).shrink(1);
-                        return InteractionResult.CONSUME_PARTIAL;
+
+                        if(newBlock != this) {
+                            world.setBlockAndUpdate(pos, newBlock.defaultBlockState().setValue(FACING, state.getValue(FACING)));
+                            player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
+                            player.getItemInHand(hand).shrink(1);
+                            return InteractionResult.CONSUME_PARTIAL;
+                        }
                     }
                 }
 

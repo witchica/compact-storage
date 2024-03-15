@@ -55,9 +55,16 @@ public class CompactChestBlock extends BaseEntityBlock {
     public static final VoxelShape CHEST_SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
 
     public static final MapCodec<CompactChestBlock> CODEC = simpleCodec(CompactChestBlock::new);
+    private boolean canDye;
+
     public CompactChestBlock(Properties settings) {
         super(settings);
         registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH));
+    }
+
+    public CompactChestBlock setCanDye() {
+        this.canDye = true;
+        return this;
     }
 
     @Override
@@ -121,12 +128,14 @@ public class CompactChestBlock extends BaseEntityBlock {
                         player.displayClientMessage(Component.translatable(storageUpgradeItem.getUpgradeType().upgradeFail).withStyle(ChatFormatting.RED), true);
                         return InteractionResult.FAIL;
                     }
-                } else if(heldItem instanceof DyeItem dyeItem) {
+                } else if(canDye && heldItem instanceof DyeItem dyeItem) {
                     Block newBlock = CompactStorage.getCompactChestFromDyeColor(dyeItem.getDyeColor());
-                    world.setBlockAndUpdate(pos, newBlock.defaultBlockState().setValue(FACING, state.getValue(FACING)));
-                    player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
-                    player.getItemInHand(hand).shrink(1);
-                    return InteractionResult.CONSUME_PARTIAL;
+                    if(newBlock != this) {
+                        world.setBlockAndUpdate(pos, newBlock.defaultBlockState().setValue(FACING, state.getValue(FACING)));
+                        player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
+                        player.getItemInHand(hand).shrink(1);
+                        return InteractionResult.CONSUME_PARTIAL;
+                    }
                  }
             }
 

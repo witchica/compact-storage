@@ -54,13 +54,14 @@ public class CompactStorage {
     public static final RegistrySupplier<CompactChestBlock>[] COMPACT_CHEST_BLOCKS = new RegistrySupplier[16];
     public static final RegistrySupplier<CompactChestBlock>[] COMPACT_CHEST_WOOD_BLOCKS = new RegistrySupplier[CompactStorageUtil.DRUM_TYPES.length];
     public static final RegistrySupplier<CompactBarrelBlock>[] COMPACT_BARREL_BLOCKS = new RegistrySupplier[16];
+    public static final RegistrySupplier<CompactBarrelBlock>[] COMPACT_BARREL_WOOD_BLOCKS = new RegistrySupplier[CompactStorageUtil.DRUM_TYPES.length];
     public static final RegistrySupplier<DrumBlock>[] DRUM_BLOCKS = new RegistrySupplier[CompactStorageUtil.DRUM_TYPES.length];
     public static final RegistrySupplier<BackpackItem>[] BACKPACK_ITEMS = new RegistrySupplier[16];
 
     public static final String COMPACT_CHEST_TRANSLATION_KEY = Util.makeDescriptionId("container", COMPACT_CHEST_GENERIC_IDENTIFIER);
 
     public static RegistrySupplier<BlockEntityType<CompactBarrelBlockEntity>> COMPACT_BARREL_ENTITY_TYPE =
-            BLOCK_ENTITY_TYPES.register("compact_barrel", () -> BlockEntityType.Builder.of(CompactStoragePlatform.compactBarrelBlockEntitySupplier(), Arrays.stream(COMPACT_BARREL_BLOCKS).map(RegistrySupplier::get).toArray(Block[]::new)).build(null));
+            BLOCK_ENTITY_TYPES.register("compact_barrel", () -> BlockEntityType.Builder.of(CompactStoragePlatform.compactBarrelBlockEntitySupplier(), getAllCompactBarrels()).build(null));
 
     public static RegistrySupplier<BlockEntityType<CompactChestBlockEntity>> COMPACT_CHEST_ENTITY_TYPE =
             BLOCK_ENTITY_TYPES.register("compact_chest", () -> BlockEntityType.Builder.of(CompactStoragePlatform.compactChestBlockEntitySupplier(), getAllCompactChests()).build(null));
@@ -69,6 +70,13 @@ public class CompactStorage {
         List<Block> blocks = new ArrayList<Block>();
         Arrays.stream(COMPACT_CHEST_BLOCKS).forEach(block -> blocks.add(block.get()));
         Arrays.stream(COMPACT_CHEST_WOOD_BLOCKS).forEach(block -> blocks.add(block.get()));
+
+        return blocks.toArray(Block[]::new);
+    }
+    private static Block[] getAllCompactBarrels() {
+        List<Block> blocks = new ArrayList<Block>();
+        Arrays.stream(COMPACT_BARREL_BLOCKS).forEach(block -> blocks.add(block.get()));
+        Arrays.stream(COMPACT_BARREL_WOOD_BLOCKS).forEach(block -> blocks.add(block.get()));
 
         return blocks.toArray(Block[]::new);
     }
@@ -106,6 +114,7 @@ public class CompactStorage {
                 .displayItems((params, populator) -> {
                     Arrays.stream(DRUM_BLOCKS).forEach(item-> populator.accept(item.get()));
                     Arrays.stream(COMPACT_CHEST_WOOD_BLOCKS).forEach(item -> populator.accept(item.get()));
+                    Arrays.stream(COMPACT_BARREL_WOOD_BLOCKS).forEach(item -> populator.accept(item.get()));
                 });
     }));
 
@@ -116,7 +125,7 @@ public class CompactStorage {
             final int id = i;
 
             COMPACT_CHEST_BLOCKS[i] = BLOCKS.register("compact_chest_" + dyeName, () ->
-                    new CompactChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().strength(2f, 5f))
+                    new CompactChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().strength(2f, 5f)).setCanDye()
             );
 
             ITEMS.register("compact_chest_" + dyeName, () ->
@@ -134,7 +143,7 @@ public class CompactStorage {
 
 
             COMPACT_BARREL_BLOCKS[i] = BLOCKS.register("compact_barrel_" + color, () ->
-                    new CompactBarrelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL).strength(2f, 5f)));
+                    new CompactBarrelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL).strength(2f, 5f)).setCanDye());
             DYE_COLOR_TO_COMPACT_BARREL_MAP.put(color, COMPACT_BARREL_BLOCKS[i]);
 
             ITEMS.register("compact_barrel_" + dyeName, () ->
@@ -152,6 +161,9 @@ public class CompactStorage {
 
             COMPACT_CHEST_WOOD_BLOCKS[id] = BLOCKS.register(CompactStorageUtil.DRUM_TYPES[i] + "_compact_chest", () -> new CompactChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST)));
             ITEMS.register(CompactStorageUtil.DRUM_TYPES[i] + "_compact_chest", () -> new BlockItem(COMPACT_CHEST_WOOD_BLOCKS[id].get(), new Item.Properties()));
+
+            COMPACT_BARREL_WOOD_BLOCKS[id] = BLOCKS.register(CompactStorageUtil.DRUM_TYPES[i] + "_compact_barrel", () -> new CompactBarrelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)));
+            ITEMS.register(CompactStorageUtil.DRUM_TYPES[i] + "_compact_barrel", () -> new BlockItem(COMPACT_BARREL_WOOD_BLOCKS[id].get(), new Item.Properties()));
         }
     }
     public static void onInitialize() {

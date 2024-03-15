@@ -116,5 +116,17 @@
     "block.compact_storage.mangrove_compact_chest": "Mangrove Compact Chest",
     "block.compact_storage.warped_compact_chest": "Warped Compact Chest",
     "block.compact_storage.cherry_compact_chest": "Cherry Compact Chest",
-    "block.compact_storage.jungle_compact_chest": "Jungle Compact Chest"
+    "block.compact_storage.jungle_compact_chest": "Jungle Compact Chest",
+
+    "block.compact_storage.spruce_compact_barrel": "Spruce Compact Barrel",
+    "block.compact_storage.oak_compact_barrel": "Oak Compact Barrel",
+    "block.compact_storage.crimson_compact_barrel": "Crimson Compact Barrel",
+    "block.compact_storage.birch_compact_barrel": "Birch Compact Barrel",
+    "block.compact_storage.dark_oak_compact_barrel": "Dark Oak Compact Barrel",
+    "block.compact_storage.bamboo_compact_barrel": "Bamboo Compact Barrel",
+    "block.compact_storage.acacia_compact_barrel": "Acacia Compact Barrel",
+    "block.compact_storage.mangrove_compact_barrel": "Mangrove Compact Barrel",
+    "block.compact_storage.warped_compact_barrel": "Warped Compact Barrel",
+    "block.compact_storage.cherry_compact_barrel": "Cherry Compact Barrel",
+    "block.compact_storage.jungle_compact_barrel": "Jungle Compact Barrel"
 }
