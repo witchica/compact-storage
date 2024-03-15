@@ -85,7 +85,8 @@
     "text.compact_storage.tooltip.size_y": "Inventory Height: ",
     "text.compact_storage.tooltip.slots": "Has %d slots",
 
-    "itemGroup.compact_storage.general": "CompactStorage",
+    "itemGroup.compact_storage.general": "CompactStorage: Iron",
+    "itemGroup.compact_storage.wood": "CompactStorage: Wood",
     "text.compact_storage.drum.tooltip_1": "Can store 64 stacks of one item type",
     "text.compact_storage.drum.tooltip_2": "Right-click to add items, left click to remove",
 
@@ -103,5 +104,17 @@
     "tooltip.compact_storage.new_item_description": "New!",
     "tooltip.compact_storage.storage_size": "%d x %d = %d slots",
     "tooltip.compact_storage.retaining": "Retaining",
-    "tooltip.compact_storage.drum_contains": "Contains %d x %s"
+    "tooltip.compact_storage.drum_contains": "Contains %d x %s",
+
+    "block.compact_storage.spruce_compact_chest": "Spruce Compact Chest",
+    "block.compact_storage.oak_compact_chest": "Oak Compact Chest",
+    "block.compact_storage.crimson_compact_chest": "Crimson Compact Chest",
+    "block.compact_storage.birch_compact_chest": "Birch Compact Chest",
+    "block.compact_storage.dark_oak_compact_chest": "Dark Oak Compact Chest",
+    "block.compact_storage.bamboo_compact_chest": "Bamboo Compact Chest",
+    "block.compact_storage.acacia_compact_chest": "Acacia Compact Chest",
+    "block.compact_storage.mangrove_compact_chest": "Mangrove Compact Chest",
+    "block.compact_storage.warped_compact_chest": "Warped Compact Chest",
+    "block.compact_storage.cherry_compact_chest": "Cherry Compact Chest",
+    "block.compact_storage.jungle_compact_chest": "Jungle Compact Chest"
 }

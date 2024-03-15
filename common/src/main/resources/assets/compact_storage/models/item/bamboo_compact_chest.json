@@ -1,5 +1,5 @@
 {
-  "parent": "compact_storage:block/compact_chest",
+  "parent": "compact_storage:item/compact_chest",
   "textures": {
     "0": "compact_storage:block/chest/bamboo_chest"
   }

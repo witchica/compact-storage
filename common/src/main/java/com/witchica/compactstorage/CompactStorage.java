@@ -86,21 +86,28 @@ public class CompactStorage {
 
     public static RegistrySupplier<MenuType<CompactChestScreenHandler>> COMPACT_CHEST_SCREEN_HANDLER = MENU_TYPES.register("compact_chest", () -> MenuRegistry.ofExtended(CompactChestScreenHandler::new));
     public static final RegistrySupplier<CreativeModeTab> COMPACT_STORAGE_TAB = CREATIVE_MODE_TABS.register("compact_storage_tab", () -> CreativeTabRegistry.create(builder -> {
-                builder.title(Component.translatable("itemGroup.compact_storage.general"))
-                    .icon(() -> new ItemStack(COMPACT_CHEST_BLOCKS[0].get(), 1))
-                    .displayItems((params, populator) -> {
+        builder.title(Component.translatable("itemGroup.compact_storage.general"))
+                .icon(() -> new ItemStack(COMPACT_CHEST_BLOCKS[0].get(), 1))
+                .displayItems((params, populator) -> {
 
-                        Arrays.stream(COMPACT_CHEST_BLOCKS).forEach(item -> populator.accept(item.get()));
-                        Arrays.stream(COMPACT_BARREL_BLOCKS).forEach(item-> populator.accept(item.get()));
-                        Arrays.stream(BACKPACK_ITEMS).forEach(item-> populator.accept(item.get()));
-                        Arrays.stream(DRUM_BLOCKS).forEach(item-> populator.accept(item.get()));
-                        Arrays.stream(COMPACT_CHEST_WOOD_BLOCKS).forEach(item -> populator.accept(item.get()));
+                    Arrays.stream(COMPACT_CHEST_BLOCKS).forEach(item -> populator.accept(item.get()));
+                    Arrays.stream(COMPACT_BARREL_BLOCKS).forEach(item-> populator.accept(item.get()));
+                    Arrays.stream(BACKPACK_ITEMS).forEach(item-> populator.accept(item.get()));
 
-                        populator.accept(UPGRADE_COLUMN_ITEM.get());
-                        populator.accept(UPGRADE_ROW_ITEM.get());
-                        populator.accept(UPGRADE_RETAINER_ITEM.get());
-                    });
-            }));
+                    populator.accept(UPGRADE_COLUMN_ITEM.get());
+                    populator.accept(UPGRADE_ROW_ITEM.get());
+                    populator.accept(UPGRADE_RETAINER_ITEM.get());
+                });
+    }));
+
+    public static final RegistrySupplier<CreativeModeTab> COMPACT_STORAGE_WOOD_TAB = CREATIVE_MODE_TABS.register("compact_storage_tab_wood", () -> CreativeTabRegistry.create(builder -> {
+        builder.title(Component.translatable("itemGroup.compact_storage.wood"))
+                .icon(() -> new ItemStack(COMPACT_CHEST_WOOD_BLOCKS[1].get(), 1))
+                .displayItems((params, populator) -> {
+                    Arrays.stream(DRUM_BLOCKS).forEach(item-> populator.accept(item.get()));
+                    Arrays.stream(COMPACT_CHEST_WOOD_BLOCKS).forEach(item -> populator.accept(item.get()));
+                });
+    }));
 
     static {
         for(int i = 0; i < 16; i++) {
