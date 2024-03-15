@@ -97,14 +97,13 @@ public class CompactStorage {
         builder.title(Component.translatable("itemGroup.compact_storage.general"))
                 .icon(() -> new ItemStack(COMPACT_CHEST_BLOCKS[0].get(), 1))
                 .displayItems((params, populator) -> {
+                    populator.accept(UPGRADE_COLUMN_ITEM.get());
+                    populator.accept(UPGRADE_ROW_ITEM.get());
+                    populator.accept(UPGRADE_RETAINER_ITEM.get());
 
                     Arrays.stream(COMPACT_CHEST_BLOCKS).forEach(item -> populator.accept(item.get()));
                     Arrays.stream(COMPACT_BARREL_BLOCKS).forEach(item-> populator.accept(item.get()));
                     Arrays.stream(BACKPACK_ITEMS).forEach(item-> populator.accept(item.get()));
-
-                    populator.accept(UPGRADE_COLUMN_ITEM.get());
-                    populator.accept(UPGRADE_ROW_ITEM.get());
-                    populator.accept(UPGRADE_RETAINER_ITEM.get());
                 });
     }));
 
@@ -112,9 +111,9 @@ public class CompactStorage {
         builder.title(Component.translatable("itemGroup.compact_storage.wood"))
                 .icon(() -> new ItemStack(COMPACT_CHEST_WOOD_BLOCKS[1].get(), 1))
                 .displayItems((params, populator) -> {
-                    Arrays.stream(DRUM_BLOCKS).forEach(item-> populator.accept(item.get()));
                     Arrays.stream(COMPACT_CHEST_WOOD_BLOCKS).forEach(item -> populator.accept(item.get()));
                     Arrays.stream(COMPACT_BARREL_WOOD_BLOCKS).forEach(item -> populator.accept(item.get()));
+                    Arrays.stream(DRUM_BLOCKS).forEach(item-> populator.accept(item.get()));
                 });
     }));
 
