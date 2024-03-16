@@ -72,6 +72,7 @@
     "block.compact_storage.spruce_drum": "Spruce Item Drum",
     "block.compact_storage.dark_oak_drum": "Dark Oak Item Drum",
     "block.compact_storage.warped_drum": "Warped Item Drum",
+    "block.compact_storage.bamboo_drum": "Bamboo Item Drum",
 
     "tooltip.compact_storage.row_upgrade_descriptor": "Use this on a Compact Storage block to add extra width",
     "tooltip.compact_storage.column_upgrade_descriptor": "Use this on a Compact Storage block to add extra height",

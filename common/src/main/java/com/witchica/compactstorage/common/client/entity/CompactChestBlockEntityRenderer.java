@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
-public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<CompactChestBlockEntity> {
+public class    CompactChestBlockEntityRenderer implements BlockEntityRenderer<CompactChestBlockEntity> {
     private final ModelPart chestBase;
 
     private final ModelPart chestLid;

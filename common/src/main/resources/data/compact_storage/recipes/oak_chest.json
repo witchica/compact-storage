@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "item": "minecraft:oak_planks"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    "IWI",
+    "WCW",
+    "IWI"
+  ],
+  "result": {
+    "item": "compact_storage:oak_compact_chest",
+    "count": 1
+  },
+  "show_notification": true
+}

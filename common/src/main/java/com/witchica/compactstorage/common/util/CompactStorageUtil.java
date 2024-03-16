@@ -34,7 +34,8 @@ public class CompactStorageUtil {
          "mangrove",
          "oak",
          "spruce",
-         "warped"
+         "warped",
+         "bamboo"
     };
 
     public static void appendTooltip(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag options, boolean isBackpack) {
