@@ -1,0 +1,7 @@
+{
+  "parent": "compact_storage:block/barrel/compact_barrel_overlay",
+  "textures": {
+    "barrel": "compact_storage:block/barrel/pink_barrel",
+    "overlay": "compact_storage:block/barrel/barrel_retaining_overlay"
+  }
+}

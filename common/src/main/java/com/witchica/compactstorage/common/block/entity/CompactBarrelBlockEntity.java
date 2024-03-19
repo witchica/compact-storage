@@ -127,6 +127,18 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
 
         this.inventory = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
         CompactStorageUtil.readItemsFromTag(inventory, nbt);
+
+        if(nbt.contains("Version")) {
+            switch(nbt.getInt("Version")) {
+                default -> {
+
+                }
+            }
+        } else {
+            if(level != null && !level.isClientSide) {
+                level.setBlock(getBlockPos(), getBlockState().setValue(CompactBarrelBlock.RETAINING, this.retaining), 0);
+            }
+        }
     }
 
     @Override
@@ -137,6 +149,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
         nbt.putInt("inventory_width", inventoryWidth);
         nbt.putInt("inventory_height", inventoryHeight);
         nbt.putBoolean("retaining", retaining);
+        nbt.putInt("Version", 1);
     }
 
     @Override
@@ -249,6 +262,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
                 }
                 case RETAINING -> {
                     applyRetainingUpgrade();
+                    level.setBlock(getBlockPos(),getBlockState().setValue(CompactBarrelBlock.RETAINING, true), 0);
                     return true;
                 }
             }

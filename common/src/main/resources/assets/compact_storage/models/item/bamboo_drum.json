@@ -1,5 +1,3 @@
 {
-
-    "parent": "compact_storage:block/bamboo_drum"
-
-  }
+  "parent": "compact_storage:block/drum/bamboo_drum"
+}

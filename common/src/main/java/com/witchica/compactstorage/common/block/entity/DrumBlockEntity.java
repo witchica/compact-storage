@@ -2,6 +2,8 @@ package com.witchica.compactstorage.common.block.entity;
 
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.CompactStoragePlatform;
+import com.witchica.compactstorage.common.block.CompactBarrelBlock;
+import com.witchica.compactstorage.common.block.DrumBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -100,6 +102,7 @@ public class DrumBlockEntity extends BlockEntity {
         nbt.putInt("ClientStackSize", getStoredType().getMaxStackSize());
         nbt.putInt("ClientStoredItems", getTotalItemCount());
         nbt.putBoolean("Retaining", retaining);
+        nbt.putInt("Version", 1);
     }
 
     @Override
@@ -111,6 +114,18 @@ public class DrumBlockEntity extends BlockEntity {
         this.clientStackSize = nbt.getInt("ClientStackSize");
         this.clientStoredItems = nbt.getInt("ClientStoredItems");
         this.retaining = nbt.getBoolean("Retaining");
+
+        if(nbt.contains("Version")) {
+            switch(nbt.getInt("Version")) {
+                default -> {
+
+                }
+            }
+        } else {
+            if(level != null && !level.isClientSide) {
+                level.setBlock(getBlockPos(),getBlockState().setValue(DrumBlock.RETAINING, this.retaining), 0);
+            }
+        }
     }
 
     @Nullable
@@ -155,7 +170,7 @@ public class DrumBlockEntity extends BlockEntity {
         if(!this.retaining) {
             this.retaining = true;
             setChanged();
-            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+            level.setBlock(getBlockPos(),getBlockState().setValue(DrumBlock.RETAINING, true), Block.UPDATE_CLIENTS);
             return true;
         }
 

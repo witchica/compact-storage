@@ -8,6 +8,7 @@ import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.CompactChestBlock;
 import com.witchica.compactstorage.common.block.entity.CompactChestBlockEntity;
 
+import com.witchica.compactstorage.common.util.CompactStorageUpgradeType;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,13 +38,15 @@ public class    CompactChestBlockEntityRenderer implements BlockEntityRenderer<C
 
     static {
         for(int i = 0; i < 16; i++) {
-            CHEST_TEXTURES.put(CompactStorage.COMPACT_CHEST_BLOCKS[i].get(), new ResourceLocation("compact_storage", String.format("textures/block/compact_chest_%s.png", DyeColor.byId(i).name().toLowerCase())));
+            CHEST_TEXTURES.put(CompactStorage.COMPACT_CHEST_BLOCKS[i].get(), new ResourceLocation("compact_storage", String.format("textures/block/chest/%s_chest.png", DyeColor.byId(i).name().toLowerCase())));
         }
 
         for(int i = 0; i < CompactStorageUtil.DRUM_TYPES.length; i++) {
             CHEST_TEXTURES.put(CompactStorage.COMPACT_CHEST_WOOD_BLOCKS[i].get(), new ResourceLocation("compact_storage", String.format("textures/block/chest/%s_chest.png", CompactStorageUtil.DRUM_TYPES[i])));
         }
     }
+
+    public static final ResourceLocation RETAINING_TEXTURE = new ResourceLocation("compact_storage", "textures/block/chest/retaining_chest.png");
     
     public CompactChestBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
         super();
@@ -80,7 +83,9 @@ public class    CompactChestBlockEntityRenderer implements BlockEntityRenderer<C
 
         chestBase.render(matrixStack, vertexConsumer, light, overlay);
         chestLid.render(matrixStack, vertexConsumer, light, overlay);
-        chestLock.render(matrixStack, vertexConsumer, light, overlay);
+
+        VertexConsumer lockConsumer = compactChestBlockEntity.hasUpgrade(CompactStorageUpgradeType.RETAINING) ? vertexConsumerProvider.getBuffer(RenderType.entitySolid(RETAINING_TEXTURE)) : vertexConsumer;
+        chestLock.render(matrixStack, lockConsumer, light, overlay);
 
         matrixStack.popPose();
     }

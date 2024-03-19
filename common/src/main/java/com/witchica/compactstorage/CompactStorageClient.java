@@ -13,5 +13,7 @@ public class CompactStorageClient {
         MenuRegistry.registerScreenFactory(CompactStorage.COMPACT_CHEST_SCREEN_HANDLER.get(), CompactChestScreen::new);
         BlockEntityRendererRegistry.register(CompactStorage.COMPACT_CHEST_ENTITY_TYPE.get(), CompactChestBlockEntityRenderer::new);
         BlockEntityRendererRegistry.register(CompactStorage.DRUM_ENTITY_TYPE.get(), DrumBlockEntityRenderer::new);
+
+
     }
 }

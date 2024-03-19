@@ -1,5 +1,3 @@
 {
-
-    "parent": "compact_storage:block/jungle_drum"
-
-  }
+  "parent": "compact_storage:block/drum/jungle_drum"
+}

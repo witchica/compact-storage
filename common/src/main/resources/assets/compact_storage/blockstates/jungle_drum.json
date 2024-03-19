@@ -1,59 +1,56 @@
 {
-
-    "variants": {
-
-      "facing=down": {
-
-        "model": "compact_storage:block/jungle_drum",
-
-        "x": 180
-
-      },
-
-      "facing=east": {
-
-        "model": "compact_storage:block/jungle_drum",
-
-        "x": 90,
-
-        "y": 90
-
-      },
-
-      "facing=north": {
-
-        "model": "compact_storage:block/jungle_drum",
-
-        "x": 90
-
-      },
-
-      "facing=south": {
-
-        "model": "compact_storage:block/jungle_drum",
-
-        "x": 90,
-
-        "y": 180
-
-      },
-
-      "facing=up": {
-
-        "model": "compact_storage:block/jungle_drum"
-
-      },
-
-      "facing=west": {
-
-        "model": "compact_storage:block/jungle_drum",
-
-        "x": 90,
-
-        "y": 270
-
-      }
-
+  "variants": {
+    "facing=down,retaining=false": {
+      "model": "compact_storage:block/drum/jungle_drum",
+      "x": 180
+    },
+    "facing=down,retaining=true": {
+      "model": "compact_storage:block/drum/jungle_drum_retaining",
+      "x": 180
+    },
+    "facing=east,retaining=false": {
+      "model": "compact_storage:block/drum/jungle_drum",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,retaining=true": {
+      "model": "compact_storage:block/drum/jungle_drum_retaining",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north,retaining=false": {
+      "model": "compact_storage:block/drum/jungle_drum",
+      "x": 90
+    },
+    "facing=north,retaining=true": {
+      "model": "compact_storage:block/drum/jungle_drum_retaining",
+      "x": 90
+    },
+    "facing=south,retaining=false": {
+      "model": "compact_storage:block/drum/jungle_drum",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,retaining=true": {
+      "model": "compact_storage:block/drum/jungle_drum_retaining",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up,retaining=false": {
+      "model": "compact_storage:block/drum/jungle_drum"
+    },
+    "facing=up,retaining=true": {
+      "model": "compact_storage:block/drum/jungle_drum_retaining"
+    },
+    "facing=west,retaining=false": {
+      "model": "compact_storage:block/drum/jungle_drum",
+      "x": 90,
+      "y": 270
+    },
+    "facing=west,retaining=true": {
+      "model": "compact_storage:block/drum/jungle_drum_retaining",
+      "x": 90,
+      "y": 270
     }
-
+  }
 }

@@ -1,56 +1,108 @@
 {
   "variants": {
-    "facing=down,open=false": {
-      "x": 180,
+    "facing=down,open=false,retaining=false": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel",
+      "x": 180
+    },
+    "facing=down,open=true,retaining=false": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_open",
+      "x": 180
+    },
+    "facing=down,open=true,retaining=true": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_open",
+      "x": 180
+    },
+    "facing=down,open=false,retaining=true": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_retaining",
+      "x": 180
+    },
+    "facing=east,open=false,retaining=false": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,open=true,retaining=false": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_open",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,open=true,retaining=true": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_open",
+      "x": 90,
+      "y": 90
+    },
+    "facing=east,open=false,retaining=true": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_retaining",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north,open=false,retaining=false": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel",
+      "x": 90
+    },
+    "facing=north,open=true,retaining=false": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_open",
+      "x": 90
+    },
+    "facing=north,open=true,retaining=true": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_open",
+      "x": 90
+    },
+    "facing=north,open=false,retaining=true": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_retaining",
+      "x": 90
+    },
+    "facing=south,open=false,retaining=false": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,open=true,retaining=false": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_open",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,open=true,retaining=true": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_open",
+      "x": 90,
+      "y": 180
+    },
+    "facing=south,open=false,retaining=true": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_retaining",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up,open=false,retaining=false": {
       "model": "compact_storage:block/barrel/spruce_compact_barrel"
     },
-    "facing=down,open=true": {
-      "x": 180,
+    "facing=up,open=true,retaining=false": {
       "model": "compact_storage:block/barrel/spruce_compact_barrel_open"
     },
-    "facing=east,open=false": {
-      "x": 90,
-      "y": 90,
-      "model": "compact_storage:block/barrel/spruce_compact_barrel"
-    },
-    "facing=east,open=true": {
-      "x": 90,
-      "y": 90,
+    "facing=up,open=true,retaining=true": {
       "model": "compact_storage:block/barrel/spruce_compact_barrel_open"
     },
-    "facing=north,open=false": {
+    "facing=up,open=false,retaining=true": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_retaining"
+    },
+    "facing=west,open=false,retaining=false": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel",
       "x": 90,
-      "model": "compact_storage:block/barrel/spruce_compact_barrel"
+      "y": 270
     },
-    "facing=north,open=true": {
+    "facing=west,open=true,retaining=false": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_open",
       "x": 90,
-      "model": "compact_storage:block/barrel/spruce_compact_barrel_open"
+      "y": 270
     },
-    "facing=south,open=false": {
+    "facing=west,open=true,retaining=true": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_open",
       "x": 90,
-      "y": 180,
-      "model": "compact_storage:block/barrel/spruce_compact_barrel"
+      "y": 270
     },
-    "facing=south,open=true": {
+    "facing=west,open=false,retaining=true": {
+      "model": "compact_storage:block/barrel/spruce_compact_barrel_retaining",
       "x": 90,
-      "y": 180,
-      "model": "compact_storage:block/barrel/spruce_compact_barrel_open"
-    },
-    "facing=up,open=false": {
-      "model": "compact_storage:block/barrel/spruce_compact_barrel"
-    },
-    "facing=up,open=true": {
-      "model": "compact_storage:block/barrel/spruce_compact_barrel_open"
-    },
-    "facing=west,open=false": {
-      "x": 90,
-      "y": 270,
-      "model": "compact_storage:block/barrel/spruce_compact_barrel"
-    },
-    "facing=west,open=true": {
-      "x": 90,
-      "y": 270,
-      "model": "compact_storage:block/barrel/spruce_compact_barrel_open"
+      "y": 270
     }
   }
 }

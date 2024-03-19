@@ -1,5 +1,3 @@
 {
-
-    "parent": "compact_storage:block/warped_drum"
-
-  }
+  "parent": "compact_storage:block/drum/warped_drum"
+}
