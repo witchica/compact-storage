@@ -44,6 +44,7 @@
     "item.compact_storage.backpack": "Backpack",
     "item.compact_storage.upgrade_column": "Storage Upgrade (Height)",
     "item.compact_storage.upgrade_row": "Storage Upgrade (Width)",
+    "item.compact_storage.wrench": "Wrench",
 
     "item.compact_storage.backpack_white": "White Backpack",
     "item.compact_storage.backpack_orange": "Orange Backpack",

@@ -10,6 +10,7 @@ import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
 import com.witchica.compactstorage.common.config.CompactStorageConfig;
 import com.witchica.compactstorage.common.item.BackpackItem;
 import com.witchica.compactstorage.common.item.StorageUpgradeItem;
+import com.witchica.compactstorage.common.item.WrenchItem;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageUpgradeType;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
@@ -94,6 +95,8 @@ public class CompactStorage {
     public static final RegistrySupplier<StorageUpgradeItem> UPGRADE_RETAINER_ITEM = ITEMS.register("upgrade_retainer", () -> new StorageUpgradeItem(new Item.Properties(), CompactStorageUpgradeType.RETAINING));
 
     public static RegistrySupplier<MenuType<CompactChestScreenHandler>> COMPACT_CHEST_SCREEN_HANDLER = MENU_TYPES.register("compact_chest", () -> MenuRegistry.ofExtended(CompactChestScreenHandler::new));
+
+    public static RegistrySupplier<Item> WRENCH_ITEM = ITEMS.register("wrench", () -> new WrenchItem(new Item.Properties().stacksTo(1)));
     public static final RegistrySupplier<CreativeModeTab> COMPACT_STORAGE_TAB = CREATIVE_MODE_TABS.register("compact_storage_tab", () -> CreativeTabRegistry.create(builder -> {
         builder.title(Component.translatable("itemGroup.compact_storage.general"))
                 .icon(() -> new ItemStack(COMPACT_CHEST_BLOCKS[0].get(), 1))
@@ -101,6 +104,7 @@ public class CompactStorage {
                     populator.accept(UPGRADE_COLUMN_ITEM.get());
                     populator.accept(UPGRADE_ROW_ITEM.get());
                     populator.accept(UPGRADE_RETAINER_ITEM.get());
+                    populator.accept(WRENCH_ITEM.get());
 
                     Arrays.stream(COMPACT_CHEST_BLOCKS).forEach(item -> populator.accept(item.get()));
                     Arrays.stream(COMPACT_BARREL_BLOCKS).forEach(item-> populator.accept(item.get()));
