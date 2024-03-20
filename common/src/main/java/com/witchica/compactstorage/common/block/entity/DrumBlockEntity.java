@@ -13,6 +13,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -82,6 +83,12 @@ public class DrumBlockEntity extends BlockEntity {
         }
     };
 
+    public static void tick(Level level, BlockPos blockPos, BlockState blockState, DrumBlockEntity blockEntity) {
+        if(!level.isClientSide() && blockState.getValue(DrumBlock.RETAINING) != blockEntity.retaining) {
+            level.setBlockAndUpdate(blockPos, blockState.setValue(DrumBlock.RETAINING, blockEntity.retaining));
+        }
+    }
+
 
     public boolean hasAnyItems() {
         return !inventory.getItem(0).isEmpty();
@@ -114,18 +121,6 @@ public class DrumBlockEntity extends BlockEntity {
         this.clientStackSize = nbt.getInt("ClientStackSize");
         this.clientStoredItems = nbt.getInt("ClientStoredItems");
         this.retaining = nbt.getBoolean("Retaining");
-
-        if(nbt.contains("Version")) {
-            switch(nbt.getInt("Version")) {
-                default -> {
-
-                }
-            }
-        } else {
-            if(level != null && !level.isClientSide) {
-                level.setBlock(getBlockPos(),getBlockState().setValue(DrumBlock.RETAINING, this.retaining), 0);
-            }
-        }
     }
 
     @Nullable
@@ -147,7 +142,15 @@ public class DrumBlockEntity extends BlockEntity {
         }
     }
 
-    public String getTextToDisplay() {
+    public String getTextToDisplay(boolean crouched) {
+
+        if(crouched) {
+            int stored = clientStoredItems;
+            int maxStored = (clientStackSize == 0 ? 64 : clientStackSize) * 64;
+
+            return "%d / %d".formatted(stored, maxStored);
+        }
+
         if(clientStackSize == 0) {
             return "Empty";
         }

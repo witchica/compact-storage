@@ -3,6 +3,7 @@ package com.witchica.compactstorage.common.block.entity;
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.CompactBarrelBlock;
+import com.witchica.compactstorage.common.block.DrumBlock;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
 
@@ -24,6 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -127,18 +129,6 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
 
         this.inventory = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
         CompactStorageUtil.readItemsFromTag(inventory, nbt);
-
-        if(nbt.contains("Version")) {
-            switch(nbt.getInt("Version")) {
-                default -> {
-
-                }
-            }
-        } else {
-            if(level != null && !level.isClientSide) {
-                level.setBlock(getBlockPos(), getBlockState().setValue(CompactBarrelBlock.RETAINING, this.retaining), 0);
-            }
-        }
     }
 
     @Override
@@ -163,6 +153,10 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
     }
 
     public static void tick(Level world, BlockPos pos, BlockState state, CompactBarrelBlockEntity compactChestBlockEntity) {
+
+        if(!world.isClientSide() &&world.getBlockState(pos).getValue(CompactBarrelBlock.RETAINING) != compactChestBlockEntity.hasUpgrade(CompactStorageUpgradeType.RETAINING)) {
+            world.setBlockAndUpdate(pos, state.setValue(CompactBarrelBlock.RETAINING, compactChestBlockEntity.hasUpgrade(CompactStorageUpgradeType.RETAINING)));
+        }
 
         if(compactChestBlockEntity.playersUsing > 0 && compactChestBlockEntity.playersUsingOld == 0) {
             compactChestBlockEntity.isOpen = true;

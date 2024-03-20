@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.witchica.compactstorage.common.block.DrumBlock;
 import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -28,7 +29,14 @@ public class DrumBlockEntityRenderer implements BlockEntityRenderer<DrumBlockEnt
         }
 
         ItemStack stack = drumBlock.clientItem;
-        String text = drumBlock.getTextToDisplay();
+
+        boolean crouched = false;
+
+        if(Minecraft.getInstance().player != null) {
+            crouched = Minecraft.getInstance().player.isCrouching();
+        }
+
+        String text = drumBlock.getTextToDisplay(crouched);
 
         Direction direction = drumBlock.getBlockState().getValue(DrumBlock.FACING);
 
