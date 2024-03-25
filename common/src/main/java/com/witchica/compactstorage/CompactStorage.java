@@ -96,7 +96,7 @@ public class CompactStorage {
 
     public static RegistrySupplier<MenuType<CompactChestScreenHandler>> COMPACT_CHEST_SCREEN_HANDLER = MENU_TYPES.register("compact_chest", () -> MenuRegistry.ofExtended(CompactChestScreenHandler::new));
 
-    public static RegistrySupplier<Item> WRENCH_ITEM = ITEMS.register("wrench", () -> new WrenchItem(new Item.Properties().stacksTo(1)));
+    //public static RegistrySupplier<Item> WRENCH_ITEM = ITEMS.register("wrench", () -> new WrenchItem(new Item.Properties().stacksTo(1)));
     public static final RegistrySupplier<CreativeModeTab> COMPACT_STORAGE_TAB = CREATIVE_MODE_TABS.register("compact_storage_tab", () -> CreativeTabRegistry.create(builder -> {
         builder.title(Component.translatable("itemGroup.compact_storage.general"))
                 .icon(() -> new ItemStack(COMPACT_CHEST_BLOCKS[0].get(), 1))
@@ -104,7 +104,7 @@ public class CompactStorage {
                     populator.accept(UPGRADE_COLUMN_ITEM.get());
                     populator.accept(UPGRADE_ROW_ITEM.get());
                     populator.accept(UPGRADE_RETAINER_ITEM.get());
-                    populator.accept(WRENCH_ITEM.get());
+                    //populator.accept(WRENCH_ITEM.get());
 
                     Arrays.stream(COMPACT_CHEST_BLOCKS).forEach(item -> populator.accept(item.get()));
                     Arrays.stream(COMPACT_BARREL_BLOCKS).forEach(item-> populator.accept(item.get()));

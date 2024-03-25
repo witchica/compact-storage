@@ -13,6 +13,7 @@ public class CompactStorageNeoForge {
 
     public CompactStorageNeoForge(IEventBus eventBus) {
         CompactStorage.onInitialize();
+        eventBus.register(this);
     }
 
     @SubscribeEvent
