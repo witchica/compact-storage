@@ -5,7 +5,9 @@ import com.witchica.compactstorage.fabric.block.entity.FabricCompactBarrelBlockE
 import com.witchica.compactstorage.fabric.block.entity.FabricCompactChestBlockEntity;
 import com.witchica.compactstorage.fabric.block.entity.FabricDrumBlockEntity;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 
 public class CompactStorageFabric implements ModInitializer {
 	@Override

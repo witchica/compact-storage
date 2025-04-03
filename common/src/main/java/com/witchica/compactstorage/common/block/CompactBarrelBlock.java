@@ -11,8 +11,10 @@ import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -37,7 +39,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,7 +47,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 public class CompactBarrelBlock extends BaseEntityBlock {
-    public static final DirectionProperty FACING = DirectionProperty.create("facing");
+    public static final EnumProperty<Direction> FACING = EnumProperty.create("facing", Direction.class, Direction.values());
     public static final BooleanProperty OPEN = BooleanProperty.create("open");
     public static final BooleanProperty RETAINING = BooleanProperty.create("retaining");
     public static final MapCodec<CompactBarrelBlock> CODEC = simpleCodec(CompactBarrelBlock::new);
@@ -69,7 +71,7 @@ public class CompactBarrelBlock extends BaseEntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return getStateDefinition().any().setValue(FACING, ctx.getNearestLookingDirection().getOpposite()).setValue(OPEN, false).setValue(RETAINING, ctx.getItemInHand().hasTag() ? ctx.getItemInHand().getTag().getBoolean("retaining") : false);
+        return getStateDefinition().any().setValue(FACING, ctx.getNearestLookingDirection().getOpposite()).setValue(OPEN, false).setValue(RETAINING, ctx.getItemInHand().has(DataComponents.CUSTOM_DATA) ? ctx.getItemInHand().get(DataComponents.CUSTOM_DATA).copyTag().getBoolean("retaining") : false);
     }
 
     @Override
@@ -81,20 +83,18 @@ public class CompactBarrelBlock extends BaseEntityBlock {
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         super.setPlacedBy(world, pos, state, placer, itemStack);
 
-        if (itemStack.hasCustomHoverName()) {
+        if (itemStack.has(DataComponents.CUSTOM_NAME)) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
             if (blockEntity instanceof CompactBarrelBlockEntity) {
-                ((CompactBarrelBlockEntity) blockEntity).setCustomName(itemStack.getHoverName());
+                ((CompactBarrelBlockEntity) blockEntity).setCustomName(itemStack.get(DataComponents.CUSTOM_NAME));
             }
         }
 
-        if (!world.isClientSide && itemStack.hasTag()) {
-            CompoundTag nbt = itemStack.getTag();
+        if (!world.isClientSide && itemStack.has(DataComponents.CUSTOM_DATA)) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
-
             if (blockEntity instanceof CompactBarrelBlockEntity compactBarrelBlockEntity) {
-                compactBarrelBlockEntity.load(nbt);
+                itemStack.get(DataComponents.CUSTOM_DATA).loadInto(blockEntity, world.registryAccess());
             }
         }
     }
@@ -107,21 +107,20 @@ public class CompactBarrelBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-                              BlockHitResult hit) {
-        if (!world.isClientSide) {
-            if (!world.isClientSide) {
-                BlockEntity blockEntity = world.getBlockEntity(pos);
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (!level.isClientSide) {
+                BlockEntity blockEntity = level.getBlockEntity(pos);
 
                 if(blockEntity instanceof CompactBarrelBlockEntity compactBarrelBlockEntity) {
                     Item heldItem = player.getItemInHand(hand).getItem();
 
                     if(heldItem instanceof StorageUpgradeItem storageUpgradeItem) {
                         if(compactBarrelBlockEntity.applyUpgrade(storageUpgradeItem.getUpgradeType())) {
-                            player.getItemInHand(hand).shrink(1);
+                            ItemStack heldItemStack = player.getItemInHand(hand);
+                            heldItemStack.shrink(1);
                             player.displayClientMessage(Component.translatable(storageUpgradeItem.getUpgradeType().upgradeSuccess).withStyle(ChatFormatting.GREEN), true);
                             player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
-                            return InteractionResult.CONSUME_PARTIAL;
+                            return InteractionResult.CONSUME.heldItemTransformedTo(heldItemStack);
                         } else {
                             player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
                             player.displayClientMessage(Component.translatable(storageUpgradeItem.getUpgradeType().upgradeFail).withStyle(ChatFormatting.RED), true);
@@ -131,22 +130,29 @@ public class CompactBarrelBlock extends BaseEntityBlock {
                         Block newBlock = CompactStorage.getCompactBarrelFromDyeColor(dyeItem.getDyeColor());
 
                         if(newBlock != this) {
-                            world.setBlockAndUpdate(pos, newBlock.defaultBlockState().setValue(FACING, state.getValue(FACING)));
+                            level.setBlockAndUpdate(pos, newBlock.defaultBlockState().setValue(FACING, state.getValue(FACING)));
                             player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
-                            player.getItemInHand(hand).shrink(1);
-                            return InteractionResult.CONSUME_PARTIAL;
+                            ItemStack heldItemStack = player.getItemInHand(hand);
+                            heldItemStack.shrink(1);
+                            return InteractionResult.CONSUME.heldItemTransformedTo(heldItemStack);
                         }
-                    }
                 }
-
-                openMenu(world, player, pos, state, hand);
             }
         }
 
-        return InteractionResult.SUCCESS;
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
-    public void openMenu(Level level, Player player, BlockPos pos, BlockState state, InteractionHand hand) {
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if(!level.isClientSide) {
+            openMenu(level, player, pos, state);
+            return InteractionResult.SUCCESS;
+        }
+        return super.useWithoutItem(state, level, pos, player, hitResult);
+    }
+
+    public void openMenu(Level level, Player player, BlockPos pos, BlockState state) {
         MenuRegistry.openExtendedMenu((ServerPlayer) player, CompactStorageMenuProvider.ofBlock(pos, Component.translatable("container.compact_storage.compact_barrel")));
     }
 
@@ -157,22 +163,21 @@ public class CompactBarrelBlock extends BaseEntityBlock {
 
     @Override
     public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
-        CompactStorageUtil.dropContents(world, pos, state.getBlock(), player, registries);
+        CompactStorageUtil.dropContents(world, pos, state.getBlock(), player, world.registryAccess());
         return super.playerWillDestroy(world, pos, state, player);
     }
 
     @Override
-    public void onExplosionHit(BlockState state, Level world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
-        CompactStorageUtil.dropContents(world, pos, this, null, registries);
-        super.onExplosionHit(state, world, pos, explosion, stackMerger);
+    protected void onExplosionHit(BlockState state, ServerLevel level, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> dropConsumer) {
+        CompactStorageUtil.dropContents(level, pos, this, null, level.registryAccess());
+        super.onExplosionHit(state, level, pos, explosion, dropConsumer);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag options) {
-        super.appendHoverText(stack, world, tooltip, options);
-        CompactStorageUtil.appendTooltip(stack, world, tooltip, options, false);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        CompactStorageUtil.appendTooltip(stack, context, tooltipComponents, tooltipFlag, false);
     }
-
     @Override
     public boolean hasAnalogOutputSignal(BlockState state) {
         return true;

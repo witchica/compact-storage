@@ -46,7 +46,7 @@ public class BackpackInventoryHandlerFactory implements MenuProvider {
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int syncId, Inventory inv, Player player) {
-        BackpackInventory backpackInventory = getBackpackInventory(player, hand, registries);
+        BackpackInventory backpackInventory = getBackpackInventory(player, hand, player.level().registryAccess());
         return new CompactChestScreenHandler(syncId, inv, writeToByteBuf(new FriendlyByteBuf(Unpooled.buffer())));
     }
 

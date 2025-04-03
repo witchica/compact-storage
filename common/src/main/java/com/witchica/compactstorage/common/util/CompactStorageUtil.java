@@ -45,25 +45,30 @@ public class CompactStorageUtil {
         int inventoryX = 9;
         int inventoryY = 6;
 
-        CompoundTag compound = stack.get(DataComponents.CUSTOM_DATA).copyTag();
+        boolean hasTag = stack.has(DataComponents.CUSTOM_DATA);
+        boolean retaining = false;
 
-        if(isBackpack && compound != null) {
-            compound = compound.getCompound("Backpack");
-        }
+        if (hasTag) {
+            CompoundTag compound = stack.get(DataComponents.CUSTOM_DATA).copyTag();
 
-        if(compound != null && compound.contains("inventory_width")) {
-            inventoryX = compound.getInt("inventory_width");
-            inventoryY = compound.getInt("inventory_height");
+            if(isBackpack) {
+                compound = compound.getCompound("Backpack");
+            }
+
+            if(compound.contains("inventory_width")) {
+                inventoryX = compound.getInt("inventory_width");
+                inventoryY = compound.getInt("inventory_height");
+            }
+
+            retaining = compound.getBoolean("retaining");
         }
 
         int slots = inventoryX * inventoryY;
         tooltip.add(Component.translatable("tooltip.compact_storage.storage_size", inventoryX, inventoryY, slots).withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC));
 
-        if(compound != null && compound.contains("retaining") && compound.getBoolean("retaining")) {
+        if(retaining) {
             tooltip.add(Component.translatable("tooltip.compact_storage.retaining").withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD));
         }
-
-        stack.set(DataComponents.CUSTOM_DATA, CustomData.of(compound));
     }
 
     public static void dropContents(Level world, BlockPos pos, Block block, Player player, HolderLookup.Provider registries) {

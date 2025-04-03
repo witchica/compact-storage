@@ -2,18 +2,13 @@ pluginManagement {
     repositories {
         maven { url "https://maven.fabricmc.net/" }
         maven { url "https://maven.architectury.dev/" }
-        maven { url "https://maven.neoforged.net/releases/" }
-        maven { url "https://maven.minecraftforge.net/" }
-        maven {
-            name = 'ParchmentMC'
-            url = 'https://maven.parchmentmc.org'
-        }
+        maven { url "https://files.minecraftforge.net/maven/" }
         gradlePluginPortal()
     }
 }
 
-include("common")
-include("fabric")
-include("neoforge")
+rootProject.name = 'compact_storage'
 
-rootProject.name = "compact-storage"
+include 'common'
+include 'fabric'
+include 'neoforge'

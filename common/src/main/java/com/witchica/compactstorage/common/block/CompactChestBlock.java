@@ -12,8 +12,10 @@ import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -39,7 +41,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -49,7 +51,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 public class CompactChestBlock extends BaseEntityBlock {
-    public static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.NORTH, Direction.EAST,
+    public static final EnumProperty<Direction> FACING = EnumProperty.create("facing", Direction.class, Direction.NORTH, Direction.EAST,
             Direction.SOUTH, Direction.WEST);
 
     public static final VoxelShape CHEST_SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
@@ -84,14 +86,14 @@ public class CompactChestBlock extends BaseEntityBlock {
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
+        return RenderShape.MODEL;
     }
 
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         super.setPlacedBy(world, pos, state, placer, itemStack);
 
-        if (itemStack.hasCustomHoverName()) {
+        if (itemStack.has(DataComponents.CUSTOM_NAME)) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
             if (blockEntity instanceof CompactChestBlockEntity) {
@@ -99,30 +101,30 @@ public class CompactChestBlock extends BaseEntityBlock {
             }
         }
 
-        if (!world.isClientSide && itemStack.hasTag()) {
-            CompoundTag nbt = itemStack.getTag();
+        if (!world.isClientSide && itemStack.has(DataComponents.CUSTOM_DATA)) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
          if (blockEntity instanceof CompactChestBlockEntity compactChestBlockEntity) {
-                compactChestBlockEntity.load(nbt);
+               itemStack.get(DataComponents.CUSTOM_DATA).loadInto(blockEntity, world.registryAccess());
             }
         }
-}
+    }
+
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
-            BlockHitResult hit) {
-        if (!world.isClientSide) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (!level.isClientSide) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
 
             if(blockEntity instanceof CompactChestBlockEntity compactChestBlockEntity) {
                 Item heldItem = player.getItemInHand(hand).getItem();
+                ItemStack heldItemStack = player.getItemInHand(hand);
 
                 if(heldItem instanceof StorageUpgradeItem storageUpgradeItem) {
                     if(compactChestBlockEntity.applyUpgrade(storageUpgradeItem.getUpgradeType())) {
-                        player.getItemInHand(hand).shrink(1);
+                        heldItemStack.shrink(1);
                         player.displayClientMessage(Component.translatable(storageUpgradeItem.getUpgradeType().upgradeSuccess).withStyle(ChatFormatting.GREEN), true);
                         player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
-                        return InteractionResult.CONSUME_PARTIAL;
+                        return InteractionResult.CONSUME.heldItemTransformedTo(heldItemStack);
                     } else {
                         player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
                         player.displayClientMessage(Component.translatable(storageUpgradeItem.getUpgradeType().upgradeFail).withStyle(ChatFormatting.RED), true);
@@ -131,18 +133,26 @@ public class CompactChestBlock extends BaseEntityBlock {
                 } else if(canDye && heldItem instanceof DyeItem dyeItem) {
                     Block newBlock = CompactStorage.getCompactChestFromDyeColor(dyeItem.getDyeColor());
                     if(newBlock != this) {
-                        world.setBlockAndUpdate(pos, newBlock.defaultBlockState().setValue(FACING, state.getValue(FACING)));
+                        level.setBlockAndUpdate(pos, newBlock.defaultBlockState().setValue(FACING, state.getValue(FACING)));
                         player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
-                        player.getItemInHand(hand).shrink(1);
-                        return InteractionResult.CONSUME_PARTIAL;
+                        heldItemStack.shrink(1);
+                        return InteractionResult.CONSUME.heldItemTransformedTo(heldItemStack);
                     }
-                 }
+                }
             }
 
-            openMenu(world, player, pos, state, hand);
         }
 
-        return InteractionResult.SUCCESS;
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if(!level.isClientSide) {
+            openMenu(level, player, pos, state);
+            return InteractionResult.SUCCESS;
+        }
+        return super.useWithoutItem(state, level, pos, player, hitResult);
     }
 
     @Override
@@ -152,7 +162,7 @@ public class CompactChestBlock extends BaseEntityBlock {
         }
     }
 
-    public void openMenu(Level level, Player player, BlockPos pos, BlockState state, InteractionHand hand) {
+    public void openMenu(Level level, Player player, BlockPos pos, BlockState state) {
         MenuRegistry.openExtendedMenu((ServerPlayer) player, CompactStorageMenuProvider.ofBlock(pos, Component.translatable("container.compact_storage.compact_chest")));
     }
 
@@ -170,20 +180,21 @@ public class CompactChestBlock extends BaseEntityBlock {
 
     @Override
     public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
-        CompactStorageUtil.dropContents(world, pos, state.getBlock(), player, registries);
+        CompactStorageUtil.dropContents(world, pos, state.getBlock(), player, world.registryAccess());
         return super.playerWillDestroy(world, pos, state, player);
     }
 
+
     @Override
-    public void onExplosionHit(BlockState state, Level world, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> stackMerger) {
-        CompactStorageUtil.dropContents(world, pos, this, null, registries);
-        super.onExplosionHit(state, world, pos, explosion, stackMerger);
+    protected void onExplosionHit(BlockState state, ServerLevel level, BlockPos pos, Explosion explosion, BiConsumer<ItemStack, BlockPos> dropConsumer) {
+        CompactStorageUtil.dropContents(level, pos, this, null, level.registryAccess());
+        super.onExplosionHit(state, level, pos, explosion, dropConsumer);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag options) {
-        super.appendHoverText(stack, world, tooltip, options);
-        CompactStorageUtil.appendTooltip(stack, world, tooltip, options, false);
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        CompactStorageUtil.appendTooltip(stack, context, tooltipComponents, tooltipFlag, false);
     }
 
     @Override

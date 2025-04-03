@@ -30,6 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.LidBlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 @EnvironmentInterface(
     itf = LidBlockEntity.class,
@@ -48,6 +49,7 @@ public class CompactChestBlockEntity extends RandomizableContainerBlockEntity im
     public float lidOpenness = 0f;
     public float lastLidOpenness = 0f;
     private boolean retaining;
+    private Component customName;
 
     public CompactChestBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CompactStorage.COMPACT_CHEST_ENTITY_TYPE.get(), blockPos, blockState);
@@ -289,5 +291,19 @@ public class CompactChestBlockEntity extends RandomizableContainerBlockEntity im
     @Override
     public NonNullList<ItemStack> getItemList() {
         return inventory;
+    }
+
+    public void setCustomName(Component customName) {
+        this.customName = customName;
+    }
+
+    @Override
+    public @Nullable Component getCustomName() {
+        return customName;
+    }
+
+    @Override
+    public boolean hasCustomName() {
+        return customName != null;
     }
 }

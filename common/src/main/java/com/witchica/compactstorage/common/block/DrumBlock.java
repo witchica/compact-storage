@@ -9,7 +9,10 @@ import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.*;
@@ -20,31 +23,28 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class DrumBlock extends BaseEntityBlock {
-    public static final DirectionProperty FACING = DirectionProperty.create("facing");
+    public static final EnumProperty<Direction> FACING = EnumProperty.create("facing", Direction.class, Direction.values());
     public static final BooleanProperty RETAINING = BooleanProperty.create("retaining");
     public static final MapCodec<DrumBlock> CODEC = simpleCodec(DrumBlock::new);
     public DrumBlock(Properties settings) {
@@ -55,7 +55,7 @@ public class DrumBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return super.getStateForPlacement(ctx).setValue(FACING, ctx.getNearestLookingDirection().getOpposite()).setValue(RETAINING, ctx.getItemInHand().hasTag() ? ctx.getItemInHand().getTag().getBoolean("Retaining") : false);
+        return super.getStateForPlacement(ctx).setValue(FACING, ctx.getNearestLookingDirection().getOpposite()).setValue(RETAINING, ctx.getItemInHand().has(DataComponents.CUSTOM_DATA) && ctx.getItemInHand().get(DataComponents.CUSTOM_DATA).copyTag().getBoolean("Retaining"));
     }
 
     @Override
@@ -81,26 +81,28 @@ public class DrumBlock extends BaseEntityBlock {
 
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag options) {
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag tooltipFlag) {
         tooltip.add(Component.translatable("text.compact_storage.drum.tooltip_1").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         tooltip.add(Component.translatable("text.compact_storage.drum.tooltip_2").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
 
-        if(stack.hasTag()) {
-            if(stack.getTag().contains("Retaining") && stack.getTag().getBoolean("Retaining")) {
+        if(stack.has(DataComponents.CUSTOM_DATA)) {
+            CompoundTag tag = stack.get(DataComponents.CUSTOM_DATA).copyTag();
+
+            if(tag.contains("Retaining") && tag.getBoolean("Retaining")) {
                 tooltip.add(Component.translatable("tooltip.compact_storage.retaining").withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD));
             }
-            if(stack.getTag().contains("TooltipItem")) {
-                ItemStack stored = ItemStack.of(stack.getTag().getCompound("TooltipItem"));
+            if(tag.contains("TooltipItem")) {
+                ItemStack stored = ItemStack.parseOptional(context.registries(), tag.getCompound("TooltipItem"));
 
                 if(!stored.isEmpty()) {
-                    int count = stack.getTag().getInt("TooltipCount");
+                    int count = tag.getInt("TooltipCount");
                     tooltip.add(Component.translatable("tooltip.compact_storage.drum_contains", stored.getDisplayName().getString(), count).withStyle(ChatFormatting.AQUA, ChatFormatting.ITALIC));
 
                 }
             }
         }
 
-        super.appendHoverText(stack, world, tooltip, options);
+        super.appendHoverText(stack, context, tooltip, tooltipFlag);
     }
 
     @Override
@@ -168,19 +170,21 @@ public class DrumBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if(!world.isClientSide) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if(!level.isClientSide) {
             if(player.isShiftKeyDown()) {
-               extractItem(world, pos, player);
+                extractItem(level, pos, player);
             } else {
                 if(player.getItemInHand(hand).getItem() == CompactStorage.UPGRADE_RETAINER_ITEM.get()) {
-                    StorageUpgradeItem storageUpgradeItem = (StorageUpgradeItem) player.getItemInHand(hand).getItem();
-                    if(world.getBlockEntity(pos) instanceof DrumBlockEntity drumBlockEntity) {
+                    ItemStack itemStack = player.getItemInHand(hand);
+                    StorageUpgradeItem storageUpgradeItem = (StorageUpgradeItem) itemStack.getItem();
+
+                    if(level.getBlockEntity(pos) instanceof DrumBlockEntity drumBlockEntity) {
                         if(drumBlockEntity.applyRetainingUpgrade()) {
-                            player.getItemInHand(hand).shrink(1);
+                            itemStack.shrink(1);
                             player.displayClientMessage(Component.translatable(storageUpgradeItem.getUpgradeType().upgradeSuccess).withStyle(ChatFormatting.GREEN), true);
                             player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
-                            return InteractionResult.CONSUME_PARTIAL;
+                            return InteractionResult.CONSUME.heldItemTransformedTo(itemStack);
                         } else {
                             player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
                             player.displayClientMessage(Component.translatable(storageUpgradeItem.getUpgradeType().upgradeFail).withStyle(ChatFormatting.RED), true);
@@ -189,11 +193,11 @@ public class DrumBlock extends BaseEntityBlock {
                     }
                 }
 
-                insertItem(world, pos, player, hand);
+                insertItem(level, pos, player, hand);
             }
         }
 
-        return InteractionResult.CONSUME;
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
     @Override
@@ -216,7 +220,7 @@ public class DrumBlock extends BaseEntityBlock {
 
         if(blockEntity instanceof DrumBlockEntity drumBlock) {
             int totalItemCount = drumBlock.getTotalItemCount();
-            int stackSize = drumBlock.getStoredType().getMaxStackSize();
+            int stackSize = drumBlock.getStoredType().getDefaultMaxStackSize();
             int output = Mth.floor(((totalItemCount / (float) stackSize) / 64f) * 15f);
             return output;
         }
@@ -228,9 +232,8 @@ public class DrumBlock extends BaseEntityBlock {
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         if(!level.isClientSide) {
             if(level.getBlockEntity(pos) instanceof DrumBlockEntity drumBlock) {
-                if(stack.hasTag()) {
-                    drumBlock.load(stack.getTag());
-                    drumBlock.setChanged();
+                if(stack.has(DataComponents.CUSTOM_DATA)) {
+                    stack.get(DataComponents.CUSTOM_DATA).loadInto(level.getBlockEntity(pos), level.registryAccess());
                 }
             }
         }
@@ -239,13 +242,13 @@ public class DrumBlock extends BaseEntityBlock {
 
     @Override
     public BlockState playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        CompactStorageUtil.dropContents(level, blockPos, blockState.getBlock(), player, registries);
+        CompactStorageUtil.dropContents(level, blockPos, blockState.getBlock(), player, level.registryAccess());
         return super.playerWillDestroy(level, blockPos, blockState, player);
     }
 
     @Override
-    public void wasExploded(Level level, BlockPos pos, Explosion explosion) {
-        CompactStorageUtil.dropContents(level, pos, level.getBlockState(pos).getBlock(), null, registries);
+    public void wasExploded(ServerLevel level, BlockPos pos, Explosion explosion) {
+        CompactStorageUtil.dropContents(level, pos, level.getBlockState(pos).getBlock(), null, level.registryAccess());
         super.wasExploded(level, pos, explosion);
     }
 

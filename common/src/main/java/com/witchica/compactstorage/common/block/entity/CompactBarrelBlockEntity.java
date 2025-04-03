@@ -26,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 
 public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity implements CompactStorageInventoryImpl {
@@ -38,6 +39,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
     public int playersUsingOld = 0;
     public boolean isOpen = false;
     private boolean retaining = false;
+    private Component customName;
 
     public CompactBarrelBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CompactStorage.COMPACT_BARREL_ENTITY_TYPE.get(), blockPos, blockState);
@@ -266,5 +268,19 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
     @Override
     public NonNullList<ItemStack> getItemList() {
         return inventory;
+    }
+
+    public void setCustomName(Component customName) {
+        this.customName = customName;
+    }
+
+    @Override
+    public @Nullable Component getCustomName() {
+        return customName;
+    }
+
+    @Override
+    public boolean hasCustomName() {
+        return customName != null;
     }
 }

@@ -25,6 +25,7 @@ import net.minecraft.Util;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
@@ -50,8 +51,8 @@ public class CompactStorage {
     private static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(MOD_ID, Registries.MENU);
     private static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(MOD_ID, Registries.CREATIVE_MODE_TAB);
 
-    public static ResourceLocation COMPACT_CHEST_GENERIC_IDENTIFIER = new ResourceLocation(MOD_ID, "compact_chest");
-    public static ResourceLocation COMPACT_BARREL_GENERIC_IDENTIFIER = new ResourceLocation(MOD_ID, "compact_barrel");
+    public static ResourceLocation COMPACT_CHEST_GENERIC_IDENTIFIER = ResourceLocation.fromNamespaceAndPath(MOD_ID, "compact_chest");
+    public static ResourceLocation COMPACT_BARREL_GENERIC_IDENTIFIER = ResourceLocation.fromNamespaceAndPath(MOD_ID, "compact_barrel");
 
     public static final RegistrySupplier<CompactChestBlock>[] COMPACT_CHEST_BLOCKS = new RegistrySupplier[16];
     public static final RegistrySupplier<CompactChestBlock>[] COMPACT_CHEST_WOOD_BLOCKS = new RegistrySupplier[CompactStorageUtil.DRUM_TYPES.length];
@@ -62,11 +63,11 @@ public class CompactStorage {
 
     public static final String COMPACT_CHEST_TRANSLATION_KEY = Util.makeDescriptionId("container", COMPACT_CHEST_GENERIC_IDENTIFIER);
 
-    public static RegistrySupplier<BlockEntityType<CompactBarrelBlockEntity>> COMPACT_BARREL_ENTITY_TYPE =
-            BLOCK_ENTITY_TYPES.register("compact_barrel", () -> BlockEntityType.Builder.of(CompactStoragePlatform.compactBarrelBlockEntitySupplier(), getAllCompactBarrels()).build(null));
+    public static RegistrySupplier<? extends BlockEntityType<?>> COMPACT_BARREL_ENTITY_TYPE =
+            BLOCK_ENTITY_TYPES.register("compact_barrel", ()-> CompactStoragePlatform.createBlockEntityType(CompactStoragePlatform.compactBarrelBlockEntitySupplier(), COMPACT_BARREL_BLOCKS));
 
     public static RegistrySupplier<BlockEntityType<CompactChestBlockEntity>> COMPACT_CHEST_ENTITY_TYPE =
-            BLOCK_ENTITY_TYPES.register("compact_chest", () -> BlockEntityType.Builder.of(CompactStoragePlatform.compactChestBlockEntitySupplier(), getAllCompactChests()).build(null));
+            BLOCK_ENTITY_TYPES.register("compact_chest", () -> CompactStoragePlatform.createBlockEntityType(CompactStoragePlatform.compactChestBlockEntitySupplier(), getAllCompactChests()));
 
     private static Block[] getAllCompactChests() {
         List<Block> blocks = new ArrayList<Block>();
@@ -84,15 +85,15 @@ public class CompactStorage {
     }
 
     public static RegistrySupplier<BlockEntityType<DrumBlockEntity>> DRUM_ENTITY_TYPE =
-            BLOCK_ENTITY_TYPES.register("drum", () -> BlockEntityType.Builder.of(CompactStoragePlatform.drumBlockEntitySupplier(), Arrays.stream(DRUM_BLOCKS).map(RegistrySupplier::get).toArray(Block[]::new)).build(null));
+            BLOCK_ENTITY_TYPES.register("drum", () -> CompactStoragePlatform.createBlockEntityType(CompactStoragePlatform.drumBlockEntitySupplier(), DRUM_BLOCKS));
 
     public static final HashMap<DyeColor, RegistrySupplier<CompactChestBlock>> DYE_COLOR_TO_COMPACT_CHEST_MAP = new HashMap<DyeColor, RegistrySupplier<CompactChestBlock>>();
     public static final HashMap<DyeColor, RegistrySupplier<CompactBarrelBlock>> DYE_COLOR_TO_COMPACT_BARREL_MAP = new HashMap<DyeColor, RegistrySupplier<CompactBarrelBlock>>();
     public static final HashMap<DyeColor, RegistrySupplier<BackpackItem>> DYE_COLOR_TO_BACKPACK_MAP = new HashMap<DyeColor, RegistrySupplier<BackpackItem>>();
 
-    public static final RegistrySupplier<StorageUpgradeItem> UPGRADE_ROW_ITEM = ITEMS.register("upgrade_row", () -> new StorageUpgradeItem(new Item.Properties(), CompactStorageUpgradeType.WIDTH_INCREASE));
-    public static final RegistrySupplier<StorageUpgradeItem> UPGRADE_COLUMN_ITEM = ITEMS.register("upgrade_column", () -> new StorageUpgradeItem(new Item.Properties(), CompactStorageUpgradeType.HEIGHT_INCREASE));
-    public static final RegistrySupplier<StorageUpgradeItem> UPGRADE_RETAINER_ITEM = ITEMS.register("upgrade_retainer", () -> new StorageUpgradeItem(new Item.Properties(), CompactStorageUpgradeType.RETAINING));
+    public static final RegistrySupplier<StorageUpgradeItem> UPGRADE_ROW_ITEM = ITEMS.register("upgrade_row", () -> new StorageUpgradeItem(new Item.Properties().setId(id(Registries.ITEM, "upgrade_row")), CompactStorageUpgradeType.WIDTH_INCREASE));
+    public static final RegistrySupplier<StorageUpgradeItem> UPGRADE_COLUMN_ITEM = ITEMS.register("upgrade_column", () -> new StorageUpgradeItem(new Item.Properties().setId(id(Registries.ITEM, "upgrade_column")), CompactStorageUpgradeType.HEIGHT_INCREASE));
+    public static final RegistrySupplier<StorageUpgradeItem> UPGRADE_RETAINER_ITEM = ITEMS.register("upgrade_retainer", () -> new StorageUpgradeItem(new Item.Properties().setId(id(Registries.ITEM, "upgrade_retainer")), CompactStorageUpgradeType.RETAINING));
 
     public static RegistrySupplier<MenuType<CompactChestScreenHandler>> COMPACT_CHEST_SCREEN_HANDLER = MENU_TYPES.register("compact_chest", () -> MenuRegistry.ofExtended(CompactChestScreenHandler::new));
 
@@ -130,12 +131,17 @@ public class CompactStorage {
             DyeColor color = DyeColor.byId(i);
             final int id = i;
 
+
             COMPACT_CHEST_BLOCKS[i] = BLOCKS.register("compact_chest_" + dyeName, () ->
-                    new CompactChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).noOcclusion().strength(2f, 5f)).setCanDye()
+                    new CompactChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST)
+                            .setId(id(Registries.BLOCK, "compact_chest_" + dyeName))
+                            .noOcclusion().strength(2f, 5f)).setCanDye()
             );
 
             ITEMS.register("compact_chest_" + dyeName, () ->
-                    new BlockItem(COMPACT_CHEST_BLOCKS[id].get(), new Item.Properties())
+                    new BlockItem(COMPACT_CHEST_BLOCKS[id].get(), new Item.Properties()
+                            .setId(id(Registries.ITEM, "compact_chest_" + dyeName))
+                            .useBlockDescriptionPrefix())
             );
 
             DYE_COLOR_TO_COMPACT_CHEST_MAP.put(color, COMPACT_CHEST_BLOCKS[i]);
@@ -143,17 +149,21 @@ public class CompactStorage {
 
 
             BACKPACK_ITEMS[i] = ITEMS.register("backpack_" + dyeName, () ->
-                    new BackpackItem(new Item.Properties().stacksTo(1)));
+                    new BackpackItem(new Item.Properties().stacksTo(1)
+                            .setId(id(Registries.ITEM, "backpack_" + dyeName))));
             DYE_COLOR_TO_BACKPACK_MAP.put(color, BACKPACK_ITEMS[i]);
 
 
 
             COMPACT_BARREL_BLOCKS[i] = BLOCKS.register("compact_barrel_" + color, () ->
-                    new CompactBarrelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL).strength(2f, 5f)).setCanDye());
+                    new CompactBarrelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)
+                            .setId(id(Registries.BLOCK, "compact_barrel_" + dyeName))
+                            .strength(2f, 5f)).setCanDye());
             DYE_COLOR_TO_COMPACT_BARREL_MAP.put(color, COMPACT_BARREL_BLOCKS[i]);
 
             ITEMS.register("compact_barrel_" + dyeName, () ->
-                    new BlockItem(COMPACT_BARREL_BLOCKS[id].get(), new Item.Properties())
+                    new BlockItem(COMPACT_BARREL_BLOCKS[id].get(), new Item.Properties()
+                            .setId(id(Registries.ITEM, "compact_barrel_" + dyeName)).useBlockDescriptionPrefix())
             );
         }
 
@@ -161,15 +171,26 @@ public class CompactStorage {
             final int id = i;
 
             DRUM_BLOCKS[id] = BLOCKS.register( CompactStorageUtil.DRUM_TYPES[id] + "_drum", () ->
-                    new DrumBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL).strength(2f, 2f)));
+                    new DrumBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)
+                            .setId(id(Registries.BLOCK, CompactStorageUtil.DRUM_TYPES[id] + "_drum"))
+                            .strength(2f, 2f)));
 
-            ITEMS.register(CompactStorageUtil.DRUM_TYPES[i] + "_drum", () -> new BlockItem(DRUM_BLOCKS[id].get(), new Item.Properties()));
+            ITEMS.register(CompactStorageUtil.DRUM_TYPES[i] + "_drum", () -> new BlockItem(DRUM_BLOCKS[id].get(),
+                    new Item.Properties()
+                    .setId(id(Registries.ITEM, CompactStorageUtil.DRUM_TYPES[id] + "_drum"))
+                    .useBlockDescriptionPrefix()));
 
-            COMPACT_CHEST_WOOD_BLOCKS[id] = BLOCKS.register(CompactStorageUtil.DRUM_TYPES[i] + "_compact_chest", () -> new CompactChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST)));
-            ITEMS.register(CompactStorageUtil.DRUM_TYPES[i] + "_compact_chest", () -> new BlockItem(COMPACT_CHEST_WOOD_BLOCKS[id].get(), new Item.Properties()));
+            COMPACT_CHEST_WOOD_BLOCKS[id] = BLOCKS.register(CompactStorageUtil.DRUM_TYPES[i] + "_compact_chest", () -> new CompactChestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST)
+                    .setId(id(Registries.BLOCK, CompactStorageUtil.DRUM_TYPES[id] + "_compact_chest"))));
+            ITEMS.register(CompactStorageUtil.DRUM_TYPES[i] + "_compact_chest", () -> new BlockItem(COMPACT_CHEST_WOOD_BLOCKS[id].get(), new Item.Properties()
+                    .setId(id(Registries.ITEM, CompactStorageUtil.DRUM_TYPES[id] + "_compact_chest"))
+                    .useBlockDescriptionPrefix()));
 
-            COMPACT_BARREL_WOOD_BLOCKS[id] = BLOCKS.register(CompactStorageUtil.DRUM_TYPES[i] + "_compact_barrel", () -> new CompactBarrelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)));
-            ITEMS.register(CompactStorageUtil.DRUM_TYPES[i] + "_compact_barrel", () -> new BlockItem(COMPACT_BARREL_WOOD_BLOCKS[id].get(), new Item.Properties()));
+            COMPACT_BARREL_WOOD_BLOCKS[id] = BLOCKS.register(CompactStorageUtil.DRUM_TYPES[i] + "_compact_barrel", () -> new CompactBarrelBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL)
+                    .setId(id(Registries.BLOCK, CompactStorageUtil.DRUM_TYPES[id] + "_compact_barrel"))));
+            ITEMS.register(CompactStorageUtil.DRUM_TYPES[i] + "_compact_barrel", () -> new BlockItem(COMPACT_BARREL_WOOD_BLOCKS[id].get(), new Item.Properties()
+                    .setId(id(Registries.ITEM, CompactStorageUtil.DRUM_TYPES[id] + "_compact_barrel"))
+                    .useBlockDescriptionPrefix()));
         }
     }
     public static void onInitialize() {
@@ -195,5 +216,9 @@ public class CompactStorage {
 
     public static Item getBackpackFromDyeColor(DyeColor dye) {
         return DYE_COLOR_TO_BACKPACK_MAP.get(dye).get();
+    }
+
+    private static <T> ResourceKey<T> id(ResourceKey<Registry<T>> key, String string) {
+        return ResourceKey.create(key, ResourceLocation.fromNamespaceAndPath(CompactStorage.MOD_ID, string));
     }
 }
