@@ -1,5 +1,3 @@
 {
-
-    "parent": "compact_storage:block/oak_drum"
-
-  }
+  "parent": "compact_storage:block/drum/oak_drum"
+}

@@ -1,5 +1,3 @@
 {
-
-    "parent": "compact_storage:block/spruce_drum"
-
-  }
+  "parent": "compact_storage:block/drum/spruce_drum"
+}

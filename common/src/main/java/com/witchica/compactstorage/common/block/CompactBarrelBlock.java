@@ -44,21 +44,22 @@ import java.util.function.BiConsumer;
 public abstract class CompactBarrelBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
     public static final BooleanProperty OPEN = BooleanProperty.create("open");
+    public static final BooleanProperty RETAINING = BooleanProperty.create("retaining");
 
 
     public CompactBarrelBlock(BlockBehaviour.Properties settings) {
         super(settings);
-        registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(OPEN, false));
+        registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(OPEN, false).setValue(RETAINING, false));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return getStateDefinition().any().setValue(FACING, ctx.getNearestLookingDirection().getOpposite()).setValue(OPEN, false);
+        return getStateDefinition().any().setValue(FACING, ctx.getNearestLookingDirection().getOpposite()).setValue(OPEN, false).setValue(RETAINING, false);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, OPEN);
+        builder.add(FACING, OPEN, RETAINING);
     }
 
     @Override

@@ -39,10 +39,12 @@
 
     "container.compact_storage.compact_chest": "Compact Chest",
     "container.compact_storage.backpack": "Backpack",
+    "container.compact_storage.compact_barrel": "Compact Barrel",
 
     "item.compact_storage.backpack": "Backpack",
     "item.compact_storage.upgrade_column": "Storage Upgrade (Height)",
     "item.compact_storage.upgrade_row": "Storage Upgrade (Width)",
+    "item.compact_storage.wrench": "Wrench",
 
     "item.compact_storage.backpack_white": "White Backpack",
     "item.compact_storage.backpack_orange": "Orange Backpack",
@@ -71,6 +73,7 @@
     "block.compact_storage.spruce_drum": "Spruce Item Drum",
     "block.compact_storage.dark_oak_drum": "Dark Oak Item Drum",
     "block.compact_storage.warped_drum": "Warped Item Drum",
+    "block.compact_storage.bamboo_drum": "Bamboo Item Drum",
 
     "tooltip.compact_storage.row_upgrade_descriptor": "Use this on a Compact Storage block to add extra width",
     "tooltip.compact_storage.column_upgrade_descriptor": "Use this on a Compact Storage block to add extra height",
@@ -78,12 +81,14 @@
 
     "text.compact_storage.upgrade_success": "Upgrade successfully applied!",
     "text.compact_storage.upgrade_fail_maxsize": "Maximum size already reached, upgrade failed!",
+    "text.compact_storage.retainer_applied": "Retainer Upgrade already applied",
 
     "text.compact_storage.tooltip.size_x": "Inventory Width: ",
     "text.compact_storage.tooltip.size_y": "Inventory Height: ",
     "text.compact_storage.tooltip.slots": "Has %d slots",
 
-    "itemGroup.compact_storage.general": "Compact Storage",
+    "itemGroup.compact_storage.general": "CompactStorage: Iron",
+    "itemGroup.compact_storage.wood": "CompactStorage: Wood",
     "text.compact_storage.drum.tooltip_1": "Can store 64 stacks of one item type",
     "text.compact_storage.drum.tooltip_2": "Right-click to add items, left click to remove",
 
@@ -94,5 +99,49 @@
     "text.compact_storage.advancements.drum_me_up": "Drum me up!",
     "text.compact_storage.advancements.drum_me_up_description": "Drumming up a storm!",
     "text.compact_storage.advancements.storage_on_the_move": "Storage, now on the move!",
-    "text.compact_storage.advancements.storage_on_the_move_description": "Think of all the things that you can take with you now!"
+    "text.compact_storage.advancements.storage_on_the_move_description": "Think of all the things that you can take with you now!",
+
+    "item.compact_storage.upgrade_retainer": "Storage Retainer Upgrade",
+    "tooltip.compact_storage.upgrade_retainer_description": "Keep items stored in the block even after breaking!",
+    "tooltip.compact_storage.new_item_description": "New!",
+    "tooltip.compact_storage.storage_size": "%d x %d = %d slots",
+    "tooltip.compact_storage.retaining": "Retaining",
+    "tooltip.compact_storage.drum_contains": "Contains %d x %s",
+
+    "block.compact_storage.spruce_compact_chest": "Spruce Compact Chest",
+    "block.compact_storage.oak_compact_chest": "Oak Compact Chest",
+    "block.compact_storage.crimson_compact_chest": "Crimson Compact Chest",
+    "block.compact_storage.birch_compact_chest": "Birch Compact Chest",
+    "block.compact_storage.dark_oak_compact_chest": "Dark Oak Compact Chest",
+    "block.compact_storage.bamboo_compact_chest": "Bamboo Compact Chest",
+    "block.compact_storage.acacia_compact_chest": "Acacia Compact Chest",
+    "block.compact_storage.mangrove_compact_chest": "Mangrove Compact Chest",
+    "block.compact_storage.warped_compact_chest": "Warped Compact Chest",
+    "block.compact_storage.cherry_compact_chest": "Cherry Compact Chest",
+    "block.compact_storage.jungle_compact_chest": "Jungle Compact Chest",
+
+    "block.compact_storage.spruce_compact_barrel": "Spruce Compact Barrel",
+    "block.compact_storage.oak_compact_barrel": "Oak Compact Barrel",
+    "block.compact_storage.crimson_compact_barrel": "Crimson Compact Barrel",
+    "block.compact_storage.birch_compact_barrel": "Birch Compact Barrel",
+    "block.compact_storage.dark_oak_compact_barrel": "Dark Oak Compact Barrel",
+    "block.compact_storage.bamboo_compact_barrel": "Bamboo Compact Barrel",
+    "block.compact_storage.acacia_compact_barrel": "Acacia Compact Barrel",
+    "block.compact_storage.mangrove_compact_barrel": "Mangrove Compact Barrel",
+    "block.compact_storage.warped_compact_barrel": "Warped Compact Barrel",
+    "block.compact_storage.cherry_compact_barrel": "Cherry Compact Barrel",
+    "block.compact_storage.jungle_compact_barrel": "Jungle Compact Barrel",
+
+    "tag.item.compact_storage.blocks.compact_barrel": "Compact Barrel Blocks",
+    "tag.item.compact_storage.blocks.compact_barrels_wood": "Wooden Compact Barrel Blocks",
+    "tag.item.compact_storage.blocks.compact_chest": "Compact Chest Blocks",
+    "tag.item.compact_storage.blocks.compact_chests_wood": "Wooden Compact Chest Blocks",
+    "tag.item.compact_storage.blocks.drum": "Drum Blocks",
+
+    "tag.item.compact_storage.items.compact_barrel": "Compact Barrel Items",
+    "tag.item.compact_storage.items.compact_barrels_wood": "Wooden Compact Barrel Items",
+    "tag.item.compact_storage.items.compact_chest": "Compact Chest Items",
+    "tag.item.compact_storage.items.compact_chests_wood": "Wooden Compact Chest Items",
+    "tag.item.compact_storage.items.drum": "Drum Items",
+    "tag.item.compact_storage.items.backpack": "Backpack Items"
 }

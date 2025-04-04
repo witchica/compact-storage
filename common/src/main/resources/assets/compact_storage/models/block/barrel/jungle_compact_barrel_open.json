@@ -1,0 +1,6 @@
+{
+  "parent": "compact_storage:block/barrel/compact_barrel_open",
+  "textures": {
+    "barrel": "compact_storage:block/barrel/jungle_barrel"
+  }
+}

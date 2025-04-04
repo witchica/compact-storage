@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +33,7 @@ import java.util.List;
 
 public class DrumBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
+    public static final BooleanProperty RETAINING = BooleanProperty.create("retaining");
 
     public DrumBlock(Properties settings) {
         super(settings);
@@ -40,7 +42,7 @@ public class DrumBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return super.getStateForPlacement(ctx).setValue(FACING, ctx.getNearestLookingDirection().getOpposite());
+        return super.getStateForPlacement(ctx).setValue(FACING, ctx.getNearestLookingDirection().getOpposite()).setValue(RETAINING, false);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class DrumBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(FACING);
+        builder.add(FACING, RETAINING);
     }
 
 

@@ -1,5 +1,3 @@
 {
-
-    "parent": "compact_storage:block/mangrove_drum"
-
-  }
+  "parent": "compact_storage:block/drum/mangrove_drum"
+}
