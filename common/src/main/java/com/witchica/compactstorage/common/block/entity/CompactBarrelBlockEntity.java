@@ -184,7 +184,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
     }
 
     public boolean increaseSize(int x, int y) {
-        if((inventoryWidth > 23 && x > 0) || (inventoryHeight > 11 && y > 0)) {
+        if((inventoryWidth > 20 && x > 0) || (inventoryHeight > 11 && y > 0)) {
             return false;
         }
 
