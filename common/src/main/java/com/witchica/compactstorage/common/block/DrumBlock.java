@@ -72,7 +72,7 @@ public class DrumBlock extends BaseEntityBlock {
         tooltip.add(Component.translatable("text.compact_storage.drum.tooltip_1").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         tooltip.add(Component.translatable("text.compact_storage.drum.tooltip_2").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
 
-        if(stack.hasTag() && stack.getTag().contains("Retaining")) {
+        if(stack.hasTag() && stack.getTag().contains("Retaining") && stack.getTag().getBoolean("Retaining")) {
             tooltip.add(Component.translatable("tooltip.compact_storage.retaining").withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD));
         }
     }

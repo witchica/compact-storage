@@ -54,7 +54,7 @@ public class CompactStorageUtil {
         tooltip.add(Component.translatable("text.compact_storage.tooltip.size_y").withStyle(ChatFormatting.WHITE).append(Component.literal("" + inventoryY).withStyle(ChatFormatting.DARK_PURPLE)));
         tooltip.add(Component.translatable("text.compact_storage.tooltip.slots", slots).withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.ITALIC));
 
-        if(compound != null && compound.contains("retaining")) {
+        if(compound != null && compound.contains("retaining") && compound.getBoolean("retaining")) {
             tooltip.add(Component.translatable("tooltip.compact_storage.retaining").withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD));
         }
     }

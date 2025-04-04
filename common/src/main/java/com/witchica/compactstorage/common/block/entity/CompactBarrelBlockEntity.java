@@ -65,7 +65,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
 
     @Override
     protected Component getDefaultName() {
-        return Component.translatable("container.barrel");
+        return this.getBlockState().getBlock().getName();
     }
 
     @Override
@@ -213,6 +213,15 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
         CompoundTag compoundTag = this.saveWithoutMetadata();
         if(!retaining) {
             compoundTag.remove("Items");
+        }
+
+        if(compoundTag.contains("CustomName")) {
+            if(!compoundTag.contains("display")) {
+                compoundTag.put("display", new CompoundTag());
+            }
+
+            compoundTag.getCompound("display").put("Name", compoundTag.get("CustomName"));
+            compoundTag.remove("CustomName");
         }
 
         stack.setTag(compoundTag);

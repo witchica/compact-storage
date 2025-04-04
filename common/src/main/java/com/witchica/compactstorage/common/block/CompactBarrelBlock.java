@@ -67,14 +67,6 @@ public abstract class CompactBarrelBlock extends BaseEntityBlock {
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         super.setPlacedBy(world, pos, state, placer, itemStack);
 
-        if (itemStack.hasCustomHoverName()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-
-            if (blockEntity instanceof CompactBarrelBlockEntity) {
-                ((CompactBarrelBlockEntity) blockEntity).setCustomName(itemStack.getHoverName());
-            }
-        }
-
         if (!world.isClientSide && itemStack.hasTag()) {
             CompoundTag nbt = itemStack.getTag();
             BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -88,6 +80,10 @@ public abstract class CompactBarrelBlock extends BaseEntityBlock {
                 if(nbt.contains("retaining") && nbt.getBoolean("retaining")) {
                     compactBarrelBlockEntity.readItemsFromTag(compactBarrelBlockEntity.getItems(), nbt);
                     compactBarrelBlockEntity.setRetaining();
+                }
+
+                if(nbt.contains("CustomName")) {
+                    compactBarrelBlockEntity.setCustomName(Component.Serializer.fromJson(nbt.getString("CustomName")));
                 }
 
                 compactBarrelBlockEntity.setChanged();

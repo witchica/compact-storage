@@ -73,14 +73,6 @@ public abstract class CompactChestBlock extends BaseEntityBlock {
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
         super.setPlacedBy(world, pos, state, placer, itemStack);
 
-        if (itemStack.hasCustomHoverName()) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-
-            if (blockEntity instanceof CompactChestBlockEntity) {
-                ((CompactChestBlockEntity) blockEntity).setCustomName(itemStack.getHoverName());
-            }
-        }
-
         if (!world.isClientSide && itemStack.hasTag()) {
             CompoundTag nbt = itemStack.getTag();
 
@@ -96,6 +88,12 @@ public abstract class CompactChestBlock extends BaseEntityBlock {
                 if (nbt.contains("retaining") && nbt.getBoolean("retaining")) {
                     compactChestBlockEntity.readItemsFromTag(compactChestBlockEntity.getItems(), nbt);
                     compactChestBlockEntity.setRetaining();
+                }
+
+                if(nbt.contains("CustomName")) {
+                    compactChestBlockEntity.setCustomName(Component.Serializer.fromJson(nbt.getString("CustomName")));
+                } else if (nbt.contains("display") && nbt.getCompound("display").contains("Name")) {
+                    compactChestBlockEntity.setCustomName(Component.Serializer.fromJson(nbt.getCompound("display").getString("Name")));
                 }
 
                 compactChestBlockEntity.setChanged();

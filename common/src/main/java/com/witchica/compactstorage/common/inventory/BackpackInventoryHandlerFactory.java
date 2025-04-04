@@ -24,7 +24,7 @@ public class BackpackInventoryHandlerFactory implements MenuProvider {
 
     @Override
     public Component getDisplayName() {
-        return backpackStack.hasCustomHoverName() ? backpackStack.getHoverName() : Component.translatable("container.compact_storage.backpack");
+        return backpackStack.getHoverName();
     }
 
     public static BackpackInventory getBackpackInventory(Player player, InteractionHand hand) {
