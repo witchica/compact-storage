@@ -58,4 +58,13 @@ public class CompactStoragePlatformImpl {
     public static BackpackInventoryHandlerFactory getBackpackInventoryHandlerFactory(Player player, InteractionHand hand) {
         return new FabricBackpackInventoryFactory(player, hand);
     }
+    public static Block getWoodenCompactChestBlock(int index) {
+        return CompactStorage.WOODEN_COMPACT_CHEST_BLOCKS[index].get();
+    }
+    public static Block getWoodenCompactBarrelBlock(int index) {
+        return CompactStorage.WOODEN_COMPACT_BARREL_BLOCKS[index].get();
+    }
+    public static Item getRetainingUpgradeItem() {
+        return CompactStorage.UPGRADE_RETAINING_ITEM.get();
+    }
 }

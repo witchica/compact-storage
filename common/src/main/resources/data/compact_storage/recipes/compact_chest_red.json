@@ -17,7 +17,7 @@
         }
     },
     "result": {
-      "id": "compact_storage:compact_chest_red",
+      "item": "compact_storage:compact_chest_red",
         "count": 1
     }
 }

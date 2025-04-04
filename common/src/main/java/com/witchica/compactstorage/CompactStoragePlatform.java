@@ -16,6 +16,14 @@ public class CompactStoragePlatform {
         throw new AssertionError("Method not implemented on this platform.");
     }
     @ExpectPlatform
+    public static Block getWoodenCompactChestBlock(int index) {
+        throw new AssertionError("Method not implemented on this platform.");
+    }
+    @ExpectPlatform
+    public static Block getWoodenCompactBarrelBlock(int index) {
+        throw new AssertionError("Method not implemented on this platform.");
+    }
+    @ExpectPlatform
     public static Block getCompactBarrelBlock(int index) {
         throw new AssertionError("Method not implemented on this platform.");
     }
@@ -33,6 +41,10 @@ public class CompactStoragePlatform {
     }
     @ExpectPlatform
     public static Item getStorageColumnUpgradeItem() {
+        throw new AssertionError("Method not implemented on this platform.");
+    }
+    @ExpectPlatform
+    public static Item getRetainingUpgradeItem() {
         throw new AssertionError("Method not implemented on this platform.");
     }
     @ExpectPlatform

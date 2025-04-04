@@ -7,6 +7,7 @@ import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.CompactChestBlock;
 import com.witchica.compactstorage.common.block.entity.CompactChestBlockEntity;
 
+import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelLayers;
@@ -38,8 +39,14 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
         for(int i = 0; i < 16; i++) {
             CHEST_TEXTURES.put(CompactStoragePlatform.getCompactChestBlock(i), new ResourceLocation("compact_storage", String.format("textures/block/chest/%s_chest.png", DyeColor.byId(i).name().toLowerCase(Locale.ROOT))));
         }
+
+        for(int i = 0; i < CompactStorageUtil.DRUM_TYPES.length; i++) {
+            CHEST_TEXTURES.put(CompactStoragePlatform.getWoodenCompactChestBlock(i), new ResourceLocation("compact_storage", String.format("textures/block/chest/%s_chest.png", CompactStorageUtil.DRUM_TYPES[i])));
+        }
     }
-    
+
+    public static final ResourceLocation RETAINING_TEXTURE = new ResourceLocation("compact_storage", "textures/block/chest/retaining_chest.png");
+
     public CompactChestBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
         super();
 
@@ -75,6 +82,8 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
 
         chestBase.render(matrixStack, vertexConsumer, light, overlay);
         chestLid.render(matrixStack, vertexConsumer, light, overlay);
+
+        VertexConsumer vertexConsumer1 = compactChestBlockEntity.getRetaining() ? vertexConsumerProvider.getBuffer(RenderType.entitySolid(RETAINING_TEXTURE)) : vertexConsumer;
         chestLock.render(matrixStack, vertexConsumer, light, overlay);
 
         matrixStack.popPose();

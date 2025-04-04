@@ -60,6 +60,16 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
     }
 
     @Override
+    public boolean getRetaining() {
+        return false;
+    }
+
+    @Override
+    public void setRetaining() {
+
+    }
+
+    @Override
     public int getContainerSize() {
         return getInventoryWidth() * getInventoryHeight();
     }

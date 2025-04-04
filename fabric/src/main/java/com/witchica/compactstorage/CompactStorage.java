@@ -59,6 +59,12 @@ public class CompactStorage implements ModInitializer {
 	public static final RegistryHolder.Blocks[] DRUM_BLOCKS = new RegistryHolder.Blocks[CompactStorageUtil.DRUM_TYPES.length];
 	public static final RegistryHolder.Items[] BACKPACK_ITEMS = new RegistryHolder.Items[16];
 
+	private static final List<RegistryHolder.Blocks> ALL_CHEST_BLOCKS = new ArrayList<>();
+	private static final List<RegistryHolder.Blocks> ALL_BARREL_BLOCKS = new ArrayList<>();
+
+	public static final RegistryHolder.Blocks[] WOODEN_COMPACT_CHEST_BLOCKS = new RegistryHolder.Blocks[CompactStorageUtil.DRUM_TYPES.length];
+	public static final RegistryHolder.Blocks[] WOODEN_COMPACT_BARREL_BLOCKS = new RegistryHolder.Blocks[CompactStorageUtil.DRUM_TYPES.length];
+
 	public static RegistryHolder<BlockEntityType<FabricDrumBlockEntity>> DRUM_BLOCK_ENTITY_TYPE;
 
 	public static final HashMap<DyeColor, RegistryHolder.Blocks> DYE_COLOR_TO_COMPACT_CHEST_MAP = new HashMap<DyeColor, RegistryHolder.Blocks>();
@@ -67,9 +73,9 @@ public class CompactStorage implements ModInitializer {
 	/**
 	 * Items
 	 */
-
 	public static final RegistryHolder.Items UPGRADE_ROW_ITEM = new RegistryHolder.Items("upgrade_row", new StorageUpgradeItem(new FabricItemSettings()));
 	public static final RegistryHolder.Items UPGRADE_COLUMN_ITEM = new RegistryHolder.Items("upgrade_column", new StorageUpgradeItem(new FabricItemSettings()));
+	public static final RegistryHolder.Items UPGRADE_RETAINING_ITEM = new RegistryHolder.Items("upgrade_retainer", new StorageUpgradeItem(new FabricItemSettings()));
 
 	public static final HashMap<DyeColor, RegistryHolder.Items> DYE_COLOR_TO_BACKPACK_MAP = new HashMap<DyeColor, RegistryHolder.Items>();
 
@@ -84,24 +90,42 @@ public class CompactStorage implements ModInitializer {
 
 			COMPACT_BARREL_BLOCKS[i] = new RegistryHolder.Blocks("compact_barrel_" + dyeName, new FabricCompactBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL).strength(2f, 5f)));
 			DYE_COLOR_TO_COMPACT_BARREL_MAP.put(DyeColor.byId(i), COMPACT_BARREL_BLOCKS[i]);
+
+			ALL_CHEST_BLOCKS.add(COMPACT_CHEST_BLOCKS[i]);
+			ALL_BARREL_BLOCKS.add(COMPACT_BARREL_BLOCKS[i]);
 		}
 
 		for(int i = 0; i < CompactStorageUtil.DRUM_TYPES.length; i++) {
 			DRUM_BLOCKS[i] = new RegistryHolder.Blocks(CompactStorageUtil.DRUM_TYPES[i] + "_drum", new FabricDrumBlock(BlockBehaviour.Properties.copy(Blocks.BARREL)));
+			WOODEN_COMPACT_CHEST_BLOCKS[i] = new RegistryHolder.Blocks(CompactStorageUtil.DRUM_TYPES[i] + "_compact_chest", new FabricCompactChestBlock(BlockBehaviour.Properties.copy(Blocks.CHEST)));
+			WOODEN_COMPACT_BARREL_BLOCKS[i] = new RegistryHolder.Blocks(CompactStorageUtil.DRUM_TYPES[i] + "_compact_barrel", new FabricCompactBarrelBlock(BlockBehaviour.Properties.copy(Blocks.CHEST)));
+
+			ALL_CHEST_BLOCKS.add(WOODEN_COMPACT_CHEST_BLOCKS[i]);
+			ALL_BARREL_BLOCKS.add(WOODEN_COMPACT_BARREL_BLOCKS[i]);
 		}
 
 	}
 
-	public static final CreativeModeTab COMPACT_STORAGE_ITEM_GROUP = FabricItemGroup.builder()
+	public static final CreativeModeTab COMPACT_STORAGE_IRON_ITEM_GROUP = FabricItemGroup.builder()
 			.title(Component.translatable("itemGroup.compact_storage.general"))
 			.icon(() -> new ItemStack(COMPACT_CHEST_BLOCKS[0].get(), 1))
 			.displayItems(((displayContext, entries) -> {
 				entries.acceptAll(Arrays.stream(COMPACT_CHEST_BLOCKS).map((block) -> new ItemStack(block.get(), 1)).toList());
 				entries.acceptAll(Arrays.stream(COMPACT_BARREL_BLOCKS).map((block) -> new ItemStack(block.get(), 1)).toList());
-				entries.acceptAll(Arrays.stream(DRUM_BLOCKS).map((block) -> new ItemStack(block.get(), 1)).toList());
 				entries.acceptAll(Arrays.stream(BACKPACK_ITEMS).map((block) -> new ItemStack(block.get(), 1)).toList());
 				entries.accept(UPGRADE_COLUMN_ITEM.get());
 				entries.accept(UPGRADE_ROW_ITEM.get());
+				entries.accept(UPGRADE_RETAINING_ITEM.get());
+			}))
+			.build();
+
+	public static final CreativeModeTab COMPACT_STORAGE_WOOD_ITEM_GROUP = FabricItemGroup.builder()
+			.title(Component.translatable("itemGroup.compact_storage.wood"))
+			.icon(() -> new ItemStack(WOODEN_COMPACT_CHEST_BLOCKS[0].get(), 1))
+			.displayItems(((displayContext, entries) -> {
+				entries.acceptAll(Arrays.stream(WOODEN_COMPACT_CHEST_BLOCKS).map((block) -> new ItemStack(block.get(), 1)).toList());
+				entries.acceptAll(Arrays.stream(WOODEN_COMPACT_BARREL_BLOCKS).map((block) -> new ItemStack(block.get(), 1)).toList());
+				entries.acceptAll(Arrays.stream(DRUM_BLOCKS).map((block) -> new ItemStack(block.get(), 1)).toList());
 			}))
 			.build();
 
@@ -116,18 +140,22 @@ public class CompactStorage implements ModInitializer {
 		}
 
 		Arrays.stream(DRUM_BLOCKS).forEach(RegistryHolder.Blocks::registerBlockAndItem);
+		Arrays.stream(WOODEN_COMPACT_CHEST_BLOCKS).forEach(RegistryHolder.Blocks::registerBlockAndItem);
+		Arrays.stream(WOODEN_COMPACT_BARREL_BLOCKS).forEach(RegistryHolder.Blocks::registerBlockAndItem);
 
 		Registry.register(BuiltInRegistries.MENU, COMPACT_CHEST_GENERIC_IDENTIFIER, COMPACT_CHEST_SCREEN_HANDLER);
-		COMPACT_CHEST_ENTITY_TYPE = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, COMPACT_CHEST_GENERIC_IDENTIFIER, FabricBlockEntityTypeBuilder.create(FabricCompactChestBlockEntity::new, Arrays.stream(COMPACT_CHEST_BLOCKS).map(RegistryHolder::get).toArray(Block[]::new)).build(null));
-		COMPACT_BARREL_ENTITY_TYPE = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, COMPACT_BARREL_GENERIC_IDENTIFIER, FabricBlockEntityTypeBuilder.create(FabricCompactBarrelBlockEntity::new, Arrays.stream(COMPACT_BARREL_BLOCKS).map(RegistryHolder::get).toArray(Block[]::new)).build(null));
+		COMPACT_CHEST_ENTITY_TYPE = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, COMPACT_CHEST_GENERIC_IDENTIFIER, FabricBlockEntityTypeBuilder.create(FabricCompactChestBlockEntity::new, ALL_CHEST_BLOCKS.stream().map(RegistryHolder::get).toArray(Block[]::new)).build(null));
+		COMPACT_BARREL_ENTITY_TYPE = Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, COMPACT_BARREL_GENERIC_IDENTIFIER, FabricBlockEntityTypeBuilder.create(FabricCompactBarrelBlockEntity::new, ALL_BARREL_BLOCKS.stream().map(RegistryHolder::get).toArray(Block[]::new)).build(null));
 
 		DRUM_BLOCK_ENTITY_TYPE = new RegistryHolder<BlockEntityType<FabricDrumBlockEntity>>("drum", FabricBlockEntityTypeBuilder.create(FabricDrumBlockEntity::new, Arrays.stream(DRUM_BLOCKS).map(RegistryHolder::get).toArray(Block[]::new)).build(null));
 		DRUM_BLOCK_ENTITY_TYPE.register(BuiltInRegistries.BLOCK_ENTITY_TYPE);
 
 		UPGRADE_ROW_ITEM.register(BuiltInRegistries.ITEM);
 		UPGRADE_COLUMN_ITEM.register(BuiltInRegistries.ITEM);
+		UPGRADE_RETAINING_ITEM.register(BuiltInRegistries.ITEM);
 
-		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(MOD_ID, "general"), COMPACT_STORAGE_ITEM_GROUP);
+		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(MOD_ID, "general"), COMPACT_STORAGE_IRON_ITEM_GROUP);
+		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(MOD_ID, "wood"), COMPACT_STORAGE_WOOD_ITEM_GROUP);
 
 		ItemStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> blockEntity.inventoryStorage, COMPACT_CHEST_ENTITY_TYPE);
 		ItemStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> blockEntity.inventoryStorage, COMPACT_BARREL_ENTITY_TYPE);

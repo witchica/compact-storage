@@ -1,6 +1,7 @@
 package com.witchica.compactstorage.common.block;
 
 import com.mojang.serialization.MapCodec;
+import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -13,6 +14,7 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -42,7 +44,8 @@ public class DrumBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return super.getStateForPlacement(ctx).setValue(FACING, ctx.getNearestLookingDirection().getOpposite()).setValue(RETAINING, false);
+        boolean retaining = ctx.getItemInHand().hasTag() ? ctx.getItemInHand().getTag().getBoolean("Retaining") : false;
+        return super.getStateForPlacement(ctx).setValue(FACING, ctx.getNearestLookingDirection().getOpposite()).setValue(RETAINING, retaining);
     }
 
     @Override
@@ -68,6 +71,10 @@ public class DrumBlock extends BaseEntityBlock {
 
         tooltip.add(Component.translatable("text.compact_storage.drum.tooltip_1").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         tooltip.add(Component.translatable("text.compact_storage.drum.tooltip_2").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+
+        if(stack.hasTag() && stack.getTag().contains("Retaining")) {
+            tooltip.add(Component.translatable("tooltip.compact_storage.retaining").withStyle(ChatFormatting.AQUA, ChatFormatting.BOLD));
+        }
     }
 
     @Override
@@ -137,10 +144,18 @@ public class DrumBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if(!world.isClientSide) {
-            if(player.isShiftKeyDown()) {
-               extractItem(world, pos, player);
+            if(player.getItemInHand(hand).getItem() == CompactStoragePlatform.getRetainingUpgradeItem()) {
+                if (world.getBlockEntity(pos) instanceof DrumBlockEntity drumBlockEntity) {
+                    drumBlockEntity.setRetaining();
+                    player.getItemInHand(hand).shrink(1);
+                    return InteractionResult.CONSUME_PARTIAL;
+                }
             } else {
-                insertItem(world, pos, player, hand);
+                if(player.isShiftKeyDown()) {
+                    extractItem(world, pos, player);
+                } else {
+                    insertItem(world, pos, player, hand);
+                }
             }
         }
 
@@ -176,12 +191,32 @@ public class DrumBlock extends BaseEntityBlock {
     }
 
     @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        if(!level.isClientSide) {
+            if(stack.hasTag() && stack.getTag().contains("Retaining")) {
+                if(level.getBlockEntity(pos) instanceof DrumBlockEntity drumBlock) {
+                    drumBlock.load(stack.getTag());
+                    drumBlock.setChanged();
+                }
+            }
+        }
+
+        super.setPlacedBy(level, pos, state, placer, stack);
+    }
+
+    @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
         if(!state.is(newState.getBlock())) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
             if(blockEntity instanceof DrumBlockEntity drumBlock) {
-                Containers.dropContents(world, pos, drumBlock.inventory);
+                if(!drumBlock.getRetaining()) {
+                    Containers.dropContents(world, pos, drumBlock.inventory);
+                }
+
+                ItemStack itemStack = new ItemStack(this, 1);
+                drumBlock.saveToItem(itemStack);
+                Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStack);
                 world.updateNeighbourForOutputSignal(pos, state.getBlock());
             }
         }

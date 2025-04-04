@@ -54,7 +54,8 @@ public abstract class CompactBarrelBlock extends BaseEntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        return getStateDefinition().any().setValue(FACING, ctx.getNearestLookingDirection().getOpposite()).setValue(OPEN, false).setValue(RETAINING, false);
+        boolean retaining = ctx.getItemInHand().hasTag() ? ctx.getItemInHand().getTag().getBoolean("retaining") : false;
+        return getStateDefinition().any().setValue(FACING, ctx.getNearestLookingDirection().getOpposite()).setValue(OPEN, false).setValue(RETAINING, retaining);
     }
 
     @Override
@@ -76,17 +77,20 @@ public abstract class CompactBarrelBlock extends BaseEntityBlock {
 
         if (!world.isClientSide && itemStack.hasTag()) {
             CompoundTag nbt = itemStack.getTag();
-
-            if (nbt.contains("inventory_width") && nbt.contains("inventory_height")) {
-                BlockEntity blockEntity = world.getBlockEntity(pos);
-
-                if (blockEntity instanceof CompactBarrelBlockEntity) {
-                    CompactBarrelBlockEntity compactBarrelBlockEntity = (CompactBarrelBlockEntity) blockEntity;
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof CompactBarrelBlockEntity compactBarrelBlockEntity) {
+                if (nbt.contains("inventory_width") && nbt.contains("inventory_height")) {
                     compactBarrelBlockEntity.inventoryWidth = nbt.getInt("inventory_width");
                     compactBarrelBlockEntity.inventoryHeight = nbt.getInt("inventory_height");
                     compactBarrelBlockEntity.resizeInventory(false);
-                    compactBarrelBlockEntity.setChanged();
                 }
+
+                if(nbt.contains("retaining") && nbt.getBoolean("retaining")) {
+                    compactBarrelBlockEntity.readItemsFromTag(compactBarrelBlockEntity.getItems(), nbt);
+                    compactBarrelBlockEntity.setRetaining();
+                }
+
+                compactBarrelBlockEntity.setChanged();
             }
         }
     }
@@ -113,7 +117,7 @@ public abstract class CompactBarrelBlock extends BaseEntityBlock {
                             return InteractionResult.FAIL;
                         }
                     } else if(heldItem == CompactStoragePlatform.getStorageColumnUpgradeItem()) {
-                        if(compactBarrelBlockEntity.increaseSize(0, 1)) {
+                        if (compactBarrelBlockEntity.increaseSize(0, 1)) {
                             player.getItemInHand(hand).shrink(1);
                             player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
                             player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
@@ -123,7 +127,20 @@ public abstract class CompactBarrelBlock extends BaseEntityBlock {
                             player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
                             return InteractionResult.FAIL;
                         }
-                    } else if(heldItem instanceof DyeItem dyeItem) {
+                    } else if(heldItem == CompactStoragePlatform.getRetainingUpgradeItem()) {
+                        if(!compactBarrelBlockEntity.getRetaining()) {
+                            player.getItemInHand(hand).shrink(1);
+                            compactBarrelBlockEntity.setRetaining();
+                            player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
+                            player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
+                            return InteractionResult.CONSUME_PARTIAL;
+                        } else {
+                            player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
+                            player.displayClientMessage(Component.translatable("text.compact_storage.retainer_applied").withStyle(ChatFormatting.RED), true);
+                            return InteractionResult.FAIL;
+                        }
+                    }
+                    else if(heldItem instanceof DyeItem dyeItem) {
                         Block newBlock = CompactStoragePlatform.getCompactBarrelFromDyeColor(dyeItem.getDyeColor());
                         world.setBlockAndUpdate(pos, newBlock.defaultBlockState().setValue(FACING, state.getValue(FACING)));
                         player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);

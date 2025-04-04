@@ -1,8 +1,6 @@
 package com.witchica.compactstorage.forge;
 
 import com.mojang.logging.LogUtils;
-import com.witchica.compactstorage.common.block.DrumBlock;
-import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
 import com.witchica.compactstorage.common.item.StorageUpgradeItem;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
@@ -32,9 +30,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import org.slf4j.Logger;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Locale;
+import java.util.*;
 
 import static com.witchica.compactstorage.CompactStorageCommon.MOD_ID;
 
@@ -56,13 +52,16 @@ public class CompactStorageForge {
     public static final RegistryObject<ForgeDrumBlock>[] DRUM_BLOCKS = new RegistryObject[CompactStorageUtil.DRUM_TYPES.length];
     public static final RegistryObject<ForgeBackpackItem>[] BACKPACK_ITEMS = new RegistryObject[16];
 
+    public static final List<RegistryObject<ForgeCompactChestBlock>> ALL_CHEST_BLOCKS = new ArrayList<RegistryObject<ForgeCompactChestBlock>>();
+    public static final List<RegistryObject<ForgeCompactBarrelBlock>> ALL_BARREL_BLOCKS = new ArrayList<RegistryObject<ForgeCompactBarrelBlock>>();
+
     public static final String COMPACT_CHEST_TRANSLATION_KEY = Util.makeDescriptionId("container", COMPACT_CHEST_GENERIC_IDENTIFIER);
 
     public static RegistryObject<BlockEntityType<ForgeCompactBarrelBlockEntity>> COMPACT_BARREL_ENTITY_TYPE =
-            BLOCK_ENTITY_TYPES.register("compact_barrel", () -> BlockEntityType.Builder.of(ForgeCompactBarrelBlockEntity::new, Arrays.stream(COMPACT_BARREL_BLOCKS).map(RegistryObject::get).toArray(Block[]::new)).build(null));
+            BLOCK_ENTITY_TYPES.register("compact_barrel", () -> BlockEntityType.Builder.of(ForgeCompactBarrelBlockEntity::new, ALL_BARREL_BLOCKS.stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
 
     public static RegistryObject<BlockEntityType<ForgeCompactChestBlockEntity>> COMPACT_CHEST_ENTITY_TYPE =
-            BLOCK_ENTITY_TYPES.register("compact_chest", () -> BlockEntityType.Builder.of(ForgeCompactChestBlockEntity::new, Arrays.stream(COMPACT_CHEST_BLOCKS).map(RegistryObject::get).toArray(Block[]::new)).build(null));
+            BLOCK_ENTITY_TYPES.register("compact_chest", () -> BlockEntityType.Builder.of(ForgeCompactChestBlockEntity::new, ALL_CHEST_BLOCKS.stream().map(RegistryObject::get).toArray(Block[]::new)).build(null));
 
     public static RegistryObject<BlockEntityType<ForgeDrumBlockEntity>> DRUM_ENTITY_TYPE =
             BLOCK_ENTITY_TYPES.register("drum", () -> BlockEntityType.Builder.of(ForgeDrumBlockEntity::new, Arrays.stream(DRUM_BLOCKS).map(RegistryObject::get).toArray(Block[]::new)).build(null));
@@ -73,6 +72,10 @@ public class CompactStorageForge {
 
     public static final RegistryObject<StorageUpgradeItem> UPGRADE_ROW_ITEM = ITEMS.register("upgrade_row", () -> new StorageUpgradeItem(new Item.Properties()));
     public static final RegistryObject<StorageUpgradeItem> UPGRADE_COLUMN_ITEM = ITEMS.register("upgrade_column", () -> new StorageUpgradeItem(new Item.Properties()));
+    public static final RegistryObject<StorageUpgradeItem> UPGRADE_RETAINING_ITEM = ITEMS.register("upgrade_retainer", () -> new StorageUpgradeItem(new Item.Properties()));
+
+    public static final RegistryObject<ForgeCompactChestBlock>[] WOODEN_COMPACT_CHEST_BLOCKS = new RegistryObject[CompactStorageUtil.DRUM_TYPES.length];
+    public static final RegistryObject<ForgeCompactBarrelBlock>[] WOODEN_COMPACT_BARREL_BLOCKS = new RegistryObject[CompactStorageUtil.DRUM_TYPES.length];
 
     public static final RegistryObject<MenuType<CompactChestScreenHandler>> COMPACT_CHEST_SCREEN_HANDLER = MENU_TYPES.register("compact_chest", () -> IForgeMenuType.create(CompactChestScreenHandler::new));
     public static final RegistryObject<CreativeModeTab> COMPACT_STORAGE_TAB = CREATIVE_MODE_TABS.register("compact_storage_tab", () -> CreativeModeTab.builder()
@@ -83,10 +86,20 @@ public class CompactStorageForge {
                 Arrays.stream(COMPACT_CHEST_BLOCKS).forEach(item -> populator.accept(item.get()));
                 Arrays.stream(COMPACT_BARREL_BLOCKS).forEach(item-> populator.accept(item.get()));
                 Arrays.stream(BACKPACK_ITEMS).forEach(item-> populator.accept(item.get()));
-                Arrays.stream(DRUM_BLOCKS).forEach(item-> populator.accept(item.get()));
 
                 populator.accept(UPGRADE_COLUMN_ITEM.get());
                 populator.accept(UPGRADE_ROW_ITEM.get());
+                populator.accept(UPGRADE_RETAINING_ITEM.get());
+            }).build());
+
+    public static final RegistryObject<CreativeModeTab> COMPACT_STORAGE_WOOD_TAB = CREATIVE_MODE_TABS.register("compact_storage_wood_tab", () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup.compact_storage.wood"))
+            .icon(() -> new ItemStack(WOODEN_COMPACT_CHEST_BLOCKS[0].get(), 1))
+            .displayItems((params, populator) -> {
+
+                Arrays.stream(WOODEN_COMPACT_CHEST_BLOCKS).forEach(item -> populator.accept(item.get()));
+                Arrays.stream(WOODEN_COMPACT_BARREL_BLOCKS).forEach(item-> populator.accept(item.get()));
+                Arrays.stream(DRUM_BLOCKS).forEach(item-> populator.accept(item.get()));
             }).build());
 
     static {
@@ -98,6 +111,8 @@ public class CompactStorageForge {
             COMPACT_CHEST_BLOCKS[i] = BLOCKS.register("compact_chest_" + dyeName, () ->
                     new ForgeCompactChestBlock(BlockBehaviour.Properties.copy(Blocks.CHEST).noOcclusion().strength(2f, 5f))
             );
+
+            ALL_CHEST_BLOCKS.add(COMPACT_CHEST_BLOCKS[i]);
 
             ITEMS.register("compact_chest_" + dyeName, () ->
                     new BlockItem(COMPACT_CHEST_BLOCKS[id].get(), new Item.Properties())
@@ -117,6 +132,7 @@ public class CompactStorageForge {
                     new ForgeCompactBarrelBlock(BlockBehaviour.Properties.copy(Blocks.BARREL).strength(2f, 5f)));
             DYE_COLOR_TO_COMPACT_BARREL_MAP.put(color, COMPACT_BARREL_BLOCKS[i]);
 
+            ALL_BARREL_BLOCKS.add(COMPACT_BARREL_BLOCKS[i]);
             ITEMS.register("compact_barrel_" + dyeName, () ->
                     new BlockItem(COMPACT_BARREL_BLOCKS[id].get(), new Item.Properties())
             );
@@ -129,6 +145,21 @@ public class CompactStorageForge {
                     new ForgeDrumBlock(BlockBehaviour.Properties.copy(Blocks.BARREL).strength(2f, 2f)));
 
             ITEMS.register(CompactStorageUtil.DRUM_TYPES[i] + "_drum", () -> new BlockItem(DRUM_BLOCKS[id].get(), new Item.Properties()));
+
+            WOODEN_COMPACT_CHEST_BLOCKS[i] = BLOCKS.register(CompactStorageUtil.DRUM_TYPES[id] + "_compact_chest", () ->
+                    new ForgeCompactChestBlock(BlockBehaviour.Properties.copy(Blocks.CHEST)));
+
+            ITEMS.register(CompactStorageUtil.DRUM_TYPES[id] + "_compact_chest", () ->
+                    new BlockItem(WOODEN_COMPACT_CHEST_BLOCKS[id].get(), new Item.Properties()));
+
+            WOODEN_COMPACT_BARREL_BLOCKS[i] = BLOCKS.register(CompactStorageUtil.DRUM_TYPES[id] + "_compact_barrel", () ->
+                    new ForgeCompactBarrelBlock(BlockBehaviour.Properties.copy(Blocks.CHEST)));
+
+            ITEMS.register(CompactStorageUtil.DRUM_TYPES[id] + "_compact_barrel", () ->
+                    new BlockItem(WOODEN_COMPACT_BARREL_BLOCKS[id].get(), new Item.Properties()));
+
+            ALL_CHEST_BLOCKS.add(WOODEN_COMPACT_CHEST_BLOCKS[id]);
+            ALL_BARREL_BLOCKS.add(WOODEN_COMPACT_BARREL_BLOCKS[id]);
         }
     }
     public CompactStorageForge() {

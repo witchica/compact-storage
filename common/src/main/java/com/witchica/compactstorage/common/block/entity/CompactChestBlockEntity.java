@@ -22,6 +22,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.LidBlockEntity;
@@ -44,6 +45,7 @@ public class CompactChestBlockEntity extends RandomizableContainerBlockEntity im
 
     public float lidOpenness = 0f;
     public float lastLidOpenness = 0f;
+    private boolean retaining = false;
 
     public CompactChestBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CompactStoragePlatform.getCompactChestBlockEntityType(), blockPos, blockState);
@@ -66,7 +68,7 @@ public class CompactChestBlockEntity extends RandomizableContainerBlockEntity im
     }
 
     @Override
-    protected NonNullList<ItemStack> getItems() {
+    public NonNullList<ItemStack> getItems() {
         return getInvStackList();
     }
 
@@ -133,6 +135,7 @@ public class CompactChestBlockEntity extends RandomizableContainerBlockEntity im
 
         this.inventoryWidth = nbt.contains("inventory_width") ? nbt.getInt("inventory_width") : 9;
         this.inventoryHeight = nbt.contains("inventory_height") ? nbt.getInt("inventory_height") : 3;
+        this.retaining = nbt.contains("retaining") && nbt.getBoolean("retaining");
 
         this.inventory = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
         readItemsFromTag(inventory, nbt);
@@ -145,6 +148,7 @@ public class CompactChestBlockEntity extends RandomizableContainerBlockEntity im
 
         nbt.putInt("inventory_width", inventoryWidth);
         nbt.putInt("inventory_height", inventoryHeight);
+        nbt.putBoolean("retaining", retaining);
     }
 
     @Override
@@ -215,5 +219,25 @@ public class CompactChestBlockEntity extends RandomizableContainerBlockEntity im
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 1);
 
         return true;
+    }
+
+    public void setRetaining() {
+        this.retaining = true;
+        setChanged();
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 1);
+    }
+
+    public boolean getRetaining() {
+        return this.retaining;
+    }
+
+    @Override
+    public void saveToItem(ItemStack stack) {
+        CompoundTag compoundTag = this.saveWithoutMetadata();
+        if(!retaining) {
+            compoundTag.remove("Items");
+        }
+
+        stack.setTag(compoundTag);
     }
 }

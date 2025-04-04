@@ -13,6 +13,8 @@ public interface CompactStorageInventoryImpl {
 
     public int getInventoryWidth();
     public int getInventoryHeight();
+    public boolean getRetaining();
+    public void setRetaining();
 
     default void writeItemsToTag(NonNullList<ItemStack> inventory, CompoundTag tag) {
         ListTag listTag = new ListTag();

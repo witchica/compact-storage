@@ -19,6 +19,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
@@ -34,6 +35,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
     public int playersUsing = 0;
     public int playersUsingOld = 0;
     public boolean isOpen = false;
+    private boolean retaining = false;
 
     public CompactBarrelBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CompactStoragePlatform.getCompactBarrelBlockEntityType(), blockPos, blockState);
@@ -52,7 +54,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
 
 
     @Override
-    protected NonNullList<ItemStack> getItems() {
+    public NonNullList<ItemStack> getItems() {
         return inventory;
     }
 
@@ -119,6 +121,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
 
         this.inventoryWidth = nbt.contains("inventory_width") ? nbt.getInt("inventory_width") : 9;
         this.inventoryHeight = nbt.contains("inventory_height") ? nbt.getInt("inventory_height") : 3;
+        this.retaining = nbt.contains("retaining") && nbt.getBoolean("retaining");
 
         this.inventory = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
         readItemsFromTag(inventory, nbt);
@@ -131,6 +134,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
 
         nbt.putInt("inventory_width", inventoryWidth);
         nbt.putInt("inventory_height", inventoryHeight);
+        nbt.putBoolean("retaining", retaining);
     }
 
     @Override
@@ -144,6 +148,9 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
     }
 
     public static void tick(Level world, BlockPos pos, BlockState state, CompactBarrelBlockEntity compactChestBlockEntity) {
+        if(!world.isClientSide() &&world.getBlockState(pos).getValue(CompactBarrelBlock.RETAINING) != compactChestBlockEntity.getRetaining()) {
+            world.setBlockAndUpdate(pos, state.setValue(CompactBarrelBlock.RETAINING, compactChestBlockEntity.getRetaining()));
+        }
 
         if(compactChestBlockEntity.playersUsing > 0 && compactChestBlockEntity.playersUsingOld == 0) {
             compactChestBlockEntity.isOpen = true;
@@ -189,5 +196,25 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 1);
 
         return true;
+    }
+
+    public void setRetaining() {
+        this.retaining = true;
+        setChanged();
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 1);
+    }
+
+    public boolean getRetaining() {
+        return this.retaining;
+    }
+
+    @Override
+    public void saveToItem(ItemStack stack) {
+        CompoundTag compoundTag = this.saveWithoutMetadata();
+        if(!retaining) {
+            compoundTag.remove("Items");
+        }
+
+        stack.setTag(compoundTag);
     }
 }

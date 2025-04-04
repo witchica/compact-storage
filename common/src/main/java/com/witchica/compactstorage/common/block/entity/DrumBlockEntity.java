@@ -1,6 +1,7 @@
 package com.witchica.compactstorage.common.block.entity;
 
 import com.witchica.compactstorage.CompactStoragePlatform;
+import com.witchica.compactstorage.common.block.DrumBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -8,6 +9,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -19,6 +21,7 @@ public class DrumBlockEntity extends BlockEntity {
     public ItemStack clientItem = ItemStack.EMPTY;
     public int clientStackSize;
     public int clientStoredItems;
+    private boolean retaining = false;
 
     public DrumBlockEntity(BlockPos pos, BlockState state) {
         super(CompactStoragePlatform.getDrumBlockEntityType(), pos, state);
@@ -97,6 +100,7 @@ public class DrumBlockEntity extends BlockEntity {
         nbt.put("ClientItem", new ItemStack(getStoredType(), 1).save(new CompoundTag()));
         nbt.putInt("ClientStackSize", getStoredType().getMaxStackSize());
         nbt.putInt("ClientStoredItems", getTotalItemCount());
+        nbt.putBoolean("Retaining", this.retaining);
     }
 
     @Override
@@ -107,6 +111,7 @@ public class DrumBlockEntity extends BlockEntity {
         this.clientItem = ItemStack.of(nbt.getCompound("ClientItem"));
         this.clientStackSize = nbt.getInt("ClientStackSize");
         this.clientStoredItems = nbt.getInt("ClientStoredItems");
+        this.retaining = nbt.getBoolean("Retaining");
     }
 
     @Nullable
@@ -145,5 +150,26 @@ public class DrumBlockEntity extends BlockEntity {
         } else {
             return (clientStackSize + " x " + numStacks + " + " + leftover);
         }
+    }
+
+    public void setRetaining() {
+        this.retaining = true;
+        setChanged();
+        level.setBlock(getBlockPos(),getBlockState().setValue(DrumBlock.RETAINING, true), Block.UPDATE_CLIENTS);
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 1);
+    }
+
+    public boolean getRetaining() {
+        return this.retaining;
+    }
+
+    @Override
+    public void saveToItem(ItemStack stack) {
+        CompoundTag compoundTag = this.saveWithoutMetadata();
+        if(!retaining) {
+            compoundTag.remove("Inventory");
+        }
+
+        stack.setTag(compoundTag);
     }
 }

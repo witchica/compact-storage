@@ -84,16 +84,21 @@ public abstract class CompactChestBlock extends BaseEntityBlock {
         if (!world.isClientSide && itemStack.hasTag()) {
             CompoundTag nbt = itemStack.getTag();
 
-            if (nbt.contains("inventory_width") && nbt.contains("inventory_height")) {
-                BlockEntity blockEntity = world.getBlockEntity(pos);
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof CompactChestBlockEntity compactChestBlockEntity) {
 
-                if (blockEntity instanceof CompactChestBlockEntity) {
-                    CompactChestBlockEntity compactChestBlockEntity = (CompactChestBlockEntity) blockEntity;
+                if (nbt.contains("inventory_width") && nbt.contains("inventory_height")) {
                     compactChestBlockEntity.inventoryWidth = nbt.getInt("inventory_width");
                     compactChestBlockEntity.inventoryHeight = nbt.getInt("inventory_height");
                     compactChestBlockEntity.resizeInventory(false);
-                    compactChestBlockEntity.setChanged();
                 }
+
+                if (nbt.contains("retaining") && nbt.getBoolean("retaining")) {
+                    compactChestBlockEntity.readItemsFromTag(compactChestBlockEntity.getItems(), nbt);
+                    compactChestBlockEntity.setRetaining();
+                }
+
+                compactChestBlockEntity.setChanged();
             }
         }
     }
@@ -127,6 +132,18 @@ public abstract class CompactChestBlock extends BaseEntityBlock {
                     } else {
                         player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
                         player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
+                        return InteractionResult.FAIL;
+                    }
+                } else if (heldItem == CompactStoragePlatform.getRetainingUpgradeItem()) {
+                    if(!compactChestBlockEntity.getRetaining()) {
+                        player.getItemInHand(hand).shrink(1);
+                        compactChestBlockEntity.setRetaining();
+                        player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
+                        player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
+                        return InteractionResult.CONSUME_PARTIAL;
+                    } else {
+                        player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
+                        player.displayClientMessage(Component.translatable("text.compact_storage.retainer_applied").withStyle(ChatFormatting.RED), true);
                         return InteractionResult.FAIL;
                     }
                 } else if(heldItem instanceof DyeItem dyeItem) {
