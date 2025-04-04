@@ -34,7 +34,7 @@ jobs:
           cp fabric/build/libs/*.jar dist
           cp neoforge/build/libs/*.jar dist
       - name: capture build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.6.2
         with:
           if-no-files-found: error
           path: dist/*
