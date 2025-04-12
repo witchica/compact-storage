@@ -1,10 +1,11 @@
 package com.witchica.compactstorage.common.block.entity;
 
-import com.witchica.compactstorage.CompactStoragePlatform;
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.common.block.CompactBarrelBlock;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
 
+import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -19,7 +20,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
@@ -38,7 +38,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
     private boolean retaining = false;
 
     public CompactBarrelBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(CompactStoragePlatform.getCompactBarrelBlockEntityType(), blockPos, blockState);
+        super(CompactStorage.COMPACT_BARREL_ENTITY_TYPE.get(), blockPos, blockState);
         this.inventory = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
     }
 
@@ -202,6 +202,11 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
         this.retaining = true;
         setChanged();
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 1);
+    }
+
+    @Override
+    public CompactStorageUtil.StorageVisualTypes getVisualType() {
+        return ((CompactBarrelBlock) this.getBlockState().getBlock()).getVisualType();
     }
 
     public boolean getRetaining() {

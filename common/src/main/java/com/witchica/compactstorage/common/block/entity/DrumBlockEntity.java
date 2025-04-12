@@ -1,6 +1,6 @@
 package com.witchica.compactstorage.common.block.entity;
 
-import com.witchica.compactstorage.CompactStoragePlatform;
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.common.block.DrumBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -9,7 +9,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
@@ -24,7 +23,7 @@ public class DrumBlockEntity extends BlockEntity {
     private boolean retaining = false;
 
     public DrumBlockEntity(BlockPos pos, BlockState state) {
-        super(CompactStoragePlatform.getDrumBlockEntityType(), pos, state);
+        super(CompactStorage.DRUM_ENTITY_TYPE.get(), pos, state);
     }
 
     public final SimpleContainer inventory = new SimpleContainer(64) {

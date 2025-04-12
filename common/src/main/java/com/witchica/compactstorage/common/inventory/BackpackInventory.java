@@ -1,6 +1,8 @@
 package com.witchica.compactstorage.common.inventory;
 
+import com.witchica.compactstorage.common.item.BackpackItem;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
+import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -13,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public class BackpackInventory implements Container, CompactStorageInventoryImpl  {
+    private final ItemStack backpackItem;
     public NonNullList<ItemStack> items;
     public int inventoryWidth;
     public int inventoryHeight;
@@ -25,6 +28,8 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
         this.backpackSlot = player.getInventory().selected;
         this.player = player;
         this.isInOffhand = isInOffhand;
+
+        this.backpackItem = player.getItemInHand(isInOffhand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
 
         this.fromTag(itemsNbt);
     }
@@ -67,6 +72,15 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
     @Override
     public void setRetaining() {
 
+    }
+
+    @Override
+    public CompactStorageUtil.StorageVisualTypes getVisualType() {
+        if (backpackItem != null && !backpackItem.isEmpty() && backpackItem.getItem() instanceof BackpackItem backpack) {
+            return backpack.getVisualType();
+        }
+
+        return CompactStorageUtil.StorageVisualTypes.RED;
     }
 
     @Override

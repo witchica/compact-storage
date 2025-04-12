@@ -3,7 +3,7 @@ package com.witchica.compactstorage.common.client.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.witchica.compactstorage.CompactStoragePlatform;
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.common.block.CompactChestBlock;
 import com.witchica.compactstorage.common.block.entity.CompactChestBlockEntity;
 
@@ -36,12 +36,8 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
     public static final Map<Block, ResourceLocation> CHEST_TEXTURES = new HashMap<Block, ResourceLocation>();
 
     static {
-        for(int i = 0; i < 16; i++) {
-            CHEST_TEXTURES.put(CompactStoragePlatform.getCompactChestBlock(i), new ResourceLocation("compact_storage", String.format("textures/block/chest/%s_chest.png", DyeColor.byId(i).name().toLowerCase(Locale.ROOT))));
-        }
-
-        for(int i = 0; i < CompactStorageUtil.DRUM_TYPES.length; i++) {
-            CHEST_TEXTURES.put(CompactStoragePlatform.getWoodenCompactChestBlock(i), new ResourceLocation("compact_storage", String.format("textures/block/chest/%s_chest.png", CompactStorageUtil.DRUM_TYPES[i])));
+        for(int i = 0; i < CompactStorageUtil.StorageVisualTypes.values().length; i++) {
+            CHEST_TEXTURES.put(CompactStorage.COMPACT_CHEST_BLOCKS[i].get(), new ResourceLocation("compact_storage", String.format("textures/block/chest/%s_chest.png", CompactStorageUtil.StorageVisualTypes.values()[i].getType())));
         }
     }
 
@@ -62,7 +58,7 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
         boolean bl = world != null;
 
 
-        BlockState blockState = bl ? compactChestBlockEntity.getBlockState() : CompactStoragePlatform.getCompactChestBlock(0).defaultBlockState().setValue(CompactChestBlock.FACING, Direction.SOUTH);
+        BlockState blockState = bl ? compactChestBlockEntity.getBlockState() : CompactStorage.COMPACT_CHEST_BLOCKS[0].get().defaultBlockState().setValue(CompactChestBlock.FACING, Direction.SOUTH);
         Block block = blockState.getBlock();
 
         matrixStack.pushPose();

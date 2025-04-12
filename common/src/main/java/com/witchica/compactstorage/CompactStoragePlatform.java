@@ -1,5 +1,9 @@
 package com.witchica.compactstorage;
 
+import com.mojang.datafixers.FunctionType;
+import com.witchica.compactstorage.common.block.entity.CompactBarrelBlockEntity;
+import com.witchica.compactstorage.common.block.entity.CompactChestBlockEntity;
+import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
 import com.witchica.compactstorage.common.inventory.BackpackInventoryHandlerFactory;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.world.InteractionHand;
@@ -10,75 +14,19 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.util.function.Supplier;
+
 public class CompactStoragePlatform {
     @ExpectPlatform
-    public static Block getCompactChestBlock(int index) {
+    public static BlockEntityType.BlockEntitySupplier<CompactChestBlockEntity> compactChestBlockEntityProvider() {
         throw new AssertionError("Method not implemented on this platform.");
     }
     @ExpectPlatform
-    public static Block getWoodenCompactChestBlock(int index) {
+    public static BlockEntityType.BlockEntitySupplier<CompactBarrelBlockEntity> compactBarrelBlockEntityProvider() {
         throw new AssertionError("Method not implemented on this platform.");
     }
     @ExpectPlatform
-    public static Block getWoodenCompactBarrelBlock(int index) {
-        throw new AssertionError("Method not implemented on this platform.");
-    }
-    @ExpectPlatform
-    public static Block getCompactBarrelBlock(int index) {
-        throw new AssertionError("Method not implemented on this platform.");
-    }
-    @ExpectPlatform
-    public static Block getDrumBlock(int index) {
-        throw new AssertionError("Method not implemented on this platform.");
-    }
-    @ExpectPlatform
-    public static Item getBackpackItem(int index) {
-        throw new AssertionError("Method not implemented on this platform.");
-    }
-    @ExpectPlatform
-    public static Item getStorageRowUpgradeItem() {
-        throw new AssertionError("Method not implemented on this platform.");
-    }
-    @ExpectPlatform
-    public static Item getStorageColumnUpgradeItem() {
-        throw new AssertionError("Method not implemented on this platform.");
-    }
-    @ExpectPlatform
-    public static Item getRetainingUpgradeItem() {
-        throw new AssertionError("Method not implemented on this platform.");
-    }
-    @ExpectPlatform
-    public static Block getCompactChestFromDyeColor(DyeColor dyeColor) {
-        throw new AssertionError("Method not implemented on this platform.");
-    }
-    @ExpectPlatform
-    public static Block getCompactBarrelFromDyeColor(DyeColor dyeColor) {
-        throw new AssertionError("Method not implemented on this platform.");
-    }
-    @ExpectPlatform
-    public static Item getBackpackFromDyeColor(DyeColor dyeColor) {
-        throw new AssertionError("Method not implemented on this platform.");
-    }
-    @ExpectPlatform
-    public static MenuType<?> getCompactStorageScreenHandler() {
-        throw new AssertionError("Method not implemented on this platform.");
-    }
-    @ExpectPlatform
-    public static BlockEntityType<?> getCompactChestBlockEntityType() {
-        throw new AssertionError("Method not implemented on this platform.");
-    }
-    @ExpectPlatform
-    public static BlockEntityType<?> getCompactBarrelBlockEntityType() {
-        throw new AssertionError("Method not implemented on this platform.");
-    }
-
-    @ExpectPlatform
-    public static BlockEntityType<?> getDrumBlockEntityType() {
-        throw new AssertionError("Method not implemented on this platform.");
-    }
-
-    @ExpectPlatform
-    public static BackpackInventoryHandlerFactory getBackpackInventoryHandlerFactory(Player player, InteractionHand hand) {
+    public static BlockEntityType.BlockEntitySupplier<DrumBlockEntity> drumBlockEntityProvider() {
         throw new AssertionError("Method not implemented on this platform.");
     }
 }

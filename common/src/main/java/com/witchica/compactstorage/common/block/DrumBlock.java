@@ -1,7 +1,6 @@
 package com.witchica.compactstorage.common.block;
 
-import com.mojang.serialization.MapCodec;
-import com.witchica.compactstorage.CompactStoragePlatform;
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -144,7 +143,7 @@ public class DrumBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if(!world.isClientSide) {
-            if(player.getItemInHand(hand).getItem() == CompactStoragePlatform.getRetainingUpgradeItem()) {
+            if(player.getItemInHand(hand).getItem() == CompactStorage.UPGRADE_RETAINER_ITEM.get()) {
                 if (world.getBlockEntity(pos) instanceof DrumBlockEntity drumBlockEntity) {
                     drumBlockEntity.setRetaining();
                     player.getItemInHand(hand).shrink(1);

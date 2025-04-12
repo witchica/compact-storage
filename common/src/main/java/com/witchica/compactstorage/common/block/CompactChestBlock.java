@@ -1,15 +1,18 @@
 package com.witchica.compactstorage.common.block;
 
-import com.mojang.serialization.MapCodec;
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.entity.CompactChestBlockEntity;
 
+import com.witchica.compactstorage.common.screen.CompactStorageMenuProvider;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
+import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -28,6 +31,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -41,16 +45,17 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.BiConsumer;
 
-public abstract class CompactChestBlock extends BaseEntityBlock {
+public class CompactChestBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.NORTH, Direction.EAST,
             Direction.SOUTH, Direction.WEST);
 
     public static final VoxelShape CHEST_SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
+    private final CompactStorageUtil.StorageVisualTypes visualType;
 
-    public CompactChestBlock(Properties settings) {
-        super(settings);
+    public CompactChestBlock(CompactStorageUtil.StorageVisualTypes visualType) {
+        super((visualType.isWooden() ? Properties.copy(Blocks.CHEST) : Properties.copy(Blocks.CHEST).strength(2f, 5f)).noOcclusion());
+        this.visualType = visualType;
         registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH));
     }
 
@@ -110,7 +115,7 @@ public abstract class CompactChestBlock extends BaseEntityBlock {
             if(blockEntity instanceof CompactChestBlockEntity compactChestBlockEntity) {
                 Item heldItem = player.getItemInHand(hand).getItem();
 
-                if(heldItem == CompactStoragePlatform.getStorageRowUpgradeItem()) {
+                if(heldItem == CompactStorage.UPGRADE_ROW_ITEM.get()) {
                     if(compactChestBlockEntity.increaseSize(1, 0)) {
                         player.getItemInHand(hand).shrink(1);
                         player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
@@ -121,7 +126,7 @@ public abstract class CompactChestBlock extends BaseEntityBlock {
                         player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
                         return InteractionResult.FAIL;
                     }
-                } else if(heldItem == CompactStoragePlatform.getStorageColumnUpgradeItem()) {
+                } else if(heldItem == CompactStorage.UPGRADE_COLUMN_ITEM.get()) {
                     if(compactChestBlockEntity.increaseSize(0, 1)) {
                         player.getItemInHand(hand).shrink(1);
                         player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
@@ -132,7 +137,7 @@ public abstract class CompactChestBlock extends BaseEntityBlock {
                         player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
                         return InteractionResult.FAIL;
                     }
-                } else if (heldItem == CompactStoragePlatform.getRetainingUpgradeItem()) {
+                } else if (heldItem == CompactStorage.UPGRADE_RETAINER_ITEM.get()) {
                     if(!compactChestBlockEntity.getRetaining()) {
                         player.getItemInHand(hand).shrink(1);
                         compactChestBlockEntity.setRetaining();
@@ -144,8 +149,8 @@ public abstract class CompactChestBlock extends BaseEntityBlock {
                         player.displayClientMessage(Component.translatable("text.compact_storage.retainer_applied").withStyle(ChatFormatting.RED), true);
                         return InteractionResult.FAIL;
                     }
-                } else if(heldItem instanceof DyeItem dyeItem) {
-                    Block newBlock = CompactStoragePlatform.getCompactChestFromDyeColor(dyeItem.getDyeColor());
+                } else if(!visualType.isWooden() && heldItem instanceof DyeItem dyeItem) {
+                    Block newBlock = CompactStorage.getCompactChestFromDyeColor(dyeItem.getDyeColor());
                     world.setBlockAndUpdate(pos, newBlock.defaultBlockState().setValue(FACING, state.getValue(FACING)));
                     player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
                     player.getItemInHand(hand).shrink(1);
@@ -158,7 +163,9 @@ public abstract class CompactChestBlock extends BaseEntityBlock {
 
         return InteractionResult.SUCCESS;
     }
-    public abstract void openMenu(Level level, Player player, BlockPos pos, BlockState state, InteractionHand hand);
+    public void openMenu(Level level, Player player, BlockPos pos, BlockState state, InteractionHand hand) {
+        MenuRegistry.openExtendedMenu((ServerPlayer) player, CompactStorageMenuProvider.ofBlock(pos, this.getName()));
+    }
 
 
     @Nullable
@@ -202,9 +209,15 @@ public abstract class CompactChestBlock extends BaseEntityBlock {
         return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
     }
 
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return CompactStoragePlatform.compactChestBlockEntityProvider().create(pos, state);
+    }
+
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        if(type == CompactStoragePlatform.getCompactChestBlockEntityType()) {
+        if(type == CompactStorage.COMPACT_CHEST_ENTITY_TYPE.get()) {
             return  (world1, pos, state1, be) -> CompactChestBlockEntity.tick(world1, pos, state1, (CompactChestBlockEntity) be);
         } else {
             return null;
@@ -219,4 +232,7 @@ public abstract class CompactChestBlock extends BaseEntityBlock {
     }
 
 
+    public CompactStorageUtil.StorageVisualTypes getVisualType() {
+        return visualType;
+    }
 }

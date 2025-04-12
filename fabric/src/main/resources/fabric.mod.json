@@ -19,10 +19,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.witchica.compactstorage.CompactStorage"
+      "com.witchica.compactstorage.CompactStorageFabric"
     ],
     "client": [
-      "com.witchica.compactstorage.CompactStorageClient"
+      "com.witchica.compactstorage.CompactStorageFabricClient"
     ]
   },
   "mixins": [

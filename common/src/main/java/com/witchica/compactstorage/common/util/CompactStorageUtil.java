@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.common.util;
 
+import net.minecraft.world.item.DyeColor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import org.joml.Vector2i;
 
 public class CompactStorageUtil {
 
@@ -33,6 +35,74 @@ public class CompactStorageUtil {
          "warped",
          "bamboo"
     };
+
+    public enum StorageVisualTypes {
+        ACACIA("acacia", true, new Vector2i(1, 0), new Vector2i(1,0)),
+        BIRCH("birch", true, new Vector2i(2, 0), new Vector2i(2,0)),
+        CHERRY("cherry", true, new Vector2i(3, 0), new Vector2i(3,0)),
+        CRIMSON("crimson", true, new Vector2i(4, 0), new Vector2i(4,0)),
+        DARK_OAK("dark_oak", true, new Vector2i(5, 0), new Vector2i(5,0)),
+        JUNGLE("jungle", true, new Vector2i(6, 0), new Vector2i(6,0)),
+        MANGROVE("mangrove", true, new Vector2i(0, 1), new Vector2i(7,0)),
+        OAK("oak", true, new Vector2i(1, 1), new Vector2i(0,1)),
+        SPRUCE("spruce", true, new Vector2i(2, 1), new Vector2i(1,1)),
+        WARPED("warped", true, new Vector2i(3, 1), new Vector2i(2,1)),
+        BAMBOO("bamboo", true, new Vector2i(4, 1), new Vector2i(3,1)),
+        WHITE("white", false, DyeColor.WHITE, new Vector2i(5, 3), new Vector2i(2,3)),
+        ORANGE("orange", false, DyeColor.ORANGE, new Vector2i(1, 3), new Vector2i(6,2)),
+        MAGENTA("magenta", false, DyeColor.MAGENTA, new Vector2i(0, 3), new Vector2i(5,2)),
+        LIGHT_BLUE("light_blue", false, DyeColor.LIGHT_BLUE, new Vector2i(4, 2), new Vector2i(2,2)),
+        YELLOW("yellow", false, DyeColor.YELLOW, new Vector2i(6, 3), new Vector2i(3,3)),
+        LIME("lime", false, DyeColor.LIME, new Vector2i(6, 3), new Vector2i(4,2)),
+        PINK("pink", false, DyeColor.PINK, new Vector2i(2, 3), new Vector2i(7,2)),
+        GRAY("gray", false, DyeColor.GRAY, new Vector2i(2, 2), new Vector2i(0,2)),
+        LIGHT_GRAY("light_gray", false, DyeColor.LIGHT_GRAY, new Vector2i(5, 2), new Vector2i(3,2)),
+        CYAN("cyan", false, DyeColor.CYAN, new Vector2i(1, 2), new Vector2i(7,1)),
+        PURPLE("purple", false, DyeColor.PURPLE, new Vector2i(3, 3), new Vector2i(0,3)),
+        BLUE("blue", false, DyeColor.BLUE, new Vector2i(6, 1), new Vector2i(5,1)),
+        BROWN("brown", false, DyeColor.BROWN, new Vector2i(0, 2), new Vector2i(6,1)),
+        GREEN("green", false, DyeColor.GREEN, new Vector2i(3, 2), new Vector2i(1,2)),
+        RED("red", false, DyeColor.RED, new Vector2i(4, 3), new Vector2i(1,3)),
+        BLACK("black", false, DyeColor.BLACK, new Vector2i(5, 1), new Vector2i(4,1));
+
+        final Vector2i slotOffset;
+        final Vector2i backgroundOffset;
+        final String type;
+        final DyeColor associatedDye;
+        final boolean wooden;
+
+        StorageVisualTypes(String type, boolean wooden, DyeColor associatedDye, Vector2i slotOffset, Vector2i backgroundOffset) {
+            this.type = type;
+            this.wooden = wooden;
+            this.associatedDye = associatedDye;
+            this.slotOffset = slotOffset;
+            this.backgroundOffset = backgroundOffset;
+        }
+
+        StorageVisualTypes(String name, boolean wooden, Vector2i slotOffset, Vector2i backgroundOffset) {
+            this(name, wooden, null, slotOffset, backgroundOffset);
+        }
+
+        public String getType() {
+            return this.type;
+        }
+
+        public boolean isWooden() {
+            return wooden;
+        }
+
+        public DyeColor getAssociatedDyeColor() {
+            return associatedDye;
+        }
+
+        public Vector2i getSlotOffset() {
+            return slotOffset;
+        }
+
+        public Vector2i getBackgroundOffset() {
+            return backgroundOffset;
+        }
+    }
 
     public static void appendTooltip(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag options, boolean isBackpack) {
         int inventoryX = 9;

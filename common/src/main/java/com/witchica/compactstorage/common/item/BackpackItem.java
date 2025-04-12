@@ -1,19 +1,19 @@
 package com.witchica.compactstorage.common.item;
 
-import com.witchica.compactstorage.CompactStoragePlatform;
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.common.inventory.BackpackInventory;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
+import com.witchica.compactstorage.common.screen.CompactStorageMenuProvider;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
+import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
@@ -21,10 +21,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class BackpackItem extends Item {
+public class BackpackItem extends Item {
 
-    public BackpackItem(Properties settings) {
+    private final CompactStorageUtil.StorageVisualTypes visualType;
+
+    public BackpackItem(CompactStorageUtil.StorageVisualTypes visualType, Properties settings) {
         super(settings);
+        this.visualType = visualType;
     }
 
     @Override
@@ -48,7 +51,7 @@ public abstract class BackpackItem extends Item {
                     return super.use(world, player, hand);
                 }
 
-                if(oppositeItem == CompactStoragePlatform.getStorageRowUpgradeItem()) {
+                if(oppositeItem == CompactStorage.UPGRADE_ROW_ITEM.get()) {
                     if(inventory.increaseSize(1, 0)) {
                         player.getItemInHand(oppositeHand).shrink(1);
                         heldItemStack.getTag().put("Backpack", inventory.toTag());
@@ -61,7 +64,7 @@ public abstract class BackpackItem extends Item {
                         player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
                         return InteractionResultHolder.fail(heldItemStack);
                     }
-                } else if(oppositeItem == CompactStoragePlatform.getStorageColumnUpgradeItem()) {
+                } else if(oppositeItem == CompactStorage.UPGRADE_COLUMN_ITEM.get()) {
                     if(inventory.increaseSize(0, 1)) {
                         player.getItemInHand(oppositeHand).shrink(1);
                         heldItemStack.getTag().put("Backpack", inventory.toTag());
@@ -75,7 +78,7 @@ public abstract class BackpackItem extends Item {
                         return InteractionResultHolder.fail(heldItemStack);
                     }
                 } else if(oppositeItem instanceof DyeItem dyeItem) {
-                    Item newBackpackItem = CompactStoragePlatform.getBackpackFromDyeColor(dyeItem.getDyeColor());
+                    Item newBackpackItem = CompactStorage.getBackpackFromDyeColor(dyeItem.getDyeColor());
 
                     if(newBackpackItem != heldItemStack.getItem()) {
                         ItemStack newStack = new ItemStack(newBackpackItem, 1);
@@ -98,11 +101,18 @@ public abstract class BackpackItem extends Item {
         return super.use(world, player, hand);
     }
 
-    public abstract void openMenu(Player player, InteractionHand hand);
+    public void openMenu(Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        MenuRegistry.openExtendedMenu((ServerPlayer) player, CompactStorageMenuProvider.ofBackpack(hand, stack.getHoverName()));
+    }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
         super.appendHoverText(stack, world, tooltip, context);
         CompactStorageUtil.appendTooltip(stack, world, tooltip, context, true);
+    }
+
+    public CompactStorageUtil.StorageVisualTypes getVisualType() {
+        return visualType;
     }
 }

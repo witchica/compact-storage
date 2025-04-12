@@ -1,9 +1,11 @@
 package com.witchica.compactstorage.common.block.entity;
 
-import com.witchica.compactstorage.CompactStoragePlatform;
+import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.common.block.CompactChestBlock;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
 
+import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.EnvironmentInterface;
@@ -22,7 +24,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.LidBlockEntity;
@@ -48,7 +49,7 @@ public class CompactChestBlockEntity extends RandomizableContainerBlockEntity im
     private boolean retaining = false;
 
     public CompactChestBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(CompactStoragePlatform.getCompactChestBlockEntityType(), blockPos, blockState);
+        super(CompactStorage.COMPACT_CHEST_ENTITY_TYPE.get(), blockPos, blockState);
         this.inventory = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
     }
 
@@ -225,6 +226,11 @@ public class CompactChestBlockEntity extends RandomizableContainerBlockEntity im
         this.retaining = true;
         setChanged();
         level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 1);
+    }
+
+    @Override
+    public CompactStorageUtil.StorageVisualTypes getVisualType() {
+        return ((CompactChestBlock) this.getBlockState().getBlock()).getVisualType();
     }
 
     public boolean getRetaining() {

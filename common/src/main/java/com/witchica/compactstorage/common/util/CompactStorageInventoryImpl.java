@@ -15,6 +15,7 @@ public interface CompactStorageInventoryImpl {
     public int getInventoryHeight();
     public boolean getRetaining();
     public void setRetaining();
+    public CompactStorageUtil.StorageVisualTypes getVisualType();
 
     default void writeItemsToTag(NonNullList<ItemStack> inventory, CompoundTag tag) {
         ListTag listTag = new ListTag();

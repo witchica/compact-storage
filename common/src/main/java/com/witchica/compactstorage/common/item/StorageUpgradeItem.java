@@ -1,6 +1,6 @@
 package com.witchica.compactstorage.common.item;
 
-import com.witchica.compactstorage.CompactStoragePlatform;
+import com.witchica.compactstorage.CompactStorage;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -20,9 +20,9 @@ public class StorageUpgradeItem extends Item {
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
         super.appendHoverText(stack, world, tooltip, context);
 
-        if(stack.getItem() == CompactStoragePlatform.getStorageColumnUpgradeItem()) {
+        if(stack.getItem() == CompactStorage.UPGRADE_COLUMN_ITEM.get()) {
             tooltip.add(Component.translatable("tooltip.compact_storage.column_upgrade_descriptor").withStyle(ChatFormatting.LIGHT_PURPLE));
-        } else if(stack.getItem() == CompactStoragePlatform.getStorageRowUpgradeItem()) {
+        } else if(stack.getItem() == CompactStorage.UPGRADE_ROW_ITEM.get()) {
             tooltip.add(Component.translatable("tooltip.compact_storage.row_upgrade_descriptor").withStyle(ChatFormatting.LIGHT_PURPLE));
         }
 
