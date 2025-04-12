@@ -53,7 +53,7 @@ public class CompactStorageUtil {
         MAGENTA("magenta", false, DyeColor.MAGENTA, new Vector2i(0, 3), new Vector2i(5,2)),
         LIGHT_BLUE("light_blue", false, DyeColor.LIGHT_BLUE, new Vector2i(4, 2), new Vector2i(2,2)),
         YELLOW("yellow", false, DyeColor.YELLOW, new Vector2i(6, 3), new Vector2i(3,3)),
-        LIME("lime", false, DyeColor.LIME, new Vector2i(6, 3), new Vector2i(4,2)),
+        LIME("lime", false, DyeColor.LIME, new Vector2i(6, 2), new Vector2i(4,2)),
         PINK("pink", false, DyeColor.PINK, new Vector2i(2, 3), new Vector2i(7,2)),
         GRAY("gray", false, DyeColor.GRAY, new Vector2i(2, 2), new Vector2i(0,2)),
         LIGHT_GRAY("light_gray", false, DyeColor.LIGHT_GRAY, new Vector2i(5, 2), new Vector2i(3,2)),
