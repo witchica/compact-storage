@@ -2,6 +2,7 @@ package com.witchica.compactstorage.common.block;
 
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
+import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -16,6 +17,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -35,9 +37,11 @@ import java.util.List;
 public class DrumBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
     public static final BooleanProperty RETAINING = BooleanProperty.create("retaining");
+    private final CompactStorageUtil.StorageVisualTypes type;
 
-    public DrumBlock(Properties settings) {
-        super(settings);
+    public DrumBlock(CompactStorageUtil.StorageVisualTypes type) {
+        super(type.isWooden() ? Properties.copy(Blocks.BARREL) : Properties.copy(Blocks.BARREL).strength(2f, 5f));
+        this.type = type;
     }
 
     @Nullable
@@ -150,6 +154,15 @@ public class DrumBlock extends BaseEntityBlock {
                     return InteractionResult.CONSUME_PARTIAL;
                 }
             } else {
+                if(!type.isWooden() && player.getItemInHand(hand).getItem() instanceof DyeItem dyeItem) {
+                    if (dyeItem.getDyeColor() != type.getAssociatedDyeColor()) {
+                        Block newBlock = CompactStorage.getDrumFromDyeColor(dyeItem.getDyeColor());
+                        world.setBlockAndUpdate(pos, newBlock.defaultBlockState().setValue(FACING, state.getValue(FACING)).setValue(RETAINING, state.getValue(RETAINING)));
+                        player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
+                        player.getItemInHand(hand).shrink(1);
+                        return InteractionResult.CONSUME_PARTIAL;
+                    }
+                }
                 if(player.isShiftKeyDown()) {
                     extractItem(world, pos, player);
                 } else {
@@ -205,11 +218,11 @@ public class DrumBlock extends BaseEntityBlock {
 
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
-        if(!state.is(newState.getBlock())) {
+        if (!state.is(newState.getBlock()) && !(newState.getBlock() instanceof DrumBlock)) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
 
-            if(blockEntity instanceof DrumBlockEntity drumBlock) {
-                if(!drumBlock.getRetaining()) {
+            if (blockEntity instanceof DrumBlockEntity drumBlock) {
+                if (!drumBlock.getRetaining()) {
                     Containers.dropContents(world, pos, drumBlock.inventory);
                 }
 
@@ -218,7 +231,11 @@ public class DrumBlock extends BaseEntityBlock {
                 Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStack);
                 world.updateNeighbourForOutputSignal(pos, state.getBlock());
             }
+            world.removeBlockEntity(pos);
         }
-        super.onRemove(state, world, pos, newState, moved);
+    }
+
+    public CompactStorageUtil.StorageVisualTypes getType() {
+        return type;
     }
 }

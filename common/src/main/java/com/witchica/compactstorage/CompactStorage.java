@@ -11,6 +11,7 @@ import com.witchica.compactstorage.common.item.BackpackItem;
 import com.witchica.compactstorage.common.item.StorageUpgradeItem;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
+import com.witchica.compactstorage.common.util.StorageUpgradeType;
 import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.CreativeTabRegistry;
@@ -50,7 +51,7 @@ public class CompactStorage {
 
     public static final RegistrySupplier<CompactChestBlock>[] COMPACT_CHEST_BLOCKS = new RegistrySupplier[CompactStorageUtil.StorageVisualTypes.values().length];
     public static final RegistrySupplier<CompactBarrelBlock>[] COMPACT_BARREL_BLOCKS = new RegistrySupplier[CompactStorageUtil.StorageVisualTypes.values().length];
-    public static final RegistrySupplier<DrumBlock>[] DRUM_BLOCKS = new RegistrySupplier[11];
+    public static final RegistrySupplier<DrumBlock>[] DRUM_BLOCKS = new RegistrySupplier[CompactStorageUtil.StorageVisualTypes.values().length];
     public static final RegistrySupplier<BackpackItem>[] BACKPACK_ITEMS = new RegistrySupplier[16];
 
     private static Block[] getAllCompactChests() {
@@ -78,17 +79,18 @@ public class CompactStorage {
     public static final HashMap<DyeColor, RegistrySupplier<CompactChestBlock>> DYE_COLOR_TO_COMPACT_CHEST_MAP = new HashMap<DyeColor, RegistrySupplier<CompactChestBlock>>();
     public static final HashMap<DyeColor, RegistrySupplier<CompactBarrelBlock>> DYE_COLOR_TO_COMPACT_BARREL_MAP = new HashMap<DyeColor, RegistrySupplier<CompactBarrelBlock>>();
     public static final HashMap<DyeColor, RegistrySupplier<BackpackItem>> DYE_COLOR_TO_BACKPACK_MAP = new HashMap<DyeColor, RegistrySupplier<BackpackItem>>();
+    public static final HashMap<DyeColor, RegistrySupplier<DrumBlock>> DYE_COLOR_TO_DRUM_MAP = new HashMap<DyeColor, RegistrySupplier<DrumBlock>>();
 
-    public static final RegistrySupplier<StorageUpgradeItem> UPGRADE_ROW_ITEM = ITEMS.register("upgrade_row", () -> new StorageUpgradeItem(new Item.Properties()));
-    public static final RegistrySupplier<StorageUpgradeItem> UPGRADE_COLUMN_ITEM = ITEMS.register("upgrade_column", () -> new StorageUpgradeItem(new Item.Properties()));
-    public static final RegistrySupplier<StorageUpgradeItem> UPGRADE_RETAINER_ITEM = ITEMS.register("upgrade_retainer", () -> new StorageUpgradeItem(new Item.Properties()));
+    public static final RegistrySupplier<StorageUpgradeItem> UPGRADE_ROW_ITEM = ITEMS.register("upgrade_row", () -> new StorageUpgradeItem(StorageUpgradeType.ROW, new Item.Properties()));
+    public static final RegistrySupplier<StorageUpgradeItem> UPGRADE_COLUMN_ITEM = ITEMS.register("upgrade_column", () -> new StorageUpgradeItem(StorageUpgradeType.COLUMM, new Item.Properties()));
+    public static final RegistrySupplier<StorageUpgradeItem> UPGRADE_RETAINER_ITEM = ITEMS.register("upgrade_retainer", () -> new StorageUpgradeItem(StorageUpgradeType.RETAINING, new Item.Properties()));
 
     public static RegistrySupplier<MenuType<CompactChestScreenHandler>> COMPACT_CHEST_SCREEN_HANDLER = MENU_TYPES.register("compact_chest", () -> MenuRegistry.ofExtended(CompactChestScreenHandler::new));
 
     //public static RegistrySupplier<Item> WRENCH_ITEM = ITEMS.register("wrench", () -> new WrenchItem(new Item.Properties().stacksTo(1)));
     public static final RegistrySupplier<CreativeModeTab> COMPACT_STORAGE_TAB = CREATIVE_MODE_TABS.register("compact_storage_tab", () -> CreativeTabRegistry.create(builder -> {
         builder.title(Component.translatable("itemGroup.compact_storage.general"))
-                .icon(() -> new ItemStack(COMPACT_CHEST_BLOCKS[0].get(), 1))
+                .icon(() -> new ItemStack(COMPACT_CHEST_BLOCKS[25].get(), 1))
                 .displayItems((params, populator) -> {
                     populator.accept(UPGRADE_COLUMN_ITEM.get());
                     populator.accept(UPGRADE_ROW_ITEM.get());
@@ -96,19 +98,19 @@ public class CompactStorage {
 
                     Arrays.stream(COMPACT_CHEST_BLOCKS).map(Supplier::get).filter(block -> !block.getVisualType().isWooden()).forEach(populator::accept);
                     Arrays.stream(COMPACT_BARREL_BLOCKS).map(Supplier::get).filter(block -> !block.getVisualType().isWooden()).forEach(populator::accept);
+                    Arrays.stream(DRUM_BLOCKS).map(Supplier::get).filter(block -> !block.getType().isWooden()).forEach(populator::accept);
                     Arrays.stream(BACKPACK_ITEMS).map(Supplier::get).forEach(populator::accept);
                 });
     }));
 
     public static final RegistrySupplier<CreativeModeTab> COMPACT_STORAGE_WOOD_TAB = CREATIVE_MODE_TABS.register("compact_storage_tab_wood", () -> CreativeTabRegistry.create(builder -> {
         builder.title(Component.translatable("itemGroup.compact_storage.wood"))
-                .icon(() -> new ItemStack(COMPACT_CHEST_BLOCKS[12].get(), 1))
+                .icon(() -> new ItemStack(COMPACT_CHEST_BLOCKS[1].get(), 1))
                 .displayItems((params, populator) -> {
 
                     Arrays.stream(COMPACT_CHEST_BLOCKS).map(Supplier::get).filter(block -> block.getVisualType().isWooden()).forEach(populator::accept);
                     Arrays.stream(COMPACT_BARREL_BLOCKS).map(Supplier::get).filter(block -> block.getVisualType().isWooden()).forEach(populator::accept);
-                    Arrays.stream(BACKPACK_ITEMS).map(Supplier::get).forEach(populator::accept);
-                    Arrays.stream(DRUM_BLOCKS).map(Supplier::get).forEach(populator::accept);
+                    Arrays.stream(DRUM_BLOCKS).map(Supplier::get).filter(block -> block.getType().isWooden()).forEach(populator::accept);
                 });
     }));
 
@@ -158,16 +160,15 @@ public class CompactStorage {
                 DYE_COLOR_TO_COMPACT_BARREL_MAP.put(type.getAssociatedDyeColor(), COMPACT_BARREL_BLOCKS[i]);
             }
 
-            if(type.isWooden()) {
-                DRUM_BLOCKS[drumIndex] = BLOCKS.register( drumName, () ->
-                        new DrumBlock(BlockBehaviour.Properties.copy(Blocks.BARREL).strength(2f, 2f)));
+            DRUM_BLOCKS[index] = BLOCKS.register(drumName, () ->
+                    new DrumBlock(type));
 
-                int finalDrumIndex = drumIndex;
-                ITEMS.register(drumName, () ->
-                        new BlockItem(DRUM_BLOCKS[finalDrumIndex].get(), new Item.Properties())
-                );
+            ITEMS.register(drumName, () ->
+                    new BlockItem(DRUM_BLOCKS[index].get(), new Item.Properties())
+            );
 
-                drumIndex++;
+            if(!type.isWooden()) {
+                DYE_COLOR_TO_DRUM_MAP.put(type.getAssociatedDyeColor(), DRUM_BLOCKS[index]);
             }
         }
     }
@@ -193,5 +194,9 @@ public class CompactStorage {
 
     public static Item getBackpackFromDyeColor(DyeColor dye) {
         return DYE_COLOR_TO_BACKPACK_MAP.get(dye).get();
+    }
+
+    public static Block getDrumFromDyeColor(DyeColor dye) {
+        return DYE_COLOR_TO_DRUM_MAP.get(dye).get();
     }
 }

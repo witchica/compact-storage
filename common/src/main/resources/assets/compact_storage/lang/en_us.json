@@ -75,6 +75,23 @@
     "block.compact_storage.warped_drum": "Warped Item Drum",
     "block.compact_storage.bamboo_drum": "Bamboo Item Drum",
 
+    "block.compact_storage.white_drum": "White Item Drum",
+    "block.compact_storage.orange_drum": "Orange Item Drum",
+    "block.compact_storage.magenta_drum": "Magenta Item Drum",
+    "block.compact_storage.light_blue_drum": "Light Blue Item Drum",
+    "block.compact_storage.yellow_drum": "Yellow Item Drum",
+    "block.compact_storage.lime_drum": "Lime Item Drum",
+    "block.compact_storage.pink_drum": "Pink Item Drum",
+    "block.compact_storage.gray_drum": "Gray Item Drum",
+    "block.compact_storage.light_gray_drum": "Light Gray Item Drum",
+    "block.compact_storage.cyan_drum": "Cyan Item Drum",
+    "block.compact_storage.purple_drum": "Purple Item Drum",
+    "block.compact_storage.blue_drum": "Blue Item Drum",
+    "block.compact_storage.brown_drum": "Brown Item Drum",
+    "block.compact_storage.green_drum": "Green Item Drum",
+    "block.compact_storage.red_drum": "Red Item Drum",
+    "block.compact_storage.black_drum": "Black Item Drum",
+
     "tooltip.compact_storage.row_upgrade_descriptor": "Use this on a Compact Storage block to add extra width",
     "tooltip.compact_storage.column_upgrade_descriptor": "Use this on a Compact Storage block to add extra height",
     "tooltip.compact_storage.upgrade_backpack": "Can also be applied to backpacks by placing in your off-hand",
@@ -136,12 +153,16 @@
     "tag.item.compact_storage.blocks.compact_barrels_wood": "Wooden Compact Barrel Blocks",
     "tag.item.compact_storage.blocks.compact_chest": "Compact Chest Blocks",
     "tag.item.compact_storage.blocks.compact_chests_wood": "Wooden Compact Chest Blocks",
+    "tag.item.compact_storage.blocks.drum_wooden": "Wooden Drum Blocks",
     "tag.item.compact_storage.blocks.drum": "Drum Blocks",
 
     "tag.item.compact_storage.items.compact_barrel": "Compact Barrel Items",
     "tag.item.compact_storage.items.compact_barrels_wood": "Wooden Compact Barrel Items",
     "tag.item.compact_storage.items.compact_chest": "Compact Chest Items",
     "tag.item.compact_storage.items.compact_chests_wood": "Wooden Compact Chest Items",
+    "tag.item.compact_storage.items.drum_wooden": "Wooden Drum Items",
     "tag.item.compact_storage.items.drum": "Drum Items",
-    "tag.item.compact_storage.items.backpack": "Backpack Items"
+    "tag.item.compact_storage.items.backpack": "Backpack Items",
+
+    "tooltip.compact_storage.upgrade_drum_increase_description": "Use this on a Drum block to increase the amount of items it can store!"
 }

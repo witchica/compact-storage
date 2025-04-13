@@ -38,7 +38,7 @@ public class DrumBlockEntity extends BlockEntity {
 
         @Override
         public boolean canPlaceItem(int slot, ItemStack stack) {
-            return getItem(0).isEmpty() || ItemStack.isSameItem(getItem(0), stack);
+            return getItem(0).isEmpty() || (ItemStack.isSameItem(getItem(0), stack) && ItemStack.isSameItemSameTags(getItem(0), stack));
         }
 
         @Override
@@ -165,10 +165,11 @@ public class DrumBlockEntity extends BlockEntity {
     @Override
     public void saveToItem(ItemStack stack) {
         CompoundTag compoundTag = this.saveWithoutMetadata();
-        if(!retaining) {
-            compoundTag.remove("Inventory");
+        if(retaining) {
+            compoundTag.remove("ClientStackSize");
+            compoundTag.remove("ClientItem");
+            compoundTag.remove("ClientStoredItems");
+            stack.setTag(compoundTag);
         }
-
-        stack.setTag(compoundTag);
     }
 }

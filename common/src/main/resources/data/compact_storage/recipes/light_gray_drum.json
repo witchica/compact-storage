@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "category": "misc",
+    "key": {
+        "P": {
+            "tag": "minecraft:planks"
+        },
+        "L": {
+            "tag": "minecraft:logs"
+        },
+        "C": {
+            "tag": "compact_storage:compact_chest"
+        },
+        "D": {
+            "item": "minecraft:light_gray_dye"
+        }
+    },
+    "pattern": [
+        "PDP",
+        "PCP",
+        "PLP"
+    ],
+    "result": {
+        "item": "compact_storage:light_gray_drum"
+    },
+    "show_notification": true
+}
