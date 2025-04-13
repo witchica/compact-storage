@@ -3,6 +3,7 @@ package com.witchica.compactstorage.common.block;
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.entity.CompactBarrelBlockEntity;
+import com.witchica.compactstorage.common.item.StorageUpgradeItem;
 import com.witchica.compactstorage.common.screen.CompactStorageMenuProvider;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import dev.architectury.registry.menu.MenuRegistry;
@@ -99,58 +100,32 @@ public class CompactBarrelBlock extends BaseEntityBlock {
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand,
                               BlockHitResult hit) {
         if (!world.isClientSide) {
-            if (!world.isClientSide) {
-                BlockEntity blockEntity = world.getBlockEntity(pos);
+            BlockEntity blockEntity = world.getBlockEntity(pos);
 
-                if(blockEntity instanceof CompactBarrelBlockEntity compactBarrelBlockEntity) {
-                    Item heldItem = player.getItemInHand(hand).getItem();
+            if(blockEntity instanceof CompactBarrelBlockEntity compactBarrelBlockEntity) {
+                Item heldItem = player.getItemInHand(hand).getItem();
 
-                    if(heldItem == CompactStorage.UPGRADE_ROW_ITEM.get()) {
-                        if(compactBarrelBlockEntity.increaseSize(1, 0)) {
-                            player.getItemInHand(hand).shrink(1);
-                            player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
-                            player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
-                            return InteractionResult.CONSUME_PARTIAL;
-                        } else {
-                            player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                            player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
-                            return InteractionResult.FAIL;
-                        }
-                    } else if(heldItem == CompactStorage.UPGRADE_COLUMN_ITEM.get()) {
-                        if (compactBarrelBlockEntity.increaseSize(0, 1)) {
-                            player.getItemInHand(hand).shrink(1);
-                            player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
-                            player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
-                            return InteractionResult.CONSUME_PARTIAL;
-                        } else {
-                            player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                            player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
-                            return InteractionResult.FAIL;
-                        }
-                    } else if(heldItem == CompactStorage.UPGRADE_RETAINER_ITEM.get()) {
-                        if(!compactBarrelBlockEntity.getRetaining()) {
-                            player.getItemInHand(hand).shrink(1);
-                            compactBarrelBlockEntity.setRetaining();
-                            player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
-                            player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
-                            return InteractionResult.CONSUME_PARTIAL;
-                        } else {
-                            player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                            player.displayClientMessage(Component.translatable("text.compact_storage.retainer_applied").withStyle(ChatFormatting.RED), true);
-                            return InteractionResult.FAIL;
-                        }
-                    }
-                    else if(!visualType.isWooden() && heldItem instanceof DyeItem dyeItem) {
-                        Block newBlock = CompactStorage.getCompactBarrelFromDyeColor(dyeItem.getDyeColor());
-                        world.setBlockAndUpdate(pos, newBlock.defaultBlockState().setValue(FACING, state.getValue(FACING)));
-                        player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
+                if(heldItem instanceof StorageUpgradeItem storageUpgradeItem) {
+                    if(compactBarrelBlockEntity.applyUpgrade(storageUpgradeItem.getType())) {
                         player.getItemInHand(hand).shrink(1);
+                        player.displayClientMessage(storageUpgradeItem.getType().getSuccessMessage(), true);
+                        player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
                         return InteractionResult.CONSUME_PARTIAL;
+                    } else {
+                        player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
+                        player.displayClientMessage(storageUpgradeItem.getType().getFailureMessage(), true);
+                        return InteractionResult.FAIL;
                     }
+                } else if(!visualType.isWooden() && heldItem instanceof DyeItem dyeItem) {
+                    Block newBlock = CompactStorage.getCompactBarrelFromDyeColor(dyeItem.getDyeColor());
+                    world.setBlockAndUpdate(pos, newBlock.defaultBlockState().setValue(FACING, state.getValue(FACING)));
+                    player.playNotifySound(SoundEvents.SLIME_BLOCK_PLACE, SoundSource.BLOCKS, 1f, 1f);
+                    player.getItemInHand(hand).shrink(1);
+                    return InteractionResult.CONSUME_PARTIAL;
                 }
-
-                openMenu(world, player, pos, state, hand);
             }
+
+            openMenu(world, player, pos, state, hand);
         }
 
         return InteractionResult.SUCCESS;

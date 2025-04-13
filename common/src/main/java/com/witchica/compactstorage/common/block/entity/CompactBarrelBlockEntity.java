@@ -6,6 +6,7 @@ import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
 
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
+import com.witchica.compactstorage.common.util.StorageUpgradeType;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -230,5 +231,66 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
         }
 
         stack.setTag(compoundTag);
+    }
+
+    @Override
+    public boolean applyUpgrade(StorageUpgradeType upgradeType) {
+        if(!canAcceptUpgrade(upgradeType)) {
+            return false;
+        }
+
+        switch(upgradeType) {
+            case ROW ->  {
+                increaseSize(1, 0);
+                return true;
+            }
+            case COLUMM -> {
+                increaseSize(0, 1);
+                return true;
+            }
+            case RETAINING -> {
+                setRetaining();
+                return true;
+            }
+            default -> {
+                return false;
+            }
+        }
+    }
+
+    @Override
+    public boolean hasUpgrade(StorageUpgradeType upgradeType) {
+        switch (upgradeType) {
+            case ROW -> {
+                return inventoryWidth > 9;
+            }
+            case COLUMM -> {
+                return inventoryHeight > 6;
+            }
+            case RETAINING -> {
+                return retaining;
+            }
+            default -> {
+                return false;
+            }
+        }
+    }
+
+    @Override
+    public boolean canAcceptUpgrade(StorageUpgradeType upgradeType) {
+        switch (upgradeType) {
+            case RETAINING -> {
+                return !retaining;
+            }
+            case ROW -> {
+                return inventoryWidth < 21;
+            }
+            case COLUMM -> {
+                return inventoryHeight < 12;
+            }
+            default -> {
+                return false;
+            }
+        }
     }
 }

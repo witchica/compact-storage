@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.common.util;
 
+import com.witchica.compactstorage.common.item.StorageUpgradeItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -13,9 +14,14 @@ public interface CompactStorageInventoryImpl {
 
     public int getInventoryWidth();
     public int getInventoryHeight();
+
     public boolean getRetaining();
     public void setRetaining();
     public CompactStorageUtil.StorageVisualTypes getVisualType();
+
+    public boolean applyUpgrade(StorageUpgradeType upgradeType);
+    public boolean hasUpgrade(StorageUpgradeType upgradeType);
+    public boolean canAcceptUpgrade(StorageUpgradeType upgradeType);
 
     default void writeItemsToTag(NonNullList<ItemStack> inventory, CompoundTag tag) {
         ListTag listTag = new ListTag();

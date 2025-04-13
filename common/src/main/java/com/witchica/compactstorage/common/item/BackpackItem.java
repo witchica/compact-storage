@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
@@ -51,30 +52,16 @@ public class BackpackItem extends Item {
                     return super.use(world, player, hand);
                 }
 
-                if(oppositeItem == CompactStorage.UPGRADE_ROW_ITEM.get()) {
-                    if(inventory.increaseSize(1, 0)) {
-                        player.getItemInHand(oppositeHand).shrink(1);
+                if(oppositeItem instanceof StorageUpgradeItem storageUpgradeItem) {
+                    if(inventory.applyUpgrade(storageUpgradeItem.getType())) {
                         heldItemStack.getTag().put("Backpack", inventory.toTag());
-
-                        player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
+                        player.getItemInHand(oppositeHand).shrink(1);
+                        player.displayClientMessage(storageUpgradeItem.getType().getSuccessMessage(), true);
                         player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
                         return InteractionResultHolder.pass(heldItemStack);
                     } else {
                         player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                        player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
-                        return InteractionResultHolder.fail(heldItemStack);
-                    }
-                } else if(oppositeItem == CompactStorage.UPGRADE_COLUMN_ITEM.get()) {
-                    if(inventory.increaseSize(0, 1)) {
-                        player.getItemInHand(oppositeHand).shrink(1);
-                        heldItemStack.getTag().put("Backpack", inventory.toTag());
-
-                        player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
-                        player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
-                        return InteractionResultHolder.pass(heldItemStack);
-                    } else {
-                        player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                        player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
+                        player.displayClientMessage(storageUpgradeItem.getType().getFailureMessage(), true);
                         return InteractionResultHolder.fail(heldItemStack);
                     }
                 } else if(oppositeItem instanceof DyeItem dyeItem) {

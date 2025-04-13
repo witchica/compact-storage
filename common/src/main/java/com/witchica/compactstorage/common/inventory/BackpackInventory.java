@@ -3,6 +3,7 @@ package com.witchica.compactstorage.common.inventory;
 import com.witchica.compactstorage.common.item.BackpackItem;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
+import com.witchica.compactstorage.common.util.StorageUpgradeType;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -180,5 +181,54 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
             inventory.getItem(backpackSlot).getTag().put("Backpack", toTag());
         }
         player.playNotifySound(SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 1f, 1f);
+    }
+
+    @Override
+    public boolean applyUpgrade(StorageUpgradeType upgradeType) {
+        if(!canAcceptUpgrade(upgradeType)) {
+            return false;
+        }
+
+        switch(upgradeType) {
+            case ROW ->  {
+                return increaseSize(1, 0);
+            }
+            case COLUMM -> {
+                return increaseSize(0, 1);
+            }
+            default -> {
+                return false;
+            }
+        }
+    }
+
+    @Override
+    public boolean hasUpgrade(StorageUpgradeType upgradeType) {
+        switch (upgradeType) {
+            case ROW -> {
+                return inventoryWidth > 9;
+            }
+            case COLUMM -> {
+                return inventoryHeight > 6;
+            }
+            default -> {
+                return false;
+            }
+        }
+    }
+
+    @Override
+    public boolean canAcceptUpgrade(StorageUpgradeType upgradeType) {
+        switch (upgradeType) {
+            case ROW -> {
+                return inventoryWidth < 21;
+            }
+            case COLUMM -> {
+                return inventoryHeight < 12;
+            }
+            default -> {
+                return false;
+            }
+        }
     }
 }

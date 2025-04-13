@@ -4,6 +4,7 @@ import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.entity.CompactChestBlockEntity;
 
+import com.witchica.compactstorage.common.item.StorageUpgradeItem;
 import com.witchica.compactstorage.common.screen.CompactStorageMenuProvider;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import dev.architectury.registry.menu.MenuRegistry;
@@ -115,38 +116,15 @@ public class CompactChestBlock extends BaseEntityBlock {
             if(blockEntity instanceof CompactChestBlockEntity compactChestBlockEntity) {
                 Item heldItem = player.getItemInHand(hand).getItem();
 
-                if(heldItem == CompactStorage.UPGRADE_ROW_ITEM.get()) {
-                    if(compactChestBlockEntity.increaseSize(1, 0)) {
+                if(heldItem instanceof StorageUpgradeItem storageUpgradeItem) {
+                    if(compactChestBlockEntity.applyUpgrade(storageUpgradeItem.getType())) {
                         player.getItemInHand(hand).shrink(1);
-                        player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
+                        player.displayClientMessage(storageUpgradeItem.getType().getSuccessMessage(), true);
                         player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
                         return InteractionResult.CONSUME_PARTIAL;
                     } else {
                         player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                        player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
-                        return InteractionResult.FAIL;
-                    }
-                } else if(heldItem == CompactStorage.UPGRADE_COLUMN_ITEM.get()) {
-                    if(compactChestBlockEntity.increaseSize(0, 1)) {
-                        player.getItemInHand(hand).shrink(1);
-                        player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
-                        player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
-                        return InteractionResult.CONSUME_PARTIAL;
-                    } else {
-                        player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                        player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_fail_maxsize").withStyle(ChatFormatting.RED), true);
-                        return InteractionResult.FAIL;
-                    }
-                } else if (heldItem == CompactStorage.UPGRADE_RETAINER_ITEM.get()) {
-                    if(!compactChestBlockEntity.getRetaining()) {
-                        player.getItemInHand(hand).shrink(1);
-                        compactChestBlockEntity.setRetaining();
-                        player.displayClientMessage(Component.translatable("text.compact_storage.upgrade_success").withStyle(ChatFormatting.GREEN), true);
-                        player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
-                        return InteractionResult.CONSUME_PARTIAL;
-                    } else {
-                        player.playNotifySound(SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                        player.displayClientMessage(Component.translatable("text.compact_storage.retainer_applied").withStyle(ChatFormatting.RED), true);
+                        player.displayClientMessage(storageUpgradeItem.getType().getFailureMessage(), true);
                         return InteractionResult.FAIL;
                     }
                 } else if(!visualType.isWooden() && heldItem instanceof DyeItem dyeItem) {
