@@ -35,15 +35,16 @@ public class CompactChestScreen extends AbstractContainerScreen<CompactChestScre
         this.playerInventory = inventory;
 
         this.imageWidth = 14 + container.inventoryWidth * 18;
-        this.imageHeight = 114 + container.inventoryHeight * 18 + 7;
+        this.imageHeight = (container.inventoryHeight * 18) + 55 + (18 * 4);
 
         this.slotUvOffset = new Vector2i(container.visualType.getSlotOffset()).mul(18);
         this.backgroundUvOffset =  new Vector2i(container.visualType.getBackgroundOffset()).mul(15);
     }
     @Override
     protected void renderLabels(GuiGraphics context, int mouseX, int mouseY) {
+        int playerInventoryOffset = (imageWidth / 2) - 9 * 9 - 7;
         context.drawString(this.font, this.title, 8, 6, container.visualType == CompactStorageUtil.StorageVisualTypes.WHITE ? 4210752 : 0xDCDCDC, false);
-        context.drawString(font, this.playerInventory.getDisplayName(), 8, this.imageHeight-86-3, 4210752, false);
+        context.drawString(font, this.playerInventory.getDisplayName(), 8 + playerInventoryOffset, 32+ (container.inventoryHeight*18), 4210752, false);
         
         this.renderTooltip(context,mouseX - leftPos, mouseY - topPos);
     }
@@ -57,10 +58,12 @@ public class CompactChestScreen extends AbstractContainerScreen<CompactChestScre
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.setShaderTexture(0, CHEST_BACKGROUND_TEXTURE);
 
+        int playerInventoryOffset = (imageWidth / 2) - 9 * 9 - 7;
+
         // background
         drawInventorySection(matrixStack, leftPos, topPos, imageWidth, container.inventoryHeight * 18 + 24, backgroundUvOffset);
 
-        drawInventorySection(matrixStack, leftPos, topPos + container.inventoryHeight * 18 + 24+3, imageWidth, 7 + (18 * 4) + 7 + 7+7, ZERO);
+        drawInventorySection(matrixStack, leftPos + playerInventoryOffset, topPos + container.inventoryHeight * 18 + 24+3, 14 + (9 * 18), 7 + (18 * 4) + 7 + 7+7, ZERO);
 
         //chest slots
         drawInventorySlots(matrixStack, this.leftPos + 7, this.topPos + 18, container.inventoryWidth, container.inventoryHeight, slotUvOffset);
