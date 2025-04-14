@@ -1,12 +1,14 @@
-package com.witchica.compactstorage;
+package com.witchica.compactstorage.common;
 
 import com.mojang.logging.LogUtils;
+import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.CompactBarrelBlock;
 import com.witchica.compactstorage.common.block.CompactChestBlock;
 import com.witchica.compactstorage.common.block.DrumBlock;
 import com.witchica.compactstorage.common.block.entity.CompactBarrelBlockEntity;
 import com.witchica.compactstorage.common.block.entity.CompactChestBlockEntity;
 import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
+import com.witchica.compactstorage.common.config.CompactStorageConfig;
 import com.witchica.compactstorage.common.item.BackpackItem;
 import com.witchica.compactstorage.common.item.StorageUpgradeItem;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
@@ -25,9 +27,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -39,6 +39,7 @@ import java.util.function.Supplier;
 public class CompactStorage {
     public static final String MOD_ID = "compact_storage";
     public static final Logger LOGGER = LogUtils.getLogger();
+    public static CompactStorageConfig CONFIG;
 
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(MOD_ID, Registries.BLOCK);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(MOD_ID, Registries.ITEM);
@@ -177,6 +178,9 @@ public class CompactStorage {
         if(Platform.getEnv() == EnvType.CLIENT) {
             ClientLifecycleEvent.CLIENT_SETUP.register(CompactStorageCommonClient::clientSetupEvent);
         }
+
+        CONFIG = new CompactStorageConfig();
+        CONFIG.readConfig();
 
         BLOCKS.register();
         ITEMS.register();

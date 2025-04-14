@@ -1,6 +1,6 @@
 package com.witchica.compactstorage.common.block.entity;
 
-import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.common.CompactStorage;
 import com.witchica.compactstorage.common.block.CompactBarrelBlock;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;

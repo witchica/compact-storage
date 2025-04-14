@@ -1,4 +1,4 @@
-package com.witchica.compactstorage;
+package com.witchica.compactstorage.common;
 
 import com.witchica.compactstorage.common.client.entity.CompactChestBlockEntityRenderer;
 import com.witchica.compactstorage.common.client.entity.DrumBlockEntityRenderer;

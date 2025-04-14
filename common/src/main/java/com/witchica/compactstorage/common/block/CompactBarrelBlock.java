@@ -1,13 +1,12 @@
 package com.witchica.compactstorage.common.block;
 
-import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.common.CompactStorage;
 import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.entity.CompactBarrelBlockEntity;
 import com.witchica.compactstorage.common.item.StorageUpgradeItem;
 import com.witchica.compactstorage.common.screen.CompactStorageMenuProvider;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import dev.architectury.registry.menu.MenuRegistry;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -35,7 +34,6 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;

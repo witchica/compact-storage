@@ -1,5 +1,6 @@
 package com.witchica.compactstorage;
 
+import com.witchica.compactstorage.common.CompactStorage;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

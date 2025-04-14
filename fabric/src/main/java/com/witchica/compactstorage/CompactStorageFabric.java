@@ -1,5 +1,6 @@
 package com.witchica.compactstorage;
 
+import com.witchica.compactstorage.common.CompactStorage;
 import com.witchica.compactstorage.fabric.block.entity.FabricCompactBarrelBlockEntity;
 import com.witchica.compactstorage.fabric.block.entity.FabricCompactChestBlockEntity;
 import com.witchica.compactstorage.fabric.block.entity.FabricDrumBlockEntity;

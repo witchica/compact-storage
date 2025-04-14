@@ -3,7 +3,7 @@ package com.witchica.compactstorage.common.client.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.common.CompactStorage;
 import com.witchica.compactstorage.common.block.CompactChestBlock;
 import com.witchica.compactstorage.common.block.entity.CompactChestBlockEntity;
 
@@ -18,12 +18,10 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)

@@ -1,6 +1,5 @@
 package com.witchica.compactstorage.common.item;
 
-import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.common.util.StorageUpgradeType;
 import org.jetbrains.annotations.Nullable;
 

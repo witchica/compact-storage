@@ -1,6 +1,6 @@
 package com.witchica.compactstorage.common.block.entity;
 
-import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.common.CompactStorage;
 import com.witchica.compactstorage.common.block.DrumBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

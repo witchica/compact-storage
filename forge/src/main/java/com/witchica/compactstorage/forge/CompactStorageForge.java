@@ -1,13 +1,11 @@
 package com.witchica.compactstorage.forge;
 
-import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.common.CompactStorage;
 import dev.architectury.platform.forge.EventBuses;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-import static com.witchica.compactstorage.CompactStorage.MOD_ID;
+import static com.witchica.compactstorage.common.CompactStorage.MOD_ID;
 
 @Mod(MOD_ID)
 public class CompactStorageForge {

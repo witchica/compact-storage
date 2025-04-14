@@ -1,6 +1,6 @@
 package com.witchica.compactstorage.common.block;
 
-import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.common.CompactStorage;
 import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import net.minecraft.ChatFormatting;

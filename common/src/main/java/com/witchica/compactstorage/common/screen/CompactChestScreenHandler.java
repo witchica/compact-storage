@@ -1,6 +1,6 @@
 package com.witchica.compactstorage.common.screen;
 
-import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.common.CompactStorage;
 import com.witchica.compactstorage.common.inventory.BackpackInventory;
 
 import com.witchica.compactstorage.common.inventory.BackpackInventoryHandlerFactory;
