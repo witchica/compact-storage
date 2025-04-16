@@ -1,0 +1,7 @@
+{
+    "parent": "compact_storage:item/pack_frame_base",
+    "textures": {
+        "log": "minecraft:block/warped_stem",
+        "planks": "minecraft:block/warped_planks"
+    }
+}

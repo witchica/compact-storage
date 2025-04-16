@@ -1,0 +1,7 @@
+{
+    "parent": "compact_storage:item/pack_frame_base",
+    "textures": {
+        "log": "minecraft:block/spruce_log",
+        "planks": "minecraft:block/spruce_planks"
+    }
+}

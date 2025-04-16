@@ -53,7 +53,7 @@ public class CompactStorage {
     public static final RegistrySupplier<CompactChestBlock>[] COMPACT_CHEST_BLOCKS = new RegistrySupplier[CompactStorageUtil.StorageVisualTypes.values().length];
     public static final RegistrySupplier<CompactBarrelBlock>[] COMPACT_BARREL_BLOCKS = new RegistrySupplier[CompactStorageUtil.StorageVisualTypes.values().length];
     public static final RegistrySupplier<DrumBlock>[] DRUM_BLOCKS = new RegistrySupplier[CompactStorageUtil.StorageVisualTypes.values().length];
-    public static final RegistrySupplier<BackpackItem>[] BACKPACK_ITEMS = new RegistrySupplier[16];
+    public static final RegistrySupplier<BackpackItem>[] BACKPACK_ITEMS = new RegistrySupplier[CompactStorageUtil.StorageVisualTypes.values().length];
 
     private static Block[] getAllCompactChests() {
         List<Block> blocks = new ArrayList<Block>();
@@ -100,7 +100,7 @@ public class CompactStorage {
                     Arrays.stream(COMPACT_CHEST_BLOCKS).map(Supplier::get).filter(block -> !block.getVisualType().isWooden()).forEach(populator::accept);
                     Arrays.stream(COMPACT_BARREL_BLOCKS).map(Supplier::get).filter(block -> !block.getVisualType().isWooden()).forEach(populator::accept);
                     Arrays.stream(DRUM_BLOCKS).map(Supplier::get).filter(block -> !block.getType().isWooden()).forEach(populator::accept);
-                    Arrays.stream(BACKPACK_ITEMS).map(Supplier::get).forEach(populator::accept);
+                    Arrays.stream(BACKPACK_ITEMS).map(Supplier::get).filter(item -> !item.getVisualType().isWooden()).forEach(populator::accept);
                 });
     }));
 
@@ -112,12 +112,11 @@ public class CompactStorage {
                     Arrays.stream(COMPACT_CHEST_BLOCKS).map(Supplier::get).filter(block -> block.getVisualType().isWooden()).forEach(populator::accept);
                     Arrays.stream(COMPACT_BARREL_BLOCKS).map(Supplier::get).filter(block -> block.getVisualType().isWooden()).forEach(populator::accept);
                     Arrays.stream(DRUM_BLOCKS).map(Supplier::get).filter(block -> block.getType().isWooden()).forEach(populator::accept);
+                    Arrays.stream(BACKPACK_ITEMS).map(Supplier::get).filter(item -> item.getVisualType().isWooden()).forEach(populator::accept);
                 });
     }));
 
     static {
-        int backpackIndex = 0;
-        int drumIndex = 0;
         for(int i = 0; i < CompactStorageUtil.StorageVisualTypes.values().length; i++) {
             CompactStorageUtil.StorageVisualTypes type = CompactStorageUtil.StorageVisualTypes.values()[i];
             String name = type.getType();
@@ -131,6 +130,7 @@ public class CompactStorage {
             if(type.isWooden()) {
                 chestName = name+"_compact_chest";
                 barrelName = name+"_compact_barrel";
+                backpackName = name + "_pack_frame";
             }
 
             COMPACT_CHEST_BLOCKS[i] = BLOCKS.register(chestName, () ->
@@ -142,11 +142,13 @@ public class CompactStorage {
 
             if(!type.isWooden()) {
                 DYE_COLOR_TO_COMPACT_CHEST_MAP.put(type.getAssociatedDyeColor(), COMPACT_CHEST_BLOCKS[i]);
+            }
 
-                BACKPACK_ITEMS[backpackIndex] = ITEMS.register(backpackName, () ->
-                        new BackpackItem(type, new Item.Properties().stacksTo(1)));
-                DYE_COLOR_TO_BACKPACK_MAP.put(type.getAssociatedDyeColor(), BACKPACK_ITEMS[backpackIndex]);
-                backpackIndex++;
+            BACKPACK_ITEMS[index] = ITEMS.register(backpackName, () ->
+                    new BackpackItem(type, new Item.Properties().stacksTo(1)));
+
+            if(!type.isWooden()) {
+                DYE_COLOR_TO_BACKPACK_MAP.put(type.getAssociatedDyeColor(), BACKPACK_ITEMS[index]);
             }
 
 

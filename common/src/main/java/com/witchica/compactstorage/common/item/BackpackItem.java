@@ -62,7 +62,7 @@ public class BackpackItem extends Item {
                         player.displayClientMessage(storageUpgradeItem.getType().getFailureMessage(), true);
                         return InteractionResultHolder.fail(heldItemStack);
                     }
-                } else if(oppositeItem instanceof DyeItem dyeItem) {
+                } else if(!visualType.isWooden() && oppositeItem instanceof DyeItem dyeItem) {
                     Item newBackpackItem = CompactStorage.getBackpackFromDyeColor(dyeItem.getDyeColor());
 
                     if(newBackpackItem != heldItemStack.getItem()) {

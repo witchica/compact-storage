@@ -63,6 +63,18 @@
     "item.compact_storage.backpack_red": "Red Backpack",
     "item.compact_storage.backpack_black": "Black Backpack",
 
+    "item.compact_storage.acacia_pack_frame": "Acacia Pack Frame",
+    "item.compact_storage.birch_pack_frame": "Birch Pack Frame",
+    "item.compact_storage.cherry_pack_frame": "Cherry Pack Frame",
+    "item.compact_storage.crimson_pack_frame": "Crimson Pack Frame",
+    "item.compact_storage.dark_oak_pack_frame": "Dark Oak Pack Frame",
+    "item.compact_storage.jungle_pack_frame": "Jungle Pack Frame",
+    "item.compact_storage.mangrove_pack_frame": "Mangrove Pack Frame",
+    "item.compact_storage.oak_pack_frame": "Oak Pack Frame",
+    "item.compact_storage.spruce_pack_frame": "Spruce Pack Frame",
+    "item.compact_storage.warped_pack_frame": "Warped Pack Frame",
+    "item.compact_storage.bamboo_pack_frame": "Bamboo Pack Frame",
+
     "block.compact_storage.acacia_drum": "Acacia Item Drum",
     "block.compact_storage.birch_drum": "Birch Item Drum",
     "block.compact_storage.cherry_drum": "Cherry Item Drum",
@@ -163,6 +175,7 @@
     "tag.item.compact_storage.items.drum_wooden": "Wooden Drum Items",
     "tag.item.compact_storage.items.drum": "Drum Items",
     "tag.item.compact_storage.items.backpack": "Backpack Items",
+    "tag.item.compact_storage.items.pack_frame": "Pack Frame Items",
 
     "tooltip.compact_storage.upgrade_drum_increase_description": "Use this on a Drum block to increase the amount of items it can store!"
 }

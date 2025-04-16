@@ -1,0 +1,7 @@
+{
+    "parent": "compact_storage:item/pack_frame_base",
+    "textures": {
+        "log": "minecraft:block/mangrove_log",
+        "planks": "minecraft:block/mangrove_planks"
+    }
+}

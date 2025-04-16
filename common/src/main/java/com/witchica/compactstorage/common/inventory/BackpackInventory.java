@@ -159,7 +159,7 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
     @Override
     public void startOpen(Player player) {
         Container.super.startOpen(player);
-        player.playNotifySound(SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 1f, 1f);
+        player.playNotifySound(getVisualType().isWooden() ? SoundEvents.WOODEN_TRAPDOOR_OPEN : SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 1f, 1f);
     }
 
     @Override
@@ -180,7 +180,7 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
 
             inventory.getItem(backpackSlot).getTag().put("Backpack", toTag());
         }
-        player.playNotifySound(SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 1f, 1f);
+        player.playNotifySound(getVisualType().isWooden() ? SoundEvents.WOODEN_TRAPDOOR_CLOSE : SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 1f, 1f);
     }
 
     @Override
