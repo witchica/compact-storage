@@ -69,10 +69,10 @@ public class CompactStorage {
     }
 
     public static RegistrySupplier<BlockEntityType<CompactBarrelBlockEntity>> COMPACT_BARREL_ENTITY_TYPE =
-            BLOCK_ENTITY_TYPES.register("compact_barrel", () -> BlockEntityType.Builder.of(CompactStoragePlatform.compactBarrelBlockEntityProvider(), getAllCompactBarrels()).build(null));
+            BLOCK_ENTITY_TYPES.register("compact_barrel", () -> BlockEntityType.Builder.of(CompactStoragePlatform.compactBarrelBlockEntityProvider(), Arrays.stream(COMPACT_BARREL_BLOCKS).map(RegistrySupplier::get).toArray(Block[]::new)).build(null));
 
     public static RegistrySupplier<BlockEntityType<CompactChestBlockEntity>> COMPACT_CHEST_ENTITY_TYPE =
-            BLOCK_ENTITY_TYPES.register("compact_chest", () -> BlockEntityType.Builder.of(CompactStoragePlatform.compactChestBlockEntityProvider(), getAllCompactChests()).build(null));
+            BLOCK_ENTITY_TYPES.register("compact_chest", () -> BlockEntityType.Builder.of(CompactStoragePlatform.compactChestBlockEntityProvider(), Arrays.stream(COMPACT_CHEST_BLOCKS).map(RegistrySupplier::get).toArray(Block[]::new)).build(null));
 
     public static RegistrySupplier<BlockEntityType<DrumBlockEntity>> DRUM_ENTITY_TYPE =
             BLOCK_ENTITY_TYPES.register("drum", () -> BlockEntityType.Builder.of(CompactStoragePlatform.drumBlockEntityProvider(), Arrays.stream(DRUM_BLOCKS).map(RegistrySupplier::get).toArray(Block[]::new)).build(null));
