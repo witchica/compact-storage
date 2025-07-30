@@ -15,6 +15,8 @@ import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import com.witchica.compactstorage.common.util.StorageUpgradeType;
 import dev.architectury.event.events.client.ClientLifecycleEvent;
+import dev.architectury.event.events.client.ClientTickEvent;
+import dev.architectury.networking.NetworkManager;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.menu.MenuRegistry;
@@ -24,16 +26,14 @@ import net.fabricmc.api.EnvType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class CompactStorage {
@@ -49,6 +49,7 @@ public class CompactStorage {
 
     public static ResourceLocation COMPACT_CHEST_GENERIC_IDENTIFIER = new ResourceLocation(MOD_ID, "compact_chest");
     public static ResourceLocation COMPACT_BARREL_GENERIC_IDENTIFIER = new ResourceLocation(MOD_ID, "compact_barrel");
+    public static ResourceLocation COMPACT_STORAGE_BACKPACK_KEY = new ResourceLocation(MOD_ID, "backpack_key");
 
     public static final RegistrySupplier<CompactChestBlock>[] COMPACT_CHEST_BLOCKS = new RegistrySupplier[CompactStorageUtil.StorageVisualTypes.values().length];
     public static final RegistrySupplier<CompactBarrelBlock>[] COMPACT_BARREL_BLOCKS = new RegistrySupplier[CompactStorageUtil.StorageVisualTypes.values().length];
@@ -179,10 +180,20 @@ public class CompactStorage {
     public static void onInitialize() {
         if(Platform.getEnv() == EnvType.CLIENT) {
             ClientLifecycleEvent.CLIENT_SETUP.register(CompactStorageCommonClient::clientSetupEvent);
+            ClientTickEvent.CLIENT_POST.register(CompactStorageCommonClient::clientTickEvent);
         }
 
         CONFIG = new CompactStorageConfig();
         CONFIG.readConfig();
+
+        NetworkManager.registerReceiver(NetworkManager.Side.C2S, COMPACT_STORAGE_BACKPACK_KEY, (buf, context) -> {
+            Player player = context.getPlayer();
+            Optional<ItemStack> stack = CompactStoragePlatform.getAdditionalSlotBackpack(player);
+
+            if(stack.isPresent()) {
+
+            }
+        });
 
         BLOCKS.register();
         ITEMS.register();

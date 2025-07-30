@@ -5,6 +5,7 @@ import com.witchica.compactstorage.common.inventory.BackpackInventory;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.screen.CompactStorageMenuProvider;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
+import com.witchica.compactstorage.common.util.InventoryOpenSource;
 import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class BackpackItem extends Item {
 
@@ -88,7 +90,7 @@ public class BackpackItem extends Item {
 
     public void openMenu(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        MenuRegistry.openExtendedMenu((ServerPlayer) player, CompactStorageMenuProvider.ofBackpack(hand, stack.getHoverName()));
+        MenuRegistry.openExtendedMenu((ServerPlayer) player, CompactStorageMenuProvider.fromType(InventoryOpenSource.BACKPACK_OPEN_HAND, Optional.empty(), Optional.of(hand), this.getName(stack)));
     }
 
     @Override

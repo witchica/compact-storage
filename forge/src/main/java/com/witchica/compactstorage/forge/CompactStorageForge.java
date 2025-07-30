@@ -2,6 +2,8 @@ package com.witchica.compactstorage.forge;
 
 import com.witchica.compactstorage.common.CompactStorage;
 import dev.architectury.platform.forge.EventBuses;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 

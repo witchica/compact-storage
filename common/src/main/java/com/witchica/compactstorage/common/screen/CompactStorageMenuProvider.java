@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.common.screen;
 
+import com.witchica.compactstorage.common.util.InventoryOpenSource;
 import dev.architectury.registry.menu.ExtendedMenuProvider;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
@@ -9,8 +10,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -19,18 +22,29 @@ public class CompactStorageMenuProvider implements ExtendedMenuProvider {
     private final Consumer<FriendlyByteBuf> dataWriter;
     private final Component name;
 
-    public static CompactStorageMenuProvider ofBackpack(InteractionHand hand, Component name) {
-        return new CompactStorageMenuProvider(friendlyByteBuf -> {
-            friendlyByteBuf.writeInt(1);
-            friendlyByteBuf.writeInt(hand.ordinal());
-        }, name);
-    }
-
-    public static CompactStorageMenuProvider ofBlock(BlockPos pos, Component name) {
-        return new CompactStorageMenuProvider(friendlyByteBuf -> {
-            friendlyByteBuf.writeInt(0);
-            friendlyByteBuf.writeBlockPos(pos);
-        }, name);
+    public static CompactStorageMenuProvider fromType(InventoryOpenSource openSource, Optional<BlockPos> blockPos, Optional<InteractionHand> hand, Component name) {
+        switch (openSource) {
+            case CHEST_BARREL -> {
+                return new CompactStorageMenuProvider(friendlyByteBuf -> {
+                    friendlyByteBuf.writeInt(0);
+                    friendlyByteBuf.writeBlockPos(blockPos.get());
+                }, name);
+            }
+            case BACKPACK_OPEN_HAND -> {
+                return new CompactStorageMenuProvider(friendlyByteBuf -> {
+                    friendlyByteBuf.writeInt(1);
+                    friendlyByteBuf.writeInt(hand.get().ordinal());
+                }, name);
+            }
+            case BACKPACK_OPEN_INVENTORY -> {
+                return new CompactStorageMenuProvider(friendlyByteBuf -> {
+                    friendlyByteBuf.writeInt(2);
+                }, name);
+            }
+            default -> {
+                return null;
+            }
+        }
     }
 
     protected CompactStorageMenuProvider(Consumer<FriendlyByteBuf> dataWriter, Component name) {

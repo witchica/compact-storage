@@ -14,12 +14,10 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class BackpackInventoryHandlerFactory implements MenuProvider {
-    public InteractionHand hand;
     public ItemStack backpackStack;
 
-    public BackpackInventoryHandlerFactory(Player player, InteractionHand hand) {
-        this.hand = hand;
-        this.backpackStack = player.getItemInHand(hand);
+    public BackpackInventoryHandlerFactory(Player player, ItemStack backpackStack) {
+        this.backpackStack = backpackStack;
     }
 
     @Override
@@ -27,15 +25,12 @@ public class BackpackInventoryHandlerFactory implements MenuProvider {
         return backpackStack.getHoverName();
     }
 
-    public static BackpackInventory getBackpackInventory(Player player, InteractionHand hand) {
-        ItemStack backpackStack = player.getItemInHand(hand);
-        boolean isInOffhand = hand == InteractionHand.OFF_HAND;
-
+    public static BackpackInventory getBackpackInventory(Player player, ItemStack backpackStack) {
         if(backpackStack.hasTag() && backpackStack.getTag().contains("Backpack")) {
             CompoundTag backpackTag = backpackStack.getTag().getCompound("Backpack");
-            return new BackpackInventory(backpackTag, player, isInOffhand);
+            return new BackpackInventory(backpackTag, backpackStack);
         } else {
-            return new BackpackInventory(new CompoundTag(), player, isInOffhand);
+            return new BackpackInventory(new CompoundTag(), player);
         }
     }
 

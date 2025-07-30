@@ -48,7 +48,7 @@ public class CompactChestScreenHandler extends AbstractContainerMenu {
             visualType = inv.getVisualType();
             this.blockEntity = inv;
             this.backpack = null;
-        } else {
+        } else if(inventoryType == 1) {
             InteractionHand hand = buf.readInt() == 0 ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
             BackpackInventory backpackInventory = BackpackInventoryHandlerFactory.getBackpackInventory(playerInventory.player, hand);
             visualType = backpackInventory.getVisualType();

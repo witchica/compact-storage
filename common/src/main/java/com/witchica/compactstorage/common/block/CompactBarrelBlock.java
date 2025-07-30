@@ -6,6 +6,7 @@ import com.witchica.compactstorage.common.block.entity.CompactBarrelBlockEntity;
 import com.witchica.compactstorage.common.item.StorageUpgradeItem;
 import com.witchica.compactstorage.common.screen.CompactStorageMenuProvider;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
+import com.witchica.compactstorage.common.util.InventoryOpenSource;
 import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -42,6 +43,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public class CompactBarrelBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
@@ -130,7 +132,7 @@ public class CompactBarrelBlock extends BaseEntityBlock {
     }
 
     public void openMenu(Level level, Player player, BlockPos pos, BlockState state, InteractionHand hand) {
-        MenuRegistry.openExtendedMenu((ServerPlayer) player, CompactStorageMenuProvider.ofBlock(pos, this.getName()));
+        MenuRegistry.openExtendedMenu((ServerPlayer) player, CompactStorageMenuProvider.fromType(InventoryOpenSource.CHEST_BARREL, Optional.of(pos), Optional.empty(), this.getName()));
     }
 
     @Override
