@@ -2,6 +2,7 @@ package com.witchica.compactstorage.common.item;
 
 import com.witchica.compactstorage.common.CompactStorage;
 import com.witchica.compactstorage.common.inventory.BackpackInventory;
+import com.witchica.compactstorage.common.inventory.BackpackInventoryHandlerFactory;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.screen.CompactStorageMenuProvider;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
@@ -46,7 +47,7 @@ public class BackpackItem extends Item {
 
             if(!oppositeItemStack.isEmpty()) {
                 Item oppositeItem = oppositeItemStack.getItem();
-                BackpackInventory inventory = new BackpackInventory(heldItemStack.getTag().getCompound("Backpack"), player, isInOffhand);
+                BackpackInventory inventory = BackpackInventoryHandlerFactory.getBackpackInventory(player, InventoryOpenSource.BACKPACK_OPEN_HAND, Optional.of(hand));
 
                 if(hand == InteractionHand.MAIN_HAND && oppositeItem instanceof BackpackItem) {
                     return super.use(world, player, hand);

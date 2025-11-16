@@ -1,8 +1,10 @@
 package com.witchica.compactstorage.common.inventory;
 
+import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.item.BackpackItem;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
+import com.witchica.compactstorage.common.util.InventoryOpenSource;
 import com.witchica.compactstorage.common.util.StorageUpgradeType;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -15,24 +17,32 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Optional;
+
 public class BackpackInventory implements Container, CompactStorageInventoryImpl  {
     private final ItemStack backpackItem;
+    private final Optional<InteractionHand> hand;
+    private final InventoryOpenSource openSource;
     public NonNullList<ItemStack> items;
     public int inventoryWidth;
     public int inventoryHeight;
 
     private final Player player;
     private final int backpackSlot;
-    private final boolean isInOffhand;
 
-    public BackpackInventory(CompoundTag itemsNbt, Player player, boolean isInOffhand) {
-        this.backpackSlot = player.getInventory().selected;
+    // Type: (0 : main hand, 1 : off hand, 2 : backpack key)
+    public BackpackInventory(Player player, InventoryOpenSource openSource, ItemStack backpackStack, Optional<InteractionHand> hand) {
         this.player = player;
-        this.isInOffhand = isInOffhand;
+        this.hand = hand;
+        this.openSource = openSource;
+        this.backpackSlot = player.getInventory().selected;
+        this.backpackItem = backpackStack;
 
-        this.backpackItem = player.getItemInHand(isInOffhand ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
-
-        this.fromTag(itemsNbt);
+        if(backpackStack.hasTag()) {
+            this.fromTag(backpackStack.getTag().contains("Backpack") ? backpackStack.getTag().getCompound("Backpack") : new CompoundTag());
+        } else {
+            this.fromTag(new CompoundTag());
+        }
     }
 
 
@@ -167,19 +177,26 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
         Container.super.stopOpen(player);
         Inventory inventory = player.getInventory();
 
-        if(isInOffhand) {
-            if(!player.getItemInHand(InteractionHand.OFF_HAND).hasTag()) {
-                player.getItemInHand(InteractionHand.OFF_HAND).setTag(new CompoundTag());
-            }
+        if(openSource == InventoryOpenSource.BACKPACK_OPEN_HAND) {
+            InteractionHand playerHand = hand.orElse(InteractionHand.MAIN_HAND);
+            if(player.getItemInHand(playerHand).getItem() instanceof BackpackItem) {
+                if(!player.getItemInHand(playerHand).hasTag()) {
+                    player.getItemInHand(playerHand).setTag(new CompoundTag());
+                }
 
-            player.getItemInHand(InteractionHand.OFF_HAND).getTag().put("Backpack", toTag());
-        } else {
-            if(!inventory.getItem(backpackSlot).hasTag()) {
-                inventory.getItem(backpackSlot).setTag(new CompoundTag());
+                inventory.getItem(backpackSlot).getTag().put("Backpack", toTag());
             }
+        } else if(openSource == InventoryOpenSource.BACKPACK_OPEN_INVENTORY) {
+            ItemStack stack = CompactStoragePlatform.getAdditionalSlotBackpack(player).orElse(ItemStack.EMPTY);
+            if(stack.getItem() instanceof BackpackItem) {
+                if(!stack.hasTag()) {
+                    stack.setTag(new CompoundTag());
+                }
 
-            inventory.getItem(backpackSlot).getTag().put("Backpack", toTag());
+                stack.getTag().put("Backpack", toTag());
+            }
         }
+
         player.playNotifySound(getVisualType().isWooden() ? SoundEvents.WOODEN_TRAPDOOR_CLOSE : SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 1f, 1f);
     }
 

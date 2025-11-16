@@ -12,7 +12,9 @@ import com.witchica.compactstorage.common.config.CompactStorageConfig;
 import com.witchica.compactstorage.common.item.BackpackItem;
 import com.witchica.compactstorage.common.item.StorageUpgradeItem;
 import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
+import com.witchica.compactstorage.common.screen.CompactStorageMenuProvider;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
+import com.witchica.compactstorage.common.util.InventoryOpenSource;
 import com.witchica.compactstorage.common.util.StorageUpgradeType;
 import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.architectury.event.events.client.ClientTickEvent;
@@ -26,6 +28,7 @@ import net.fabricmc.api.EnvType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
@@ -191,7 +194,7 @@ public class CompactStorage {
             Optional<ItemStack> stack = CompactStoragePlatform.getAdditionalSlotBackpack(player);
 
             if(stack.isPresent()) {
-
+                MenuRegistry.openExtendedMenu((ServerPlayer) player, CompactStorageMenuProvider.fromType(InventoryOpenSource.BACKPACK_OPEN_INVENTORY, Optional.empty(), Optional.empty(), stack.get().getHoverName()));
             }
         });
 

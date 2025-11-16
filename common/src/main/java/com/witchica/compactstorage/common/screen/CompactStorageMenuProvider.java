@@ -39,6 +39,7 @@ public class CompactStorageMenuProvider implements ExtendedMenuProvider {
             case BACKPACK_OPEN_INVENTORY -> {
                 return new CompactStorageMenuProvider(friendlyByteBuf -> {
                     friendlyByteBuf.writeInt(2);
+                    friendlyByteBuf.writeInt(0);
                 }, name);
             }
             default -> {

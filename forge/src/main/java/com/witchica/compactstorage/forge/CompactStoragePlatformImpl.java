@@ -40,7 +40,12 @@ public class CompactStoragePlatformImpl {
         LazyOptional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(player);
 
         if(curiosInventory.isPresent()) {
-            return Optional.of(curiosInventory.resolve().get().findFirstCurio(itemStack -> itemStack.getItem() instanceof BackpackItem).get().stack());
+            ICuriosItemHandler itemHandler = curiosInventory.resolve().get();
+            Optional<SlotResult> slotResult = itemHandler.findFirstCurio(itemStack -> itemStack.getItem() instanceof BackpackItem);
+
+            if(slotResult.isPresent()) {
+                return Optional.of(slotResult.get().stack());
+            }
         }
 
         return Optional.empty();

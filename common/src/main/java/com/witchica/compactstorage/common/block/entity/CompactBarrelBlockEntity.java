@@ -6,6 +6,7 @@ import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
 
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
+import com.witchica.compactstorage.common.util.InventoryOpenSource;
 import com.witchica.compactstorage.common.util.StorageUpgradeType;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
@@ -168,7 +169,7 @@ public class CompactBarrelBlockEntity extends RandomizableContainerBlockEntity i
 
     public FriendlyByteBuf writeToByteBuf() {
         FriendlyByteBuf packetByteBuf = new FriendlyByteBuf(Unpooled.buffer());
-        packetByteBuf.writeInt(0);
+        packetByteBuf.writeInt(InventoryOpenSource.CHEST_BARREL.ordinal());
         packetByteBuf.writeBlockPos(getBlockPos());
 
         return packetByteBuf;

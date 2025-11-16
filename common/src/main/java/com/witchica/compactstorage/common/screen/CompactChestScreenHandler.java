@@ -6,6 +6,7 @@ import com.witchica.compactstorage.common.inventory.BackpackInventory;
 import com.witchica.compactstorage.common.inventory.BackpackInventoryHandlerFactory;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
+import com.witchica.compactstorage.common.util.InventoryOpenSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -18,6 +19,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Optional;
+
 public class CompactChestScreenHandler extends AbstractContainerMenu {
     private Container inventory;
     private Inventory playerInventory;
@@ -27,37 +30,41 @@ public class CompactChestScreenHandler extends AbstractContainerMenu {
     public int inventoryWidth;
     public int inventoryHeight;
     public String inventoryType;
-
-    private ItemStack backpack;
-    private boolean isBackpackInOffhand;
+    private int backpackSlot = -1;
 
     public CompactStorageUtil.StorageVisualTypes visualType;
 
     public CompactChestScreenHandler(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
         super(CompactStorage.COMPACT_CHEST_SCREEN_HANDLER.get(), syncId);
-        int inventoryType = buf.readInt();
+        InventoryOpenSource inventoryType = InventoryOpenSource.values()[buf.readInt()];
 
         this.playerInventory = playerInventory;
 
-        if(inventoryType == 0) {
-            BlockPos pos = buf.readBlockPos();
-            CompactStorageInventoryImpl inv = (CompactStorageInventoryImpl) playerInventory.player.level().getBlockEntity(pos);
-            this.inventory = (Container) inv;
-            this.inventoryWidth = inv.getInventoryWidth();
-            this.inventoryHeight = inv.getInventoryHeight();
-            visualType = inv.getVisualType();
-            this.blockEntity = inv;
-            this.backpack = null;
-        } else if(inventoryType == 1) {
-            InteractionHand hand = buf.readInt() == 0 ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
-            BackpackInventory backpackInventory = BackpackInventoryHandlerFactory.getBackpackInventory(playerInventory.player, hand);
-            visualType = backpackInventory.getVisualType();
-            this.inventory = (Container) backpackInventory;
-            this.inventoryWidth = backpackInventory.inventoryWidth;
-            this.inventoryHeight = backpackInventory.inventoryHeight;
-            this.backpack = playerInventory.player.getItemInHand(hand);
-            this.isBackpackInOffhand = hand == InteractionHand.OFF_HAND;
-            this.blockEntity = null;
+        switch(inventoryType) {
+            case CHEST_BARREL: {
+                BlockPos pos = buf.readBlockPos();
+                CompactStorageInventoryImpl inv = (CompactStorageInventoryImpl) playerInventory.player.level().getBlockEntity(pos);
+                this.inventory = (Container) inv;
+                this.inventoryWidth = inv.getInventoryWidth();
+                this.inventoryHeight = inv.getInventoryHeight();
+                visualType = inv.getVisualType();
+                this.blockEntity = inv;
+                break;
+            } default: {
+                Optional<InteractionHand> hand = Optional.of(InteractionHand.values()[buf.readInt()]);
+                BackpackInventory backpackInventory = BackpackInventoryHandlerFactory.getBackpackInventory(playerInventory.player, inventoryType, hand);
+                visualType = backpackInventory.getVisualType();
+                this.inventory = (Container) backpackInventory;
+                this.inventoryWidth = backpackInventory.inventoryWidth;
+                this.inventoryHeight = backpackInventory.inventoryHeight;
+                this.blockEntity = null;
+                if(inventoryType == InventoryOpenSource.BACKPACK_OPEN_HAND) {
+                    if(hand.get() ==  InteractionHand.MAIN_HAND) {
+                        this.backpackSlot = playerInventory.selected;
+                    }
+                }
+                break;
+            }
         }
 
         checkContainerSize(inventory, inventoryWidth * inventoryHeight);
@@ -102,7 +109,7 @@ public class CompactChestScreenHandler extends AbstractContainerMenu {
 
 
         for (j = 0; j < 9; j++) {
-            if(this.blockEntity == null && j==playerInventory.selected && !isBackpackInOffhand) {
+            if(this.blockEntity == null && j==backpackSlot) {
                 this.addSlot(new Slot(playerInventory, j, 8 + ((inventoryWidth * 18) / 2) - (9 * 9) + j * 18, 7+18 + chestInvHeight + 60 + 18) {
                     @Override
                     public boolean mayPickup(Player playerEntity) {
