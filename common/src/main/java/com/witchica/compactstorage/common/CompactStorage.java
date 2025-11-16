@@ -42,7 +42,7 @@ import java.util.function.Supplier;
 public class CompactStorage {
     public static final String MOD_ID = "compact_storage";
     public static final Logger LOGGER = LogUtils.getLogger();
-    public static CompactStorageConfig CONFIG;
+//    public static CompactStorageConfig CONFIG;
 
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(MOD_ID, Registries.BLOCK);
     private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(MOD_ID, Registries.ITEM);
@@ -186,8 +186,8 @@ public class CompactStorage {
             ClientTickEvent.CLIENT_POST.register(CompactStorageCommonClient::clientTickEvent);
         }
 
-        CONFIG = new CompactStorageConfig();
-        CONFIG.readConfig();
+//        CONFIG = new CompactStorageConfig();
+//        CONFIG.readConfig();
 
         NetworkManager.registerReceiver(NetworkManager.Side.C2S, COMPACT_STORAGE_BACKPACK_KEY, (buf, context) -> {
             Player player = context.getPlayer();
