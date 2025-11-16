@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -140,19 +141,6 @@ public class CompactBarrelBlock extends BaseEntityBlock {
         return RenderShape.MODEL;
     }
 
-
-    @Override
-    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
-        CompactStorageUtil.dropContents(world, pos, state.getBlock(), player);
-        super.playerWillDestroy(world, pos, state, player);
-    }
-
-    @Override
-    public void wasExploded(Level level, BlockPos pos, Explosion explosion) {
-        super.wasExploded(level, pos, explosion);
-        CompactStorageUtil.dropContents(level, pos, this, null);
-    }
-
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter world, List<Component> tooltip, TooltipFlag options) {
         super.appendHoverText(stack, world, tooltip, options);
@@ -187,6 +175,7 @@ public class CompactBarrelBlock extends BaseEntityBlock {
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if(state.hasBlockEntity() && !(newState.getBlock() instanceof CompactBarrelBlock)) {
+            CompactStorageUtil.dropContents(level, pos, state.getBlock(), null);
             level.removeBlockEntity(pos);
         }
     }
