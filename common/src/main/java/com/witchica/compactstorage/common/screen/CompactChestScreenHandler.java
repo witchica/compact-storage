@@ -4,6 +4,8 @@ import com.witchica.compactstorage.common.CompactStorage;
 import com.witchica.compactstorage.common.inventory.BackpackInventory;
 
 import com.witchica.compactstorage.common.inventory.BackpackInventoryHandlerFactory;
+import com.witchica.compactstorage.common.inventory.slot.BackpackHoldSlot;
+import com.witchica.compactstorage.common.item.BackpackItem;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import com.witchica.compactstorage.common.util.InventoryOpenSource;
@@ -14,6 +16,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -29,18 +32,18 @@ public class CompactChestScreenHandler extends AbstractContainerMenu {
 
     public int inventoryWidth;
     public int inventoryHeight;
-    public String inventoryType;
+    public InventoryOpenSource openSource;
     private int backpackSlot = -1;
 
     public CompactStorageUtil.StorageVisualTypes visualType;
 
     public CompactChestScreenHandler(int syncId, Inventory playerInventory, FriendlyByteBuf buf) {
         super(CompactStorage.COMPACT_CHEST_SCREEN_HANDLER.get(), syncId);
-        InventoryOpenSource inventoryType = InventoryOpenSource.values()[buf.readInt()];
+        openSource = InventoryOpenSource.values()[buf.readInt()];
 
         this.playerInventory = playerInventory;
 
-        switch(inventoryType) {
+        switch(openSource) {
             case CHEST_BARREL: {
                 BlockPos pos = buf.readBlockPos();
                 CompactStorageInventoryImpl inv = (CompactStorageInventoryImpl) playerInventory.player.level().getBlockEntity(pos);
@@ -52,13 +55,13 @@ public class CompactChestScreenHandler extends AbstractContainerMenu {
                 break;
             } default: {
                 Optional<InteractionHand> hand = Optional.of(InteractionHand.values()[buf.readInt()]);
-                BackpackInventory backpackInventory = BackpackInventoryHandlerFactory.getBackpackInventory(playerInventory.player, inventoryType, hand);
+                BackpackInventory backpackInventory = BackpackInventoryHandlerFactory.getBackpackInventory(playerInventory.player, openSource, hand);
                 visualType = backpackInventory.getVisualType();
                 this.inventory = (Container) backpackInventory;
                 this.inventoryWidth = backpackInventory.inventoryWidth;
                 this.inventoryHeight = backpackInventory.inventoryHeight;
                 this.blockEntity = null;
-                if(inventoryType == InventoryOpenSource.BACKPACK_OPEN_HAND) {
+                if(openSource == InventoryOpenSource.BACKPACK_OPEN_HAND) {
                     if(hand.get() ==  InteractionHand.MAIN_HAND) {
                         this.backpackSlot = playerInventory.selected;
                     }
@@ -88,6 +91,8 @@ public class CompactChestScreenHandler extends AbstractContainerMenu {
         int i;
         int j;
 
+        boolean checkBackpack = openSource != InventoryOpenSource.CHEST_BARREL;
+
         this.slots.clear();
 
         final int chestInvHeight = inventoryHeight * 18;
@@ -95,7 +100,7 @@ public class CompactChestScreenHandler extends AbstractContainerMenu {
         // Chest Inventory
         for (i = 0; i < inventoryHeight; i++) {
             for (j = 0; j < inventoryWidth; j++) {
-                final Slot slot = new Slot(inventory, i * inventoryWidth + j, 8 + j * 18, 1 + 18 + i * 18);
+                final Slot slot = new BackpackHoldSlot(inventory, i * inventoryWidth + j, 8 + j * 18, 1 + 18 + i * 18, checkBackpack);
                 this.addSlot(slot);
             }
         }
@@ -103,27 +108,16 @@ public class CompactChestScreenHandler extends AbstractContainerMenu {
         // Player Inventory (27 storage + 9 hotbar)
         for (i = 0; i < 3; i++) {
             for (j = 0; j < 9; j++) {
-                this.addSlot(new Slot(playerInventory, i * 9 + j + 9, 8 + ((inventoryWidth * 18) / 2) - (9 * 9) + j * 18, 7 + 18 + i * 18 + chestInvHeight + 18));
+                this.addSlot(new BackpackHoldSlot(playerInventory, i * 9 + j + 9, 8 + ((inventoryWidth * 18) / 2) - (9 * 9) + j * 18, 7 + 18 + i * 18 + chestInvHeight + 18, checkBackpack));
             }
         }
 
 
         for (j = 0; j < 9; j++) {
-            if(this.blockEntity == null && j==backpackSlot) {
-                this.addSlot(new Slot(playerInventory, j, 8 + ((inventoryWidth * 18) / 2) - (9 * 9) + j * 18, 7+18 + chestInvHeight + 60 + 18) {
-                    @Override
-                    public boolean mayPickup(Player playerEntity) {
-                        return false;
-                    }
-
-                });
-            } else {
-                this.addSlot(new Slot(playerInventory, j, 8 + ((inventoryWidth * 18) / 2) - (9 * 9) + j * 18, 7+18 + chestInvHeight + 60 + 18));
-            }
+            this.addSlot(new BackpackHoldSlot(playerInventory, j, 8 + ((inventoryWidth * 18) / 2) - (9 * 9) + j * 18, 7+18 + chestInvHeight + 60 + 18, checkBackpack));
         }
     }
 
-    
     @Override
     public boolean stillValid(final Player player) {
         return this.inventory.stillValid(player);

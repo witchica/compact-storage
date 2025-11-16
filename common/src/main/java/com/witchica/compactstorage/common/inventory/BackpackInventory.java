@@ -28,14 +28,12 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
     public int inventoryHeight;
 
     private final Player player;
-    private final int backpackSlot;
 
     // Type: (0 : main hand, 1 : off hand, 2 : backpack key)
     public BackpackInventory(Player player, InventoryOpenSource openSource, ItemStack backpackStack, Optional<InteractionHand> hand) {
         this.player = player;
         this.hand = hand;
         this.openSource = openSource;
-        this.backpackSlot = player.getInventory().selected;
         this.backpackItem = backpackStack;
 
         if(backpackStack.hasTag()) {
@@ -184,7 +182,7 @@ public class BackpackInventory implements Container, CompactStorageInventoryImpl
                     player.getItemInHand(playerHand).setTag(new CompoundTag());
                 }
 
-                inventory.getItem(backpackSlot).getTag().put("Backpack", toTag());
+                player.getItemInHand(playerHand).getTag().put("Backpack", toTag());
             }
         } else if(openSource == InventoryOpenSource.BACKPACK_OPEN_INVENTORY) {
             ItemStack stack = CompactStoragePlatform.getAdditionalSlotBackpack(player).orElse(ItemStack.EMPTY);
