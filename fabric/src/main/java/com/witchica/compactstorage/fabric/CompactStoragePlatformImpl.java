@@ -8,6 +8,7 @@ import com.witchica.compactstorage.fabric.block.entity.FabricCompactBarrelBlockE
 import com.witchica.compactstorage.fabric.block.entity.FabricCompactChestBlockEntity;
 import com.witchica.compactstorage.fabric.block.entity.FabricDrumBlockEntity;
 import dev.emi.trinkets.api.*;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -28,17 +29,23 @@ public class CompactStoragePlatformImpl {
     }
 
     public static Optional<ItemStack> getAdditionalSlotBackpack(Player player) {
-        Optional<TrinketComponent> trinketComponentOptional = TrinketsApi.getTrinketComponent(player);
+        if(FabricLoader.getInstance().isModLoaded("trinkets")) {
+            Optional<TrinketComponent> trinketComponentOptional = TrinketsApi.getTrinketComponent(player);
 
-        if (trinketComponentOptional.isPresent()) {
-            TrinketComponent trinketComponent = trinketComponentOptional.get();
-            List<Tuple<SlotReference, ItemStack>> slots = trinketComponent.getEquipped(itemStack -> itemStack.getItem() instanceof BackpackItem);
+            if (trinketComponentOptional.isPresent()) {
+                TrinketComponent trinketComponent = trinketComponentOptional.get();
+                List<Tuple<SlotReference, ItemStack>> slots = trinketComponent.getEquipped(itemStack -> itemStack.getItem() instanceof BackpackItem);
 
-            if (!slots.isEmpty()) {
-                return Optional.of(slots.get(0).getB());
+                if (!slots.isEmpty()) {
+                    return Optional.of(slots.get(0).getB());
+                }
             }
         }
 
         return Optional.empty();
+    }
+
+    public static Optional<ItemStack> getBackpackToRender(Player player) {
+        return getAdditionalSlotBackpack(player);
     }
 }

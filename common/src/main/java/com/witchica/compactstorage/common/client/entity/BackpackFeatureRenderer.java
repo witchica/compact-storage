@@ -49,7 +49,7 @@ public class BackpackFeatureRenderer extends RenderLayer<AbstractClientPlayer, P
             return;
         }
 
-        Optional<ItemStack> backpack = CompactStoragePlatform.getAdditionalSlotBackpack(livingEntity);
+        Optional<ItemStack> backpack = CompactStoragePlatform.getBackpackToRender(livingEntity);
 
         if(backpack.isPresent()) {
             ItemStack stack = backpack.get();

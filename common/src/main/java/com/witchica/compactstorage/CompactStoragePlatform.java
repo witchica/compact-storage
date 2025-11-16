@@ -35,4 +35,8 @@ public class CompactStoragePlatform {
     public static Optional<ItemStack> getAdditionalSlotBackpack(Player player) {
         throw new AssertionError("Method not implemented on this platform.");
     }
+    @ExpectPlatform
+    public static Optional<ItemStack> getBackpackToRender(Player player) {
+        throw new AssertionError("Method not implemented on this platform.");
+    }
 }

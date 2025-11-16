@@ -17,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fml.ModList;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
@@ -36,15 +37,38 @@ public class CompactStoragePlatformImpl {
     public static BlockEntityType.BlockEntitySupplier<DrumBlockEntity> drumBlockEntityProvider() {
         return ForgeDrumBlockEntity::new;
     }
-    public static Optional<ItemStack> getAdditionalSlotBackpack(Player player) {
+
+    private static Optional<SlotResult> getCuriosSlot(Player player) {
         LazyOptional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(player);
 
         if(curiosInventory.isPresent()) {
             ICuriosItemHandler itemHandler = curiosInventory.resolve().get();
             Optional<SlotResult> slotResult = itemHandler.findFirstCurio(itemStack -> itemStack.getItem() instanceof BackpackItem);
 
-            if(slotResult.isPresent()) {
-                return Optional.of(slotResult.get().stack());
+            if (slotResult.isPresent()) {
+                return slotResult;
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    public static Optional<ItemStack> getAdditionalSlotBackpack(Player player) {
+        if(ModList.get().isLoaded("curios")) {
+            Optional<SlotResult> slotResult = getCuriosSlot(player);
+            return slotResult.map(SlotResult::stack);
+        }
+
+        return Optional.empty();
+
+    }
+
+    public static Optional<ItemStack> getBackpackToRender(Player player) {
+        if(ModList.get().isLoaded("curios")) {
+            Optional<SlotResult> slotResult = getCuriosSlot(player);
+
+            if(slotResult.isPresent() && slotResult.get().slotContext().visible()) {
+                return slotResult.map(SlotResult::stack);
             }
         }
 

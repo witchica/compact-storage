@@ -177,5 +177,7 @@
     "tag.item.compact_storage.items.backpack": "Backpack Items",
     "tag.item.compact_storage.items.pack_frame": "Pack Frame Items",
 
-    "tooltip.compact_storage.upgrade_drum_increase_description": "Use this on a Drum block to increase the amount of items it can store!"
+    "tooltip.compact_storage.upgrade_drum_increase_description": "Use this on a Drum block to increase the amount of items it can store!",
+    "key.compact_storage.backpack": "Open Backpack",
+    "key.categories.compact_storage": "CompactStorage"
 }

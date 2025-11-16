@@ -33,7 +33,6 @@
     "fabricloader": "${mod_fabric_loader_minimum}",
     "fabric": "*",
     "minecraft": "~1.20",
-    "java": ">=17",
-    "trinkets": ">=3.7"
+    "java": ">=17"
   }
 }

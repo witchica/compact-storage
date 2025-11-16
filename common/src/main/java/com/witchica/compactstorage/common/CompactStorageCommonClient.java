@@ -14,7 +14,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import org.lwjgl.glfw.GLFW;
 
 public class CompactStorageCommonClient {
-    public static final KeyMapping KEY_BINDING_BACKPACK = new KeyMapping("key.compact_storage.backpack", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_U, "key.categories.misc");
+    public static final KeyMapping KEY_BINDING_BACKPACK = new KeyMapping("key.compact_storage.backpack", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_U, "key.categories.compact_storage");
 
     public static void clientSetupEvent(Minecraft minecraft) {
         MenuRegistry.registerScreenFactory(CompactStorage.COMPACT_CHEST_SCREEN_HANDLER.get(), CompactChestScreen::new);
