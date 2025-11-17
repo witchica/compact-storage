@@ -8,6 +8,7 @@ import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
@@ -29,8 +30,8 @@ public class CompactStorageForgeClient {
 
     @SubscribeEvent
     public static void onPlayer(EntityRenderersEvent.AddLayers event) {
-        for(String skin : event.getSkins()) {
-            PlayerRenderer renderer =  event.getSkin(skin);
+        for(PlayerSkin.Model skin : event.getSkins()) {
+            PlayerRenderer renderer =  event.getPlayerSkin(skin);
             if(renderer != null) {
                 renderer.addLayer(new BackpackFeatureRenderer(renderer, event.getContext().getItemInHandRenderer()));
             }

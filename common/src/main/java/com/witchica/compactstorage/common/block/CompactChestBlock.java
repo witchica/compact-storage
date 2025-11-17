@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.common.block;
 
+import com.mojang.serialization.MapCodec;
 import com.witchica.compactstorage.common.CompactStorage;
 import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.entity.CompactChestBlockEntity;
@@ -52,12 +53,17 @@ public class CompactChestBlock extends BaseEntityBlock {
             Direction.SOUTH, Direction.WEST);
 
     public static final VoxelShape CHEST_SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
-    private final CompactStorageUtil.StorageVisualTypes visualType;
+    private  CompactStorageUtil.StorageVisualTypes visualType;
+    public static MapCodec<? extends BaseEntityBlock> CODEC = simpleCodec(CompactChestBlock::new);
 
-    public CompactChestBlock(CompactStorageUtil.StorageVisualTypes visualType) {
-        super((visualType.isWooden() ? Properties.copy(Blocks.CHEST) : Properties.copy(Blocks.CHEST).strength(2f, 5f)).noOcclusion());
-        this.visualType = visualType;
+    public CompactChestBlock(Properties properties) {
+        super(properties);
         registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH));
+    }
+
+    public CompactChestBlock setVisualType(CompactStorageUtil.StorageVisualTypes visualType) {
+        this.visualType = visualType;
+        return this;
     }
 
     @Override
@@ -68,6 +74,11 @@ public class CompactChestBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
         builder.add(FACING);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override

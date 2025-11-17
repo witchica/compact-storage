@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.common.block;
 
+import com.mojang.serialization.MapCodec;
 import com.witchica.compactstorage.common.CompactStorage;
 import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.block.entity.CompactBarrelBlockEntity;
@@ -29,10 +30,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -50,12 +48,17 @@ public class CompactBarrelBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
     public static final BooleanProperty OPEN = BooleanProperty.create("open");
     public static final BooleanProperty RETAINING = BooleanProperty.create("retaining");
-    private final CompactStorageUtil.StorageVisualTypes visualType;
+    private CompactStorageUtil.StorageVisualTypes visualType;
+    public static MapCodec<? extends BaseEntityBlock> CODEC = simpleCodec(CompactBarrelBlock::new);
 
-    public CompactBarrelBlock(CompactStorageUtil.StorageVisualTypes visualType) {
-        super(visualType.isWooden() ? Properties.copy(Blocks.BARREL) : Properties.copy(Blocks.BARREL).strength(2f, 5f));
-        this.visualType = visualType;
+    public CompactBarrelBlock(Properties properties) {
+        super(properties);
         registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(OPEN, false).setValue(RETAINING, false));
+    }
+
+    public CompactBarrelBlock setVisualType(CompactStorageUtil.StorageVisualTypes visualType) {
+        this.visualType = visualType;
+        return this;
     }
 
     @Override
@@ -134,6 +137,11 @@ public class CompactBarrelBlock extends BaseEntityBlock {
 
     public void openMenu(Level level, Player player, BlockPos pos, BlockState state, InteractionHand hand) {
         MenuRegistry.openExtendedMenu((ServerPlayer) player, CompactStorageMenuProvider.fromType(InventoryOpenSource.CHEST_BARREL, Optional.of(pos), Optional.empty(), this.getName()));
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override

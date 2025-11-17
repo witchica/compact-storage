@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.common.block;
 
+import com.mojang.serialization.MapCodec;
 import com.witchica.compactstorage.common.CompactStorage;
 import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
@@ -33,15 +34,26 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 public class DrumBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = DirectionProperty.create("facing");
     public static final BooleanProperty RETAINING = BooleanProperty.create("retaining");
-    private final CompactStorageUtil.StorageVisualTypes type;
+    private  CompactStorageUtil.StorageVisualTypes type;
+    public static final MapCodec<? extends BaseEntityBlock> CODEC = simpleCodec(DrumBlock::new);
 
-    public DrumBlock(CompactStorageUtil.StorageVisualTypes type) {
-        super(type.isWooden() ? Properties.copy(Blocks.BARREL) : Properties.copy(Blocks.BARREL).strength(2f, 5f));
+    public DrumBlock(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
+    public DrumBlock setVisualType(CompactStorageUtil.StorageVisualTypes type) {
         this.type = type;
+        return this;
     }
 
     @Nullable

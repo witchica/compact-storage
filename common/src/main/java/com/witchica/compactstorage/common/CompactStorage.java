@@ -33,7 +33,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -138,7 +140,7 @@ public class CompactStorage {
             }
 
             COMPACT_CHEST_BLOCKS[i] = BLOCKS.register(chestName, () ->
-                    new CompactChestBlock(type)
+                    new CompactChestBlock((type.isWooden() ? BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST) : BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST).strength(2f, 5f)).noOcclusion()).setVisualType(type)
             );
             ITEMS.register(chestName, () ->
                     new BlockItem(COMPACT_CHEST_BLOCKS[index].get(), new Item.Properties())
@@ -157,7 +159,7 @@ public class CompactStorage {
 
 
             COMPACT_BARREL_BLOCKS[i] = BLOCKS.register(barrelName, () ->
-                    new CompactBarrelBlock(type));
+                    new CompactBarrelBlock(type.isWooden() ? BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL) : BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL).strength(2f, 5f)).setVisualType(type));
 
             ITEMS.register(barrelName, () ->
                     new BlockItem(COMPACT_BARREL_BLOCKS[index].get(), new Item.Properties())
@@ -168,7 +170,7 @@ public class CompactStorage {
             }
 
             DRUM_BLOCKS[index] = BLOCKS.register(drumName, () ->
-                    new DrumBlock(type));
+                    new DrumBlock(type.isWooden() ? BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL) : BlockBehaviour.Properties.ofFullCopy(Blocks.BARREL).strength(2f, 5f)).setVisualType(type));
 
             ITEMS.register(drumName, () ->
                     new BlockItem(DRUM_BLOCKS[index].get(), new Item.Properties())

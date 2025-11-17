@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
@@ -36,9 +37,17 @@ public class BackpackFeatureRenderer extends RenderLayer<AbstractClientPlayer, P
             return;
         }
 
-        // Hide for cape
-        if(livingEntity.isCapeLoaded() && livingEntity.isModelPartShown(PlayerModelPart.CAPE) && livingEntity.getCloakTextureLocation() != null) {
+        //hide if invisible
+        if(livingEntity.isInvisible()) {
             return;
+        }
+
+        // Hide for cape
+        if (livingEntity.isModelPartShown(PlayerModelPart.CAPE)) {
+            PlayerSkin playerSkin = livingEntity.getSkin();
+            if (playerSkin.capeTexture() != null) {
+                return;
+            }
         }
 
         Optional<ItemStack> backpack = CompactStoragePlatform.getBackpackToRender(livingEntity);
