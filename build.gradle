@@ -1,6 +1,7 @@
 plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.6-SNAPSHOT" apply false
+    id 'dev.architectury.loom' version '1.11-SNAPSHOT' apply false
+    id 'architectury-plugin' version '3.4-SNAPSHOT'
+    id 'com.gradleup.shadow' version '8.3.6' apply false
 }
 
 architectury {
@@ -81,9 +82,9 @@ allprojects {
                     "mod_neo_loader_version": rootProject.mod_neo_loader_version,
                     "mod_neo_version": rootProject.mod_neo_version,
                     "mod_neo_minecraft_range": rootProject.mod_neo_minecraft_range,
-                    "mod_forge_loader_version": rootProject.mod_neo_loader_version,
-                    "mod_forge_version": rootProject.mod_neo_version,
-                    "mod_forge_minecraft_range": rootProject.mod_neo_minecraft_range,
+                    "mod_forge_loader_version": rootProject.mod_forge_loader_version,
+                    "mod_forge_version": rootProject.mod_forge_version,
+                    "mod_forge_minecraft_range": rootProject.mod_forge_minecraft_range,
                     "logo_file": rootProject.logo_file,
                     "architectury_version": rootProject.architectury_version
         }

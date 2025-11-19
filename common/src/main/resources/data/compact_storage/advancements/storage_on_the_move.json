@@ -2,7 +2,7 @@
   "parent": "compact_storage:barrel_me_this",
   "display": {
     "icon": {
-      "id": "compact_storage:backpack_yellow"
+      "item": "compact_storage:backpack_yellow"
     },
     "title": {
       "translate": "text.compact_storage.advancements.storage_on_the_move",
