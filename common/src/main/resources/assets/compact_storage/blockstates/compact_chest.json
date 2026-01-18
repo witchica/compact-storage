@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "compact_storage:block/compact_chest"
+    },
+    "facing=east": {
+      "model": "compact_storage:block/compact_chest"
+    },
+    "facing=south": {
+      "model": "compact_storage:block/compact_chest"
+    },
+    "facing=west": {
+      "model": "compact_storage:block/compact_chest"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+[versions]
+# See https://maven.twelveiterations.com/service/rest/repository/browse/maven-public/net/blay09/mods/balm-common/
+balm = "21.11.3"
+minecraft = "1.21.11"
+# See https://projects.neoforged.net/neoforged/neoform
+neoForm = "1.21.11-20251209.172050"
+# See https://projects.neoforged.net/neoforged/neoforge
+neoForge = "21.11.13-beta"
+# See https://files.minecraftforge.net
+forge = "61.0.3"
+# See https://fabricmc.net/develop/
+fabricApi = "0.140.2+1.21.11"
+fabricLoader = "0.18.3"
+
+[libraries]
+minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
+# Parchment adds human-readable names to parameters. You can find the latest version at: https://parchmentmc.org/docs/getting-started
+parchment = { module = "org.parchmentmc.data:parchment-1.21.10", version = "2025.10.12" }
+
+balmCommon = { module = "net.blay09.mods:balm-common", version.ref = "balm" }
+balmNeoForge = { module = "net.blay09.mods:balm-neoforge", version.ref = "balm" }
+balmForge = { module = "net.blay09.mods:balm-forge", version.ref = "balm" }
+balmFabric = { module = "net.blay09.mods:balm-fabric", version.ref = "balm" }
+
+neoForm = { module = "net.neoforged:neoform", version.ref = "neoForm" }
+neoForge = { module = "net.neoforged:neoforge", version.ref = "neoForge" }
+forge = { module = "net.minecraftforge:forge", version.ref = "forge" }
+fabricApi = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabricApi" }
+fabricLoader = { module = "net.fabricmc:fabric-loader", version.ref = "fabricLoader" }
+
+mixin = { module = "org.spongepowered:mixin", version = "0.8.7" }
+
+[plugins]
+fabricLoom = { id = "fabric-loom", version = "1.13-SNAPSHOT" }
+modDevGradle = { id = "net.neoforged.moddev", version = "2.0.107" }
+forgeGradle = { id = "net.minecraftforge.gradle", version = "[6.0.25,6.2)" }
+mixin = { id = "org.spongepowered.mixin", version = "0.7-SNAPSHOT" }
+curseForgeGradle = { id = "net.darkhax.curseforgegradle", version = "1.1.26" }
+modrinthMinotaur = { id = "com.modrinth.minotaur", version = "2.+" }

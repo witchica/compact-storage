@@ -1,0 +1,26 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "TST",
+        "TCT",
+        "TLT"
+    ],
+    "key": {
+        "T": {
+            "item": "minecraft:stick"
+        },
+        "S": {
+            "item": "minecraft:string"
+        },
+        "C": {
+            "item": "minecraft:chest"
+        },
+        "L": {
+            "tag": "minecraft:warped_stems"
+        }
+    },
+    "result": {
+      "item": "compact_storage:mangrove_pack_frame",
+        "count": 1
+    }
+}

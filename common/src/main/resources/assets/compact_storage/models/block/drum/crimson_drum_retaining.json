@@ -1,0 +1,7 @@
+{
+  "parent": "compact_storage:block/barrel/compact_barrel_overlay",
+  "textures": {
+    "barrel": "compact_storage:block/drum/crimson_drum",
+    "overlay": "compact_storage:block/drum/drum_retaining_overlay"
+  }
+}

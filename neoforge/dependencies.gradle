@@ -1,0 +1,5 @@
+dependencies {
+    implementation(libs.balmNeoForge) {
+        changing = libs.versions.balm.get().contains("SNAPSHOT")
+    }
+}

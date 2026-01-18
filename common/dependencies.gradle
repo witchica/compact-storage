@@ -1,0 +1,5 @@
+dependencies {
+    implementation(libs.balmCommon) {
+        changing = libs.versions.balm.get().endsWith("SNAPSHOT")
+    }
+}

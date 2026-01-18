@@ -1,0 +1,15 @@
+plugins {
+    alias libs.plugins.fabricLoom apply(false)
+    alias libs.plugins.modDevGradle apply(false)
+    alias libs.plugins.curseForgeGradle apply(false)
+    alias libs.plugins.modrinthMinotaur apply(false)
+}
+
+subprojects {
+    configurations.configureEach {
+        resolutionStrategy {
+            cacheChangingModulesFor 60, 'seconds'
+            cacheDynamicVersionsFor 60, 'seconds'
+        }
+    }
+}
