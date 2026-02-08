@@ -9,6 +9,7 @@ import com.witchica.compactstorage.common.item.BackpackItem;
 import com.witchica.compactstorage.common.util.CompactStorageInventoryImpl;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
 import com.witchica.compactstorage.common.util.InventoryOpenSource;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;

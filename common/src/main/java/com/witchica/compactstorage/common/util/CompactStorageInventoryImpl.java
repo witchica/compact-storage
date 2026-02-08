@@ -1,6 +1,7 @@
 package com.witchica.compactstorage.common.util;
 
 import com.witchica.compactstorage.common.item.StorageUpgradeItem;
+import com.witchica.compactstorage.common.screen.CompactChestScreenHandler;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

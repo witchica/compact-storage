@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.common.block;
 
+import com.witchica.compactstorage.CompactStoragePlatform;
 import com.witchica.compactstorage.common.CompactStorage;
 import com.witchica.compactstorage.common.block.entity.DrumBlockEntity;
 import com.witchica.compactstorage.common.util.CompactStorageUtil;
@@ -88,7 +89,7 @@ public class DrumBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new DrumBlockEntity(pos, state);
+        return CompactStoragePlatform.drumBlockEntityProvider().create(pos, state);
     }
 
     public void extractItem(Level world, BlockPos pos, Player player) {
