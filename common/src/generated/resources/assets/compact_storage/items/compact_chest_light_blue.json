@@ -1,0 +1,10 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "compact_storage:item/compact_chest_light_blue",
+    "model": {
+      "type": "minecraft:chest",
+      "texture": "compact_storage:light_blue_chest"
+    }
+  }
+}

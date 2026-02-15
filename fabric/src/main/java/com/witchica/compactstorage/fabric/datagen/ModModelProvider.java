@@ -4,9 +4,9 @@ import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
-import net.minecraft.client.data.models.model.*;
-import com.witchica.compactstorage.block.ModBlocks;
-import com.witchica.compactstorage.item.ModItems;
+import com.witchica.compactstorage.block.CompactStorageBlocks;
+import net.minecraft.resources.Identifier;
+import util.StorageTypes;
 
 public class ModModelProvider extends FabricModelProvider {
     public ModModelProvider(FabricDataOutput output) {
@@ -15,6 +15,10 @@ public class ModModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockModelGenerators blockStateModelGenerator) {
+        for(StorageTypes type : StorageTypes.values()) {
+            blockStateModelGenerator.createChest(CompactStorageBlocks.metalCompactChests.get(type).asBlock(), type.getRecipeData().particle(), Identifier.fromNamespaceAndPath("compact_storage", type.getName() +"_chest"), false);
+        }
+
     }
 
     @Override

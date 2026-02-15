@@ -1,11 +1,15 @@
 package com.witchica.compactstorage.block.entity;
 
 import com.mojang.serialization.Codec;
+import com.witchica.compactstorage.menu.CompactStorageMenuData;
 import com.witchica.compactstorage.menu.CompactStorageMenuTypes;
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
+import net.blay09.mods.balm.world.BalmMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -13,23 +17,38 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
+import util.CompactStorageOpeningSource;
 
-public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEntity {
+import java.util.Optional;
+
+public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEntity implements BalmMenuProvider<@NotNull CompactStorageMenuData> {
     private NonNullList<ItemStack> items;
 
     private int inventoryWidth = 9;
     private int inventoryHeight = 3;
 
-    public BaseCompactStorageBlockEntity(BlockPos pos, BlockState blockState) {
-        super(ModBlockEntities.COMPACT_CHEST_ENTITY.value(), pos, blockState);
+    public BaseCompactStorageBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
         items = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
     }
     public static void ticker(Level level, BlockPos blockPos, BlockState blockState, BaseCompactStorageBlockEntity itemStacks) {
 
+    }
+
+    @Override
+    public @NotNull CompactStorageMenuData getScreenOpeningData(ServerPlayer player) {
+        return CompactStorageMenuData.ofBlock(getBlockPos());
+    }
+
+    @Override
+    public StreamCodec<RegistryFriendlyByteBuf, @NotNull CompactStorageMenuData> getScreenStreamCodec() {
+        return CompactStorageMenuData.STREAM_CODEC;
     }
 
     @Override
@@ -44,7 +63,7 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
 
     @Override
     protected AbstractContainerMenu createMenu(int i, Inventory inventory) {
-        return new GenericCompactStorageMenu(CompactStorageMenuTypes.COMPACT_STORAGE_MENU, i, inventory, this);
+        return new GenericCompactStorageMenu(i, inventory, CompactStorageMenuData.ofBlock(getBlockPos()));
     }
 
     @Override

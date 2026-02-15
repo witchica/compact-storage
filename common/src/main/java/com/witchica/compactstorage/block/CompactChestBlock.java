@@ -3,11 +3,25 @@ package com.witchica.compactstorage.block;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.witchica.compactstorage.block.entity.BaseCompactStorageBlockEntity;
-import com.witchica.compactstorage.block.entity.ModBlockEntities;
+import com.witchica.compactstorage.block.entity.CompactChestBlockEntity;
+import com.witchica.compactstorage.block.entity.CompactStorageBlockEntities;
+import com.witchica.compactstorage.menu.CompactStorageMenuTypes;
+import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
+import com.witchica.compactstorage.util.StorageTypeProvider;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.world.BalmMenuProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.animal.feline.Cat;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
@@ -23,15 +37,19 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import util.CompactStorageOpeningSource;
 import util.StorageTypes;
 
 import java.util.List;
+import java.util.Optional;
 
-public class CompactChestBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
+public class CompactChestBlock extends BaseEntityBlock implements SimpleWaterloggedBlock, StorageTypeProvider {
     public static final EnumProperty<@NotNull Direction> FACING = EnumProperty.create("facing", Direction.class, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -45,7 +63,7 @@ public class CompactChestBlock extends BaseEntityBlock implements SimpleWaterlog
         this.registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
-    public StorageTypes getStorageType() {
+    public @NonNull StorageTypes getStorageType() {
         return this.storageType;
     }
 
@@ -87,7 +105,7 @@ public class CompactChestBlock extends BaseEntityBlock implements SimpleWaterlog
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide() ? createTickerHelper(blockEntityType, ModBlockEntities.COMPACT_CHEST_ENTITY.value(), BaseCompactStorageBlockEntity::ticker) : null;
+        return level.isClientSide() ? createTickerHelper(blockEntityType, CompactStorageBlockEntities.COMPACT_CHEST_ENTITY.value(), BaseCompactStorageBlockEntity::ticker) : null;
     }
 
     @Override
@@ -102,7 +120,7 @@ public class CompactChestBlock extends BaseEntityBlock implements SimpleWaterlog
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new BaseCompactStorageBlockEntity(blockPos, blockState)    ;
+        return new CompactChestBlockEntity(blockPos, blockState);
     }
 
     @Override
@@ -130,5 +148,15 @@ public class CompactChestBlock extends BaseEntityBlock implements SimpleWaterlog
         }
 
         return false;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if(!level.isClientSide()) {
+            Balm.networking().openMenu(player, getMenuProvider(state, level, pos));
+            return InteractionResult.SUCCESS;
+        }
+
+        return super.useWithoutItem(state, level, pos, player, hitResult);
     }
 }

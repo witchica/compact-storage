@@ -5,6 +5,7 @@ import com.mojang.math.Axis;
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.block.CompactChestBlock;
 import com.witchica.compactstorage.block.entity.BaseCompactStorageBlockEntity;
+import com.witchica.compactstorage.block.entity.CompactChestBlockEntity;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.object.chest.ChestModel;
 import net.minecraft.client.renderer.Sheets;
@@ -28,7 +29,7 @@ import util.StorageTypes;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<BaseCompactStorageBlockEntity, CompactChestBlockEntityRenderer.CompactChestRenderState> {
+public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<CompactChestBlockEntity, CompactChestBlockEntityRenderer.CompactChestRenderState> {
     public static class CompactChestRenderState extends BlockEntityRenderState {
         float lidAngle;
         float rotation;
@@ -59,7 +60,7 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Base
     }
 
     @Override
-    public void extractRenderState(BaseCompactStorageBlockEntity blockEntity, CompactChestRenderState renderState, float partialTick, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
+    public void extractRenderState(CompactChestBlockEntity blockEntity, CompactChestRenderState renderState, float partialTick, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
 
         if(blockEntity != null) {

@@ -1,0 +1,10 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "compact_storage:item/compact_chest_magenta",
+    "model": {
+      "type": "minecraft:chest",
+      "texture": "compact_storage:magenta_chest"
+    }
+  }
+}

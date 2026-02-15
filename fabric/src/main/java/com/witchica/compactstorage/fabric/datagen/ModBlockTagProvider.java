@@ -3,8 +3,6 @@ package com.witchica.compactstorage.fabric.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
-import com.witchica.compactstorage.block.ModBlocks;
-import com.witchica.compactstorage.tag.ModBlockTags;
 
 import java.util.concurrent.CompletableFuture;
 

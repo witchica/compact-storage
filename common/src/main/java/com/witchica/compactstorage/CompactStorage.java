@@ -1,15 +1,14 @@
 package com.witchica.compactstorage;
 
-import com.mojang.datafixers.DataFix;
-import com.mojang.datafixers.DataFixerBuilder;
-import com.witchica.compactstorage.block.entity.ModBlockEntities;
+import com.witchica.compactstorage.block.entity.CompactStorageBlockEntities;
+import com.witchica.compactstorage.menu.CompactStorageMenuTypes;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.witchica.compactstorage.block.ModBlocks;
-import com.witchica.compactstorage.item.ModItems;
+import com.witchica.compactstorage.block.CompactStorageBlocks;
+import com.witchica.compactstorage.item.CompactStorageItems;
 
 public class CompactStorage {
 
@@ -28,10 +27,11 @@ public class CompactStorage {
     public static void initialize(BalmRegistrars registrars) {
         Balm.config().registerConfig(CompactStorageConfig.class);
 
-        registrars.blocks(ModBlocks::initialize);
-        registrars.items(ModItems::initializeItems);
-        registrars.creativeModeTabs(ModItems::initializeCreativeTabs);
-        registrars.blockEntityTypes(ModBlockEntities::initialize);
+        registrars.blocks(CompactStorageBlocks::initialize);
+        registrars.items(CompactStorageItems::initializeItems);
+        registrars.creativeModeTabs(CompactStorageItems::initializeCreativeTabs);
+        registrars.blockEntityTypes(CompactStorageBlockEntities::initialize);
+        registrars.menuTypes(CompactStorageMenuTypes::initialize);
     }
 
 }

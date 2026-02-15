@@ -1,6 +1,0 @@
-{
-  "parent": "compact_storage:block/barrel/compact_barrel",
-  "textures": {
-    "barrel": "compact_storage:block/drum/pink_drum"
-  }
-}
