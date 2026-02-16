@@ -28,7 +28,6 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class StorageTypes {
-
     public record RecipeData(Optional<ItemLike> planks, Optional<TagKey<Block>> log, Optional<ItemLike> slab, Optional<ItemLike> wool, Optional<ItemLike> dye, Block particle) {
         public RecipeData(ItemLike wool, ItemLike dye, Block particle) {
             this(Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(wool), Optional.of(dye), particle);
@@ -64,6 +63,7 @@ public class StorageTypes {
     @Nullable
     private WoodType woodType;
     private Vector2i uiCoords;
+    private int uiTitleColor;
 
     public StorageTypes name(String name) {
         this.name = name;
@@ -170,6 +170,15 @@ public class StorageTypes {
         return canDye;
     }
 
+    public StorageTypes setUiTitleColor(int color) {
+        this.uiTitleColor = color;
+        return this;
+    }
+
+    public int getUiTitleColor() {
+        return uiTitleColor;
+    }
+
     @Nullable
     public DyeColor getDyeColor() {
         return dyeColor;
@@ -258,35 +267,35 @@ public class StorageTypes {
     public static StorageTypes BAMBOO;
 
     static {
-        WHITE = register(new StorageTypes().name("white").recipe(new RecipeData(Blocks.WHITE_WOOL, Items.WHITE_DYE, Blocks.WHITE_CONCRETE)).setMetal().setDyeable(DyeColor.WHITE)).inventoryBackground(2, 3);
-        ORANGE = register(new StorageTypes().name("orange").recipe(new RecipeData(Blocks.ORANGE_WOOL, Items.ORANGE_DYE, Blocks.ORANGE_CONCRETE)).setMetal().setDyeable(DyeColor.ORANGE)).inventoryBackground(6, 2);
-        MAGENTA = register(new StorageTypes().name("magenta").recipe(new RecipeData(Blocks.MAGENTA_WOOL, Items.MAGENTA_DYE, Blocks.MAGENTA_CONCRETE)).setDyeable(DyeColor.MAGENTA)).inventoryBackground(5, 2);
-        LIGHT_BLUE = register(new StorageTypes().name("light_blue").recipe(new RecipeData(Blocks.LIGHT_BLUE_WOOL, Items.LIGHT_BLUE_DYE, Blocks.LIGHT_BLUE_CONCRETE)).setDyeable(DyeColor.LIGHT_BLUE)).inventoryBackground(2, 2);
-        YELLOW = register(new StorageTypes().name("yellow").recipe(new RecipeData(Blocks.YELLOW_WOOL, Items.YELLOW_DYE, Blocks.YELLOW_CONCRETE)).setDyeable(DyeColor.YELLOW)).inventoryBackground(3, 3);
-        LIME = register(new StorageTypes().name("lime").recipe(new RecipeData(Blocks.LIME_WOOL, Items.LIME_DYE, Blocks.LIME_CONCRETE)).setDyeable(DyeColor.LIME)).inventoryBackground(4, 2);
-        PINK = register(new StorageTypes().name("pink").recipe(new RecipeData(Blocks.PINK_WOOL, Items.PINK_DYE, Blocks.PINK_CONCRETE)).setDyeable(DyeColor.PINK)).inventoryBackground(7, 2);
-        GRAY = register(new StorageTypes().name("gray").recipe(new RecipeData(Blocks.GRAY_WOOL, Items.GRAY_DYE, Blocks.GRAY_CONCRETE)).setDyeable(DyeColor.GRAY)).inventoryBackground(0, 2);
-        LIGHT_GRAY = register(new StorageTypes().name("light_gray").recipe(new RecipeData(Blocks.LIGHT_GRAY_WOOL, Items.LIGHT_GRAY_DYE, Blocks.LIGHT_GRAY_CONCRETE)).setDyeable(DyeColor.LIGHT_GRAY)).inventoryBackground(3, 2);
-        CYAN = register(new StorageTypes().name("cyan").recipe(new RecipeData(Blocks.CYAN_WOOL, Items.CYAN_DYE, Blocks.CYAN_CONCRETE)).setDyeable(DyeColor.CYAN)).inventoryBackground(7, 1);
-        PURPLE = register(new StorageTypes().name("purple").recipe(new RecipeData(Blocks.PURPLE_WOOL, Items.PURPLE_DYE, Blocks.PURPLE_CONCRETE)).setDyeable(DyeColor.PURPLE)).inventoryBackground(0, 3);
-        BLUE = register(new StorageTypes().name("blue").recipe(new RecipeData(Blocks.BLUE_WOOL, Items.BLUE_DYE, Blocks.BLUE_CONCRETE)).setDyeable(DyeColor.BLUE)).inventoryBackground(5, 1);
-        BROWN = register(new StorageTypes().name("brown").recipe(new RecipeData(Blocks.BROWN_WOOL, Items.BROWN_DYE, Blocks.BROWN_CONCRETE)).setDyeable(DyeColor.BROWN)).inventoryBackground(6, 1);
-        GREEN = register(new StorageTypes().name("green").recipe(new RecipeData(Blocks.GREEN_WOOL, Items.GREEN_DYE, Blocks.GREEN_CONCRETE)).setDyeable(DyeColor.GREEN)).inventoryBackground(1, 2);
-        RED = register(new StorageTypes().name("red").recipe(new RecipeData(Blocks.RED_WOOL, Items.RED_DYE, Blocks.RED_CONCRETE)).setDyeable(DyeColor.RED)).inventoryBackground(1, 3);
-        BLACK = register(new StorageTypes().name("black").recipe(new RecipeData(Blocks.BLACK_WOOL, Items.BLACK_DYE, Blocks.BLACK_CONCRETE)).setDyeable(DyeColor.BLACK)).inventoryBackground(4, 1);
+        WHITE = register(new StorageTypes().name("white").recipe(new RecipeData(Blocks.WHITE_WOOL, Items.WHITE_DYE, Blocks.WHITE_CONCRETE)).setMetal().setDyeable(DyeColor.WHITE)).inventoryBackground(2, 3).setUiTitleColor(0x1b1b1e);
+        ORANGE = register(new StorageTypes().name("orange").recipe(new RecipeData(Blocks.ORANGE_WOOL, Items.ORANGE_DYE, Blocks.ORANGE_CONCRETE)).setMetal().setDyeable(DyeColor.ORANGE)).inventoryBackground(6, 2).setUiTitleColor(0x8e2818);
+        MAGENTA = register(new StorageTypes().name("magenta").recipe(new RecipeData(Blocks.MAGENTA_WOOL, Items.MAGENTA_DYE, Blocks.MAGENTA_CONCRETE)).setDyeable(DyeColor.MAGENTA)).inventoryBackground(5, 2).setUiTitleColor(0x64185c);
+        LIGHT_BLUE = register(new StorageTypes().name("light_blue").recipe(new RecipeData(Blocks.LIGHT_BLUE_WOOL, Items.LIGHT_BLUE_DYE, Blocks.LIGHT_BLUE_CONCRETE)).setDyeable(DyeColor.LIGHT_BLUE)).inventoryBackground(2, 2).setUiTitleColor(0x185374);
+        YELLOW = register(new StorageTypes().name("yellow").recipe(new RecipeData(Blocks.YELLOW_WOOL, Items.YELLOW_DYE, Blocks.YELLOW_CONCRETE)).setDyeable(DyeColor.YELLOW)).inventoryBackground(3, 3).setUiTitleColor(0x927218);
+        LIME = register(new StorageTypes().name("lime").recipe(new RecipeData(Blocks.LIME_WOOL, Items.LIME_DYE, Blocks.LIME_CONCRETE)).setDyeable(DyeColor.LIME)).inventoryBackground(4, 2).setUiTitleColor(0x286418);
+        PINK = register(new StorageTypes().name("pink").recipe(new RecipeData(Blocks.PINK_WOOL, Items.PINK_DYE, Blocks.PINK_CONCRETE)).setDyeable(DyeColor.PINK)).inventoryBackground(7, 2).setUiTitleColor(0x89324c);
+        GRAY = register(new StorageTypes().name("gray").recipe(new RecipeData(Blocks.GRAY_WOOL, Items.GRAY_DYE, Blocks.GRAY_CONCRETE)).setDyeable(DyeColor.GRAY)).inventoryBackground(0, 2).setUiTitleColor(0x181818);
+        LIGHT_GRAY = register(new StorageTypes().name("light_gray").recipe(new RecipeData(Blocks.LIGHT_GRAY_WOOL, Items.LIGHT_GRAY_DYE, Blocks.LIGHT_GRAY_CONCRETE)).setDyeable(DyeColor.LIGHT_GRAY)).inventoryBackground(3, 2).setUiTitleColor(0x41413c);
+        CYAN = register(new StorageTypes().name("cyan").recipe(new RecipeData(Blocks.CYAN_WOOL, Items.CYAN_DYE, Blocks.CYAN_CONCRETE)).setDyeable(DyeColor.CYAN)).inventoryBackground(7, 1).setUiTitleColor(0x184040);
+        PURPLE = register(new StorageTypes().name("purple").recipe(new RecipeData(Blocks.PURPLE_WOOL, Items.PURPLE_DYE, Blocks.PURPLE_CONCRETE)).setDyeable(DyeColor.PURPLE)).inventoryBackground(0, 3).setUiTitleColor(0x301857);
+        BLUE = register(new StorageTypes().name("blue").recipe(new RecipeData(Blocks.BLUE_WOOL, Items.BLUE_DYE, Blocks.BLUE_CONCRETE)).setDyeable(DyeColor.BLUE)).inventoryBackground(5, 1).setUiTitleColor(0x151541);
+        BROWN = register(new StorageTypes().name("brown").recipe(new RecipeData(Blocks.BROWN_WOOL, Items.BROWN_DYE, Blocks.BROWN_CONCRETE)).setDyeable(DyeColor.BROWN)).inventoryBackground(6, 1).setUiTitleColor(0x170000);
+        GREEN = register(new StorageTypes().name("green").recipe(new RecipeData(Blocks.GREEN_WOOL, Items.GREEN_DYE, Blocks.GREEN_CONCRETE)).setDyeable(DyeColor.GREEN)).inventoryBackground(1, 2).setUiTitleColor(0x182518);
+        RED = register(new StorageTypes().name("red").recipe(new RecipeData(Blocks.RED_WOOL, Items.RED_DYE, Blocks.RED_CONCRETE)).setDyeable(DyeColor.RED)).inventoryBackground(1, 3).setUiTitleColor(0x511818);
+        BLACK = register(new StorageTypes().name("black").recipe(new RecipeData(Blocks.BLACK_WOOL, Items.BLACK_DYE, Blocks.BLACK_CONCRETE)).setDyeable(DyeColor.BLACK)).inventoryBackground(4, 1).setUiTitleColor(0xfaefee);
 
-        OAK = register(new StorageTypes().setWooden(WoodType.OAK).name("oak").recipe(new RecipeData(Blocks.OAK_PLANKS, BlockTags.OAK_LOGS, Blocks.OAK_SLAB))).inventoryBackground(0, 1);
-        SPRUCE = register(new StorageTypes().setWooden(WoodType.SPRUCE).name("spruce").recipe(new RecipeData(Blocks.SPRUCE_PLANKS, BlockTags.SPRUCE_LOGS, Blocks.SPRUCE_SLAB))).inventoryBackground(1, 1);
-        BIRCH = register(new StorageTypes().setWooden(WoodType.BIRCH).name("birch").recipe(new RecipeData(Blocks.BIRCH_PLANKS, BlockTags.BIRCH_LOGS, Blocks.BIRCH_SLAB))).inventoryBackground(2, 0);
-        ACACIA = register(new StorageTypes().setWooden(WoodType.ACACIA).name("acacia").recipe(new RecipeData(Blocks.ACACIA_PLANKS, BlockTags.ACACIA_LOGS, Blocks.ACACIA_SLAB))).inventoryBackground(1, 0);
-        CHERRY = register(new StorageTypes().setWooden(WoodType.CHERRY).name("cherry").recipe(new RecipeData(Blocks.CHERRY_PLANKS, BlockTags.CHERRY_LOGS, Blocks.CHERRY_SLAB)).soundType(SoundType.CHERRY_WOOD).backpackOpen(SoundEvents.CHERRY_WOOD_TRAPDOOR_OPEN).backpackClose(SoundEvents.CHERRY_WOOD_TRAPDOOR_CLOSE)).inventoryBackground(3, 0);
-        JUNGLE = register(new StorageTypes().setWooden(WoodType.JUNGLE).name("jungle").recipe(new RecipeData(Blocks.JUNGLE_PLANKS, BlockTags.JUNGLE_LOGS, Blocks.JUNGLE_SLAB))).inventoryBackground(6, 0);
-        DARK_OAK = register(new StorageTypes().setWooden(WoodType.DARK_OAK).name("dark_oak").recipe(new RecipeData(Blocks.DARK_OAK_PLANKS, BlockTags.DARK_OAK_LOGS, Blocks.DARK_OAK_SLAB))).inventoryBackground(5, 0);
-        PALE_OAK = register(new StorageTypes().setWooden(WoodType.PALE_OAK).name("pale_oak").recipe(new RecipeData(Blocks.PALE_OAK_PLANKS, BlockTags.PALE_OAK_LOGS, Blocks.PALE_OAK_SLAB))).inventoryBackground(4, 3);
-        CRIMSON = register(new StorageTypes().setWooden(WoodType.CRIMSON).name("crimson").recipe(new RecipeData(Blocks.CRIMSON_PLANKS, BlockTags.CRIMSON_STEMS, Blocks.CRIMSON_SLAB)).setNetherWood()).inventoryBackground(4, 0);
-        WARPED = register(new StorageTypes().setWooden(WoodType.WARPED).name("warped").recipe(new RecipeData(Blocks.WARPED_PLANKS, BlockTags.WARPED_STEMS, Blocks.WARPED_PLANKS)).setNetherWood()).inventoryBackground(2, 1);
-        MANGROVE = register(new StorageTypes().setWooden(WoodType.MANGROVE).name("mangrove").recipe(new RecipeData(Blocks.MANGROVE_PLANKS, BlockTags.MANGROVE_LOGS, Blocks.MANGROVE_SLAB))).inventoryBackground(7, 0);
+        OAK = register(new StorageTypes().setWooden(WoodType.OAK).name("oak").recipe(new RecipeData(Blocks.OAK_PLANKS, BlockTags.OAK_LOGS, Blocks.OAK_SLAB))).inventoryBackground(0, 1).setUiTitleColor(0x4c3d26);
+        SPRUCE = register(new StorageTypes().setWooden(WoodType.SPRUCE).name("spruce").recipe(new RecipeData(Blocks.SPRUCE_PLANKS, BlockTags.SPRUCE_LOGS, Blocks.SPRUCE_SLAB))).inventoryBackground(1, 1).setUiTitleColor(0x443321);
+        BIRCH = register(new StorageTypes().setWooden(WoodType.BIRCH).name("birch").recipe(new RecipeData(Blocks.BIRCH_PLANKS, BlockTags.BIRCH_LOGS, Blocks.BIRCH_SLAB))).inventoryBackground(2, 0).setUiTitleColor(0x514f47);
+        ACACIA = register(new StorageTypes().setWooden(WoodType.ACACIA).name("acacia").recipe(new RecipeData(Blocks.ACACIA_PLANKS, BlockTags.ACACIA_LOGS, Blocks.ACACIA_SLAB))).inventoryBackground(1, 0).setUiTitleColor(0x4b473e);
+        CHERRY = register(new StorageTypes().setWooden(WoodType.CHERRY).name("cherry").recipe(new RecipeData(Blocks.CHERRY_PLANKS, BlockTags.CHERRY_LOGS, Blocks.CHERRY_SLAB)).soundType(SoundType.CHERRY_WOOD).backpackOpen(SoundEvents.CHERRY_WOOD_TRAPDOOR_OPEN).backpackClose(SoundEvents.CHERRY_WOOD_TRAPDOOR_CLOSE)).inventoryBackground(3, 0).setUiTitleColor(0x271620);
+        JUNGLE = register(new StorageTypes().setWooden(WoodType.JUNGLE).name("jungle").recipe(new RecipeData(Blocks.JUNGLE_PLANKS, BlockTags.JUNGLE_LOGS, Blocks.JUNGLE_SLAB))).inventoryBackground(6, 0).setUiTitleColor(0x3e3013);
+        DARK_OAK = register(new StorageTypes().setWooden(WoodType.DARK_OAK).name("dark_oak").recipe(new RecipeData(Blocks.DARK_OAK_PLANKS, BlockTags.DARK_OAK_LOGS, Blocks.DARK_OAK_SLAB))).inventoryBackground(5, 0).setUiTitleColor(0x292011);
+        PALE_OAK = register(new StorageTypes().setWooden(WoodType.PALE_OAK).name("pale_oak").recipe(new RecipeData(Blocks.PALE_OAK_PLANKS, BlockTags.PALE_OAK_LOGS, Blocks.PALE_OAK_SLAB))).inventoryBackground(4, 3).setUiTitleColor(0x4e4340);
+        CRIMSON = register(new StorageTypes().setWooden(WoodType.CRIMSON).name("crimson").recipe(new RecipeData(Blocks.CRIMSON_PLANKS, BlockTags.CRIMSON_STEMS, Blocks.CRIMSON_SLAB)).setNetherWood()).inventoryBackground(4, 0).setUiTitleColor(0x3f1e2d);
+        WARPED = register(new StorageTypes().setWooden(WoodType.WARPED).name("warped").recipe(new RecipeData(Blocks.WARPED_PLANKS, BlockTags.WARPED_STEMS, Blocks.WARPED_PLANKS)).setNetherWood()).inventoryBackground(2, 1).setUiTitleColor(0x452d5c);
+        MANGROVE = register(new StorageTypes().setWooden(WoodType.MANGROVE).name("mangrove").recipe(new RecipeData(Blocks.MANGROVE_PLANKS, BlockTags.MANGROVE_LOGS, Blocks.MANGROVE_SLAB))).inventoryBackground(7, 0).setUiTitleColor(0x3c2f23);
         BAMBOO = register(new StorageTypes().setWooden(WoodType.BAMBOO).name("bamboo").recipe(new RecipeData(Blocks.BAMBOO_PLANKS, BlockTags.BAMBOO_BLOCKS, Blocks.BAMBOO_SLAB))
-                .soundType(SoundType.BAMBOO_WOOD).backpackOpen(SoundEvents.BAMBOO_WOOD_TRAPDOOR_OPEN).backpackClose(SoundEvents.BAMBOO_WOOD_TRAPDOOR_CLOSE)).inventoryBackground(3, 1);
+                .soundType(SoundType.BAMBOO_WOOD).backpackOpen(SoundEvents.BAMBOO_WOOD_TRAPDOOR_OPEN).backpackClose(SoundEvents.BAMBOO_WOOD_TRAPDOOR_CLOSE)).inventoryBackground(3, 1).setUiTitleColor(0x907e3a);
     }
 }

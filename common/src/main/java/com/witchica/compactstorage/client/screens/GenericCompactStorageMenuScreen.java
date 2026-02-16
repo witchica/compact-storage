@@ -75,6 +75,12 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
+    @Override
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 0xff000000 + storageType.getUiTitleColor(), false);
+        guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, -12566464, false);
+    }
+
     public void blit9slice(GuiGraphics guiGraphics, Identifier texture, int x, int y, int width, int height, int textureOffsetX, int textureOffsetY, int segmentSize, int textureSizeX, int textureSizeY) {
         // Top Left
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture,
