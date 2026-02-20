@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.block.CompactChestBlock;
-import com.witchica.compactstorage.block.entity.BaseCompactStorageBlockEntity;
 import com.witchica.compactstorage.block.entity.CompactChestBlockEntity;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.object.chest.ChestModel;
@@ -24,7 +23,7 @@ import net.minecraft.client.resources.model.MaterialSet;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
-import util.StorageTypes;
+import com.witchica.compactstorage.data.StorageType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,13 +32,13 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
     public static class CompactChestRenderState extends BlockEntityRenderState {
         float lidAngle;
         float rotation;
-        StorageTypes type = StorageTypes.OAK;
+        StorageType type = StorageType.OAK;
     }
 
-    public static final Map<StorageTypes, Material> CHEST_MATERIALS = new HashMap<>();
+    public static final Map<StorageType, Material> CHEST_MATERIALS = new HashMap<>();
 
     static {
-        for(StorageTypes type : StorageTypes.values()) {
+        for(StorageType type : StorageType.values()) {
             CHEST_MATERIALS.put(type, Sheets.CHEST_MAPPER.apply(Identifier.fromNamespaceAndPath(CompactStorage.MOD_ID, type.getName() + "_chest")));
         }
     }
@@ -65,7 +64,7 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
 
         if(blockEntity != null) {
             renderState.rotation = blockEntity.getBlockState().getValue(CompactChestBlock.FACING).toYRot();
-            renderState.lidAngle = 0f; //TODO : lid angle
+            renderState.lidAngle = blockEntity.getOpenNess(partialTick);
             if(blockEntity.getBlockState().getBlock() instanceof CompactChestBlock compactChestBlock) {
                 renderState.type = compactChestBlock.getStorageType();
             }

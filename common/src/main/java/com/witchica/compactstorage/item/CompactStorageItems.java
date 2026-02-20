@@ -3,41 +3,56 @@ package com.witchica.compactstorage.item;
 import com.witchica.compactstorage.block.CompactStorageBlocks;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.item.BalmItemRegistrar;
+import net.blay09.mods.balm.world.item.DeferredItem;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import util.StorageTypes;
+import com.witchica.compactstorage.data.StorageType;
+import com.witchica.compactstorage.data.UpgradeType;
+import net.minecraft.world.item.CreativeModeTab;
 
 import static com.witchica.compactstorage.CompactStorage.id;
 
 public class CompactStorageItems {
+    public static Holder<CreativeModeTab> IRON_TAB;
+    public static Holder<CreativeModeTab> WOOD_TAB;
+    public static DeferredItem UPGRADE_WIDTH;
+    public static DeferredItem UPGRADE_HEIGHT;
+    public static DeferredItem UPGRADE_RETAINING;
 
     public static void initializeItems(BalmItemRegistrar items) {
-
+        UPGRADE_WIDTH = items.register(UpgradeType.WIDTH_UPGRADE.name(), (properties) -> new StorageUpgradeItem(properties, UpgradeType.WIDTH_UPGRADE)).asDeferredItem();
+        UPGRADE_HEIGHT = items.register(UpgradeType.HEIGHT_UPGRADE.name(), (properties) -> new StorageUpgradeItem(properties, UpgradeType.HEIGHT_UPGRADE)).asDeferredItem();
+        UPGRADE_RETAINING = items.register(UpgradeType.RETAINING_UPGRADE.name(), (properties) -> new StorageUpgradeItem(properties, UpgradeType.RETAINING_UPGRADE)).asDeferredItem();
     }
 
     public static void initializeCreativeTabs(BalmCreativeModeTabRegistrar creativeModeTabs) {
-        creativeModeTabs.register("metal", builder ->
+        IRON_TAB = creativeModeTabs.register("metal", builder ->
                 builder.title(Component.translatable(id("general").toLanguageKey("itemGroup")))
-                        .icon(() -> CompactStorageBlocks.metalCompactChests.get(StorageTypes.RED).createStack())
+                        .icon(() -> CompactStorageBlocks.compactChests.get(StorageType.RED).createStack())
                         .displayItems((displayParameters, output) -> {
-                            StorageTypes.stream().forEach(storageType -> {
+                            StorageType.stream().forEach(storageType -> {
                                 if(!storageType.isWooden()) {
-                                    output.accept(CompactStorageBlocks.metalCompactChests.get(storageType));
+                                    output.accept(CompactStorageBlocks.compactChests.get(storageType));
                                 }
                             });
-                        })
-        );
 
-        creativeModeTabs.register("wood", builder ->
+                            output.accept(UPGRADE_WIDTH);
+                            output.accept(UPGRADE_HEIGHT);
+                            output.accept(UPGRADE_RETAINING);
+                        })
+        ).asHolder();
+
+        WOOD_TAB = creativeModeTabs.register("wood", builder ->
                 builder.title(Component.translatable(id("wood").toLanguageKey("itemGroup")))
-                        .icon(() -> CompactStorageBlocks.metalCompactChests.get(StorageTypes.PALE_OAK).createStack())
+                        .icon(() -> CompactStorageBlocks.compactChests.get(StorageType.PALE_OAK).createStack())
                         .displayItems((displayParameters, output) -> {
-                            StorageTypes.stream().forEach(storageType -> {
+                            StorageType.stream().forEach(storageType -> {
                                 if(storageType.isWooden()) {
-                                    output.accept(CompactStorageBlocks.metalCompactChests.get(storageType));
+                                    output.accept(CompactStorageBlocks.compactChests.get(storageType));
                                 }
                             });
                         })
-        );
+        ).asHolder();
     }
 
 }

@@ -10,10 +10,10 @@ import static com.witchica.compactstorage.CompactStorage.id;
 
 public class CompactStorageKeyMappings {
 
-    public static ManagedKeyMapping yourKey;
+    public static ManagedKeyMapping backpackOpenKey;
 
     public static void initialize() {
-        yourKey = Kuma.createKeyMapping(id("your_key"))
+        backpackOpenKey = Kuma.createKeyMapping(id("backpack_open"))
                 .withDefault(InputBinding.key(InputConstants.KEY_B))
                 .handleScreenInput(event -> {
                     CompactStorage.logger.info("B was pressed - " + CompactStorage.MOD_ID);

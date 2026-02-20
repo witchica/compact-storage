@@ -4,16 +4,16 @@ import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
 import net.blay09.mods.balm.world.level.block.DiscriminatedBlocks;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
-import util.StorageTypes;
+import com.witchica.compactstorage.data.StorageType;
 
 public class CompactStorageBlocks {
 
-    public static DiscriminatedBlocks<@NotNull StorageTypes> metalCompactChests;
+    public static DiscriminatedBlocks<@NotNull StorageType> compactChests;
 
     public static void initialize(BalmBlockRegistrar blocks) {
-        metalCompactChests = blocks.registerDiscriminated(
-            StorageTypes.values(),
-            StorageTypes::chestNameFactory, CompactChestBlock::new, StorageTypes::chestProeprtiesFactory).withDefaultItems((Item.Properties::useBlockDescriptionPrefix)).asDiscriminatedBlocks();
+        compactChests = blocks.registerDiscriminated(
+            StorageType.values(),
+            StorageType::chestNameFactory, CompactChestBlock::new, StorageType::chestProeprtiesFactory).withDefaultItems((Item.Properties::useBlockDescriptionPrefix)).asDiscriminatedBlocks();
     }
 
 }

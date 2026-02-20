@@ -1,17 +1,14 @@
 package com.witchica.compactstorage.client.screens;
 
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ChestMenu;
 import org.joml.Vector2i;
-import util.StorageTypes;
+import com.witchica.compactstorage.data.StorageType;
 
 public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<GenericCompactStorageMenu> {
     public static final Identifier STANDARD_SLOT = Identifier.fromNamespaceAndPath("compact_storage", "textures/gui/slots/normal.png");
@@ -22,13 +19,16 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
     private final int playerInvSizeY;
     private final int playerInvOffsetX;
 
-    private final StorageTypes storageType;
+    private final StorageType storageType;
 
     private int inventorySizeX = 9;
     private int inventorySizeY = 3;
 
     public GenericCompactStorageMenuScreen(GenericCompactStorageMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
+
+        this.inventorySizeX = menu.inventoryWidth;
+        this.inventorySizeY = menu.inventoryHeight;
 
         this.storageType = menu.getStorageType();
         this.chestInvSizeX = 7 + 7 + (inventorySizeX * 18);
@@ -57,7 +57,7 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
         renderSlots(guiGraphics, leftPos + 7 + playerInvOffsetX, topPos + chestInvSizeY + 4 + 17 + (3 * 18) + 4, 9, 1);
     }
 
-    public void renderSlots(GuiGraphics guiGraphics, StorageTypes type, int x, int y, int slotsX, int slotsY) {
+    public void renderSlots(GuiGraphics guiGraphics, StorageType type, int x, int y, int slotsX, int slotsY) {
         renderSlots(guiGraphics, type.getSlotsTexture(), x, y, slotsX, slotsY);
     }
 

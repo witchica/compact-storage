@@ -1,4 +1,4 @@
-package util;
+package com.witchica.compactstorage.data;
 
 public enum CompactStorageOpeningSource {
     BLOCK,

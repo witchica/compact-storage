@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/template_chest",
   "textures": {
-    "particle": "minecraft:block/yellow_carpet"
+    "particle": "minecraft:block/yellow_concrete"
   }
 }

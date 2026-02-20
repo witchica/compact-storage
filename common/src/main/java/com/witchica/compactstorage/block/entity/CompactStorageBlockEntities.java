@@ -9,6 +9,6 @@ public class CompactStorageBlockEntities {
     public static Holder<BlockEntityType<CompactChestBlockEntity>> COMPACT_CHEST_ENTITY;
 
     public static void initialize(BalmBlockEntityTypeRegistrar registrar) {
-        COMPACT_CHEST_ENTITY = registrar.register("compact_chest", CompactChestBlockEntity::new, CompactStorageBlocks.metalCompactChests.values()).asHolder();
+        COMPACT_CHEST_ENTITY = registrar.register("compact_chest", CompactChestBlockEntity::new, CompactStorageBlocks.compactChests.values()).asHolder();
     }
 }
