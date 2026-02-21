@@ -18,7 +18,4 @@ public interface ResizableContainer {
     default void setHeight(int height) {
         setSize(getWidth(), height);
     }
-
-    boolean canApplyUpgrade(UpgradeType upgradeType);
-    boolean applyUpgrade(UpgradeType upgradeType);
 }

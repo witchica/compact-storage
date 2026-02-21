@@ -214,9 +214,30 @@ public class StorageType {
         return isWooden ? getName() + "_compact_chest" : "compact_chest_" + getName();
     }
 
+    public String barrelNameFactory() {
+        return isWooden ? getName() + "_compact_barrel" : "compact_barrel_" + getName();
+    }
+
+    public String itemDrumNameFactory() {
+        return getName() + "_drum";
+    }
+
     public BlockBehaviour.Properties chestProeprtiesFactory(BlockBehaviour.Properties baseBlockProperties) {
         float resistance = isWooden ? Blocks.CHEST.getExplosionResistance() : Blocks.IRON_BLOCK.getExplosionResistance();
         float destroyTime = isWooden ? Blocks.CHEST.defaultDestroyTime() : Blocks.IRON_BLOCK.defaultDestroyTime();
+
+        if(canDye) {
+            baseBlockProperties = baseBlockProperties.mapColor(getDyeColor());
+        } else
+            baseBlockProperties = baseBlockProperties.mapColor(MapColor.WOOD);
+
+
+        return baseBlockProperties.explosionResistance(resistance).destroyTime(destroyTime).sound(getSoundType()).pushReaction(PushReaction.IGNORE).ignitedByLava().noOcclusion();
+    }
+
+    public BlockBehaviour.Properties barrelPropertiesFactory(BlockBehaviour.Properties baseBlockProperties) {
+        float resistance = isWooden ? Blocks.BARREL.getExplosionResistance() : Blocks.IRON_BLOCK.getExplosionResistance();
+        float destroyTime = isWooden ? Blocks.BARREL.defaultDestroyTime() : Blocks.IRON_BLOCK.defaultDestroyTime();
 
         if(canDye) {
             baseBlockProperties = baseBlockProperties.mapColor(getDyeColor());

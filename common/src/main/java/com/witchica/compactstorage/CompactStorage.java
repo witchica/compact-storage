@@ -1,14 +1,14 @@
 package com.witchica.compactstorage;
 
-import com.witchica.compactstorage.block.entity.CompactStorageBlockEntities;
-import com.witchica.compactstorage.menu.CompactStorageMenuTypes;
+import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
+import com.witchica.compactstorage.mod.CompactStorageMenuTypes;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.witchica.compactstorage.block.CompactStorageBlocks;
-import com.witchica.compactstorage.item.CompactStorageItems;
+import com.witchica.compactstorage.mod.CompactStorageBlocks;
+import com.witchica.compactstorage.mod.CompactStorageItems;
 
 public class CompactStorage {
 

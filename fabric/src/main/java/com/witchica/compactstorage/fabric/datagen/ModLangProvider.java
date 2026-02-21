@@ -1,13 +1,12 @@
 package com.witchica.compactstorage.fabric.datagen;
 
 import com.witchica.compactstorage.CompactStorage;
-import com.witchica.compactstorage.block.CompactStorageBlocks;
-import com.witchica.compactstorage.item.CompactStorageItems;
+import com.witchica.compactstorage.mod.CompactStorageBlocks;
+import com.witchica.compactstorage.mod.CompactStorageItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
 import com.witchica.compactstorage.data.StorageType;
-import net.minecraft.resources.Identifier;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -26,6 +25,7 @@ public class ModLangProvider extends FabricLanguageProvider {
     public void generateTranslations(HolderLookup.Provider provider, TranslationBuilder translationBuilder) {
         for(StorageType type : StorageType.values()) {
             translationBuilder.add(CompactStorageBlocks.compactChests.get(type).asBlock(), snakeCaseToName(type.getName()+"_chest"));
+            translationBuilder.add(CompactStorageBlocks.compactBarrels.get(type).asBlock(), snakeCaseToName(type.getName()+"_barrel"));
         }
 
         translationBuilder.add(CompactStorageItems.UPGRADE_WIDTH.asItem(), "Storage Upgrade (Width)");

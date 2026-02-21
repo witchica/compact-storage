@@ -1,0 +1,7 @@
+{
+  "parent": "compact_storage:block/compact_barrel",
+  "textures": {
+    "barrel": "compact_storage:block/drum/white_drum",
+    "particle": "minecraft:block/white_concrete"
+  }
+}

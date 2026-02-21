@@ -1,0 +1,7 @@
+{
+  "parent": "compact_storage:block/compact_barrel_open",
+  "textures": {
+    "barrel": "compact_storage:block/barrel/purple_barrel",
+    "particle": "minecraft:block/purple_concrete"
+  }
+}

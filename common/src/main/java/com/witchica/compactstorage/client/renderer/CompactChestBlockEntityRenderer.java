@@ -68,6 +68,8 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
             if(blockEntity.getBlockState().getBlock() instanceof CompactChestBlock compactChestBlock) {
                 renderState.type = compactChestBlock.getStorageType();
             }
+        } else {
+            renderState.lidAngle = 0;
         }
     }
 

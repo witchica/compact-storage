@@ -2,6 +2,7 @@ package com.witchica.compactstorage.menu;
 
 import com.witchica.compactstorage.api.inventory.ResizableContainer;
 import com.witchica.compactstorage.api.StorageTypeProvider;
+import com.witchica.compactstorage.mod.CompactStorageMenuTypes;
 import net.blay09.mods.balm.world.inventory.QuickMove;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;

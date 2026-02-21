@@ -1,0 +1,7 @@
+{
+  "parent": "compact_storage:block/compact_barrel",
+  "textures": {
+    "barrel": "compact_storage:block/barrel/dark_oak_barrel",
+    "particle": "minecraft:block/dark_oak_planks"
+  }
+}

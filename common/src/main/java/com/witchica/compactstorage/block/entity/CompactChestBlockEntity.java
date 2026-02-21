@@ -1,29 +1,14 @@
 package com.witchica.compactstorage.block.entity;
 
 import com.witchica.compactstorage.block.CompactChestBlock;
-import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
+import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
+import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.CompoundContainer;
-import net.minecraft.world.Container;
-import net.minecraft.world.entity.ContainerUser;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ChestBlock;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.entity.ChestLidController;
-import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.entity.LidBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.ChestType;
-
-import java.util.List;
 
 public class CompactChestBlockEntity extends BaseCompactStorageBlockEntity implements LidBlockEntity {
     private Component defaultName = Component.translatable("block.compact_storage.compact_chest");
@@ -53,12 +38,12 @@ public class CompactChestBlockEntity extends BaseCompactStorageBlockEntity imple
 
     @Override
     public boolean triggerEvent(int id, int type) {
-        if (id == 1) {
+        if (id == 2) {
             this.chestLidController.shouldBeOpen(type > 0);
             return true;
+        } else {
+            return super.triggerEvent(id, type);
         }
-
-        return super.triggerEvent(id, type);
     }
 
     @Override
