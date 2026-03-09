@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.client;
 
+import com.witchica.compactstorage.client.renderer.DrumBlockEntityRenderer;
 import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
 import com.witchica.compactstorage.client.renderer.CompactChestBlockEntityRenderer;
 import com.witchica.compactstorage.client.screens.GenericCompactStorageMenuScreen;
@@ -12,6 +13,7 @@ public class CompactStorageClient {
         CompactStorageKeyMappings.initialize();
         registrars.blockEntityRenderers(balmBlockEntityRendererRegistrar -> {
             balmBlockEntityRendererRegistrar.register(CompactStorageBlockEntities.COMPACT_CHEST_ENTITY, CompactChestBlockEntityRenderer::new);
+            balmBlockEntityRendererRegistrar.register(CompactStorageBlockEntities.DRUM_BLOCK_ENTITY, DrumBlockEntityRenderer::new);
         });
 
         registrars.menuScreens(balmMenuScreenRegistrar -> {

@@ -27,7 +27,7 @@ public abstract class BaseItemDrumBlock extends BaseEntityBlock implements Stora
     private final StorageType storageType;
 
     public static final EnumProperty<Direction> FACING = EnumProperty.create("facing", Direction.class);
-    public static final BooleanProperty RETAINING = BooleanProperty.create("retaining");
+    public static final BooleanProperty RETAINING = BaseCompactStorageBlock.RETAINING;
 
     protected BaseItemDrumBlock(StorageType storageType, Properties properties) {
         super(properties);

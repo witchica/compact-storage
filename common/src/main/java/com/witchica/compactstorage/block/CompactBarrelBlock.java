@@ -23,7 +23,6 @@ import org.jspecify.annotations.Nullable;
 public class CompactBarrelBlock extends BaseCompactStorageBlock {
     public static BooleanProperty OPEN = BooleanProperty.create("open");
     public static EnumProperty<Direction> FACING = EnumProperty.create("facing", Direction.class);
-    public static BooleanProperty RETAINING = BooleanProperty.create("retaining");
 
     public static final MapCodec<CompactBarrelBlock> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(StorageType.CODEC.fieldOf("storageType").forGetter(CompactBarrelBlock::getStorageType), propertiesCodec()).apply(instance, CompactBarrelBlock::new));
 

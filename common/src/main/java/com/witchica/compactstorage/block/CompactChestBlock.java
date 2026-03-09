@@ -46,12 +46,12 @@ public class CompactChestBlock extends BaseCompactStorageBlock implements Simple
 
     public CompactChestBlock(StorageType storageType, Properties blockProperties) {
         super(storageType, blockProperties);
-        this.registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
+        this.registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(RETAINING, false));
     }
 
     @Override
     public BlockState getBlockStateOnRedye(BlockState state, DyeItem dyeItem) {
-        return CompactStorageBlocks.compactChests.get(StorageType.fromDye(dyeItem.getDyeColor())).defaultBlockState().setValue(FACING, state.getValue(FACING)).setValue(WATERLOGGED, state.getValue(WATERLOGGED));
+        return CompactStorageBlocks.compactChests.get(StorageType.fromDye(dyeItem.getDyeColor())).defaultBlockState().setValue(FACING, state.getValue(FACING)).setValue(WATERLOGGED, state.getValue(WATERLOGGED)).setValue(RETAINING, state.getValue(RETAINING));
     }
 
     @Override
@@ -62,7 +62,7 @@ public class CompactChestBlock extends BaseCompactStorageBlock implements Simple
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(FACING, WATERLOGGED);
+        builder.add(FACING, WATERLOGGED, RETAINING);
     }
 
     @Override
