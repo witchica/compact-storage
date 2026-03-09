@@ -54,7 +54,11 @@ public class DrumBlockEntityRenderer implements BlockEntityRenderer<BaseItemDrum
     public void extractRenderState(BaseItemDrumBlockEntity blockEntity, DrumBlockEntityRenderer.DrumBlockEntityRenderState renderState, float partialTick, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
         BlockEntityRenderer.super.extractRenderState(blockEntity, renderState, partialTick, cameraPosition, breakProgress);
 
-        renderState.item = blockEntity.clientItem.map(ItemStack::getItem);
+        if(blockEntity.clientItem.isPresent()) {
+            renderState.item = blockEntity.clientItem.map(ItemStack::getItem);
+        } else {
+            renderState.item = Optional.empty();
+        }
         renderState.itemCount = blockEntity.clientStoredItems;
         renderState.facing = blockEntity.getBlockState().getValue(BaseItemDrumBlock.FACING);
 

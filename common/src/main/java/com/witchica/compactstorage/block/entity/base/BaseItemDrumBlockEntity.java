@@ -1,6 +1,9 @@
 package com.witchica.compactstorage.block.entity.base;
 
 import com.mojang.serialization.Codec;
+import com.witchica.compactstorage.api.inventory.RetainingContainer;
+import com.witchica.compactstorage.api.inventory.UpgradableContainer;
+import com.witchica.compactstorage.data.UpgradeType;
 import com.witchica.compactstorage.inventory.DrumInventory;
 import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityUtils;
@@ -25,9 +28,9 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
-public class BaseItemDrumBlockEntity extends BlockEntity {
+public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableContainer, RetainingContainer {
     private DrumInventory drumInventory;
-    public Optional<ItemStack> clientItem;
+    public Optional<ItemStack> clientItem = Optional.empty();
     public int clientStackSize;
     public int clientStoredItems;
     private boolean retaining;
@@ -119,5 +122,32 @@ public class BaseItemDrumBlockEntity extends BlockEntity {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
         }
 
+    }
+
+    @Override
+    public boolean canApplyUpgrade(UpgradeType upgradeType) {
+        return upgradeType == UpgradeType.RETAINING_UPGRADE;
+    }
+
+    @Override
+    public boolean applyUpgrade(UpgradeType upgradeType) {
+        if(upgradeType == UpgradeType.RETAINING_UPGRADE) {
+            if(!this.retaining) {
+                setRetaining(true);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean isRetaining() {
+        return this.retaining;
+    }
+
+    @Override
+    public void setRetaining(boolean retaining) {
+        this.retaining = retaining;
     }
 }
