@@ -1,8 +1,8 @@
 {
-  "parent": "compact_storage:block/compact_barrel_retaining",
+  "parent": "compact_storage:block/item_drum_overlay",
   "textures": {
     "barrel": "compact_storage:block/drum/mangrove_drum",
-    "overlay": "compact_storage:block/barrel/drum_retaining_overlay",
+    "overlay": "compact_storage:block/drum/drum_retaining_overlay",
     "particle": "minecraft:block/mangrove_planks"
   }
 }

@@ -23,7 +23,8 @@ public class BarrelModelProvider {
 
     public static final ModelTemplate BARREL = block("compact_barrel", BARREL_TEXTURE, TextureSlot.PARTICLE);
     public static final ModelTemplate BARREL_OPEN = block("compact_barrel_open", BARREL_TEXTURE, TextureSlot.PARTICLE);
-    public static final ModelTemplate BARREL_RETAINING = block("compact_barrel_retaining", BARREL_TEXTURE, OVERLAY_TEXTURE, TextureSlot.PARTICLE);
+    public static final ModelTemplate BARREL_RETAINING = block("compact_barrel_overlay", BARREL_TEXTURE, OVERLAY_TEXTURE, TextureSlot.PARTICLE);
+    public static final ModelTemplate ITEM_DRUM_OVERLAY = block("item_drum_overlay", BARREL_TEXTURE, OVERLAY_TEXTURE, TextureSlot.PARTICLE);
 
     //helper method for creating Models
     private static ModelTemplate block(String parent, TextureSlot... requiredTextureKeys) {
@@ -110,7 +111,7 @@ public class BarrelModelProvider {
 
     public static void registerItemDrum(BlockModelGenerators generator, Block itemDrumBlock, TextureMapping textures) {
         Identifier normalModel = BARREL.create(itemDrumBlock, textures, generator.modelOutput);
-        Identifier retainingModel = BARREL_RETAINING.createWithSuffix(itemDrumBlock, "_retaining", textures, generator.modelOutput);
+        Identifier retainingModel = ITEM_DRUM_OVERLAY.createWithSuffix(itemDrumBlock, "_retaining", textures, generator.modelOutput);
         generator.blockStateOutput.accept(createItemDrumModel(itemDrumBlock, normalModel, retainingModel));
         generator.registerSimpleItemModel(itemDrumBlock, normalModel);
     }
@@ -125,7 +126,7 @@ public class BarrelModelProvider {
     public static TextureMapping itemDrumTextureMapping(Identifier texture, Block particle) {
         TextureMapping mapping = TextureMapping.particle(particle);
         mapping.put(BARREL_TEXTURE, texture);
-        mapping.put(OVERLAY_TEXTURE, Identifier.fromNamespaceAndPath("compact_storage", "block/barrel/drum_retaining_overlay"));
+        mapping.put(OVERLAY_TEXTURE, Identifier.fromNamespaceAndPath("compact_storage", "block/drum/drum_retaining_overlay"));
         return mapping;
     }
 }

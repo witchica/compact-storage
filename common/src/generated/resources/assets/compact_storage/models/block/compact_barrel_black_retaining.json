@@ -1,5 +1,5 @@
 {
-  "parent": "compact_storage:block/compact_barrel_retaining",
+  "parent": "compact_storage:block/compact_barrel_overlay",
   "textures": {
     "barrel": "compact_storage:block/barrel/black_barrel",
     "overlay": "compact_storage:block/barrel/barrel_retaining_overlay",

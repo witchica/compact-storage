@@ -4,9 +4,21 @@ import com.witchica.compactstorage.api.StorageTypeProvider;
 import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
 import com.witchica.compactstorage.block.entity.base.BaseItemDrumBlockEntity;
 import com.witchica.compactstorage.data.StorageType;
+import com.witchica.compactstorage.inventory.DrumInventory;
+import com.witchica.compactstorage.item.StorageUpgradeItem;
 import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -20,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
@@ -74,5 +87,108 @@ public abstract class BaseItemDrumBlock extends BaseEntityBlock implements Stora
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
         return level.isClientSide() ? createTickerHelper(blockEntityType, CompactStorageBlockEntities.DRUM_BLOCK_ENTITY.value(), BaseItemDrumBlockEntity::ticker) : null;
+    }
+
+    public boolean extractItem(Level world, BlockPos pos, Player player) {
+        BaseItemDrumBlockEntity drumBlockEntity = (BaseItemDrumBlockEntity) world.getBlockEntity(pos);
+        DrumInventory inventory = drumBlockEntity.getDrumInventory();
+
+        ItemStack extracted = inventory.removeItemNoUpdate(0);
+
+        if(!extracted.isEmpty()) {
+            world.addFreshEntity(new ItemEntity(world, player.getBlockX(), player.getBlockY(), player.getBlockZ(), extracted));
+            world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean insertItem(Level world, BlockPos pos, Player player, InteractionHand hand) {
+        BaseItemDrumBlockEntity drumBlockEntity = (BaseItemDrumBlockEntity) world.getBlockEntity(pos);
+        DrumInventory inventory = drumBlockEntity.getDrumInventory();
+
+        boolean completed = false;
+
+        if(player.getItemInHand(hand).isEmpty() && drumBlockEntity.hasAnyItems()) {
+            Container playerInventory = player.getInventory();
+
+            for(int i = 0; i < playerInventory.getContainerSize(); i++) {
+                ItemStack itemStack = playerInventory.getItem(i);
+                if(inventory.canPlaceItem(0, itemStack)) {
+                    ItemStack returned = inventory.addItem(itemStack);
+
+                    if(itemStack.getCount() != returned.getCount()) {
+                        playerInventory.setItem(i, returned);
+                        completed = true;
+                        break;
+                    }
+                }
+            }
+        } else {
+            ItemStack itemStack = player.getItemInHand(hand);
+
+            if(inventory.canPlaceItem(0, itemStack)) {
+                ItemStack returned = inventory.addItem(itemStack);
+
+                if(itemStack.getCount() != returned.getCount()) {
+                    player.setItemInHand(hand, returned);
+                    completed = true;
+                }
+            }
+        }
+
+        if(completed) {
+            world.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS, 1f, 1f);
+        }
+
+        return completed;
+    }
+
+    @Override
+    protected void attack(BlockState state, Level level, BlockPos pos, Player player) {
+        if(!level.isClientSide()) {
+            extractItem(level, pos, player);
+        }
+        super.attack(state, level, pos, player);
+    }
+
+    @Override
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if(!level.isClientSide()) {
+            if(player.isShiftKeyDown()) {
+                if(extractItem(level, pos, player)) {
+                    return InteractionResult.CONSUME;
+                }
+            } else {
+                if(stack.getItem() instanceof StorageUpgradeItem storageUpgradeItem) {
+                    if(level.getBlockEntity(pos) instanceof BaseItemDrumBlockEntity drumBlockEntity) {
+                        if(drumBlockEntity.canApplyUpgrade(storageUpgradeItem.getUpgradeType())) {
+                            drumBlockEntity.applyUpgrade(storageUpgradeItem.getUpgradeType());
+                            level.playSound(null, pos, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
+                            stack.shrink(1);
+                            return InteractionResult.CONSUME;
+                        }
+                    }
+                }
+                if(!insertItem(level, pos, player, hand)) {
+                    if(player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && player.getItemInHand(InteractionHand.OFF_HAND).isEmpty()) {
+                        return InteractionResult.TRY_WITH_EMPTY_HAND;
+                    }
+                }
+            }
+        }
+
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        if(!level.isClientSide()) {
+            if(extractItem(level, pos, player)) {
+                return InteractionResult.CONSUME;
+            }
+        }
+        return InteractionResult.SUCCESS;
     }
 }

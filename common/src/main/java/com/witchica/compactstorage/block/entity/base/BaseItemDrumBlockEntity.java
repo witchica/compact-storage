@@ -3,6 +3,7 @@ package com.witchica.compactstorage.block.entity.base;
 import com.mojang.serialization.Codec;
 import com.witchica.compactstorage.api.inventory.RetainingContainer;
 import com.witchica.compactstorage.api.inventory.UpgradableContainer;
+import com.witchica.compactstorage.block.base.BaseItemDrumBlock;
 import com.witchica.compactstorage.data.UpgradeType;
 import com.witchica.compactstorage.inventory.DrumInventory;
 import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
@@ -18,6 +19,7 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -71,12 +73,14 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
 
         ContainerHelper.saveAllItems(output, drumInventory.getItems());
 
-        output.store("ClientItem", ItemStack.CODEC, new ItemStack(getStoredType(), 1));
+        if(getStoredType() != Items.AIR) {
+            output.store("ClientItem", ItemStack.CODEC, new ItemStack(getStoredType(), 1));
+        }
+
         output.putInt("ClientStackSize", drumInventory.getMaxStackSize());
         output.putInt("ClientStoredItems", getTotalItemCount());
 
-        // TODO : Retaining
-        output.store("Retaining", Codec.BOOL, false);
+        output.store("Retaining", Codec.BOOL, isRetaining());
         output.store("Version", Codec.INT,2);
     }
 
@@ -86,15 +90,16 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
         int storedVersion = input.getIntOr("Version", 0);
 
         switch(storedVersion) {
-            case 1: {
+            case 2: {
+                ContainerHelper.loadAllItems(input, drumInventory.getItems());
+                break;
+            } default: {
                 for(ItemStackWithSlot itemstackwithslot : input.listOrEmpty("Inventory", ItemStackWithSlot.CODEC)) {
                     if (itemstackwithslot.isValidInContainer(drumInventory.getItems().size())) {
                         drumInventory.setItem(itemstackwithslot.slot(), itemstackwithslot.stack());
                     }
                 }
                 break;
-            } default: {
-                ContainerHelper.loadAllItems(input, drumInventory.getItems());
             }
         }
 
@@ -102,11 +107,23 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
         this.clientStackSize = input.getIntOr("ClientStackSize", 0);
         this.clientStoredItems = input.getIntOr("ClientStoredItems", 0);
         this.retaining = input.getBooleanOr("Retaining", false);
+
+        checkAndApplyRetainingState();
+    }
+
+    protected void checkAndApplyRetainingState() {
+        if(retaining != getBlockState().getValue(BaseItemDrumBlock.RETAINING)) {
+            getLevel().setBlock(getBlockPos(), getBlockState().setValue(BaseItemDrumBlock.RETAINING, isRetaining()), 2);
+        }
     }
 
     @Override
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return BalmBlockEntityUtils.createUpdatePacket(this);
+    }
+
+    public DrumInventory getDrumInventory() {
+        return drumInventory;
     }
 
     @Override
@@ -126,7 +143,7 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
 
     @Override
     public boolean canApplyUpgrade(UpgradeType upgradeType) {
-        return upgradeType == UpgradeType.RETAINING_UPGRADE;
+        return upgradeType == UpgradeType.RETAINING_UPGRADE && !isRetaining();
     }
 
     @Override
@@ -149,5 +166,6 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
     @Override
     public void setRetaining(boolean retaining) {
         this.retaining = retaining;
+        checkAndApplyRetainingState();
     }
 }

@@ -26,6 +26,7 @@ public class ModLangProvider extends FabricLanguageProvider {
         for(StorageType type : StorageType.values()) {
             translationBuilder.add(CompactStorageBlocks.compactChests.get(type).asBlock(), snakeCaseToName(type.getName()+"_chest"));
             translationBuilder.add(CompactStorageBlocks.compactBarrels.get(type).asBlock(), snakeCaseToName(type.getName()+"_barrel"));
+            translationBuilder.add(CompactStorageBlocks.itemDrums.get(type).asBlock(), snakeCaseToName(type.getName()+"_item_drum"));
         }
 
         translationBuilder.add(CompactStorageItems.UPGRADE_WIDTH.asItem(), "Storage Upgrade (Width)");
