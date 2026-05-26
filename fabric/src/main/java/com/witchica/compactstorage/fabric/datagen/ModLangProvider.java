@@ -27,6 +27,7 @@ public class ModLangProvider extends FabricLanguageProvider {
             translationBuilder.add(CompactStorageBlocks.compactChests.get(type).asBlock(), snakeCaseToName(type.getName()+"_chest"));
             translationBuilder.add(CompactStorageBlocks.compactBarrels.get(type).asBlock(), snakeCaseToName(type.getName()+"_barrel"));
             translationBuilder.add(CompactStorageBlocks.itemDrums.get(type).asBlock(), snakeCaseToName(type.getName()+"_item_drum"));
+            translationBuilder.add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem(), snakeCaseToName(type.getName() + (type.isWooden() ? "_pack_frame" : "_backpack")));
         }
 
         translationBuilder.add(CompactStorageItems.UPGRADE_WIDTH.asItem(), "Storage Upgrade (Width)");

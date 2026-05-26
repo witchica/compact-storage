@@ -1,0 +1,8 @@
+{
+  "parent": "compact_storage:item/pack_frame_base",
+  "textures": {
+    "log": "minecraft:block/crimson_stem",
+    "planks": "minecraft:block/crimson_planks",
+    "wool": "minecraft:block/red_wool"
+  }
+}

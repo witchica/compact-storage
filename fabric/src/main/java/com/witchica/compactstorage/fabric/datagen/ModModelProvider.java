@@ -2,7 +2,9 @@ package com.witchica.compactstorage.fabric.datagen;
 
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.block.CompactBarrelBlock;
+import com.witchica.compactstorage.fabric.datagen.providers.BackpackPackFrameModelProvider;
 import com.witchica.compactstorage.fabric.datagen.providers.BarrelModelProvider;
+import com.witchica.compactstorage.mod.CompactStorageItemTags;
 import com.witchica.compactstorage.mod.CompactStorageItems;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -21,7 +23,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import com.witchica.compactstorage.data.StorageType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class ModModelProvider extends FabricModelProvider {
@@ -40,15 +45,29 @@ public class ModModelProvider extends FabricModelProvider {
             BarrelModelProvider.registerItemDrum(blockStateModelGenerator,
                     CompactStorageBlocks.itemDrums.get(type).asBlock(),
                     BarrelModelProvider.itemDrumTextureMapping(Identifier.fromNamespaceAndPath("compact_storage", "block/drum/" + type.getName() + "_drum"), type.getRecipeData().particle())
-                    );
+                );
         }
 
     }
+
 
     @Override
     public void generateItemModels(ItemModelGenerators itemModelGenerator) {
         itemModelGenerator.generateFlatItem(CompactStorageItems.UPGRADE_WIDTH.asItem(), ModelTemplates.FLAT_ITEM);
         itemModelGenerator.generateFlatItem(CompactStorageItems.UPGRADE_HEIGHT.asItem(), ModelTemplates.FLAT_ITEM);
         itemModelGenerator.generateFlatItem(CompactStorageItems.UPGRADE_RETAINING.asItem(), ModelTemplates.FLAT_ITEM);
+
+        for(StorageType type : StorageType.values()) {
+            if(type.isWooden()) {
+                BackpackPackFrameModelProvider.registerPackFrameModel(itemModelGenerator,
+                        CompactStorageItems.BACKPACK_ITEMS.get(type).asItem(),
+                        BackpackPackFrameModelProvider.packFrameTextureMapping(TextureMapping.getBlockTexture(type.backpackModelInfo().planks()),
+                                TextureMapping.logColumn(type.backpackModelInfo().log()).get(TextureSlot.SIDE), TextureMapping.getBlockTexture(type.backpackModelInfo().wool())));
+            } else {
+                BackpackPackFrameModelProvider.registerBackpackModel(itemModelGenerator,
+                        CompactStorageItems.BACKPACK_ITEMS.get(type).asItem(),
+                        BackpackPackFrameModelProvider.backpackTextureMapping(TextureMapping.getBlockTexture(type.backpackModelInfo().wool()), TextureMapping.getBlockTexture(type.backpackModelInfo().straps())));
+            }
+        }
     }
 }

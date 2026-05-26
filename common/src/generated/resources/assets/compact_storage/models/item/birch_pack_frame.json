@@ -1,0 +1,8 @@
+{
+  "parent": "compact_storage:item/pack_frame_base",
+  "textures": {
+    "log": "minecraft:block/birch_log",
+    "planks": "minecraft:block/birch_planks",
+    "wool": "minecraft:block/white_wool"
+  }
+}
