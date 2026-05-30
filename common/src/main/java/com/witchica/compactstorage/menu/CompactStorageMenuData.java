@@ -28,7 +28,7 @@ public record CompactStorageMenuData(CompactStorageOpeningSource source, Optiona
                 switch(source) {
                     case BLOCK: {
                         return CompactStorageMenuData.ofBlock(registryFriendlyByteBuf.readBlockPos());
-                    } case BACKPACK_HOT_KEY: {
+                    } case BACKPACK_IN_HAND: {
                         return ofHeldBackpack(registryFriendlyByteBuf.readInt());
                     } default: {
                         return ofCuriosBackpack();

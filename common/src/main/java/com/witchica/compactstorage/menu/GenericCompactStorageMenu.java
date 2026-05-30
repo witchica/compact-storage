@@ -2,9 +2,11 @@ package com.witchica.compactstorage.menu;
 
 import com.witchica.compactstorage.api.inventory.ResizableContainer;
 import com.witchica.compactstorage.api.StorageTypeProvider;
+import com.witchica.compactstorage.inventory.BackpackInventory;
 import com.witchica.compactstorage.mod.CompactStorageMenuTypes;
 import net.blay09.mods.balm.world.inventory.QuickMove;
 import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -12,6 +14,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import com.witchica.compactstorage.data.StorageType;
+
+import java.util.Optional;
 
 public class GenericCompactStorageMenu extends AbstractContainerMenu {
     private final Inventory playerInventory;
@@ -30,7 +34,14 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
                 this.storageType = ((StorageTypeProvider) entity.getBlockState().getBlock()).getStorageType();
                 this.container = (Container) entity;
                 break;
-            } default: {
+            } case BACKPACK_IN_HAND: {
+                InteractionHand hand = data.hotbarSlot().orElse(0) == 0 ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+                ItemStack backpack = playerInventory.player.getItemInHand(hand);
+                this.storageType = ((StorageTypeProvider) backpack.getItem()).getStorageType();
+                this.container = new BackpackInventory(playerInventory.player, data.source(), backpack, Optional.of(hand));
+                break;
+            }
+            default: {
                 this.storageType = StorageType.RED;
             }
         }

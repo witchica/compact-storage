@@ -33,7 +33,10 @@ public class CompactStorageItems {
         UPGRADE_RETAINING = items.register(UpgradeType.RETAINING_UPGRADE.name(), (properties) -> new StorageUpgradeItem(properties, UpgradeType.RETAINING_UPGRADE)).asDeferredItem();
 
         for(StorageType type : StorageType.values()) {
-            BACKPACK_ITEMS.put(type, items.register(type.backpackNameFactory(), (properties -> new BackpackItem(properties, type))).asDeferredItem());
+            BACKPACK_ITEMS.put(type, items.register(type.backpackNameFactory(), (properties -> {
+                final StorageType storageType = type;
+                return new BackpackItem(properties, storageType);
+            })).asDeferredItem());
         }
     }
 
