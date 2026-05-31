@@ -1,9 +1,13 @@
 package com.witchica.compactstorage;
 
+import com.witchica.compactstorage.item.BackpackItem;
 import com.witchica.compactstorage.mod.*;
+import com.witchica.compactstorage.network.ServerboundBackpackHotkeyPacket;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +34,15 @@ public class CompactStorage {
         registrars.creativeModeTabs(CompactStorageItems::initializeCreativeTabs);
         registrars.blockEntityTypes(CompactStorageBlockEntities::initialize);
         registrars.menuTypes(CompactStorageMenuTypes::initialize);
+
+        Balm.networking().registerServerboundPacket(ServerboundBackpackHotkeyPacket.TYPE, ServerboundBackpackHotkeyPacket.class, ServerboundBackpackHotkeyPacket.STREAM_CODEC, ServerboundBackpackHotkeyPacket::handle);
     }
 
+    public static ItemStack findCuriosBackpack(Player player) {
+        return Balm.modSupport().trinkets().findEquipped(player, itemStack -> itemStack.getItem() instanceof BackpackItem);
+    }
+
+    public static boolean isCuriosBackpackEquipped(Player player) {
+        return Balm.modSupport().trinkets().isEquipped(player, itemStack -> itemStack.getItem() instanceof BackpackItem);
+    }
 }

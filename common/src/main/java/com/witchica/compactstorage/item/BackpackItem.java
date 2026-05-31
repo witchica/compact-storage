@@ -1,7 +1,7 @@
 package com.witchica.compactstorage.item;
 
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.StorageTypeProvider;
-import com.witchica.compactstorage.client.screens.GenericCompactStorageMenuScreen;
 import com.witchica.compactstorage.components.ResizableInventoryComponent;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.data.UpgradeType;
@@ -10,7 +10,6 @@ import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
 import com.witchica.compactstorage.mod.CompactStorageComponents;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.world.BalmMenuProvider;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
@@ -30,12 +29,12 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 public class BackpackItem extends Item implements StorageTypeProvider {
-    public class BackpackMenuProvider implements BalmMenuProvider<@NotNull CompactStorageMenuData> {
+    public class HeldBackpackMenuProvider implements BalmMenuProvider<@NotNull CompactStorageMenuData> {
 
         private final InteractionHand hand;
         private final ItemStack item;
 
-        public BackpackMenuProvider(InteractionHand hand, ItemStack item) {
+        public HeldBackpackMenuProvider(InteractionHand hand, ItemStack item) {
             this.hand = hand;
             this.item = item;
         }
@@ -58,6 +57,34 @@ public class BackpackItem extends Item implements StorageTypeProvider {
         @Override
         public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
             return new GenericCompactStorageMenu(i, inventory, CompactStorageMenuData.ofHeldBackpack(this.hand.ordinal()));
+        }
+    }
+
+    public static class CuriosBackpackMenuProvider implements BalmMenuProvider<@NotNull CompactStorageMenuData> {
+        private final ItemStack item;
+
+        public CuriosBackpackMenuProvider(Player player) {
+            this.item = CompactStorage.findCuriosBackpack(player);
+        }
+
+        @Override
+        public @NotNull CompactStorageMenuData getScreenOpeningData(ServerPlayer player) {
+            return CompactStorageMenuData.ofCuriosBackpack();
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, @NotNull CompactStorageMenuData> getScreenStreamCodec() {
+            return CompactStorageMenuData.STREAM_CODEC;
+        }
+
+        @Override
+        public Component getDisplayName() {
+            return item.getItemName();
+        }
+
+        @Override
+        public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
+            return new GenericCompactStorageMenu(i, inventory, CompactStorageMenuData.ofCuriosBackpack());
         }
     }
 
@@ -121,7 +148,7 @@ public class BackpackItem extends Item implements StorageTypeProvider {
                 }
             }
 
-            Balm.networking().openMenu(player, new BackpackMenuProvider(hand, backpackStack));
+            Balm.networking().openMenu(player, new HeldBackpackMenuProvider(hand, backpackStack));
             return InteractionResult.CONSUME;
         }
 

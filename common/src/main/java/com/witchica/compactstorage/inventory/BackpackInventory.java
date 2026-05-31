@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.inventory;
 
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.StorageTypeProvider;
 import com.witchica.compactstorage.api.inventory.ResizableContainer;
 import com.witchica.compactstorage.api.inventory.UpgradableContainer;
@@ -90,10 +91,19 @@ public class BackpackInventory implements Container, ResizableContainer {
     }
 
     public void saveBackpackData() {
+        Optional<ItemStack> stackToSave = Optional.empty();
+
         if(openingSource == CompactStorageOpeningSource.BACKPACK_IN_HAND && hand.isPresent()) {
-            ItemStack handStack = player.getItemInHand(hand.get());
-            handStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getItems()));
-            handStack.set(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(inventoryWidth, inventoryHeight));
+            stackToSave = Optional.of(player.getItemInHand(hand.get()));
+        } else if(openingSource == CompactStorageOpeningSource.BACKPACK_HOT_KEY) {
+            stackToSave = Optional.of(CompactStorage.findCuriosBackpack(this.player));
+        }
+
+        if(stackToSave.isPresent()) {
+            ItemStack stack = stackToSave.get();
+
+            stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getItems()));
+            stack.set(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(inventoryWidth, inventoryHeight));
         }
     }
 

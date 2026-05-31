@@ -35,7 +35,7 @@ public class CompactStorageItems {
         for(StorageType type : StorageType.values()) {
             BACKPACK_ITEMS.put(type, items.register(type.backpackNameFactory(), (properties -> {
                 final StorageType storageType = type;
-                return new BackpackItem(properties, storageType);
+                return new BackpackItem(properties.stacksTo(1), storageType);
             })).asDeferredItem());
         }
     }

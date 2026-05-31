@@ -1,0 +1,16 @@
+{
+  "values": [
+    "compact_storage:cherry_pack_frame",
+    "compact_storage:mangrove_pack_frame",
+    "compact_storage:jungle_pack_frame",
+    "compact_storage:crimson_pack_frame",
+    "compact_storage:spruce_pack_frame",
+    "compact_storage:bamboo_pack_frame",
+    "compact_storage:pale_oak_pack_frame",
+    "compact_storage:acacia_pack_frame",
+    "compact_storage:warped_pack_frame",
+    "compact_storage:dark_oak_pack_frame",
+    "compact_storage:oak_pack_frame",
+    "compact_storage:birch_pack_frame"
+  ]
+}

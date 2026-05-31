@@ -1,8 +1,11 @@
 package com.witchica.compactstorage.menu;
 
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.inventory.ResizableContainer;
 import com.witchica.compactstorage.api.StorageTypeProvider;
+import com.witchica.compactstorage.data.CompactStorageOpeningSource;
 import com.witchica.compactstorage.inventory.BackpackInventory;
+import com.witchica.compactstorage.menu.slot.BackpackHolderSlot;
 import com.witchica.compactstorage.mod.CompactStorageMenuTypes;
 import net.blay09.mods.balm.world.inventory.QuickMove;
 import net.minecraft.world.Container;
@@ -22,12 +25,16 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
     private final StorageType storageType;
     public final int inventoryWidth;
     public final int inventoryHeight;
+    private final CompactStorageOpeningSource openSource;
+
     public Container container;
     private final QuickMove.Routing quickMove;
 
     public GenericCompactStorageMenu(int containerId, Inventory playerInventory, CompactStorageMenuData data) {
         super(CompactStorageMenuTypes.COMPACT_STORAGE_MENU.value(), containerId);
         this.playerInventory = playerInventory;
+        this.openSource = data.source();
+
         switch(data.source()) {
             case BLOCK: {
                 BlockEntity entity = playerInventory.player.level().getBlockEntity(data.pos().get());
@@ -39,6 +46,12 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
                 ItemStack backpack = playerInventory.player.getItemInHand(hand);
                 this.storageType = ((StorageTypeProvider) backpack.getItem()).getStorageType();
                 this.container = new BackpackInventory(playerInventory.player, data.source(), backpack, Optional.of(hand));
+                break;
+            }
+            case BACKPACK_HOT_KEY: {
+                ItemStack backpack = CompactStorage.findCuriosBackpack(this.playerInventory.player);
+                this.storageType = ((StorageTypeProvider) backpack.getItem()).getStorageType();
+                this.container = new BackpackInventory(playerInventory.player, data.source(), backpack, Optional.empty());
                 break;
             }
             default: {
@@ -73,23 +86,22 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
     }
 
     public void setupSlots() {
-
         int chestSizeX = (7+7+(inventoryWidth * 18));
         int offsetX = (chestSizeX / 2) - ((14+(9*18)) / 2);
         int playerInvStartY = 17 + (inventoryHeight * 18) + 7 + 4 + 18;
 
         for(int y = 0; y < inventoryHeight; y++) {
             for(int x = 0; x < inventoryWidth; x++) {
-                addSlot(new Slot(container, (y * inventoryWidth) + x, (x * 18) + 8, (y * 18) + 18));
+                addSlot(new BackpackHolderSlot(container, (y * inventoryWidth) + x, (x * 18) + 8, (y * 18) + 18, openSource==CompactStorageOpeningSource.BACKPACK_IN_HAND));
             }
         }
         for(int y = 0; y < 3; y++) {
             for(int x = 0; x < 9; x++) {
-                addSlot(new Slot(playerInventory, 9+(y * 9) + x, offsetX + 8 + (x * 18), playerInvStartY + (y * 18)));
+                addSlot(new BackpackHolderSlot(playerInventory, 9+(y * 9) + x, offsetX + 8 + (x * 18), playerInvStartY + (y * 18), openSource==CompactStorageOpeningSource.BACKPACK_IN_HAND));
             }
         }
         for(int x = 0; x < 9; x++) {
-            addSlot(new Slot(playerInventory, x, offsetX + 8 + (x * 18), playerInvStartY + (3 * 18) + 4));
+            addSlot(new BackpackHolderSlot(playerInventory, x, offsetX + 8 + (x * 18), playerInvStartY + (3 * 18) + 4, openSource==CompactStorageOpeningSource.BACKPACK_IN_HAND));
         }
     }
 
