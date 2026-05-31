@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "compact_barrels",
+  "key": {
+    "I": "minecraft:iron_ingot",
+    "S": "minecraft:pale_oak_slab",
+    "W": "minecraft:pale_oak_planks"
+  },
+  "pattern": [
+    "SIS",
+    "W W",
+    "SIS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:pale_oak_compact_barrel"
+  }
+}

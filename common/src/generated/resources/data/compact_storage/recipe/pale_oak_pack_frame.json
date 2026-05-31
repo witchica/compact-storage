@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "pack_frames",
+  "key": {
+    "C": "minecraft:chest",
+    "L": "#minecraft:pale_oak_logs",
+    "S": "minecraft:string",
+    "T": "minecraft:stick"
+  },
+  "pattern": [
+    "TST",
+    "TCT",
+    "TLT"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:pale_oak_pack_frame"
+  }
+}

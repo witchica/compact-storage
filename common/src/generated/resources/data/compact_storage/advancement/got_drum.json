@@ -5,88 +5,88 @@
       "conditions": {
         "items": [
           {
-            "items": "compact_storage:birch_drum"
-          },
-          {
-            "items": "compact_storage:bamboo_drum"
-          },
-          {
-            "items": "compact_storage:yellow_drum"
-          },
-          {
-            "items": "compact_storage:lime_drum"
-          },
-          {
-            "items": "compact_storage:purple_drum"
-          },
-          {
-            "items": "compact_storage:blue_drum"
-          },
-          {
-            "items": "compact_storage:acacia_drum"
-          },
-          {
-            "items": "compact_storage:black_drum"
-          },
-          {
-            "items": "compact_storage:warped_drum"
-          },
-          {
-            "items": "compact_storage:crimson_drum"
-          },
-          {
-            "items": "compact_storage:gray_drum"
-          },
-          {
-            "items": "compact_storage:jungle_drum"
-          },
-          {
-            "items": "compact_storage:cyan_drum"
-          },
-          {
-            "items": "compact_storage:light_blue_drum"
-          },
-          {
-            "items": "compact_storage:pale_oak_drum"
-          },
-          {
-            "items": "compact_storage:light_gray_drum"
-          },
-          {
-            "items": "compact_storage:spruce_drum"
-          },
-          {
-            "items": "compact_storage:red_drum"
-          },
-          {
-            "items": "compact_storage:cherry_drum"
-          },
-          {
-            "items": "compact_storage:orange_drum"
+            "items": "compact_storage:dark_oak_drum"
           },
           {
             "items": "compact_storage:green_drum"
           },
           {
-            "items": "compact_storage:pink_drum"
+            "items": "compact_storage:light_gray_drum"
           },
           {
-            "items": "compact_storage:mangrove_drum"
-          },
-          {
-            "items": "compact_storage:magenta_drum"
+            "items": "compact_storage:cherry_drum"
           },
           {
             "items": "compact_storage:white_drum"
           },
           {
-            "items": "compact_storage:oak_drum"
+            "items": "compact_storage:pale_oak_drum"
           },
           {
-            "items": "compact_storage:dark_oak_drum"
+            "items": "compact_storage:jungle_drum"
           },
           {
             "items": "compact_storage:brown_drum"
+          },
+          {
+            "items": "compact_storage:pink_drum"
+          },
+          {
+            "items": "compact_storage:gray_drum"
+          },
+          {
+            "items": "compact_storage:blue_drum"
+          },
+          {
+            "items": "compact_storage:warped_drum"
+          },
+          {
+            "items": "compact_storage:yellow_drum"
+          },
+          {
+            "items": "compact_storage:magenta_drum"
+          },
+          {
+            "items": "compact_storage:spruce_drum"
+          },
+          {
+            "items": "compact_storage:orange_drum"
+          },
+          {
+            "items": "compact_storage:acacia_drum"
+          },
+          {
+            "items": "compact_storage:purple_drum"
+          },
+          {
+            "items": "compact_storage:crimson_drum"
+          },
+          {
+            "items": "compact_storage:cyan_drum"
+          },
+          {
+            "items": "compact_storage:red_drum"
+          },
+          {
+            "items": "compact_storage:light_blue_drum"
+          },
+          {
+            "items": "compact_storage:lime_drum"
+          },
+          {
+            "items": "compact_storage:mangrove_drum"
+          },
+          {
+            "items": "compact_storage:black_drum"
+          },
+          {
+            "items": "compact_storage:bamboo_drum"
+          },
+          {
+            "items": "compact_storage:oak_drum"
+          },
+          {
+            "items": "compact_storage:birch_drum"
           }
         ]
       },

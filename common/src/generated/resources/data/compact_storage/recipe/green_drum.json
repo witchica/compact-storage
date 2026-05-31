@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "item_drums",
+  "key": {
+    "C": "minecraft:chest",
+    "D": "minecraft:green_dye",
+    "L": "#minecraft:logs",
+    "P": "#minecraft:planks"
+  },
+  "pattern": [
+    "PDP",
+    "PCP",
+    "PLP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:green_drum"
+  }
+}

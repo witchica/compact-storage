@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "item_drums",
+  "key": {
+    "C": "minecraft:chest",
+    "L": "#minecraft:mangrove_logs",
+    "P": "minecraft:mangrove_planks"
+  },
+  "pattern": [
+    "PLP",
+    "PCP",
+    "PLP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:mangrove_drum"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "compact_chests",
+  "key": {
+    "C": "minecraft:chest",
+    "I": "minecraft:iron_ingot",
+    "W": "minecraft:yellow_dye"
+  },
+  "pattern": [
+    "IWI",
+    "ICI",
+    "III"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:yellow_compact_chest"
+  }
+}

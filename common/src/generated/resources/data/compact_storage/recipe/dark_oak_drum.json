@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "item_drums",
+  "key": {
+    "C": "minecraft:chest",
+    "L": "#minecraft:dark_oak_logs",
+    "P": "minecraft:dark_oak_planks"
+  },
+  "pattern": [
+    "PLP",
+    "PCP",
+    "PLP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:dark_oak_drum"
+  }
+}

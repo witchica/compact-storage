@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "item_drums",
+  "key": {
+    "C": "minecraft:chest",
+    "L": "#minecraft:crimson_stems",
+    "P": "minecraft:crimson_planks"
+  },
+  "pattern": [
+    "PLP",
+    "PCP",
+    "PLP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:crimson_drum"
+  }
+}

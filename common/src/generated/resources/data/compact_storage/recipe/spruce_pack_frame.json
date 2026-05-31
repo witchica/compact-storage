@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "pack_frames",
+  "key": {
+    "C": "minecraft:chest",
+    "L": "#minecraft:spruce_logs",
+    "S": "minecraft:string",
+    "T": "minecraft:stick"
+  },
+  "pattern": [
+    "TST",
+    "TCT",
+    "TLT"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:spruce_pack_frame"
+  }
+}

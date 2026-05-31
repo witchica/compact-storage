@@ -1,16 +1,16 @@
 {
   "values": [
-    "compact_storage:birch_drum",
-    "compact_storage:bamboo_drum",
-    "compact_storage:acacia_drum",
-    "compact_storage:warped_drum",
-    "compact_storage:crimson_drum",
-    "compact_storage:jungle_drum",
-    "compact_storage:pale_oak_drum",
-    "compact_storage:spruce_drum",
+    "compact_storage:dark_oak_drum",
     "compact_storage:cherry_drum",
+    "compact_storage:pale_oak_drum",
+    "compact_storage:jungle_drum",
+    "compact_storage:warped_drum",
+    "compact_storage:spruce_drum",
+    "compact_storage:acacia_drum",
+    "compact_storage:crimson_drum",
     "compact_storage:mangrove_drum",
+    "compact_storage:bamboo_drum",
     "compact_storage:oak_drum",
-    "compact_storage:dark_oak_drum"
+    "compact_storage:birch_drum"
   ]
 }

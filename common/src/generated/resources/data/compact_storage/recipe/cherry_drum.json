@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "item_drums",
+  "key": {
+    "C": "minecraft:chest",
+    "L": "#minecraft:cherry_logs",
+    "P": "minecraft:cherry_planks"
+  },
+  "pattern": [
+    "PLP",
+    "PCP",
+    "PLP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:cherry_drum"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "compact_chests",
+  "key": {
+    "C": "minecraft:chest",
+    "I": "minecraft:iron_ingot",
+    "W": "minecraft:spruce_planks"
+  },
+  "pattern": [
+    "IWI",
+    "WCW",
+    "IWI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:spruce_compact_chest"
+  }
+}

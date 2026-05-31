@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "compact_barrels",
+  "key": {
+    "D": "minecraft:purple_dye",
+    "I": "minecraft:iron_ingot",
+    "S": "#minecraft:slabs",
+    "W": "#minecraft:planks"
+  },
+  "pattern": [
+    "WSW",
+    "IDI",
+    "WSW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:purple_compact_barrel"
+  }
+}

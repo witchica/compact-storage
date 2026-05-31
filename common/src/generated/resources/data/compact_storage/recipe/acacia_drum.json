@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "item_drums",
+  "key": {
+    "C": "minecraft:chest",
+    "L": "#minecraft:acacia_logs",
+    "P": "minecraft:acacia_planks"
+  },
+  "pattern": [
+    "PLP",
+    "PCP",
+    "PLP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:acacia_drum"
+  }
+}

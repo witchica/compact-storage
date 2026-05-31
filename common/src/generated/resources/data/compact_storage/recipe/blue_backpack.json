@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "group": "backpacks",
+  "key": {
+    "C": "minecraft:chest",
+    "I": "minecraft:iron_ingot",
+    "W": "minecraft:blue_wool"
+  },
+  "pattern": [
+    "IWI",
+    "ICI",
+    "IWI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:blue_backpack"
+  }
+}

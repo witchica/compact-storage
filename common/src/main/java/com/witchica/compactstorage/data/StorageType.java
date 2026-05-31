@@ -7,8 +7,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -25,11 +27,11 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class StorageType {
-    public record RecipeData(Optional<ItemLike> planks, Optional<TagKey<Block>> log, Optional<ItemLike> slab, Optional<ItemLike> wool, Optional<ItemLike> dye, Block particle) {
+    public record RecipeData(Optional<ItemLike> planks, Optional<TagKey<Item>> log, Optional<ItemLike> slab, Optional<ItemLike> wool, Optional<ItemLike> dye, Block particle) {
         public RecipeData(ItemLike wool, ItemLike dye, Block particle) {
             this(Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(wool), Optional.of(dye), particle);
         }
-        public RecipeData(ItemLike planks, TagKey<Block> log, Block slab) {
+        public RecipeData(ItemLike planks, TagKey<Item> log, Block slab) {
             this(Optional.of(planks), Optional.of(log), Optional.of(slab), Optional.empty(), Optional.empty(), (Block) planks);
         }
     }
@@ -334,18 +336,18 @@ public class StorageType {
         RED = register(new StorageType().name("red").recipe(new RecipeData(Blocks.RED_WOOL, Items.RED_DYE, Blocks.RED_CONCRETE)).setDyeable(DyeColor.RED)).inventoryBackground(1, 3).setUiTitleColor(0x511818).setBackpackModelInfo(new BackpackModelInfo(Blocks.RED_WOOL, Blocks.ORANGE_WOOL));
         BLACK = register(new StorageType().name("black").recipe(new RecipeData(Blocks.BLACK_WOOL, Items.BLACK_DYE, Blocks.BLACK_CONCRETE)).setDyeable(DyeColor.BLACK)).inventoryBackground(4, 1).setUiTitleColor(0xfaefee).setBackpackModelInfo(new BackpackModelInfo(Blocks.BLACK_WOOL, Blocks.GRAY_WOOL));
 
-        OAK = register(new StorageType().setWooden(WoodType.OAK).name("oak").recipe(new RecipeData(Blocks.OAK_PLANKS, BlockTags.OAK_LOGS, Blocks.OAK_SLAB))).inventoryBackground(0, 1).setUiTitleColor(0x4c3d26).setBackpackModelInfo(new BackpackModelInfo(Blocks.OAK_PLANKS, Blocks.OAK_LOG, Blocks.BROWN_WOOL));
-        SPRUCE = register(new StorageType().setWooden(WoodType.SPRUCE).name("spruce").recipe(new RecipeData(Blocks.SPRUCE_PLANKS, BlockTags.SPRUCE_LOGS, Blocks.SPRUCE_SLAB))).inventoryBackground(1, 1).setUiTitleColor(0x443321).setBackpackModelInfo(new BackpackModelInfo(Blocks.SPRUCE_PLANKS, Blocks.SPRUCE_LOG, Blocks.BROWN_WOOL));
-        BIRCH = register(new StorageType().setWooden(WoodType.BIRCH).name("birch").recipe(new RecipeData(Blocks.BIRCH_PLANKS, BlockTags.BIRCH_LOGS, Blocks.BIRCH_SLAB))).inventoryBackground(2, 0).setUiTitleColor(0x514f47).setBackpackModelInfo(new BackpackModelInfo(Blocks.BIRCH_PLANKS, Blocks.BIRCH_LOG, Blocks.WHITE_WOOL));
-        ACACIA = register(new StorageType().setWooden(WoodType.ACACIA).name("acacia").recipe(new RecipeData(Blocks.ACACIA_PLANKS, BlockTags.ACACIA_LOGS, Blocks.ACACIA_SLAB))).inventoryBackground(1, 0).setUiTitleColor(0x4b473e).setBackpackModelInfo(new BackpackModelInfo(Blocks.ACACIA_PLANKS, Blocks.ACACIA_LOG, Blocks.RED_WOOL));
-        CHERRY = register(new StorageType().setWooden(WoodType.CHERRY).name("cherry").recipe(new RecipeData(Blocks.CHERRY_PLANKS, BlockTags.CHERRY_LOGS, Blocks.CHERRY_SLAB)).soundType(SoundType.CHERRY_WOOD).backpackOpen(SoundEvents.CHERRY_WOOD_TRAPDOOR_OPEN).backpackClose(SoundEvents.CHERRY_WOOD_TRAPDOOR_CLOSE)).inventoryBackground(3, 0).setUiTitleColor(0x271620).setBackpackModelInfo(new BackpackModelInfo(Blocks.CHERRY_PLANKS, Blocks.CHERRY_LOG, Blocks.PINK_WOOL));
-        JUNGLE = register(new StorageType().setWooden(WoodType.JUNGLE).name("jungle").recipe(new RecipeData(Blocks.JUNGLE_PLANKS, BlockTags.JUNGLE_LOGS, Blocks.JUNGLE_SLAB))).inventoryBackground(6, 0).setUiTitleColor(0x3e3013).setBackpackModelInfo(new BackpackModelInfo(Blocks.JUNGLE_PLANKS, Blocks.JUNGLE_LOG, Blocks.BROWN_WOOL));
-        DARK_OAK = register(new StorageType().setWooden(WoodType.DARK_OAK).name("dark_oak").recipe(new RecipeData(Blocks.DARK_OAK_PLANKS, BlockTags.DARK_OAK_LOGS, Blocks.DARK_OAK_SLAB))).inventoryBackground(5, 0).setUiTitleColor(0x292011).setBackpackModelInfo(new BackpackModelInfo(Blocks.DARK_OAK_PLANKS, Blocks.DARK_OAK_LOG, Blocks.BLACK_WOOL));
-        PALE_OAK = register(new StorageType().setWooden(WoodType.PALE_OAK).name("pale_oak").recipe(new RecipeData(Blocks.PALE_OAK_PLANKS, BlockTags.PALE_OAK_LOGS, Blocks.PALE_OAK_SLAB))).inventoryBackground(4, 3).setUiTitleColor(0x4e4340).setBackpackModelInfo(new BackpackModelInfo(Blocks.PALE_OAK_PLANKS, Blocks.PALE_OAK_LOG, Blocks.WHITE_WOOL));
-        CRIMSON = register(new StorageType().setWooden(WoodType.CRIMSON).name("crimson").recipe(new RecipeData(Blocks.CRIMSON_PLANKS, BlockTags.CRIMSON_STEMS, Blocks.CRIMSON_SLAB)).setNetherWood()).inventoryBackground(4, 0).setUiTitleColor(0x3f1e2d).setBackpackModelInfo(new BackpackModelInfo(Blocks.CRIMSON_PLANKS, Blocks.CRIMSON_STEM, Blocks.RED_WOOL));
-        WARPED = register(new StorageType().setWooden(WoodType.WARPED).name("warped").recipe(new RecipeData(Blocks.WARPED_PLANKS, BlockTags.WARPED_STEMS, Blocks.WARPED_PLANKS)).setNetherWood()).inventoryBackground(2, 1).setUiTitleColor(0x452d5c).setBackpackModelInfo(new BackpackModelInfo(Blocks.WARPED_PLANKS, Blocks.WARPED_STEM, Blocks.CYAN_WOOL));
-        MANGROVE = register(new StorageType().setWooden(WoodType.MANGROVE).name("mangrove").recipe(new RecipeData(Blocks.MANGROVE_PLANKS, BlockTags.MANGROVE_LOGS, Blocks.MANGROVE_SLAB))).inventoryBackground(7, 0).setUiTitleColor(0x3c2f23).setBackpackModelInfo(new BackpackModelInfo(Blocks.MANGROVE_PLANKS, Blocks.MANGROVE_LOG, Blocks.WHITE_WOOL));
-        BAMBOO = register(new StorageType().setWooden(WoodType.BAMBOO).name("bamboo").recipe(new RecipeData(Blocks.BAMBOO_PLANKS, BlockTags.BAMBOO_BLOCKS, Blocks.BAMBOO_SLAB))
+        OAK = register(new StorageType().setWooden(WoodType.OAK).name("oak").recipe(new RecipeData(Blocks.OAK_PLANKS, ItemTags.OAK_LOGS, Blocks.OAK_SLAB))).inventoryBackground(0, 1).setUiTitleColor(0x4c3d26).setBackpackModelInfo(new BackpackModelInfo(Blocks.OAK_PLANKS, Blocks.OAK_LOG, Blocks.BROWN_WOOL));
+        SPRUCE = register(new StorageType().setWooden(WoodType.SPRUCE).name("spruce").recipe(new RecipeData(Blocks.SPRUCE_PLANKS, ItemTags.SPRUCE_LOGS, Blocks.SPRUCE_SLAB))).inventoryBackground(1, 1).setUiTitleColor(0x443321).setBackpackModelInfo(new BackpackModelInfo(Blocks.SPRUCE_PLANKS, Blocks.SPRUCE_LOG, Blocks.BROWN_WOOL));
+        BIRCH = register(new StorageType().setWooden(WoodType.BIRCH).name("birch").recipe(new RecipeData(Blocks.BIRCH_PLANKS, ItemTags.BIRCH_LOGS, Blocks.BIRCH_SLAB))).inventoryBackground(2, 0).setUiTitleColor(0x514f47).setBackpackModelInfo(new BackpackModelInfo(Blocks.BIRCH_PLANKS, Blocks.BIRCH_LOG, Blocks.WHITE_WOOL));
+        ACACIA = register(new StorageType().setWooden(WoodType.ACACIA).name("acacia").recipe(new RecipeData(Blocks.ACACIA_PLANKS, ItemTags.ACACIA_LOGS, Blocks.ACACIA_SLAB))).inventoryBackground(1, 0).setUiTitleColor(0x4b473e).setBackpackModelInfo(new BackpackModelInfo(Blocks.ACACIA_PLANKS, Blocks.ACACIA_LOG, Blocks.RED_WOOL));
+        CHERRY = register(new StorageType().setWooden(WoodType.CHERRY).name("cherry").recipe(new RecipeData(Blocks.CHERRY_PLANKS, ItemTags.CHERRY_LOGS, Blocks.CHERRY_SLAB)).soundType(SoundType.CHERRY_WOOD).backpackOpen(SoundEvents.CHERRY_WOOD_TRAPDOOR_OPEN).backpackClose(SoundEvents.CHERRY_WOOD_TRAPDOOR_CLOSE)).inventoryBackground(3, 0).setUiTitleColor(0x271620).setBackpackModelInfo(new BackpackModelInfo(Blocks.CHERRY_PLANKS, Blocks.CHERRY_LOG, Blocks.PINK_WOOL));
+        JUNGLE = register(new StorageType().setWooden(WoodType.JUNGLE).name("jungle").recipe(new RecipeData(Blocks.JUNGLE_PLANKS, ItemTags.JUNGLE_LOGS, Blocks.JUNGLE_SLAB))).inventoryBackground(6, 0).setUiTitleColor(0x3e3013).setBackpackModelInfo(new BackpackModelInfo(Blocks.JUNGLE_PLANKS, Blocks.JUNGLE_LOG, Blocks.BROWN_WOOL));
+        DARK_OAK = register(new StorageType().setWooden(WoodType.DARK_OAK).name("dark_oak").recipe(new RecipeData(Blocks.DARK_OAK_PLANKS, ItemTags.DARK_OAK_LOGS, Blocks.DARK_OAK_SLAB))).inventoryBackground(5, 0).setUiTitleColor(0x292011).setBackpackModelInfo(new BackpackModelInfo(Blocks.DARK_OAK_PLANKS, Blocks.DARK_OAK_LOG, Blocks.BLACK_WOOL));
+        PALE_OAK = register(new StorageType().setWooden(WoodType.PALE_OAK).name("pale_oak").recipe(new RecipeData(Blocks.PALE_OAK_PLANKS, ItemTags.PALE_OAK_LOGS, Blocks.PALE_OAK_SLAB))).inventoryBackground(4, 3).setUiTitleColor(0x4e4340).setBackpackModelInfo(new BackpackModelInfo(Blocks.PALE_OAK_PLANKS, Blocks.PALE_OAK_LOG, Blocks.WHITE_WOOL));
+        CRIMSON = register(new StorageType().setWooden(WoodType.CRIMSON).name("crimson").recipe(new RecipeData(Blocks.CRIMSON_PLANKS, ItemTags.CRIMSON_STEMS, Blocks.CRIMSON_SLAB)).setNetherWood()).inventoryBackground(4, 0).setUiTitleColor(0x3f1e2d).setBackpackModelInfo(new BackpackModelInfo(Blocks.CRIMSON_PLANKS, Blocks.CRIMSON_STEM, Blocks.RED_WOOL));
+        WARPED = register(new StorageType().setWooden(WoodType.WARPED).name("warped").recipe(new RecipeData(Blocks.WARPED_PLANKS, ItemTags.WARPED_STEMS, Blocks.WARPED_PLANKS)).setNetherWood()).inventoryBackground(2, 1).setUiTitleColor(0x452d5c).setBackpackModelInfo(new BackpackModelInfo(Blocks.WARPED_PLANKS, Blocks.WARPED_STEM, Blocks.CYAN_WOOL));
+        MANGROVE = register(new StorageType().setWooden(WoodType.MANGROVE).name("mangrove").recipe(new RecipeData(Blocks.MANGROVE_PLANKS, ItemTags.MANGROVE_LOGS, Blocks.MANGROVE_SLAB))).inventoryBackground(7, 0).setUiTitleColor(0x3c2f23).setBackpackModelInfo(new BackpackModelInfo(Blocks.MANGROVE_PLANKS, Blocks.MANGROVE_LOG, Blocks.WHITE_WOOL));
+        BAMBOO = register(new StorageType().setWooden(WoodType.BAMBOO).name("bamboo").recipe(new RecipeData(Blocks.BAMBOO_PLANKS, ItemTags.BAMBOO_BLOCKS, Blocks.BAMBOO_SLAB))
                 .soundType(SoundType.BAMBOO_WOOD).backpackOpen(SoundEvents.BAMBOO_WOOD_TRAPDOOR_OPEN).backpackClose(SoundEvents.BAMBOO_WOOD_TRAPDOOR_CLOSE)).inventoryBackground(3, 1).setUiTitleColor(0x907e3a).setBackpackModelInfo(new BackpackModelInfo(Blocks.BAMBOO_PLANKS, Blocks.BAMBOO_BLOCK, Blocks.WHITE_WOOL));
     }
 }
