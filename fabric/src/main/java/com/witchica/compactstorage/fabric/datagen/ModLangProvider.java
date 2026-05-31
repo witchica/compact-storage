@@ -42,6 +42,12 @@ public class ModLangProvider extends FabricLanguageProvider {
         translationBuilder.add(createTooltipDescriptorId("upgrade_height"), "Can be applied to CompactStorage inventories to increase their height");
         translationBuilder.add(createTooltipDescriptorId("upgrade_height_limit"), "Height is limited to a maximum of %d");
         translationBuilder.add(createTooltipDescriptorId("upgrade_retaining"), "Allows CompactStorage inventories to keep their contents when broken");
+
+        translationBuilder.add("message.compact_storage.upgrades.width.fail", "Inventory has already reached the maximum width.");
+        translationBuilder.add("message.compact_storage.upgrades.height.fail", "Inventory has already reached the maximum height.");
+        translationBuilder.add("message.compact_storage.upgrades.retaining.fail", "Inventory has already got the retaining upgrade.");
+
+        translationBuilder.add("message.compact_storage.upgrades.not_allowed", "Inventory cannot accept this upgrade type.");
     }
 
     private String snakeCaseToName(String s) {

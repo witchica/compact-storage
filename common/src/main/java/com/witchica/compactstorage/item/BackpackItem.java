@@ -2,15 +2,21 @@ package com.witchica.compactstorage.item;
 
 import com.witchica.compactstorage.api.StorageTypeProvider;
 import com.witchica.compactstorage.client.screens.GenericCompactStorageMenuScreen;
+import com.witchica.compactstorage.components.ResizableInventoryComponent;
 import com.witchica.compactstorage.data.StorageType;
+import com.witchica.compactstorage.data.UpgradeType;
 import com.witchica.compactstorage.menu.CompactStorageMenuData;
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
+import com.witchica.compactstorage.mod.CompactStorageComponents;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.world.BalmMenuProvider;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
@@ -74,8 +80,48 @@ public class BackpackItem extends Item implements StorageTypeProvider {
                 ((ServerPlayer) player).closeContainer();
                 return super.use(level, player, hand);
             }
-            Balm.networking().openMenu(player, new BackpackMenuProvider(hand, player.getItemInHand(hand)));
 
+            ItemStack backpackStack = player.getItemInHand(hand);
+            ItemStack oppositeStack = player.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+
+            if(!oppositeStack.isEmpty() && oppositeStack.getItem() instanceof StorageUpgradeItem storageUpgradeItem) {
+                UpgradeType upgradeType = storageUpgradeItem.getUpgradeType();
+                ResizableInventoryComponent resizableInventoryComponent = backpackStack.has(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value()) ? backpackStack.get(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value()) : new ResizableInventoryComponent(9, 3);
+
+                if(resizableInventoryComponent == null) {
+                    return InteractionResult.FAIL;
+                }
+
+                if(upgradeType == UpgradeType.WIDTH_UPGRADE) {
+                    if(resizableInventoryComponent.inventoryWidth() < 21) {
+                        backpackStack.update(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), resizableInventoryComponent, ResizableInventoryComponent::increaseWidth);
+                        oppositeStack.setCount(oppositeStack.getCount() - 1);
+                        level.playSound(null, player.getOnPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.NEUTRAL);
+                        return InteractionResult.CONSUME;
+                    } else {
+                        level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL);
+                        player.displayClientMessage(upgradeType.upgradeFailMessage(), true);
+                        return InteractionResult.FAIL;
+                    }
+                } else if(upgradeType == UpgradeType.HEIGHT_UPGRADE) {
+                    if(resizableInventoryComponent.inventoryHeight() < 12) {
+                        backpackStack.update(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), resizableInventoryComponent, ResizableInventoryComponent::increaseHeight);
+                        oppositeStack.setCount(oppositeStack.getCount() - 1);
+                        level.playSound(null, player.getOnPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.NEUTRAL);
+                        return InteractionResult.CONSUME;
+                    } else {
+                        level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL);
+                        player.displayClientMessage(upgradeType.upgradeFailMessage(), true);
+                        return InteractionResult.FAIL;
+                    }
+                } else {
+                    level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL);
+                    player.displayClientMessage(upgradeType.upgradeNotCompatibleMessage(), true);
+                    return InteractionResult.FAIL;
+                }
+            }
+
+            Balm.networking().openMenu(player, new BackpackMenuProvider(hand, backpackStack));
             return InteractionResult.CONSUME;
         }
 

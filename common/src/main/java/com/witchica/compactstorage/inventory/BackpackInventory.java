@@ -3,9 +3,11 @@ package com.witchica.compactstorage.inventory;
 import com.witchica.compactstorage.api.StorageTypeProvider;
 import com.witchica.compactstorage.api.inventory.ResizableContainer;
 import com.witchica.compactstorage.api.inventory.UpgradableContainer;
+import com.witchica.compactstorage.components.ResizableInventoryComponent;
 import com.witchica.compactstorage.data.CompactStorageOpeningSource;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.data.UpgradeType;
+import com.witchica.compactstorage.mod.CompactStorageComponents;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -14,25 +16,22 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.ContainerUser;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemContainerContents;
 import org.jspecify.annotations.NonNull;
-
-import javax.xml.crypto.Data;
 import java.util.Optional;
 
-public class BackpackInventory implements Container, ResizableContainer, UpgradableContainer {
+public class BackpackInventory implements Container, ResizableContainer {
     private final Player player;
     private final CompactStorageOpeningSource openingSource;
     private final ItemStack backpackStack;
     private final Optional<InteractionHand> hand;
     private final @NonNull StorageType storageType;
 
-    private int inventoryWidth;
-    private int inventoryHeight;
+    private int inventoryWidth = 9;
+    private int inventoryHeight = 3;
     private NonNullList<ItemStack> items;
 
 
@@ -47,25 +46,22 @@ public class BackpackInventory implements Container, ResizableContainer, Upgrada
     }
 
     public void fromItemStack(ItemStack stack) {
-        if(stack.has(DataComponents.CUSTOM_DATA)) {
-            CustomData data = stack.get(DataComponents.CUSTOM_DATA);
-            CompoundTag tag = data.copyTag();
+        if(stack.has(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value())) {
+            ResizableInventoryComponent resizableInventoryComponent = stack.get(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value());
 
-
-            switch(tag.getIntOr("Version", 0)) {
-                case 2: {
-                    this.inventoryWidth = tag.getIntOr("InventoryWidth", 9);
-                    this.inventoryHeight = tag.getIntOr("InventoryHeight", 3);
-                    break;
-                }
-                default: {
-                    this.inventoryWidth = tag.getIntOr("inventory_width", 9);
-                    this.inventoryHeight = tag.getIntOr("inventory_height", 3);
-                }
+            if(resizableInventoryComponent != null) {
+                resizableInventoryComponent.apply(this);
             }
-        } else {
-            this.inventoryWidth = 9;
-            this.inventoryHeight = 3;
+        } else if(stack.has(DataComponents.CUSTOM_DATA)) {
+            CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+
+            if(data != null) {
+                CompoundTag tag = data.copyTag();
+
+                this.inventoryWidth = tag.getIntOr(tag.contains("inventory_width") ? "inventory_width" : "InventoryWidth", 9);
+                this.inventoryHeight = tag.getIntOr(tag.contains("inventory_height") ? "inventory_height" : "InventoryHeight", 3);
+            }
+
         }
 
         this.items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
@@ -88,20 +84,17 @@ public class BackpackInventory implements Container, ResizableContainer, Upgrada
     @Override
     public void stopOpen(ContainerUser user) {
         Container.super.stopOpen(user);
+        player.playSound(storageType.backpackCloseSound);
 
-        if(openingSource == CompactStorageOpeningSource.BACKPACK_IN_HAND) {
-            ItemStack handStack = player.getItemInHand(hand.get());
-            handStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getItems()));
-            handStack.set(DataComponents.CUSTOM_DATA, saveToCustomData());
-        }
+        saveBackpackData();
     }
 
-    private CustomData saveToCustomData() {
-        CompoundTag tag = new CompoundTag();
-        tag.putInt("InventoryWidth", inventoryWidth);
-        tag.putInt("InventoryHeight", inventoryHeight);
-        tag.putInt("Version", 2);
-        return CustomData.of(tag);
+    public void saveBackpackData() {
+        if(openingSource == CompactStorageOpeningSource.BACKPACK_IN_HAND && hand.isPresent()) {
+            ItemStack handStack = player.getItemInHand(hand.get());
+            handStack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getItems()));
+            handStack.set(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(inventoryWidth, inventoryHeight));
+        }
     }
 
     @Override
@@ -128,34 +121,6 @@ public class BackpackInventory implements Container, ResizableContainer, Upgrada
     public void setSize(int width, int height) {
         this.inventoryWidth = width;
         this.inventoryHeight = height;
-    }
-
-    @Override
-    public boolean canApplyUpgrade(UpgradeType upgradeType) {
-        if(upgradeType == UpgradeType.WIDTH_UPGRADE) {
-            return getWidth() < getMaximumWidth();
-        } else if(upgradeType == UpgradeType.HEIGHT_UPGRADE) {
-            return getHeight() < getMaximumHeight();
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean applyUpgrade(UpgradeType upgradeType) {
-        if(!canApplyUpgrade(upgradeType)) {
-            return false;
-        }
-
-        if(upgradeType == UpgradeType.WIDTH_UPGRADE) {
-            setWidth(Math.min(getWidth() + 1, getMaximumWidth()));
-            return true;
-        } else if(upgradeType == UpgradeType.HEIGHT_UPGRADE) {
-            setHeight(Math.min(getHeight() + 1, getMaximumHeight()));
-            return true;
-        }
-
-        return false;
     }
 
     @Override
@@ -207,7 +172,7 @@ public class BackpackInventory implements Container, ResizableContainer, Upgrada
 
     @Override
     public void setChanged() {
-
+        saveBackpackData();
     }
 
     @Override

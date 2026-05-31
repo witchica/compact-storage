@@ -1,14 +1,11 @@
 package com.witchica.compactstorage;
 
-import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
-import com.witchica.compactstorage.mod.CompactStorageMenuTypes;
+import com.witchica.compactstorage.mod.*;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.witchica.compactstorage.mod.CompactStorageBlocks;
-import com.witchica.compactstorage.mod.CompactStorageItems;
 
 public class CompactStorage {
 
@@ -27,6 +24,7 @@ public class CompactStorage {
     public static void initialize(BalmRegistrars registrars) {
         Balm.config().registerConfig(CompactStorageConfig.class);
 
+        registrars.dataComponentTypes(CompactStorageComponents::initialize);
         registrars.blocks(CompactStorageBlocks::initialize);
         registrars.items(CompactStorageItems::initializeItems);
         registrars.creativeModeTabs(CompactStorageItems::initializeCreativeTabs);
