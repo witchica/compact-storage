@@ -221,11 +221,11 @@ public class StorageType {
     }
 
     public String chestNameFactory() {
-        return isWooden ? getName() + "_compact_chest" : "compact_chest_" + getName();
+        return getName() + "_compact_chest";
     }
 
     public String barrelNameFactory() {
-        return isWooden ? getName() + "_compact_barrel" : "compact_barrel_" + getName();
+        return getName() + "_compact_barrel";
     }
 
     public String itemDrumNameFactory() {
@@ -233,7 +233,7 @@ public class StorageType {
     }
 
     public String backpackNameFactory() {
-        return (isWooden ? getName() + "_pack_frame" : "backpack_" + getName());
+        return getName() + (isWooden() ? "_pack_frame" : "_backpack");
     }
 
 
