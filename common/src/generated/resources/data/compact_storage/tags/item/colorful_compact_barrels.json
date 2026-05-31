@@ -1,20 +1,20 @@
 {
   "values": [
     "compact_storage:yellow_compact_barrel",
-    "compact_storage:white_compact_barrel",
     "compact_storage:lime_compact_barrel",
-    "compact_storage:green_compact_barrel",
-    "compact_storage:brown_compact_barrel",
-    "compact_storage:magenta_compact_barrel",
-    "compact_storage:pink_compact_barrel",
-    "compact_storage:red_compact_barrel",
-    "compact_storage:light_gray_compact_barrel",
-    "compact_storage:gray_compact_barrel",
-    "compact_storage:orange_compact_barrel",
-    "compact_storage:cyan_compact_barrel",
-    "compact_storage:blue_compact_barrel",
     "compact_storage:purple_compact_barrel",
+    "compact_storage:blue_compact_barrel",
     "compact_storage:black_compact_barrel",
-    "compact_storage:light_blue_compact_barrel"
+    "compact_storage:gray_compact_barrel",
+    "compact_storage:cyan_compact_barrel",
+    "compact_storage:light_blue_compact_barrel",
+    "compact_storage:light_gray_compact_barrel",
+    "compact_storage:red_compact_barrel",
+    "compact_storage:orange_compact_barrel",
+    "compact_storage:green_compact_barrel",
+    "compact_storage:pink_compact_barrel",
+    "compact_storage:magenta_compact_barrel",
+    "compact_storage:white_compact_barrel",
+    "compact_storage:brown_compact_barrel"
   ]
 }

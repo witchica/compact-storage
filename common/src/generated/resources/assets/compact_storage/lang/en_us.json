@@ -1,4 +1,12 @@
 {
+  "advancement.compact_storage.compacting_your_storage.description": "Get your first Compact Chest",
+  "advancement.compact_storage.compacting_your_storage.title": "Compacting your storage!",
+  "advancement.compact_storage.got_backpack.description": "Now you can take lots of things with you, how cool is that?",
+  "advancement.compact_storage.got_backpack.title": "Storing things on the move? No problem.",
+  "advancement.compact_storage.got_barrel.description": "On your way to becoming a master of CompactStorage!",
+  "advancement.compact_storage.got_barrel.title": "Barrels, now even cooler",
+  "advancement.compact_storage.got_drum.description": "Finding ways to store lots of one thing",
+  "advancement.compact_storage.got_drum.title": "64 x 64 = 4096",
   "block.compact_storage.acacia_compact_barrel": "Acacia Barrel",
   "block.compact_storage.acacia_compact_chest": "Acacia Chest",
   "block.compact_storage.acacia_drum": "Acacia Item Drum",

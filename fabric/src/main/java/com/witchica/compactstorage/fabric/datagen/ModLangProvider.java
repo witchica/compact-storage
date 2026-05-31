@@ -48,6 +48,18 @@ public class ModLangProvider extends FabricLanguageProvider {
         translationBuilder.add("message.compact_storage.upgrades.retaining.fail", "Inventory has already got the retaining upgrade.");
 
         translationBuilder.add("message.compact_storage.upgrades.not_allowed", "Inventory cannot accept this upgrade type.");
+
+        translationBuilder.add("advancement.compact_storage.compacting_your_storage.title", "Compacting your storage!");
+        translationBuilder.add("advancement.compact_storage.compacting_your_storage.description", "Get your first Compact Chest");
+
+        translationBuilder.add("advancement.compact_storage.got_barrel.title", "Barrels, now even cooler");
+        translationBuilder.add("advancement.compact_storage.got_barrel.description", "On your way to becoming a master of CompactStorage!");
+
+        translationBuilder.add("advancement.compact_storage.got_drum.title", "64 x 64 = 4096");
+        translationBuilder.add("advancement.compact_storage.got_drum.description", "Finding ways to store lots of one thing");
+
+        translationBuilder.add("advancement.compact_storage.got_backpack.title", "Storing things on the move? No problem.");
+        translationBuilder.add("advancement.compact_storage.got_backpack.description", "Now you can take lots of things with you, how cool is that?");
     }
 
     private String snakeCaseToName(String s) {

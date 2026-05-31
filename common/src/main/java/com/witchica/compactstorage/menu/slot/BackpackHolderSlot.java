@@ -17,12 +17,20 @@ public class BackpackHolderSlot extends Slot {
     @Override
     public boolean mayPickup(Player player) {
         boolean isBackpack = getItem().getItem() instanceof BackpackItem;
-        return super.mayPickup(player) && (shouldFreezeBackpacks && !isBackpack);
+        if(isBackpack && shouldFreezeBackpacks) {
+            return false;
+        }
+
+        return super.mayPickup(player);
     }
 
     @Override
     public boolean mayPlace(ItemStack stack) {
         boolean isBackpack = stack.getItem() instanceof BackpackItem;
-        return super.mayPlace(stack) && (shouldFreezeBackpacks && !isBackpack);
+        if(isBackpack && shouldFreezeBackpacks) {
+            return false;
+        }
+
+        return super.mayPlace(stack);
     }
 }

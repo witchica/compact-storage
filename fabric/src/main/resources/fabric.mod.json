@@ -30,8 +30,8 @@
     ]
   },
   "mixins": [
-    "compactstorage.mixins.json",
-    "compactstorage.fabric.mixins.json"
+    "compact_storage.mixins.json",
+    "compact_storage.fabric.mixins.json"
   ],
   "depends": {
     "java": ">=${java_version}",
