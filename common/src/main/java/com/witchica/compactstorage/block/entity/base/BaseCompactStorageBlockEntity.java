@@ -2,15 +2,20 @@ package com.witchica.compactstorage.block.entity.base;
 
 import com.mojang.serialization.Codec;
 import com.witchica.compactstorage.api.inventory.UpgradableContainer;
+import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
+import com.witchica.compactstorage.components.ResizableInventoryComponent;
 import com.witchica.compactstorage.menu.CompactStorageMenuData;
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
 import com.witchica.compactstorage.api.inventory.RetainingContainer;
+import com.witchica.compactstorage.mod.CompactStorageComponents;
 import com.witchica.compactstorage.util.CompactStorageContainerOpenerCounter;
 import net.blay09.mods.balm.world.BalmMenuProvider;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -217,12 +222,12 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
 
     @Override
     public void setRetaining(boolean retaining) {
-        this.retaining = retaining;
+        level.setBlock(getBlockPos(), getBlockState().setValue(BaseCompactStorageBlock.RETAINING, retaining), 2);
     }
 
     @Override
     public boolean isRetaining() {
-        return retaining;
+        return getBlockState().getValue(BaseCompactStorageBlock.RETAINING);
     }
 
     @Override
@@ -248,5 +253,31 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         if (!this.remove) {
             this.containerOpenersCounter.recheckOpeners(this.getLevel(), this.getBlockPos(), this.getBlockState());
         }
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentGetter dataComponentGetter) {
+        super.applyImplicitComponents(dataComponentGetter);
+        setRetaining(dataComponentGetter.getOrDefault(CompactStorageComponents.RETAINING_DATA.value(), false).booleanValue());
+
+        ResizableInventoryComponent resizableInventoryComponent = dataComponentGetter.get(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value());
+        if(resizableInventoryComponent != null) {
+            resizableInventoryComponent.apply(this);
+        }
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder dataComponentMap) {
+        super.collectImplicitComponents(dataComponentMap);
+        dataComponentMap.set(CompactStorageComponents.RETAINING_DATA.value(), this.isRetaining());
+        dataComponentMap.set(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(this.getWidth(), this.getHeight()));
+    }
+
+    @Override
+    public void removeComponentsFromTag(ValueOutput tag) {
+        super.removeComponentsFromTag(tag);
+        tag.discard("InventoryWidth");
+        tag.discard("InventoryHeight");
+        tag.discard("Retaining");
     }
 }

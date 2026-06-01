@@ -7,10 +7,14 @@ import com.witchica.compactstorage.block.base.BaseItemDrumBlock;
 import com.witchica.compactstorage.data.UpgradeType;
 import com.witchica.compactstorage.inventory.DrumInventory;
 import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
+import com.witchica.compactstorage.mod.CompactStorageComponents;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -20,6 +24,7 @@ import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -167,5 +172,19 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
     public void setRetaining(boolean retaining) {
         this.retaining = retaining;
         checkAndApplyRetainingState();
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components) {
+        super.collectImplicitComponents(components);
+        components.set(CompactStorageComponents.RETAINING_DATA.value(), this.retaining);
+        components.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getDrumInventory().getItems()));
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentGetter componentGetter) {
+        super.applyImplicitComponents(componentGetter);
+        this.retaining = componentGetter.getOrDefault(CompactStorageComponents.RETAINING_DATA.value(), false);
+        componentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(getDrumInventory().getItems());
     }
 }

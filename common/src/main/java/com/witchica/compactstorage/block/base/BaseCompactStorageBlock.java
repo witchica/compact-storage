@@ -19,6 +19,7 @@ import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
@@ -60,12 +61,14 @@ public abstract class BaseCompactStorageBlock extends BaseEntityBlock implements
                 UpgradeType upgradeType = upgradeItem.getUpgradeType();
                 if(level.getBlockEntity(pos) instanceof UpgradableContainer upgradableContainer) {
                     boolean applied = upgradableContainer.applyUpgrade(upgradeType);
+
                     if(applied) {
                         stack.setCount(stack.getCount() - 1);
                         level.playSound(null, pos, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
                         return InteractionResult.CONSUME;
                     } else {
                         level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
+                        player.displayClientMessage(upgradeItem.getUpgradeType().upgradeFailMessage(), true);
                         return InteractionResult.FAIL;
                     }
                 }

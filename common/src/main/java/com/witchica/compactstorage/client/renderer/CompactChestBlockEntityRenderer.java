@@ -4,8 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.block.CompactChestBlock;
+import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
 import com.witchica.compactstorage.block.entity.CompactChestBlockEntity;
 import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.object.chest.ChestModel;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -30,26 +32,40 @@ import java.util.Map;
 
 public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<CompactChestBlockEntity, CompactChestBlockEntityRenderer.CompactChestRenderState> {
     public static class CompactChestRenderState extends BlockEntityRenderState {
+        public boolean retaining;
         float lidAngle;
         float rotation;
         StorageType type = StorageType.OAK;
     }
 
     public static final Map<StorageType, Material> CHEST_MATERIALS = new HashMap<>();
+    public static final Material RETAINING_MATERTIAL;
 
     static {
         for(StorageType type : StorageType.values()) {
             CHEST_MATERIALS.put(type, Sheets.CHEST_MAPPER.apply(Identifier.fromNamespaceAndPath(CompactStorage.MOD_ID, type.getName() + "_chest")));
         }
-    }
 
+        RETAINING_MATERTIAL = Sheets.CHEST_MAPPER.apply(Identifier.fromNamespaceAndPath(CompactStorage.MOD_ID, "retaining_chest"));
+    }
     private final ChestModel chestModel;
+    private final ChestModel lockModel;
+
     private final MaterialSet materials;
 
     public CompactChestBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
         super();
         this.materials = context.materials();
-        this.chestModel = new ChestModel(context.bakeLayer(ModelLayers.CHEST));
+
+        ModelPart chestBaseAndLid = context.bakeLayer(ModelLayers.CHEST);
+        ModelPart chestLock = context.bakeLayer(ModelLayers.CHEST);
+
+        chestBaseAndLid.getChild("lock").skipDraw = true;
+        chestLock.getChild("bottom").skipDraw = true;
+        chestLock.getChild("lid").skipDraw = true;
+
+        this.chestModel = new ChestModel(chestBaseAndLid);
+        this.lockModel = new ChestModel(chestLock);
     }
 
 
@@ -67,6 +83,7 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
             renderState.lidAngle = blockEntity.getOpenNess(partialTick);
             if(blockEntity.getBlockState().getBlock() instanceof CompactChestBlock compactChestBlock) {
                 renderState.type = compactChestBlock.getStorageType();
+                renderState.retaining = blockEntity.getBlockState().getValue(BaseCompactStorageBlock.RETAINING);
             }
         } else {
             renderState.lidAngle = 0;
@@ -87,7 +104,14 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
         RenderType renderType = material.renderType(RenderTypes::entitySolid);
         TextureAtlasSprite textureAtlasSprite = this.materials.get(material);
 
+        TextureAtlasSprite lockSprite = textureAtlasSprite;
+
+        if(compactChestRenderState.retaining) {
+            lockSprite = this.materials.get(RETAINING_MATERTIAL);
+        }
+
         submitNodeCollector.submitModel(chestModel, f, poseStack, renderType, compactChestRenderState.lightCoords, OverlayTexture.NO_OVERLAY, -1, textureAtlasSprite, 0, compactChestRenderState.breakProgress);
+        submitNodeCollector.submitModel(lockModel, f, poseStack, renderType, compactChestRenderState.lightCoords, OverlayTexture.NO_OVERLAY, -1, lockSprite, 0, compactChestRenderState.breakProgress);
         poseStack.popPose();
     }
 }

@@ -1,0 +1,48 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "conditions": [
+                {
+                  "block": "compact_storage:jungle_compact_barrel",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "retaining": "true"
+                  }
+                }
+              ],
+              "function": "minecraft:copy_components",
+              "include": [
+                "minecraft:container"
+              ],
+              "source": "block_entity"
+            },
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "minecraft:custom_data",
+                "minecraft:lock",
+                "compact_storage:retaining_data",
+                "compact_storage:resizable_inventory_data"
+              ],
+              "source": "block_entity"
+            }
+          ],
+          "name": "compact_storage:jungle_compact_barrel"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ]
+}
