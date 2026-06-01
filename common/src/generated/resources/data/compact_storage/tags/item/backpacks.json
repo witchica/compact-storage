@@ -1,20 +1,20 @@
 {
   "values": [
-    "compact_storage:light_gray_backpack",
-    "compact_storage:yellow_backpack",
-    "compact_storage:gray_backpack",
-    "compact_storage:brown_backpack",
+    "compact_storage:purple_backpack",
     "compact_storage:light_blue_backpack",
-    "compact_storage:blue_backpack",
+    "compact_storage:light_gray_backpack",
+    "compact_storage:orange_backpack",
     "compact_storage:pink_backpack",
-    "compact_storage:red_backpack",
+    "compact_storage:black_backpack",
     "compact_storage:magenta_backpack",
-    "compact_storage:green_backpack",
+    "compact_storage:red_backpack",
+    "compact_storage:gray_backpack",
+    "compact_storage:blue_backpack",
+    "compact_storage:yellow_backpack",
+    "compact_storage:brown_backpack",
     "compact_storage:lime_backpack",
     "compact_storage:cyan_backpack",
-    "compact_storage:purple_backpack",
-    "compact_storage:white_backpack",
-    "compact_storage:orange_backpack",
-    "compact_storage:black_backpack"
+    "compact_storage:green_backpack",
+    "compact_storage:white_backpack"
   ]
 }

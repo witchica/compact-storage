@@ -5,58 +5,61 @@
       "conditions": {
         "items": [
           {
-            "items": "compact_storage:light_gray_backpack"
-          },
-          {
-            "items": "compact_storage:pale_oak_pack_frame"
-          },
-          {
-            "items": "compact_storage:yellow_backpack"
-          },
-          {
-            "items": "compact_storage:birch_pack_frame"
-          },
-          {
-            "items": "compact_storage:mangrove_pack_frame"
-          },
-          {
-            "items": "compact_storage:gray_backpack"
-          },
-          {
-            "items": "compact_storage:brown_backpack"
-          },
-          {
-            "items": "compact_storage:crimson_pack_frame"
-          },
-          {
-            "items": "compact_storage:light_blue_backpack"
-          },
-          {
-            "items": "compact_storage:blue_backpack"
-          },
-          {
-            "items": "compact_storage:bamboo_pack_frame"
-          },
-          {
-            "items": "compact_storage:pink_backpack"
-          },
-          {
-            "items": "compact_storage:red_backpack"
+            "items": "compact_storage:oak_pack_frame"
           },
           {
             "items": "compact_storage:jungle_pack_frame"
           },
           {
+            "items": "compact_storage:purple_backpack"
+          },
+          {
+            "items": "compact_storage:light_blue_backpack"
+          },
+          {
+            "items": "compact_storage:light_gray_backpack"
+          },
+          {
+            "items": "compact_storage:orange_backpack"
+          },
+          {
+            "items": "compact_storage:pink_backpack"
+          },
+          {
+            "items": "compact_storage:black_backpack"
+          },
+          {
             "items": "compact_storage:magenta_backpack"
+          },
+          {
+            "items": "compact_storage:red_backpack"
+          },
+          {
+            "items": "compact_storage:pale_oak_pack_frame"
           },
           {
             "items": "compact_storage:spruce_pack_frame"
           },
           {
-            "items": "compact_storage:green_backpack"
+            "items": "compact_storage:birch_pack_frame"
           },
           {
-            "items": "compact_storage:acacia_pack_frame"
+            "items": "compact_storage:bamboo_pack_frame"
+          },
+          {
+            "items": "compact_storage:gray_backpack"
+          },
+          {
+            "items": "compact_storage:blue_backpack"
+          },
+          {
+            "items": "compact_storage:mangrove_pack_frame"
+          },
+          {
+            "items": "compact_storage:yellow_backpack"
+          },
+          {
+            "items": "compact_storage:brown_backpack"
           },
           {
             "items": "compact_storage:lime_backpack"
@@ -65,28 +68,25 @@
             "items": "compact_storage:cyan_backpack"
           },
           {
-            "items": "compact_storage:purple_backpack"
+            "items": "compact_storage:cherry_pack_frame"
           },
           {
-            "items": "compact_storage:white_backpack"
-          },
-          {
-            "items": "compact_storage:orange_backpack"
-          },
-          {
-            "items": "compact_storage:oak_pack_frame"
-          },
-          {
-            "items": "compact_storage:black_backpack"
-          },
-          {
-            "items": "compact_storage:warped_pack_frame"
+            "items": "compact_storage:acacia_pack_frame"
           },
           {
             "items": "compact_storage:dark_oak_pack_frame"
           },
           {
-            "items": "compact_storage:cherry_pack_frame"
+            "items": "compact_storage:green_backpack"
+          },
+          {
+            "items": "compact_storage:crimson_pack_frame"
+          },
+          {
+            "items": "compact_storage:white_backpack"
+          },
+          {
+            "items": "compact_storage:warped_pack_frame"
           }
         ]
       },

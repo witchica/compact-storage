@@ -44,7 +44,7 @@ public class ModLootTableGenerator extends FabricBlockLootTableProvider {
         for(StorageType storageType : StorageType.values()) {
             createStorageDrop(CompactStorageBlocks.compactChests.get(storageType).asBlock());
             createStorageDrop(CompactStorageBlocks.compactBarrels.get(storageType).asBlock());
-            createItemDrumDrop(CompactStorageBlocks.itemDrums.get(storageType).asBlock());
+            createStorageDrop(CompactStorageBlocks.itemDrums.get(storageType).asBlock());
         }
     }
 
@@ -52,17 +52,6 @@ public class ModLootTableGenerator extends FabricBlockLootTableProvider {
         add(block, LootTable.lootTable()
                 .withPool((LootPool.Builder)this.applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
                         .add(LootItem.lootTableItem(block)
-                                .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY)
-                                        .include(DataComponents.CONTAINER).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(BaseCompactStorageBlock.RETAINING, true))))
-                                .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY).include(DataComponents.CUSTOM_DATA).include(DataComponents.LOCK).include(CompactStorageComponents.RETAINING_DATA.value()).include(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value()))))));
-    }
-
-    public void createItemDrumDrop(Block block) {
-        add(block, LootTable.lootTable()
-                .withPool((LootPool.Builder)this.applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F))
-                        .add(LootItem.lootTableItem(block)
-                                .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY)
-                                        .include(DataComponents.CONTAINER).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(BaseCompactStorageBlock.RETAINING, true))))
-                                .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY).include(DataComponents.CUSTOM_DATA).include(DataComponents.LOCK).include(CompactStorageComponents.RETAINING_DATA.value()))))));
+                                .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY))))));
     }
 }

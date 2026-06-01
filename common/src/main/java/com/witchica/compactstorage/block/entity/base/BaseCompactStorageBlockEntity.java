@@ -16,6 +16,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -25,6 +26,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.Containers;
 import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -43,6 +45,7 @@ import com.witchica.compactstorage.api.inventory.ResizableContainer;
 import com.witchica.compactstorage.data.UpgradeType;
 import org.jspecify.annotations.Nullable;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 
 public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEntity implements BalmMenuProvider<@NotNull CompactStorageMenuData>, ResizableContainer, RetainingContainer, UpgradableContainer {
@@ -274,10 +277,17 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
     }
 
     @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        if(!state.getValue(BaseCompactStorageBlock.RETAINING)) {
+            Containers.dropContents(level, pos, this);
+            clearContent();
+        }
+    }
+
+    @Override
     public void removeComponentsFromTag(ValueOutput tag) {
         super.removeComponentsFromTag(tag);
         tag.discard("InventoryWidth");
         tag.discard("InventoryHeight");
-        tag.discard("Retaining");
     }
 }

@@ -3,6 +3,7 @@ package com.witchica.compactstorage.block.entity.base;
 import com.mojang.serialization.Codec;
 import com.witchica.compactstorage.api.inventory.RetainingContainer;
 import com.witchica.compactstorage.api.inventory.UpgradableContainer;
+import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
 import com.witchica.compactstorage.block.base.BaseItemDrumBlock;
 import com.witchica.compactstorage.data.UpgradeType;
 import com.witchica.compactstorage.inventory.DrumInventory;
@@ -20,6 +21,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.Containers;
 import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -186,5 +188,13 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
         super.applyImplicitComponents(componentGetter);
         this.retaining = componentGetter.getOrDefault(CompactStorageComponents.RETAINING_DATA.value(), false);
         componentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(getDrumInventory().getItems());
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        if(!state.getValue(BaseCompactStorageBlock.RETAINING)) {
+            Containers.dropContents(level, pos, drumInventory);
+            drumInventory.clearContent();
+        }
     }
 }
