@@ -42,7 +42,6 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
     public Optional<ItemStack> clientItem = Optional.empty();
     public int clientStackSize;
     public int clientStoredItems;
-    private boolean retaining;
 
     public BaseItemDrumBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CompactStorageBlockEntities.DRUM_BLOCK_ENTITY.value(), blockPos, blockState);
@@ -86,8 +85,6 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
 
         output.putInt("ClientStackSize", drumInventory.getMaxStackSize());
         output.putInt("ClientStoredItems", getTotalItemCount());
-
-        output.store("Retaining", Codec.BOOL, isRetaining());
         output.store("Version", Codec.INT,2);
     }
 
@@ -113,15 +110,6 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
         this.clientItem = input.read("ClientItem", ItemStack.CODEC);
         this.clientStackSize = input.getIntOr("ClientStackSize", 0);
         this.clientStoredItems = input.getIntOr("ClientStoredItems", 0);
-        this.retaining = input.getBooleanOr("Retaining", false);
-
-        checkAndApplyRetainingState();
-    }
-
-    protected void checkAndApplyRetainingState() {
-        if(retaining != getBlockState().getValue(BaseItemDrumBlock.RETAINING)) {
-            getLevel().setBlock(getBlockPos(), getBlockState().setValue(BaseItemDrumBlock.RETAINING, isRetaining()), 2);
-        }
     }
 
     @Override
@@ -156,7 +144,7 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
     @Override
     public boolean applyUpgrade(UpgradeType upgradeType) {
         if(upgradeType == UpgradeType.RETAINING_UPGRADE) {
-            if(!this.retaining) {
+            if(!isRetaining()) {
                 setRetaining(true);
                 return true;
             }
@@ -167,26 +155,25 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
 
     @Override
     public boolean isRetaining() {
-        return this.retaining;
+        return getBlockState().getValue(BaseCompactStorageBlock.RETAINING);
     }
 
     @Override
     public void setRetaining(boolean retaining) {
-        this.retaining = retaining;
-        checkAndApplyRetainingState();
+        level.setBlock(getBlockPos(), getBlockState().setValue(BaseCompactStorageBlock.RETAINING, retaining), 2);
     }
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
-        components.set(CompactStorageComponents.RETAINING_DATA.value(), this.retaining);
+        components.set(CompactStorageComponents.RETAINING_DATA.value(), isRetaining());
         components.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getDrumInventory().getItems()));
     }
 
     @Override
     protected void applyImplicitComponents(DataComponentGetter componentGetter) {
         super.applyImplicitComponents(componentGetter);
-        this.retaining = componentGetter.getOrDefault(CompactStorageComponents.RETAINING_DATA.value(), false);
+        setRetaining(componentGetter.getOrDefault(CompactStorageComponents.RETAINING_DATA.value(), false));
         componentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(getDrumInventory().getItems());
     }
 
