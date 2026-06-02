@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.client.screens;
 
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -13,6 +14,9 @@ import com.witchica.compactstorage.data.StorageType;
 public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<GenericCompactStorageMenu> {
     public static final Identifier STANDARD_SLOT = Identifier.fromNamespaceAndPath("compact_storage", "textures/gui/slots/normal.png");
     public static final Identifier BACKGROUND_LOCATION = Identifier.fromNamespaceAndPath("compact_storage", "textures/gui/inventory_background.png");
+
+    private static final Vector2i DEFAULT_SLOTS = new Vector2i(0,0);
+
     private final int chestInvSizeX;
     private final int chestInvSizeY;
     private final int playerInvSizeX;
@@ -20,6 +24,8 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
     private final int playerInvOffsetX;
 
     private final StorageType storageType;
+    private final Vector2i invCoords;
+    private final boolean fancyRendering;
 
     private int inventorySizeX = 9;
     private int inventorySizeY = 3;
@@ -44,15 +50,22 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
 
         this.inventoryLabelX = 7 + playerInvOffsetX;
         this.inventoryLabelY = 17 + (18 * inventorySizeY) + 11 + 7;
+
+        this.fancyRendering = CompactStorage.config().useFancyInventoryRendering;
+        this.invCoords = fancyRendering ? storageType.getInventoryCoords() : DEFAULT_SLOTS;
     }
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1) {
-        Vector2i invCoords = storageType.getInventoryCoords();
         blit9slice(guiGraphics, BACKGROUND_LOCATION, leftPos, topPos, chestInvSizeX, chestInvSizeY, invCoords.x * 15, invCoords.y * 15, 7, 128, 128);
         blit9slice(guiGraphics, BACKGROUND_LOCATION, leftPos + playerInvOffsetX, topPos + chestInvSizeY + 4, playerInvSizeX, playerInvSizeY, 0, 0, 7, 128, 128);
 
-        renderSlots(guiGraphics, storageType, leftPos + 7, topPos + 17, inventorySizeX, inventorySizeY);
+        if(fancyRendering) {
+            renderSlots(guiGraphics, storageType, leftPos + 7, topPos + 17, inventorySizeX, inventorySizeY);
+        } else {
+            renderSlots(guiGraphics, leftPos + 7, topPos + 17, inventorySizeX, inventorySizeY);
+        }
+
         renderSlots(guiGraphics, leftPos + 7 + playerInvOffsetX, topPos + chestInvSizeY + 4 + 17, 9, 3);
         renderSlots(guiGraphics, leftPos + 7 + playerInvOffsetX, topPos + chestInvSizeY + 4 + 17 + (3 * 18) + 4, 9, 1);
     }
@@ -77,7 +90,7 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 0xff000000 + storageType.getUiTitleColor(), false);
+        guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, fancyRendering ? 0xff000000 + storageType.getUiTitleColor() : -12566464, false);
         guiGraphics.drawString(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, -12566464, false);
     }
 

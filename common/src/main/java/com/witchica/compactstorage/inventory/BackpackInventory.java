@@ -122,12 +122,12 @@ public class BackpackInventory implements Container, ResizableContainer {
 
     @Override
     public int getMaximumWidth() {
-        return Math.min(CompactStorage.config().backpackMaxWidth, 21);
+        return CompactStorage.config().constrainWidth(CompactStorage.config().backpackMaxWidth);
     }
 
     @Override
     public int getMaximumHeight() {
-        return Math.min(CompactStorage.config().backpackMaxHeight, 12);
+        return CompactStorage.config().constrainHeight(CompactStorage.config().backpackMaxHeight);
     }
 
     @Override
@@ -138,12 +138,12 @@ public class BackpackInventory implements Container, ResizableContainer {
 
     @Override
     public int getDefaultWidth() {
-        return Math.min(CompactStorage.config().backpackDefaultWidth, 21);
+        return CompactStorage.config().constrainWidth(CompactStorage.config().backpackDefaultWidth);
     }
 
     @Override
     public int getDefaultHeight() {
-        return Math.min(CompactStorage.config().backpackDefaultHeight, 12);
+        return CompactStorage.config().constrainHeight(CompactStorage.config().backpackDefaultHeight);
     }
 
     @Override

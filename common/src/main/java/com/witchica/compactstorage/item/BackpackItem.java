@@ -113,14 +113,14 @@ public class BackpackItem extends Item implements StorageTypeProvider {
 
             if(!oppositeStack.isEmpty() && oppositeStack.getItem() instanceof StorageUpgradeItem storageUpgradeItem) {
                 UpgradeType upgradeType = storageUpgradeItem.getUpgradeType();
-                ResizableInventoryComponent resizableInventoryComponent = backpackStack.has(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value()) ? backpackStack.get(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value()) : new ResizableInventoryComponent(Math.min(CompactStorage.config().backpackDefaultWidth, 21), Math.min(CompactStorage.config().backpackDefaultHeight, 12));
+                ResizableInventoryComponent resizableInventoryComponent = backpackStack.has(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value()) ? backpackStack.get(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value()) : new ResizableInventoryComponent(CompactStorage.config().constrainWidth(CompactStorage.config().backpackDefaultWidth), CompactStorage.config().constrainHeight(CompactStorage.config().backpackDefaultHeight));
 
                 if(resizableInventoryComponent == null) {
                     return InteractionResult.FAIL;
                 }
 
                 if(upgradeType == UpgradeType.WIDTH_UPGRADE) {
-                    if(resizableInventoryComponent.inventoryWidth() < Math.min(CompactStorage.config().backpackMaxWidth, 21)) {
+                    if(resizableInventoryComponent.inventoryWidth() < CompactStorage.config().constrainWidth(CompactStorage.config().backpackMaxWidth)) {
                         backpackStack.update(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), resizableInventoryComponent, ResizableInventoryComponent::increaseWidth);
                         oppositeStack.setCount(oppositeStack.getCount() - 1);
                         level.playSound(null, player.getOnPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.NEUTRAL);
@@ -131,7 +131,7 @@ public class BackpackItem extends Item implements StorageTypeProvider {
                         return InteractionResult.FAIL;
                     }
                 } else if(upgradeType == UpgradeType.HEIGHT_UPGRADE) {
-                    if(resizableInventoryComponent.inventoryHeight() < Math.min(CompactStorage.config().backpackMaxHeight, 12)) {
+                    if(resizableInventoryComponent.inventoryHeight() < CompactStorage.config().constrainHeight(CompactStorage.config().backpackMaxHeight)) {
                         backpackStack.update(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), resizableInventoryComponent, ResizableInventoryComponent::increaseHeight);
                         oppositeStack.setCount(oppositeStack.getCount() - 1);
                         level.playSound(null, player.getOnPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.NEUTRAL);
