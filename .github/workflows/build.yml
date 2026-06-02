@@ -11,11 +11,11 @@ jobs:
       BUILD_NUMBER: ${{ github.run_number }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.3
       - name: Gradle Wrapper Validation
-        uses: gradle/wrapper-validation-action@v3
+        uses: gradle/wrapper-validation-action@v6
       - name: Setup Java JDK
-        uses: actions/setup-java@v4.6.0
+        uses: actions/setup-java@v5.2.0
         with:
           distribution: 'microsoft'
           java-version: '21'
@@ -33,7 +33,7 @@ jobs:
           cp forge/build/libs/*.jar dist
           cp neoforge/build/libs/*.jar dist
       - name: capture build artifacts
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7.0.1
         with:
           if-no-files-found: error
           path: dist/*
