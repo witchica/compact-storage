@@ -2,11 +2,13 @@ package com.witchica.compactstorage.fabric.datagen;
 
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.mod.CompactStorageBlocks;
+import com.witchica.compactstorage.mod.CompactStorageItemTags;
 import com.witchica.compactstorage.mod.CompactStorageItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
 import com.witchica.compactstorage.data.StorageType;
+import net.minecraft.tags.TagKey;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -63,6 +65,25 @@ public class ModLangProvider extends FabricLanguageProvider {
 
         translationBuilder.add("key.category.compact_storage.default", "CompactStorage");
         translationBuilder.add("key.compact_storage.backpack_open", "Open Backpack (Curios / Trinkets)");
+
+        addForTag(CompactStorageItemTags.COLORFUL_COMPACT_BARRELS, translationBuilder);
+        addForTag(CompactStorageItemTags.COLORFUL_COMPACT_CHESTS, translationBuilder);
+        addForTag(CompactStorageItemTags.COLORFUL_ITEM_DRUMS, translationBuilder);
+        addForTag(CompactStorageItemTags.COMPACT_BARRELS, translationBuilder);
+        addForTag(CompactStorageItemTags.COMPACT_CHESTS, translationBuilder);
+        addForTag(CompactStorageItemTags.ITEM_DRUMS, translationBuilder);
+        addForTag(CompactStorageItemTags.WOODEN_COMPACT_BARRELS, translationBuilder);
+        addForTag(CompactStorageItemTags.WOODEN_COMPACT_CHESTS, translationBuilder);
+        addForTag(CompactStorageItemTags.WOODEN_ITEM_DRUMS, translationBuilder);
+        addForTag(CompactStorageItemTags.STORAGE_BLOCKS, translationBuilder);
+        addForTag(CompactStorageItemTags.BACKPACKS, translationBuilder);
+        addForTag(CompactStorageItemTags.PACK_FRAMES, translationBuilder);
+        addForTag(CompactStorageItemTags.STORAGE_ITEMS, translationBuilder);
+        addForTag(CompactStorageItemTags.UPGRADES, translationBuilder);
+    }
+
+    public void addForTag(TagKey tagKey, TranslationBuilder translationBuilder) {
+        translationBuilder.add(tagKey.getTranslationKey(), snakeCaseToName(tagKey.location().getPath()));
     }
 
     private String snakeCaseToName(String s) {
