@@ -1,6 +1,7 @@
 {
+  "parent": "compact_storage:compacting_your_storage",
   "criteria": {
-    "got_drum": {
+    "got_backpack": {
       "conditions": {
         "items": [
           {
@@ -18,7 +19,7 @@
     },
     "icon": {
       "count": 1,
-      "id": "compact_storage:red_compact_barrel"
+      "id": "compact_storage:purple_backpack"
     },
     "title": {
       "translate": "advancement.compact_storage.got_backpack.title"
@@ -26,7 +27,7 @@
   },
   "requirements": [
     [
-      "got_drum"
+      "got_backpack"
     ]
   ],
   "sends_telemetry_event": true

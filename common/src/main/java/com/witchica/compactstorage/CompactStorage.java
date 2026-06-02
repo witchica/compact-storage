@@ -1,11 +1,14 @@
 package com.witchica.compactstorage;
 
+import com.mojang.datafixers.DataFixerBuilder;
 import com.witchica.compactstorage.item.BackpackItem;
 import com.witchica.compactstorage.mod.*;
 import com.witchica.compactstorage.network.ServerboundBackpackHotkeyPacket;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.util.datafix.fixes.BlockRenameFix;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;

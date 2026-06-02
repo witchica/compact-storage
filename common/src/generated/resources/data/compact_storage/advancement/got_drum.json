@@ -1,4 +1,5 @@
 {
+  "parent": "compact_storage:compacting_your_storage",
   "criteria": {
     "got_drum": {
       "conditions": {
@@ -18,7 +19,7 @@
     },
     "icon": {
       "count": 1,
-      "id": "compact_storage:red_compact_barrel"
+      "id": "compact_storage:pale_oak_drum"
     },
     "title": {
       "translate": "advancement.compact_storage.got_drum.title"
