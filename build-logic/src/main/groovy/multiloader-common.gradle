@@ -3,8 +3,12 @@ plugins {
     id 'maven-publish'
 }
 
+String buildId = System.getenv("GITHUB_RUN_NUMBER")
+
+version = version + (buildId == null || buildId.isEmpty() ? ".0-DEV" : "." + buildId) + version_suffix
+
 base {
-    archivesName = "${mod_id}-${project.name}-${libs.minecraft.get().version}"
+    archivesName = "${archives_name}-${project.name}"
 }
 
 java {
