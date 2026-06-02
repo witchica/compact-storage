@@ -83,12 +83,7 @@ public abstract class BaseItemDrumBlock extends BaseEntityBlock implements Stora
     protected boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
-
-    @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide() ? createTickerHelper(blockEntityType, CompactStorageBlockEntities.DRUM_BLOCK_ENTITY.value(), BaseItemDrumBlockEntity::ticker) : null;
-    }
-
+    
     public boolean extractItem(Level world, BlockPos pos, Player player) {
         BaseItemDrumBlockEntity drumBlockEntity = (BaseItemDrumBlockEntity) world.getBlockEntity(pos);
         DrumInventory inventory = drumBlockEntity.getDrumInventory();

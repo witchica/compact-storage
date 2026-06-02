@@ -48,14 +48,6 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
         drumInventory = new DrumInventory(64, this);
     }
 
-    public void tick() {
-
-    }
-
-    public static void ticker(Level level, BlockPos blockPos, BlockState blockState, BaseItemDrumBlockEntity baseItemDrumBlockEntity) {
-        baseItemDrumBlockEntity.tick();
-    }
-
     public void inventoryChanged() {
         this.setChanged();
     }

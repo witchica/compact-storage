@@ -44,7 +44,7 @@ public abstract class BaseCompactStorageBlock extends BaseEntityBlock implements
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if(!level.isClientSide() && canOpenContainer(state, level, pos, player)) {
             Balm.networking().openMenu(player, getMenuProvider(state, level, pos));
-            return InteractionResult.CONSUME;
+            return InteractionResult.SUCCESS;
         }
 
         return InteractionResult.CONSUME;

@@ -5,7 +5,10 @@ import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
 import com.witchica.compactstorage.client.renderer.CompactChestBlockEntityRenderer;
 import com.witchica.compactstorage.client.screens.GenericCompactStorageMenuScreen;
 import com.witchica.compactstorage.mod.CompactStorageMenuTypes;
+import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.client.BalmClientRegistrars;
+import net.minecraft.client.model.geom.LayerDefinitions;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
 
 public class CompactStorageClient {
 

@@ -1,6 +1,7 @@
 package com.witchica.compactstorage.data;
 
 import com.mojang.serialization.Codec;
+import com.sun.source.tree.Tree;
 import com.witchica.compactstorage.CompactStorage;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.resources.Identifier;
@@ -22,11 +23,12 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 import java.util.stream.Stream;
 
-public class StorageType {
+public class StorageType implements Comparable<StorageType> {
     public record RecipeData(Optional<ItemLike> planks, Optional<TagKey<Item>> log, Optional<ItemLike> slab, Optional<ItemLike> wool, Optional<ItemLike> dye, Block particle) {
         public RecipeData(ItemLike wool, ItemLike dye, Block particle) {
             this(Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(wool), Optional.of(dye), particle);
@@ -45,7 +47,7 @@ public class StorageType {
         }
     }
 
-    private static final Map<String, StorageType> VALUES = new Object2ObjectArrayMap();
+    private static final Map<String, StorageType> VALUES = new TreeMap<>();
 
     private static final Map<DyeColor, StorageType> DYE_TO_TYPE_MAP = new HashMap<DyeColor, StorageType>();
     private static final Map<WoodType, StorageType> WOOD_TO_TYPE_MAP = new HashMap<WoodType, StorageType>();
@@ -284,7 +286,7 @@ public class StorageType {
     }
 
     public static Set<StorageType> values() {
-        return new HashSet<>(VALUES.values());
+        return new TreeSet<>(VALUES.values());
     }
 
     public static Codec<StorageType> CODEC = Codec.stringResolver(StorageType::getName, VALUES::get);
@@ -349,5 +351,10 @@ public class StorageType {
         MANGROVE = register(new StorageType().setWooden(WoodType.MANGROVE).name("mangrove").recipe(new RecipeData(Blocks.MANGROVE_PLANKS, ItemTags.MANGROVE_LOGS, Blocks.MANGROVE_SLAB))).inventoryBackground(7, 0).setUiTitleColor(0x3c2f23).setBackpackModelInfo(new BackpackModelInfo(Blocks.MANGROVE_PLANKS, Blocks.MANGROVE_LOG, Blocks.WHITE_WOOL));
         BAMBOO = register(new StorageType().setWooden(WoodType.BAMBOO).name("bamboo").recipe(new RecipeData(Blocks.BAMBOO_PLANKS, ItemTags.BAMBOO_BLOCKS, Blocks.BAMBOO_SLAB))
                 .soundType(SoundType.BAMBOO_WOOD).backpackOpen(SoundEvents.BAMBOO_WOOD_TRAPDOOR_OPEN).backpackClose(SoundEvents.BAMBOO_WOOD_TRAPDOOR_CLOSE)).inventoryBackground(3, 1).setUiTitleColor(0x907e3a).setBackpackModelInfo(new BackpackModelInfo(Blocks.BAMBOO_PLANKS, Blocks.BAMBOO_BLOCK, Blocks.WHITE_WOOL));
+    }
+
+    @Override
+    public int compareTo(@NonNull StorageType o) {
+        return name.compareTo(o.name);
     }
 }

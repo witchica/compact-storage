@@ -60,6 +60,9 @@ public class ModLangProvider extends FabricLanguageProvider {
 
         translationBuilder.add("advancement.compact_storage.got_backpack.title", "Storing things on the move? No problem.");
         translationBuilder.add("advancement.compact_storage.got_backpack.description", "Now you can take lots of things with you, how cool is that?");
+
+        translationBuilder.add("key.category.compact_storage.default", "CompactStorage");
+        translationBuilder.add("key.compact_storage.backpack_open", "Open Backpack (Curios / Trinkets)");
     }
 
     private String snakeCaseToName(String s) {
