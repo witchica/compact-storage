@@ -47,11 +47,11 @@ public class ModModelProvider extends FabricModelProvider {
                 BackpackPackFrameModelProvider.registerPackFrameModel(itemModelGenerator,
                         CompactStorageItems.BACKPACK_ITEMS.get(type).asItem(),
                         BackpackPackFrameModelProvider.packFrameTextureMapping(TextureMapping.getBlockTexture(type.backpackModelInfo().planks()),
-                                TextureMapping.logColumn(type.backpackModelInfo().log()).get(TextureSlot.SIDE), TextureMapping.getBlockTexture(type.backpackModelInfo().wool())));
+                                TextureMapping.logColumn(type.backpackModelInfo().log()).get(TextureSlot.SIDE), TextureMapping.getBlockTexture(type.backpackModelInfo().wool()), TextureMapping.getBlockTexture(type.getRecipeData().particle())));
             } else {
                 BackpackPackFrameModelProvider.registerBackpackModel(itemModelGenerator,
                         CompactStorageItems.BACKPACK_ITEMS.get(type).asItem(),
-                        BackpackPackFrameModelProvider.backpackTextureMapping(TextureMapping.getBlockTexture(type.backpackModelInfo().wool()), TextureMapping.getBlockTexture(type.backpackModelInfo().straps())));
+                        BackpackPackFrameModelProvider.backpackTextureMapping(TextureMapping.getBlockTexture(type.backpackModelInfo().wool()), TextureMapping.getBlockTexture(type.backpackModelInfo().straps()), TextureMapping.getBlockTexture(type.getRecipeData().particle())));
             }
         }
     }

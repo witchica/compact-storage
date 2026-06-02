@@ -1,6 +1,7 @@
 {
   "parent": "compact_storage:item/backpack_base",
   "textures": {
+    "particle": "minecraft:block/orange_concrete",
     "primary": "minecraft:block/orange_wool",
     "straps": "minecraft:block/red_wool"
   }

@@ -2,6 +2,7 @@
   "parent": "compact_storage:item/pack_frame_base",
   "textures": {
     "log": "minecraft:block/bamboo_block",
+    "particle": "minecraft:block/bamboo_planks",
     "planks": "minecraft:block/bamboo_planks",
     "wool": "minecraft:block/white_wool"
   }

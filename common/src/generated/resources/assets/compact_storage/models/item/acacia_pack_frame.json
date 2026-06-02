@@ -2,6 +2,7 @@
   "parent": "compact_storage:item/pack_frame_base",
   "textures": {
     "log": "minecraft:block/acacia_log",
+    "particle": "minecraft:block/acacia_planks",
     "planks": "minecraft:block/acacia_planks",
     "wool": "minecraft:block/red_wool"
   }

@@ -24,9 +24,10 @@ public class BackpackPackFrameModelProvider {
     public static final TextureSlot LOG_TEXTURE = TextureSlot.create("log", TextureSlot.TEXTURE);
     public static final TextureSlot PLANKS_TEXTURE = TextureSlot.create("planks", TextureSlot.TEXTURE);
     public static final TextureSlot WOOL_TEXTURE = TextureSlot.create("wool", TextureSlot.TEXTURE);
+    public static final TextureSlot PARTICLE = TextureSlot.PARTICLE;
 
-    public static final ModelTemplate BACKPACK = item("backpack_base", PRIMARY_TEXTURE, STRAPS_TEXTURE);
-    public static final ModelTemplate PACK_FRAME = item("pack_frame_base", LOG_TEXTURE, PLANKS_TEXTURE, WOOL_TEXTURE);
+    public static final ModelTemplate BACKPACK = item("backpack_base", PRIMARY_TEXTURE, STRAPS_TEXTURE, PARTICLE);
+    public static final ModelTemplate PACK_FRAME = item("pack_frame_base", LOG_TEXTURE, PLANKS_TEXTURE, WOOL_TEXTURE, PARTICLE);
 
     //helper method for creating Models
     private static ModelTemplate item(String parent, TextureSlot... requiredTextureKeys) {
@@ -48,15 +49,17 @@ public class BackpackPackFrameModelProvider {
         generator.itemModelOutput.accept(backpackItem, ItemModelUtils.plainModel(model));
     }
 
-    public static TextureMapping backpackTextureMapping(Identifier primaryTexture, Identifier strapsTexture) {
+    public static TextureMapping backpackTextureMapping(Identifier primaryTexture, Identifier strapsTexture, Identifier particle) {
         TextureMapping mapping = TextureMapping.singleSlot(PRIMARY_TEXTURE, primaryTexture);
         mapping.put(STRAPS_TEXTURE, strapsTexture);
+        mapping.put(PARTICLE, particle);
         return mapping;
     }
-    public static TextureMapping packFrameTextureMapping(Identifier planks, Identifier log, Identifier wool) {
+    public static TextureMapping packFrameTextureMapping(Identifier planks, Identifier log, Identifier wool, Identifier particle) {
         TextureMapping mapping = TextureMapping.singleSlot(PLANKS_TEXTURE, planks);
         mapping.put(LOG_TEXTURE, log);
         mapping.put(WOOL_TEXTURE, wool);
+        mapping.put(PARTICLE, particle);
         return mapping;
     }
 }

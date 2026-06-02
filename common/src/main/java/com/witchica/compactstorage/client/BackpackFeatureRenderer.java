@@ -3,6 +3,7 @@ package com.witchica.compactstorage.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.api.StorageTypeProvider;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.mod.CompactStorageItems;
 import net.minecraft.client.Minecraft;
@@ -47,6 +48,11 @@ public class BackpackFeatureRenderer extends RenderLayer<AvatarRenderState, Play
 
                 if(entity instanceof Player player) {
                     ItemStack backpack = CompactStorage.findCuriosBackpack(player);
+                    StorageType type = StorageType.RED;
+
+                    if(backpack.getItem() instanceof StorageTypeProvider provider) {
+                        type = provider.getStorageType();
+                    }
 
                     if(!backpack.isEmpty()) {
                         poseStack.pushPose();
@@ -57,7 +63,7 @@ public class BackpackFeatureRenderer extends RenderLayer<AvatarRenderState, Play
                             poseStack.translate(0f,-0.175f,0.1f);
                         }
 
-                        if(false){//backpackItem.getStorageType().isWooden()) {
+                        if(type.isWooden()) {
                             poseStack.translate(0f, -0.3f, -0.19f);
                             poseStack.scale(0.45f, 0.45f, 0.45f);
                         } else {
