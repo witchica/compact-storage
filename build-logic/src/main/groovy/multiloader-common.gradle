@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
 }
 
-String buildId = System.getenv("GITHUB_RUN_NUMBER")
+String buildId = System.getenv("BUILD_NUMBER")
 
 version = version + (buildId == null || buildId.isEmpty() ? ".0-DEV" : "." + buildId) + version_suffix
 
