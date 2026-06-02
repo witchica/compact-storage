@@ -18,8 +18,8 @@ public class CompactStorageConfig {
 
     @Comment("Maximum inventory width of Compact Chests (Default Value: 9, Range: 9 - 21)")
     public int compactChestDefaultWidth = 9;
-    @Comment("Maximum inventory width of Compact Chests (Default Value: 3, Range 3 - 12)")
-    public int compactChestDefaultHeight = 3;
+    @Comment("Maximum inventory width of Compact Chests (Default Value: 6, Range 3 - 12)")
+    public int compactChestDefaultHeight = 6;
 
     @Comment("Maximum inventory width of Compact Chests (DefaultValue: 21, Range: 9 - 21)")
     public int compactChestMaxWidth = 21;
@@ -28,8 +28,8 @@ public class CompactStorageConfig {
 
     @Comment("Maximum inventory width of Compact Barrels (Default Value: 9, Range: 9 - 21)")
     public int compactBarrelDefaultWidth = 9;
-    @Comment("Maximum inventory width of Compact Barrels (Default Value: 3 Range 3 - 12)")
-    public int compactBarrelDefaultHeight = 3;
+    @Comment("Maximum inventory width of Compact Barrels (Default Value: 6 Range 3 - 12)")
+    public int compactBarrelDefaultHeight = 6;
 
     @Comment("Maximum inventory width of Compact Barrels (DefaultValue: 21, Range: 9 - 21)")
     public int compactBarrelMaxWidth = 21;
@@ -38,8 +38,8 @@ public class CompactStorageConfig {
 
     @Comment("Maximum inventory width of Backpacks (Default Value: 9, Range: 9 - 21)")
     public int backpackDefaultWidth = 9;
-    @Comment("Maximum inventory width of Backpacks (Default Value: 3 Range 3 - 12)")
-    public int backpackDefaultHeight = 3;
+    @Comment("Maximum inventory width of Backpacks (Default Value: 6 Range 3 - 12)")
+    public int backpackDefaultHeight = 6;
 
     @Comment("Maximum inventory width of Backpacks (DefaultValue: 21, Range: 9 - 21)")
     public int backpackMaxWidth = 21;

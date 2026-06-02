@@ -2,11 +2,16 @@ package com.witchica.compactstorage.mixin;
 
 import com.mojang.datafixers.DataFixerBuilder;
 import com.mojang.datafixers.schemas.Schema;
+import com.mojang.datafixers.types.templates.TypeTemplate;
 import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.util.datafix.fixes.BlockEntityRenameFix;
 import net.minecraft.util.datafix.fixes.BlockRenameFix;
 import net.minecraft.util.datafix.fixes.ItemRenameFix;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
+import net.minecraft.util.datafix.schemas.V1466;
+import net.minecraft.util.datafix.schemas.V4656;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import javax.security.auth.callback.Callback;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @Mixin(DataFixers.class)
 public class DataFixerUpperMixin {
@@ -32,10 +38,10 @@ public class DataFixerUpperMixin {
         }
     }
 
-    @Inject(method="createFixerUpper", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void createFixerUpper(CallbackInfoReturnable<DataFixerBuilder.Result> cir, DataFixerBuilder datafixerbuilder) {
-        Schema schema = datafixerbuilder.addSchema(50, 67, NamespacedSchema::new);
-        datafixerbuilder.addFixer(BlockRenameFix.create(schema, "Rename old CompactStorage blocks", s -> DFU_BLOCKS.getOrDefault(s, s)));
-        datafixerbuilder.addFixer(ItemRenameFix.create(schema, "Rename of CompactStorage items", s -> DFU_ITEMS.getOrDefault(s, s)));
+    @Inject(method="addFixers", at = @At("RETURN"))
+    private static void addFixers(DataFixerBuilder dataFixerBuilder, CallbackInfo ci) {
+        Schema schema = dataFixerBuilder.addSchema(4671, NamespacedSchema::new);
+        dataFixerBuilder.addFixer(BlockRenameFix.create(schema, "Rename old CompactStorage blocks", s -> DFU_BLOCKS.getOrDefault(NamespacedSchema.ensureNamespaced(s), s)));
+        dataFixerBuilder.addFixer(ItemRenameFix.create(schema, "Rename of CompactStorage items", s -> DFU_ITEMS.getOrDefault(NamespacedSchema.ensureNamespaced(s), s)));
     }
 }

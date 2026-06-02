@@ -9,6 +9,7 @@ import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
 import com.witchica.compactstorage.api.inventory.RetainingContainer;
 import com.witchica.compactstorage.mod.CompactStorageComponents;
 import com.witchica.compactstorage.util.CompactStorageContainerOpenerCounter;
+import com.witchica.compactstorage.util.CompactStorageUtil;
 import net.blay09.mods.balm.world.BalmMenuProvider;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityUtils;
 import net.minecraft.core.BlockPos;
@@ -22,6 +23,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -53,7 +55,7 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
 
     private int inventoryWidth ;
     private int inventoryHeight;
-    private boolean retaining;
+    private boolean needsToBeRetaining;
     protected final ContainerOpenersCounter containerOpenersCounter;
 
     public BaseCompactStorageBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -127,16 +129,35 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         super.saveAdditional(writer);
         writer.store("InventoryWidth", Codec.INT, inventoryWidth);
         writer.store("InventoryHeight", Codec.INT, inventoryHeight);
+        writer.store("Version", Codec.INT,21);
+
+        recheckRetaining();
         ContainerHelper.saveAllItems(writer, items);
     }
 
     @Override
     protected void loadAdditional(ValueInput reader) {
         super.loadAdditional(reader);
-        this.inventoryWidth = reader.getIntOr("InventoryWidth", getDefaultWidth());
-        this.inventoryHeight = reader.getIntOr("InventoryHeight", getDefaultHeight());
+
+        int version = reader.getIntOr("Version", -1);
+
+        // Snake Case is for backwards compatibility with 1.20 etc.
+        this.inventoryWidth = reader.getIntOr("InventoryWidth", reader.getIntOr("inventory_width", getDefaultWidth()));
+        this.inventoryHeight = reader.getIntOr("InventoryHeight", reader.getIntOr("inventory_height", getDefaultHeight()));
+
+        // Backwards compatibility for 1.20.1 etc.
+        if(reader.getBooleanOr("retaining", reader.getBooleanOr("Retaining", false))) {
+            needsToBeRetaining = true;
+        }
+
         this.items = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(reader, items);
+
+        // Backwards compatibility for 1.20.1 etc.
+        if(version < 21) {
+            CompactStorageUtil.loadItemsFromOldVersionIfPresent(reader, items);
+        } else {
+            ContainerHelper.loadAllItems(reader, items);
+        }
     }
 
     public void resizeInventory() {
@@ -283,5 +304,12 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         super.removeComponentsFromTag(tag);
         tag.discard("InventoryWidth");
         tag.discard("InventoryHeight");
+    }
+
+    public void recheckRetaining() {
+        if(needsToBeRetaining && level != null && !level.isClientSide()) {
+            level.setBlock(getBlockPos(), getBlockState().setValue(BaseCompactStorageBlock.RETAINING, true), 2);
+            this.needsToBeRetaining = false;
+        }
     }
 }

@@ -1,8 +1,9 @@
 {
+	"format_version": "1.21.11",
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/block",
-	"texture_size": [32, 32],
 	"render_type": "minecraft:cutout",
+	"texture_size": [32, 32],
 	"textures": {
 		"particle": "#barrel"
 	},
@@ -20,10 +21,10 @@
 			}
 		},
 		{
-			"from": [0, 16.01, 0],
-			"to": [16, 16.01, 16],
+			"from": [3, 16.01, 8],
+			"to": [5, 16.01, 10],
 			"faces": {
-				"up": {"uv": [0, 0, 16, 16], "texture": "#overlay"}
+				"up": {"uv": [3, 8, 5, 10], "texture": "#overlay"}
 			}
 		}
 	]

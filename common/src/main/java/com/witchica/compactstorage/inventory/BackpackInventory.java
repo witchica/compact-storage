@@ -9,10 +9,13 @@ import com.witchica.compactstorage.data.CompactStorageOpeningSource;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.data.UpgradeType;
 import com.witchica.compactstorage.mod.CompactStorageComponents;
+import com.witchica.compactstorage.util.CompactStorageUtil;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
@@ -21,6 +24,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemContainerContents;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.ValueInput;
 import org.jspecify.annotations.NonNull;
 import java.util.Optional;
 
@@ -46,10 +51,10 @@ public class BackpackInventory implements Container, ResizableContainer {
         this.inventoryWidth = getDefaultWidth();
         this.inventoryHeight = getDefaultHeight();
 
-        fromItemStack(backpackStack);
+        fromItemStack(backpackStack, player.registryAccess());
     }
 
-    public void fromItemStack(ItemStack stack) {
+    public void fromItemStack(ItemStack stack, RegistryAccess registryAccess) {
         if(stack.has(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value())) {
             ResizableInventoryComponent resizableInventoryComponent = stack.get(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value());
 
@@ -57,13 +62,22 @@ public class BackpackInventory implements Container, ResizableContainer {
                 resizableInventoryComponent.apply(this);
             }
         } else if(stack.has(DataComponents.CUSTOM_DATA)) {
+            // Backwards Compatibility
             CustomData data = stack.get(DataComponents.CUSTOM_DATA);
 
             if(data != null) {
-                CompoundTag tag = data.copyTag();
+                // Backwards Compatibility Only
+                CompoundTag tag = data.copyTag().getCompoundOrEmpty("Backpack");
+                ValueInput valueInput = TagValueInput.create(ProblemReporter.DISCARDING, registryAccess, tag);
 
-                this.inventoryWidth = tag.getIntOr(tag.contains("inventory_width") ? "inventory_width" : "InventoryWidth", getDefaultWidth());
-                this.inventoryHeight = tag.getIntOr(tag.contains("inventory_height") ? "inventory_height" : "InventoryHeight", getDefaultHeight());
+                this.inventoryWidth = valueInput.getIntOr("inventory_width", valueInput.getIntOr("InventoryWidth", getDefaultWidth()));
+                this.inventoryHeight = valueInput.getIntOr("inventory_height", valueInput.getIntOr("InventoryHeight", getDefaultHeight()));
+
+                this.items = NonNullList.withSize(this.inventoryWidth * this.inventoryHeight, ItemStack.EMPTY);
+                CompactStorageUtil.loadItemsFromOldVersionIfPresent(valueInput, items);
+
+                // Exit Early
+                return;
             }
 
         }
@@ -107,6 +121,7 @@ public class BackpackInventory implements Container, ResizableContainer {
 
             stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getItems()));
             stack.set(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(inventoryWidth, inventoryHeight));
+            stack.remove(DataComponents.CUSTOM_DATA);
         }
     }
 

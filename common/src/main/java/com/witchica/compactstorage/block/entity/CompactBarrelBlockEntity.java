@@ -20,7 +20,7 @@ public class CompactBarrelBlockEntity extends BaseCompactStorageBlockEntity {
 
     @Override
     public void tick() {
-
+        recheckOpen();
     }
 
     @Override

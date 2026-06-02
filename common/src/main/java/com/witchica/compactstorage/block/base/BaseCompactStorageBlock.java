@@ -20,10 +20,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
 public abstract class BaseCompactStorageBlock extends BaseEntityBlock implements StorageTypeProvider {
     public static final BooleanProperty RETAINING = BooleanProperty.create("retaining");
@@ -43,6 +47,11 @@ public abstract class BaseCompactStorageBlock extends BaseEntityBlock implements
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if(!level.isClientSide() && canOpenContainer(state, level, pos, player)) {
+            // Backwards compatibility with 1.20.1
+            if(level.getBlockEntity(pos) instanceof BaseCompactStorageBlockEntity baseCompactStorageBlockEntity) {
+                baseCompactStorageBlockEntity.recheckRetaining();
+            }
+
             Balm.networking().openMenu(player, getMenuProvider(state, level, pos));
             return InteractionResult.SUCCESS;
         }

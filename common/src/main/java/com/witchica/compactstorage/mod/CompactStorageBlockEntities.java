@@ -15,6 +15,6 @@ public class CompactStorageBlockEntities {
     public static void initialize(BalmBlockEntityTypeRegistrar registrar) {
         COMPACT_CHEST_ENTITY = registrar.register("compact_chest", CompactChestBlockEntity::new, CompactStorageBlocks.compactChests.values()).asHolder();
         COMPACT_BARREL_ENTITY = registrar.register("compact_barrel", CompactBarrelBlockEntity::new, CompactStorageBlocks.compactBarrels.values()).asHolder();
-        DRUM_BLOCK_ENTITY = registrar.register("item_drum", BaseItemDrumBlockEntity::new, CompactStorageBlocks.itemDrums.values()).asHolder();
+        DRUM_BLOCK_ENTITY = registrar.register("drum", BaseItemDrumBlockEntity::new, CompactStorageBlocks.itemDrums.values()).asHolder();
     }
 }
