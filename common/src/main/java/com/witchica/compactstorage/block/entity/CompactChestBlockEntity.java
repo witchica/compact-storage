@@ -74,11 +74,11 @@ public class CompactChestBlockEntity extends BaseCompactStorageBlockEntity imple
 
     @Override
     public int getDefaultWidth() {
-        return CompactStorage.config().constrainWidth(CompactStorage.config().compactBarrelDefaultWidth);
+        return CompactStorage.config().constrainWidth(CompactStorage.config().compactChestDefaultWidth);
     }
 
     @Override
     public int getDefaultHeight() {
-        return CompactStorage.config().constrainHeight(CompactStorage.config().compactBarrelDefaultHeight);
+        return CompactStorage.config().constrainHeight(CompactStorage.config().compactChestDefaultHeight);
     }
 }
