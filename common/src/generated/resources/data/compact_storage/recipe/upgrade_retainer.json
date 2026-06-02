@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:iron_ingot",
+    "D": "minecraft:diamond",
+    "I": "minecraft:iron_nugget"
+  },
+  "pattern": [
+    "IBI",
+    "IDI",
+    "IBI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:upgrade_retainer"
+  }
+}

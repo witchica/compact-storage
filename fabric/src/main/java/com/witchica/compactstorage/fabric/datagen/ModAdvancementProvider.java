@@ -3,6 +3,7 @@ package com.witchica.compactstorage.fabric.datagen;
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.mod.CompactStorageBlocks;
+import com.witchica.compactstorage.mod.CompactStorageItemTags;
 import com.witchica.compactstorage.mod.CompactStorageItems;
 import net.blay09.mods.balm.world.item.DeferredItem;
 import net.blay09.mods.balm.world.level.block.DeferredBlock;
@@ -13,6 +14,7 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.criterion.*;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -30,6 +32,7 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
 
     @Override
     public void generateAdvancement(HolderLookup.Provider registryLookup, Consumer<AdvancementHolder> consumer) {
+        HolderLookup.RegistryLookup<Item> items = registryLookup.lookupOrThrow(Registries.ITEM);
         AdvancementHolder compactingYourStorage = Advancement.Builder.advancement()
                 .display(CompactStorageBlocks.compactChests.get(StorageType.ACACIA),
                         Component.translatable("advancement.compact_storage.compacting_your_storage.title"),
@@ -39,7 +42,8 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         true,
                         false)
-                .addCriterion("got_chest", InventoryChangeTrigger.TriggerInstance.hasItems(CompactStorageBlocks.compactChests.filterNonNullDiscriminators().map(DeferredBlock::asItem).toArray(Item[]::new))).save(consumer, "compact_storage:compacting_your_storage");
+                .addCriterion("got_chest", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(items, CompactStorageItemTags.COMPACT_CHESTS))).save(consumer, "compact_storage:compacting_your_storage");
+
 
         AdvancementHolder gotBarrel = Advancement.Builder.advancement()
                 .display(CompactStorageBlocks.compactBarrels.get(StorageType.RED),
@@ -50,8 +54,7 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         true,
                         false)
-                .parent(compactingYourStorage)
-                .addCriterion("got_barrel", InventoryChangeTrigger.TriggerInstance.hasItems(CompactStorageBlocks.compactBarrels.filterNonNullDiscriminators().map(DeferredBlock::asItem).toArray(Item[]::new))).save(consumer, "compact_storage:got_barrel");
+                .addCriterion("got_barrel", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(items, CompactStorageItemTags.COMPACT_BARRELS))).save(consumer, "compact_storage:got_barrel");
 
         AdvancementHolder gotDrum = Advancement.Builder.advancement()
                 .display(CompactStorageBlocks.compactBarrels.get(StorageType.RED),
@@ -62,8 +65,7 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         true,
                         false)
-                .parent(compactingYourStorage)
-                .addCriterion("got_drum", InventoryChangeTrigger.TriggerInstance.hasItems(CompactStorageBlocks.itemDrums.filterNonNullDiscriminators().map(DeferredBlock::asItem).toArray(Item[]::new))).save(consumer, "compact_storage:got_drum");
+                .addCriterion("got_drum", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(items, CompactStorageItemTags.ITEM_DRUMS))).save(consumer, "compact_storage:got_drum");
 
         AdvancementHolder gotBackpack = Advancement.Builder.advancement()
                 .display(CompactStorageBlocks.compactBarrels.get(StorageType.RED),
@@ -74,7 +76,6 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         true,
                         false)
-                .parent(compactingYourStorage)
-                .addCriterion("got_drum", InventoryChangeTrigger.TriggerInstance.hasItems(CompactStorageItems.BACKPACK_ITEMS.values().stream().map(DeferredItem::asItem).toArray(Item[]::new))).save(consumer, "compact_storage:got_backpack");
+                .addCriterion("got_drum", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(items, CompactStorageItemTags.STORAGE_ITEMS))).save(consumer, "compact_storage:got_backpack");
     }
 }

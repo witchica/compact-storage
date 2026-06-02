@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:iron_ingot",
+    "I": "minecraft:iron_nugget"
+  },
+  "pattern": [
+    "III",
+    "BIB",
+    "III"
+  ],
+  "result": {
+    "count": 1,
+    "id": "compact_storage:upgrade_row"
+  }
+}

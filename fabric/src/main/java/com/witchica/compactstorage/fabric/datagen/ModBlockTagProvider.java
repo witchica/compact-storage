@@ -27,6 +27,8 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     public static final TagKey<Block> WOODEN_ITEM_DRUMS = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(CompactStorage.MOD_ID, "wooden_item_drums"));
     public static final TagKey<Block> COLORFUL_ITEM_DRUMS = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(CompactStorage.MOD_ID, "colorful_item_drums"));
 
+    public static final TagKey<Block> STORAGE_BLOCKS = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(CompactStorage.MOD_ID, "storage_blocks"));
+
     public static final TagKey<Block> MINEABLE_AXE = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("minecraft", "mineable/axe"));
     public static final TagKey<Block> MINEABLE_PICKAXE = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("minecraft", "mineable/pickaxe"));
 
@@ -46,6 +48,10 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
             valueLookupBuilder(GUARDED_BY_PIGLINS).add(CompactStorageBlocks.compactChests.get(type).asBlock());
             valueLookupBuilder(GUARDED_BY_PIGLINS).add(CompactStorageBlocks.compactBarrels.get(type).asBlock());
             valueLookupBuilder(GUARDED_BY_PIGLINS).add(CompactStorageBlocks.itemDrums.get(type).asBlock());
+
+            valueLookupBuilder(STORAGE_BLOCKS).add(CompactStorageBlocks.compactChests.get(type).asBlock());
+            valueLookupBuilder(STORAGE_BLOCKS).add(CompactStorageBlocks.compactBarrels.get(type).asBlock());
+            valueLookupBuilder(STORAGE_BLOCKS).add(CompactStorageBlocks.itemDrums.get(type).asBlock());
 
             if(type.isWooden()) {
                 valueLookupBuilder(WOODEN_COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asBlock());

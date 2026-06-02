@@ -1,92 +1,10 @@
 {
-  "parent": "compact_storage:compacting_your_storage",
   "criteria": {
     "got_barrel": {
       "conditions": {
         "items": [
           {
-            "items": "compact_storage:oak_compact_barrel"
-          },
-          {
-            "items": "compact_storage:jungle_compact_barrel"
-          },
-          {
-            "items": "compact_storage:cherry_compact_barrel"
-          },
-          {
-            "items": "compact_storage:spruce_compact_barrel"
-          },
-          {
-            "items": "compact_storage:cyan_compact_barrel"
-          },
-          {
-            "items": "compact_storage:birch_compact_barrel"
-          },
-          {
-            "items": "compact_storage:green_compact_barrel"
-          },
-          {
-            "items": "compact_storage:magenta_compact_barrel"
-          },
-          {
-            "items": "compact_storage:blue_compact_barrel"
-          },
-          {
-            "items": "compact_storage:orange_compact_barrel"
-          },
-          {
-            "items": "compact_storage:dark_oak_compact_barrel"
-          },
-          {
-            "items": "compact_storage:red_compact_barrel"
-          },
-          {
-            "items": "compact_storage:pink_compact_barrel"
-          },
-          {
-            "items": "compact_storage:yellow_compact_barrel"
-          },
-          {
-            "items": "compact_storage:black_compact_barrel"
-          },
-          {
-            "items": "compact_storage:white_compact_barrel"
-          },
-          {
-            "items": "compact_storage:crimson_compact_barrel"
-          },
-          {
-            "items": "compact_storage:light_blue_compact_barrel"
-          },
-          {
-            "items": "compact_storage:gray_compact_barrel"
-          },
-          {
-            "items": "compact_storage:light_gray_compact_barrel"
-          },
-          {
-            "items": "compact_storage:purple_compact_barrel"
-          },
-          {
-            "items": "compact_storage:lime_compact_barrel"
-          },
-          {
-            "items": "compact_storage:acacia_compact_barrel"
-          },
-          {
-            "items": "compact_storage:mangrove_compact_barrel"
-          },
-          {
-            "items": "compact_storage:brown_compact_barrel"
-          },
-          {
-            "items": "compact_storage:bamboo_compact_barrel"
-          },
-          {
-            "items": "compact_storage:warped_compact_barrel"
-          },
-          {
-            "items": "compact_storage:pale_oak_compact_barrel"
+            "items": "#compact_storage:compact_barrels"
           }
         ]
       },

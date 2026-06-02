@@ -35,6 +35,10 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
     public static final TagKey<Item> CURIOS_BACK_ITEMS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("curios", "back"));
     public static final TagKey<Item> TRINKETS_BACK_ITEMS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath("trinkets", "chest/back"));
 
+    public static final TagKey<Item> COMPACT_STORAGE_BLOCKS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(CompactStorage.MOD_ID, "storage_blocks"));
+    public static final TagKey<Item> COMPACT_STORAGE_ITEMS = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(CompactStorage.MOD_ID, "storage_items"));
+    public static final TagKey<Item> UPGRADES = TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(CompactStorage.MOD_ID, "upgrades"));
+
     public ModItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
@@ -48,9 +52,15 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 valueLookupBuilder(BACKPACK_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem());
             }
 
+            valueLookupBuilder(COMPACT_STORAGE_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem());
+
             valueLookupBuilder(COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asItem());
             valueLookupBuilder(COMPACT_BARRELS).add(CompactStorageBlocks.compactBarrels.get(type).asItem());
             valueLookupBuilder(ITEM_DRUMS).add(CompactStorageBlocks.itemDrums.get(type).asItem());
+
+            valueLookupBuilder(COMPACT_STORAGE_BLOCKS).add(CompactStorageBlocks.compactChests.get(type).asItem());
+            valueLookupBuilder(COMPACT_STORAGE_BLOCKS).add(CompactStorageBlocks.compactBarrels.get(type).asItem());
+            valueLookupBuilder(COMPACT_STORAGE_BLOCKS).add(CompactStorageBlocks.itemDrums.get(type).asItem());
 
             if(type.isWooden()) {
                 valueLookupBuilder(WOODEN_COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asItem());
@@ -65,6 +75,10 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
             valueLookupBuilder(CURIOS_BACK_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem());
             valueLookupBuilder(TRINKETS_BACK_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem());
         }
+
+        valueLookupBuilder(UPGRADES).add(CompactStorageItems.UPGRADE_WIDTH.asItem());
+        valueLookupBuilder(UPGRADES).add(CompactStorageItems.UPGRADE_HEIGHT.asItem());
+        valueLookupBuilder(UPGRADES).add(CompactStorageItems.UPGRADE_RETAINING.asItem());
     }
 
 }

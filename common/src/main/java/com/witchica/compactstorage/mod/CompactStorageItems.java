@@ -70,12 +70,12 @@ public class CompactStorageItems {
                                     output.accept(CompactStorageBlocks.compactBarrels.get(storageType));
                                     output.accept(CompactStorageBlocks.itemDrums.get(storageType));
                                     output.accept(CompactStorageItems.BACKPACK_ITEMS.get(storageType));
-
-                                    output.accept(UPGRADE_WIDTH);
-                                    output.accept(UPGRADE_HEIGHT);
-                                    output.accept(UPGRADE_RETAINING);
                                 }
                             });
+
+                            output.accept(UPGRADE_WIDTH);
+                            output.accept(UPGRADE_HEIGHT);
+                            output.accept(UPGRADE_RETAINING);
                         })
         ).asHolder();
     }

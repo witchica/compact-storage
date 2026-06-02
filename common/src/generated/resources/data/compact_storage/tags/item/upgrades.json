@@ -1,0 +1,7 @@
+{
+  "values": [
+    "compact_storage:upgrade_row",
+    "compact_storage:upgrade_column",
+    "compact_storage:upgrade_retainer"
+  ]
+}
