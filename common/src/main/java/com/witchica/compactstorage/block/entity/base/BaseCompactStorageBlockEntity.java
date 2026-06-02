@@ -51,13 +51,17 @@ import java.util.List;
 public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEntity implements BalmMenuProvider<@NotNull CompactStorageMenuData>, ResizableContainer, RetainingContainer, UpgradableContainer {
     private NonNullList<ItemStack> items;
 
-    private int inventoryWidth = 9;
-    private int inventoryHeight = 3;
+    private int inventoryWidth ;
+    private int inventoryHeight;
     private boolean retaining;
     protected final ContainerOpenersCounter containerOpenersCounter;
 
     public BaseCompactStorageBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
+
+        this.inventoryWidth = getDefaultWidth();
+        this.inventoryHeight = getDefaultHeight();
+
         items = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
         this.containerOpenersCounter = new CompactStorageContainerOpenerCounter(this);
     }
@@ -129,8 +133,8 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
     @Override
     protected void loadAdditional(ValueInput reader) {
         super.loadAdditional(reader);
-        this.inventoryWidth = reader.getIntOr("InventoryWidth", 9);
-        this.inventoryHeight = reader.getIntOr("InventoryHeight", 3);
+        this.inventoryWidth = reader.getIntOr("InventoryWidth", getDefaultWidth());
+        this.inventoryHeight = reader.getIntOr("InventoryHeight", getDefaultHeight());
         this.items = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
         ContainerHelper.loadAllItems(reader, items);
     }
@@ -171,16 +175,6 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
     @Override
     public int getHeight() {
         return inventoryHeight;
-    }
-
-    @Override
-    public int getMaximumWidth() {
-        return 21;
-    }
-
-    @Override
-    public int getMaximumHeight() {
-        return 12;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.block.entity;
 
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.block.CompactChestBlock;
 import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
 import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
@@ -59,5 +60,25 @@ public class CompactChestBlockEntity extends BaseCompactStorageBlockEntity imple
     @Override
     public void tick() {
         chestLidController.tickLid();
+    }
+
+    @Override
+    public int getMaximumWidth() {
+        return Math.min(CompactStorage.config().compactChestMaxWidth, 21);
+    }
+
+    @Override
+    public int getMaximumHeight() {
+        return Math.min(CompactStorage.config().compactChestMaxHeight, 12);
+    }
+
+    @Override
+    public int getDefaultWidth() {
+        return Math.min(CompactStorage.config().compactChestDefaultWidth, 21);
+    }
+
+    @Override
+    public int getDefaultHeight() {
+        return Math.min(CompactStorage.config().compactChestDefaultHeight, 12);
     }
 }

@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.block.entity;
 
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.block.CompactBarrelBlock;
 import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
 import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
@@ -52,5 +53,25 @@ public class CompactBarrelBlockEntity extends BaseCompactStorageBlockEntity {
     @Override
     protected Component getDefaultName() {
         return defaultName;
+    }
+
+    @Override
+    public int getMaximumWidth() {
+        return Math.min(CompactStorage.config().compactBarrelMaxWidth, 21);
+    }
+
+    @Override
+    public int getMaximumHeight() {
+        return Math.min(CompactStorage.config().compactBarrelMaxHeight, 12);
+    }
+
+    @Override
+    public int getDefaultWidth() {
+        return Math.min(CompactStorage.config().compactBarrelDefaultWidth, 21);
+    }
+
+    @Override
+    public int getDefaultHeight() {
+        return Math.min(CompactStorage.config().compactBarrelDefaultHeight, 12);
     }
 }

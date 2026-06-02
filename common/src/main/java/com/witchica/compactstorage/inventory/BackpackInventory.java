@@ -31,8 +31,8 @@ public class BackpackInventory implements Container, ResizableContainer {
     private final Optional<InteractionHand> hand;
     private final @NonNull StorageType storageType;
 
-    private int inventoryWidth = 9;
-    private int inventoryHeight = 3;
+    private int inventoryWidth;
+    private int inventoryHeight;
     private NonNullList<ItemStack> items;
 
 
@@ -42,6 +42,9 @@ public class BackpackInventory implements Container, ResizableContainer {
         this.backpackStack = backpackStack;
         this.hand = hand;
         this.storageType = ((StorageTypeProvider) backpackStack.getItem()).getStorageType();
+
+        this.inventoryWidth = getDefaultWidth();
+        this.inventoryHeight = getDefaultHeight();
 
         fromItemStack(backpackStack);
     }
@@ -59,8 +62,8 @@ public class BackpackInventory implements Container, ResizableContainer {
             if(data != null) {
                 CompoundTag tag = data.copyTag();
 
-                this.inventoryWidth = tag.getIntOr(tag.contains("inventory_width") ? "inventory_width" : "InventoryWidth", 9);
-                this.inventoryHeight = tag.getIntOr(tag.contains("inventory_height") ? "inventory_height" : "InventoryHeight", 3);
+                this.inventoryWidth = tag.getIntOr(tag.contains("inventory_width") ? "inventory_width" : "InventoryWidth", getDefaultWidth());
+                this.inventoryHeight = tag.getIntOr(tag.contains("inventory_height") ? "inventory_height" : "InventoryHeight", getDefaultHeight());
             }
 
         }
@@ -119,18 +122,28 @@ public class BackpackInventory implements Container, ResizableContainer {
 
     @Override
     public int getMaximumWidth() {
-        return 21;
+        return Math.min(CompactStorage.config().backpackMaxWidth, 21);
     }
 
     @Override
     public int getMaximumHeight() {
-        return 12;
+        return Math.min(CompactStorage.config().backpackMaxHeight, 12);
     }
 
     @Override
     public void setSize(int width, int height) {
         this.inventoryWidth = width;
         this.inventoryHeight = height;
+    }
+
+    @Override
+    public int getDefaultWidth() {
+        return Math.min(CompactStorage.config().backpackDefaultWidth, 21);
+    }
+
+    @Override
+    public int getDefaultHeight() {
+        return Math.min(CompactStorage.config().backpackDefaultHeight, 12);
     }
 
     @Override

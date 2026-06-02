@@ -18,4 +18,7 @@ public interface ResizableContainer {
     default void setHeight(int height) {
         setSize(getWidth(), height);
     }
+
+    int getDefaultWidth();
+    int getDefaultHeight();
 }
