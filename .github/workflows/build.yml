@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v5.2.0
         with:
           distribution: 'microsoft'
-          java-version: '24'
+          java-version: '21'
           cache: 'gradle'
       - name: make gradle wrapper executable
         if: ${{ runner.os != 'Windows' }}
