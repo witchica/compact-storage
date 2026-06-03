@@ -123,10 +123,10 @@ public class BackpackItem extends Item implements StorageTypeProvider {
                     if(resizableInventoryComponent.inventoryWidth() < CompactStorage.config().constrainWidth(CompactStorage.config().backpackMaxWidth)) {
                         backpackStack.update(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), resizableInventoryComponent, ResizableInventoryComponent::increaseWidth);
                         oppositeStack.setCount(oppositeStack.getCount() - 1);
-                        level.playSound(null, player.getOnPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.NEUTRAL);
+                        level.playSound(null, player.getOnPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.NEUTRAL, 1f, 1f);
                         return InteractionResult.CONSUME;
                     } else {
-                        level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL);
+                        level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1f, 1f);
                         player.displayClientMessage(upgradeType.upgradeFailMessage(), true);
                         return InteractionResult.FAIL;
                     }
@@ -134,15 +134,15 @@ public class BackpackItem extends Item implements StorageTypeProvider {
                     if(resizableInventoryComponent.inventoryHeight() < CompactStorage.config().constrainHeight(CompactStorage.config().backpackMaxHeight)) {
                         backpackStack.update(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), resizableInventoryComponent, ResizableInventoryComponent::increaseHeight);
                         oppositeStack.setCount(oppositeStack.getCount() - 1);
-                        level.playSound(null, player.getOnPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.NEUTRAL);
+                        level.playSound(null, player.getOnPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.NEUTRAL, 1f, 1f);
                         return InteractionResult.CONSUME;
                     } else {
-                        level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL);
+                        level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1f, 1f);
                         player.displayClientMessage(upgradeType.upgradeFailMessage(), true);
                         return InteractionResult.FAIL;
                     }
                 } else {
-                    level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL);
+                    level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1f, 1f);
                     player.displayClientMessage(upgradeType.upgradeNotCompatibleMessage(), true);
                     return InteractionResult.FAIL;
                 }
