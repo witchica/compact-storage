@@ -7,14 +7,69 @@ String buildId = System.getenv("BUILD_NUMBER")
 
 version = version + (buildId == null || buildId.isEmpty() ? ".0-DEV" : "." + buildId) + version_suffix
 
+tasks.register('generateNullMarkedPackageInfos') {
+    group = 'build'
+    description = 'Generates missing package-info.java files with jspecify @NullMarked for each Java package containing sources.'
+
+    def javaSourceDirsProvider = providers.provider {
+        sourceSets.main.java.srcDirs.findAll { it.exists() }
+    }
+
+    inputs.files(javaSourceDirsProvider)
+
+    doLast {
+        def created = []
+
+        javaSourceDirsProvider.get().each { File srcDir ->
+            def packageDirs = new LinkedHashSet<File>()
+            fileTree(srcDir) {
+                include '**/*.java'
+                exclude '**/package-info.java'
+            }.files.each { File javaFile ->
+                packageDirs.add(javaFile.parentFile)
+            }
+
+            packageDirs.each { File pkgDir ->
+                def relPath = srcDir.toPath().relativize(pkgDir.toPath()).toString()
+                if (relPath.isBlank()) {
+                    return
+                }
+
+                def packageName = relPath.replace(File.separatorChar, '.' as char)
+                def pkgInfo = new File(pkgDir, 'package-info.java')
+                if (pkgInfo.exists()) {
+                    return
+                }
+
+                pkgInfo.parentFile.mkdirs()
+                pkgInfo.setText("""@NullMarked
+package ${packageName};
+
+import org.jspecify.annotations.NullMarked;
+""", 'UTF-8')
+                created.add(pkgInfo)
+            }
+        }
+
+        if (!created.isEmpty()) {
+            logger.lifecycle("Generated ${created.size()} package-info.java file(s) with @NullMarked")
+        }
+    }
+}
+
 base {
-    archivesName = "${archives_name}-${project.name}"
+    archivesName = "${mod_id}-${project.name}"
 }
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(java_version)
     withSourcesJar()
     withJavadocJar()
+}
+
+tasks.withType(Javadoc).configureEach {
+    failOnError false
+    options.addStringOption('Xdoclint:-missing', '-quiet')
 }
 
 repositories {
@@ -76,10 +131,18 @@ jar {
 }
 
 processResources {
+    def minecraftVersion = libs.minecraft.get().version
+    def minecraftVersionMatch = minecraftVersion =~ /^(\d+)\.(\d+)/
+    assert minecraftVersionMatch.find(): "Unsupported Minecraft version format: ${minecraftVersion}"
+
+    def minecraftMajorMinor = "${minecraftVersionMatch.group(1)}.${minecraftVersionMatch.group(2)}"
+    def nextMinecraftMinor = "${minecraftVersionMatch.group(1)}.${minecraftVersionMatch.group(2).toInteger() + 1}"
+
     def expandProps = [
             "version": version,
             "group": project.group, //Else we target the task's group.
-            "minecraft_version": libs.minecraft.get().version.replace('-pre', '-beta.'),
+            "minecraft_version_range": "[${minecraftMajorMinor}-,${nextMinecraftMinor})",
+            "fabric_minecraft_version_range": "~${minecraftMajorMinor}-",
             "forge_version": libs.forge.get().version,
             "fabric_api_version": libs.fabricApi.get().version,
             "fabric_loader_version": libs.fabricLoader.get().version,

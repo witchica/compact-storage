@@ -9,21 +9,15 @@ plugins {
 
 dependencies {
     minecraft libs.minecraft
-    mappings loom.layered() {
-        officialMojangMappings()
-        parchment variantOf(libs.parchment) {
-            artifactType('zip')
-        }
-    }
-    modImplementation libs.fabricLoader
-    modImplementation libs.fabricApi
+    implementation libs.fabricLoader
+    implementation libs.fabricApi
 }
 
 apply from: rootProject.file('repositories.gradle')
 apply from: 'dependencies.gradle'
 
 loom {
-    def aw = project(":common").file("src/main/resources/${mod_id}.accesswidener")
+    def aw = project(":common").file("src/main/resources/${mod_id}.classtweaker")
     if (aw.exists()) {
         accessWidenerPath.set(aw)
     }
@@ -70,7 +64,7 @@ tasks.register('curseforge', TaskPublishCurseForge) {
         projectId != null
     }
     if (projectId) {
-        def mainFile = upload(findProperty("curseforge_project_id"), remapJar.archiveFile.get().asFile)
+        def mainFile = upload(findProperty("curseforge_project_id"), jar.archiveFile.get().asFile)
         mainFile.changelog = rootProject.file('CHANGELOG.md').text
         mainFile.addRequirement("fabric-api")
         mainFile.addRequirement("balm")
@@ -85,7 +79,7 @@ modrinth {
     projectId = findProperty("modrinth_project_id")
     versionType = "release"
     versionNumber = project.version + "+fabric-" + libs.minecraft.get().version
-    uploadFile = remapJar
+    uploadFile = jar
     def changelogFile = rootProject.file("CHANGELOG.md")
     if (changelogFile.exists()) {
         changelog = changelogFile.text

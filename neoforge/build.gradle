@@ -7,16 +7,6 @@ plugins {
     alias libs.plugins.modrinthMinotaur
 }
 
-repositories {
-    maven {
-        url "https://cursemaven.com"
-    }
-}
-
-dependencies {
-    implementation "curse.maven:curios-309927:7642217"
-}
-
 neoForge {
     version = libs.neoForge.get().version
     // Automatically enable neoforge AccessTransformers if the file exists
