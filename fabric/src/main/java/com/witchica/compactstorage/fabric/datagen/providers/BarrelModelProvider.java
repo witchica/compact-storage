@@ -11,6 +11,7 @@ import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
@@ -116,17 +117,17 @@ public class BarrelModelProvider {
         generator.registerSimpleItemModel(itemDrumBlock, normalModel);
     }
 
-    public static TextureMapping compactBarrelTextureMapping(Identifier texture, Block particle) {
+    public static TextureMapping compactBarrelTextureMapping(Material texture, Material particle) {
         TextureMapping mapping = TextureMapping.particle(particle);
         mapping.put(BARREL_TEXTURE, texture);
-        mapping.put(OVERLAY_TEXTURE, Identifier.fromNamespaceAndPath("compact_storage", "block/barrel/barrel_retaining_overlay"));
+        mapping.put(OVERLAY_TEXTURE, new Material(Identifier.fromNamespaceAndPath("compact_storage", "block/barrel/barrel_retaining_overlay")));
         return mapping;
     }
 
-    public static TextureMapping itemDrumTextureMapping(Identifier texture, Block particle) {
+    public static TextureMapping itemDrumTextureMapping(Material texture, Material particle) {
         TextureMapping mapping = TextureMapping.particle(particle);
         mapping.put(BARREL_TEXTURE, texture);
-        mapping.put(OVERLAY_TEXTURE, Identifier.fromNamespaceAndPath("compact_storage", "block/drum/drum_retaining_overlay"));
+        mapping.put(OVERLAY_TEXTURE, new Material(Identifier.fromNamespaceAndPath("compact_storage", "block/drum/drum_retaining_overlay")));
         return mapping;
     }
 }

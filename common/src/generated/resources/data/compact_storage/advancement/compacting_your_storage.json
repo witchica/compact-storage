@@ -17,7 +17,6 @@
       "translate": "advancement.compact_storage.compacting_your_storage.description"
     },
     "icon": {
-      "count": 1,
       "id": "compact_storage:acacia_compact_chest"
     },
     "title": {

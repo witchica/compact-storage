@@ -3,18 +3,20 @@ package com.witchica.compactstorage.fabric.datagen;
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.mod.CompactStorageBlocks;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
+public class ModBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
     public static final TagKey<Block> COMPACT_CHESTS = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(CompactStorage.MOD_ID, "compact_chests"));
     public static final TagKey<Block> WOODEN_COMPACT_CHESTS = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(CompactStorage.MOD_ID, "wooden_compact_chests"));
     public static final TagKey<Block> COLORFUL_COMPACT_CHESTS = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(CompactStorage.MOD_ID, "colorful_compact_chests"));
@@ -34,9 +36,10 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
     public static final TagKey<Block> GUARDED_BY_PIGLINS = TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath("minecraft", "guarded_by_piglins"));
 
-    public ModBlockTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
-        super(output, registriesFuture);
+    public ModBlockTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registryLookupFuture) {
+        super(output, registryLookupFuture);
     }
+
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {

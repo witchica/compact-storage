@@ -10,6 +10,7 @@ import net.minecraft.world.entity.player.PlayerModelType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import com.witchica.compactstorage.client.CompactStorageClient;
@@ -19,8 +20,8 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 @EventBusSubscriber(value=Dist.CLIENT, modid = CompactStorage.MOD_ID)
 public class NeoForgeCompactStorageClient {
 
-    public NeoForgeCompactStorageClient(IEventBus modEventBus) {
-        final var context = new NeoForgeLoadContext(modEventBus);
+    public NeoForgeCompactStorageClient(ModContainer modContainer, IEventBus modEventBus) {
+        final var context = new NeoForgeLoadContext(modContainer, modEventBus);
         BalmClient.initializeMod(CompactStorage.MOD_ID, context, CompactStorageClient::initialize);
     }
 

@@ -4,18 +4,20 @@ import com.witchica.compactstorage.fabric.datagen.providers.BackpackPackFrameMod
 import com.witchica.compactstorage.fabric.datagen.providers.BarrelModelProvider;
 import com.witchica.compactstorage.mod.CompactStorageItems;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import com.witchica.compactstorage.mod.CompactStorageBlocks;
+import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 import com.witchica.compactstorage.data.StorageType;
 
 public class ModModelProvider extends FabricModelProvider {
-    public ModModelProvider(FabricDataOutput output) {
+    public ModModelProvider(FabricPackOutput output) {
         super(output);
     }
 
@@ -25,11 +27,11 @@ public class ModModelProvider extends FabricModelProvider {
             blockStateModelGenerator.createChest(CompactStorageBlocks.compactChests.get(type).asBlock(), type.getRecipeData().particle(), Identifier.fromNamespaceAndPath("compact_storage", type.getName() +"_chest"), false);
             BarrelModelProvider.registerCompactBarrel(blockStateModelGenerator,
                     CompactStorageBlocks.compactBarrels.get(type).asBlock(),
-                    BarrelModelProvider.compactBarrelTextureMapping(Identifier.fromNamespaceAndPath("compact_storage", "block/barrel/" + type.getName() + "_barrel"), type.getRecipeData().particle()));
+                    BarrelModelProvider.compactBarrelTextureMapping(new Material(Identifier.fromNamespaceAndPath("compact_storage", "block/barrel/" + type.getName() + "_barrel")), new Material(ModelLocationUtils.getModelLocation(type.getRecipeData().particle()))));
 
             BarrelModelProvider.registerItemDrum(blockStateModelGenerator,
                     CompactStorageBlocks.itemDrums.get(type).asBlock(),
-                    BarrelModelProvider.itemDrumTextureMapping(Identifier.fromNamespaceAndPath("compact_storage", "block/drum/" + type.getName() + "_drum"), type.getRecipeData().particle())
+                    BarrelModelProvider.itemDrumTextureMapping(new Material(Identifier.fromNamespaceAndPath("compact_storage", "block/drum/" + type.getName() + "_drum")), new Material(ModelLocationUtils.getModelLocation(type.getRecipeData().particle())))
                 );
         }
 

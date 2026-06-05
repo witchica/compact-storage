@@ -127,7 +127,7 @@ public class BackpackItem extends Item implements StorageTypeProvider {
                         return InteractionResult.CONSUME;
                     } else {
                         level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1f, 1f);
-                        player.displayClientMessage(upgradeType.upgradeFailMessage(), true);
+                        player.sendOverlayMessage(upgradeType.upgradeFailMessage());
                         return InteractionResult.FAIL;
                     }
                 } else if(upgradeType == UpgradeType.HEIGHT_UPGRADE) {
@@ -138,12 +138,12 @@ public class BackpackItem extends Item implements StorageTypeProvider {
                         return InteractionResult.CONSUME;
                     } else {
                         level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1f, 1f);
-                        player.displayClientMessage(upgradeType.upgradeFailMessage(), true);
+                        player.sendOverlayMessage(upgradeType.upgradeFailMessage());
                         return InteractionResult.FAIL;
                     }
                 } else {
                     level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1f, 1f);
-                    player.displayClientMessage(upgradeType.upgradeNotCompatibleMessage(), true);
+                    player.sendOverlayMessage(upgradeType.upgradeNotCompatibleMessage());
                     return InteractionResult.FAIL;
                 }
             }

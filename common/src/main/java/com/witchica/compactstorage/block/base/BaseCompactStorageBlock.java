@@ -8,6 +8,7 @@ import com.witchica.compactstorage.data.UpgradeType;
 import com.witchica.compactstorage.item.StorageUpgradeItem;
 import net.blay09.mods.balm.Balm;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -15,6 +16,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -77,15 +79,15 @@ public abstract class BaseCompactStorageBlock extends BaseEntityBlock implements
                         return InteractionResult.CONSUME;
                     } else {
                         level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                        player.displayClientMessage(upgradeItem.getUpgradeType().upgradeFailMessage(), true);
+                        player.sendOverlayMessage(upgradeItem.getUpgradeType().upgradeFailMessage());
                         return InteractionResult.FAIL;
                     }
                 }
-            } else if (storageType.canDye() && stack.getItem() instanceof DyeItem dyeItem) {
-                StorageType newType = StorageType.fromDye(dyeItem.getDyeColor());
+            } else if (storageType.canDye() && stack.getItem() instanceof DyeItem) {
+                StorageType newType = StorageType.fromDye(stack.get(DataComponents.DYE));
 
                 if(newType != storageType) {
-                    level.setBlock(pos, getBlockStateOnRedye(state, dyeItem), 3);
+                    level.setBlock(pos, getBlockStateOnRedye(state, newType.getDyeColor()), 3);
                     stack.setCount(stack.getCount() - 1);
                     level.playSound(null, pos, SoundEvents.SLIME_SQUISH, SoundSource.BLOCKS, 1f, 1f);
                     return InteractionResult.CONSUME;
@@ -96,7 +98,7 @@ public abstract class BaseCompactStorageBlock extends BaseEntityBlock implements
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
-    protected abstract BlockState getBlockStateOnRedye(BlockState state, DyeItem dyeItem);
+    protected abstract BlockState getBlockStateOnRedye(BlockState state, DyeColor dyeColor);
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {

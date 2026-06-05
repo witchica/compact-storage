@@ -7,16 +7,13 @@ import com.witchica.compactstorage.block.entity.base.BaseItemDrumBlockEntity;
 import it.unimi.dsi.fastutil.HashCommon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Style;
@@ -70,18 +67,18 @@ public class DrumBlockEntityRenderer implements BlockEntityRenderer<BaseItemDrum
     }
 
     @Override
-    public void submit(DrumBlockEntityRenderer.DrumBlockEntityRenderState blockEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState cameraRenderState) {
+    public void submit(DrumBlockEntityRenderState drumBlockEntityRenderState, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, net.minecraft.client.renderer.state.level.CameraRenderState cameraRenderState) {
         boolean crouched = false;
 
         if(Minecraft.getInstance().player != null) {
             crouched = Minecraft.getInstance().player.isCrouching();
         }
 
-        String text = getTextToDisplay(crouched, blockEntityRenderState);
+        String text = getTextToDisplay(crouched, drumBlockEntityRenderState);
 
-        Direction direction = blockEntityRenderState.facing;
+        Direction direction = drumBlockEntityRenderState.facing;
 
-        if(blockEntityRenderState.item.isPresent()) {
+        if(drumBlockEntityRenderState.item.isPresent()) {
             poseStack.pushPose();
             poseStack.translate(0.5f, 0.5f, 0.5f);
             poseStack.translate(direction.getStepX() * 0.5f, direction.getStepY() * 0.5f, direction.getStepZ() * 0.5f);
@@ -95,7 +92,7 @@ public class DrumBlockEntityRenderer implements BlockEntityRenderer<BaseItemDrum
             poseStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot() * 2));
             poseStack.mulPose(Axis.YP.rotationDegrees(180));
 
-            blockEntityRenderState.itemStackRenderState.submit(poseStack, submitNodeCollector, blockEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+            drumBlockEntityRenderState.itemStackRenderState.submit(poseStack, submitNodeCollector, drumBlockEntityRenderState.lightCoords, OverlayTexture.NO_OVERLAY, 0);
             poseStack.popPose();
         }
 
@@ -120,7 +117,7 @@ public class DrumBlockEntityRenderer implements BlockEntityRenderer<BaseItemDrum
         //matrixStack.translate(direction.getStepX() * -0.1f, direction.getStepY() * -0.1f, direction.getStepZ() * -0.1f);
 
 
-        submitNodeCollector.submitText(poseStack, 0f, 0f, FormattedCharSequence.forward(text, Style.EMPTY), false, Font.DisplayMode.NORMAL, blockEntityRenderState.lightCoords, 0xFF000000, 0, 0);
+        submitNodeCollector.submitText(poseStack, 0f, 0f, FormattedCharSequence.forward(text, Style.EMPTY), false, Font.DisplayMode.NORMAL, drumBlockEntityRenderState.lightCoords, 0xFF000000, 0, 0);
         poseStack.popPose();
     }
 

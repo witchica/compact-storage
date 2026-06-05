@@ -13,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.animal.feline.Cat;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
@@ -50,8 +51,8 @@ public class CompactChestBlock extends BaseCompactStorageBlock implements Simple
     }
 
     @Override
-    public BlockState getBlockStateOnRedye(BlockState state, DyeItem dyeItem) {
-        return CompactStorageBlocks.compactChests.get(StorageType.fromDye(dyeItem.getDyeColor())).defaultBlockState().setValue(FACING, state.getValue(FACING)).setValue(WATERLOGGED, state.getValue(WATERLOGGED)).setValue(RETAINING, state.getValue(RETAINING));
+    public BlockState getBlockStateOnRedye(BlockState state, DyeColor dyeColor) {
+        return CompactStorageBlocks.compactChests.get(StorageType.fromDye(dyeColor)).defaultBlockState().setValue(FACING, state.getValue(FACING)).setValue(WATERLOGGED, state.getValue(WATERLOGGED)).setValue(RETAINING, state.getValue(RETAINING));
     }
 
     @Override

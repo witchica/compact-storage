@@ -18,7 +18,6 @@
       "translate": "advancement.compact_storage.got_backpack.description"
     },
     "icon": {
-      "count": 1,
       "id": "compact_storage:purple_backpack"
     },
     "title": {

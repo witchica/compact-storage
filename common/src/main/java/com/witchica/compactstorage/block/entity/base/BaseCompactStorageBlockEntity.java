@@ -85,7 +85,7 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         double d0 = (double)pos.getX() + (double)0.5F;
         double d1 = (double)pos.getY() + (double)0.5F;
         double d2 = (double)pos.getZ() + (double)0.5F;
-        level.playSound((Entity)null, d0, d1, d2, sound, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
+        level.playSound((Entity)null, d0, d1, d2, sound, SoundSource.BLOCKS, 0.5F, level.getRandom().nextFloat() * 0.1F + 0.9F);
     }
 
     public void signalOpenCount(Level level, BlockPos pos, BlockState state, int eventId, int eventParam) {

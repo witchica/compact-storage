@@ -6,7 +6,7 @@ import net.blay09.mods.balm.client.BalmClient;
 import net.blay09.mods.balm.fabric.platform.runtime.FabricLoadContext;
 import net.fabricmc.api.ClientModInitializer;
 import com.witchica.compactstorage.client.CompactStorageClient;
-import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegistrationCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.social.PlayerEntry;
 import net.minecraft.client.model.HumanoidModel;
@@ -25,7 +25,7 @@ public class FabricCompactStorageClient implements ClientModInitializer {
     public void onInitializeClient() {
         BalmClient.initializeMod(CompactStorage.MOD_ID, FabricLoadContext.INSTANCE, CompactStorageClient::initialize);
 
-        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
+        LivingEntityRenderLayerRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
             if(entityRenderer instanceof AvatarRenderer) {
                 registrationHelper.register(new BackpackFeatureRenderer((RenderLayerParent<AvatarRenderState, PlayerModel>) entityRenderer, context.getItemModelResolver()));
             }

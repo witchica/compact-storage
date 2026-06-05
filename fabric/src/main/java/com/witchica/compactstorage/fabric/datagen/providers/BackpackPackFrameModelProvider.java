@@ -9,8 +9,8 @@ import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
-import net.minecraft.client.renderer.block.model.ItemModelGenerator;
 import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -49,13 +49,13 @@ public class BackpackPackFrameModelProvider {
         generator.itemModelOutput.accept(backpackItem, ItemModelUtils.plainModel(model));
     }
 
-    public static TextureMapping backpackTextureMapping(Identifier primaryTexture, Identifier strapsTexture, Identifier particle) {
+    public static TextureMapping backpackTextureMapping(Material primaryTexture, Material strapsTexture, Material particle) {
         TextureMapping mapping = TextureMapping.singleSlot(PRIMARY_TEXTURE, primaryTexture);
         mapping.put(STRAPS_TEXTURE, strapsTexture);
         mapping.put(PARTICLE, particle);
         return mapping;
     }
-    public static TextureMapping packFrameTextureMapping(Identifier planks, Identifier log, Identifier wool, Identifier particle) {
+    public static TextureMapping packFrameTextureMapping(Material planks, Material log, Material wool, Material particle) {
         TextureMapping mapping = TextureMapping.singleSlot(PLANKS_TEXTURE, planks);
         mapping.put(LOG_TEXTURE, log);
         mapping.put(WOOL_TEXTURE, wool);

@@ -17,11 +17,11 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.MaterialSet;
+import net.minecraft.client.resources.model.sprite.SpriteGetter;
+import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
@@ -38,8 +38,8 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
         StorageType type = StorageType.OAK;
     }
 
-    public static final Map<StorageType, Material> CHEST_MATERIALS = new HashMap<>();
-    public static final Material RETAINING_MATERTIAL;
+    public static final Map<StorageType, SpriteId> CHEST_MATERIALS = new HashMap<>();
+    public static final SpriteId RETAINING_MATERTIAL;
 
     static {
         for(StorageType type : StorageType.values()) {
@@ -51,11 +51,11 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
     private final ChestModel chestModel;
     private final ChestModel lockModel;
 
-    private final MaterialSet materials;
+    private final SpriteGetter sprites;
 
     public CompactChestBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
         super();
-        this.materials = context.materials();
+        this.sprites = context.sprites();
 
         ModelPart chestBaseAndLid = context.bakeLayer(ModelLayers.CHEST);
         ModelPart chestLock = context.bakeLayer(ModelLayers.CHEST);
@@ -100,14 +100,14 @@ public class CompactChestBlockEntityRenderer implements BlockEntityRenderer<Comp
         f = 1.0F - f;
         f = 1.0F - f * f * f;
 
-        Material material = CHEST_MATERIALS.get(compactChestRenderState.type);
+        SpriteId material = CHEST_MATERIALS.get(compactChestRenderState.type);
         RenderType renderType = material.renderType(RenderTypes::entitySolid);
-        TextureAtlasSprite textureAtlasSprite = this.materials.get(material);
+        TextureAtlasSprite textureAtlasSprite = this.sprites.get(material);
 
         TextureAtlasSprite lockSprite = textureAtlasSprite;
 
         if(compactChestRenderState.retaining) {
-            lockSprite = this.materials.get(RETAINING_MATERTIAL);
+            lockSprite = this.sprites.get(RETAINING_MATERTIAL);
         }
 
         submitNodeCollector.submitModel(chestModel, f, poseStack, renderType, compactChestRenderState.lightCoords, OverlayTexture.NO_OVERLAY, -1, textureAtlasSprite, 0, compactChestRenderState.breakProgress);
