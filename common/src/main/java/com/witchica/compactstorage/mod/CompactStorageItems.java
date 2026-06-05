@@ -38,6 +38,13 @@ public class CompactStorageItems {
                 return new BackpackItem(properties.stacksTo(1), storageType);
             })).asDeferredItem());
         }
+
+        // Backwards Compatibility
+        for(StorageType storageType : StorageType.values()) {
+            if(!storageType.isWooden()) {
+                items.addAlias("backpack_" + storageType.getName(), storageType.getName() + "_backpack");
+            }
+        }
     }
 
     public static void initializeCreativeTabs(BalmCreativeModeTabRegistrar creativeModeTabs) {
