@@ -8,8 +8,10 @@ import com.witchica.compactstorage.data.UpgradeType;
 import com.witchica.compactstorage.menu.CompactStorageMenuData;
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
 import com.witchica.compactstorage.mod.CompactStorageComponents;
+import com.witchica.compactstorage.mod.CompactStorageItems;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.world.BalmMenuProvider;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
@@ -21,6 +23,8 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -146,6 +150,13 @@ public class BackpackItem extends Item implements StorageTypeProvider {
                     player.sendOverlayMessage(upgradeType.upgradeNotCompatibleMessage());
                     return InteractionResult.FAIL;
                 }
+            } else if(!oppositeStack.isEmpty() && oppositeStack.getItem() instanceof DyeItem && storageType.canDye()) {
+                DyeColor dyeColor = oppositeStack.get(DataComponents.DYE);
+
+                player.setItemInHand(hand, backpackStack.transmuteCopy(CompactStorageItems.BACKPACK_ITEMS.get(StorageType.fromDye(dyeColor))));
+                oppositeStack.setCount(oppositeStack.getCount() - 1);
+                level.playSound(null, player.getOnPos(), SoundEvents.SLIME_SQUISH, SoundSource.BLOCKS, 1f, 1f);
+                return InteractionResult.CONSUME;
             }
 
             Balm.networking().openMenu(player, new HeldBackpackMenuProvider(hand, backpackStack));
