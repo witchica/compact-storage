@@ -148,5 +148,7 @@
   "tooltip.compact_storage.upgrade_height_limit": "Height is limited to a maximum of %d",
   "tooltip.compact_storage.upgrade_retaining": "Allows CompactStorage inventories to keep their contents when broken",
   "tooltip.compact_storage.upgrade_width": "Can be applied to CompactStorage inventories to increase their width",
-  "tooltip.compact_storage.upgrade_width_limit": "Width is limited to a maximum of %d"
+  "tooltip.compact_storage.upgrade_width_limit": "Width is limited to a maximum of %d",
+  "tooltip.compact_storage.upgrades.resizable": "Size: %d x %d",
+  "tooltip.compact_storage.upgrades.retaining": "Retaining"
 }
