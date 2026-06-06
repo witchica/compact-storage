@@ -2,6 +2,7 @@ package com.witchica.compactstorage.block.entity;
 
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.CompactStorageConfig;
+import com.witchica.compactstorage.api.StorageUpgrade;
 import com.witchica.compactstorage.block.CompactBarrelBlock;
 import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
 import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
@@ -74,5 +75,10 @@ public class CompactBarrelBlockEntity extends BaseCompactStorageBlockEntity {
     @Override
     public int getDefaultHeight() {
         return CompactStorage.config().constrainHeight(CompactStorage.config().compactBarrelDefaultHeight);
+    }
+
+    @Override
+    public boolean isUpgradeAccepted(StorageUpgrade upgrade) {
+        return true;
     }
 }

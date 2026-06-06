@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "compact_storage:item/upgrade_retainer"
+    "layer0": "compact_storage:item/retainer_upgrade"
   }
 }

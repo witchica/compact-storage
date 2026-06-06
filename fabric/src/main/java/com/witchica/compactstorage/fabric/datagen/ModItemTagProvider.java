@@ -4,6 +4,8 @@ import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.mod.CompactStorageBlocks;
 import com.witchica.compactstorage.mod.CompactStorageItems;
+import com.witchica.compactstorage.mod.CompactStorageUpgrades;
+import net.blay09.mods.balm.world.item.DeferredItem;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.impl.resource.pack.FabricPack;
@@ -77,10 +79,7 @@ public class ModItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
             valueLookupBuilder(TRINKETS_BACK_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem());
         }
 
-        valueLookupBuilder(UPGRADES).add(CompactStorageItems.UPGRADE_WIDTH.asItem());
-        valueLookupBuilder(UPGRADES).add(CompactStorageItems.UPGRADE_HEIGHT.asItem());
-        valueLookupBuilder(UPGRADES).add(CompactStorageItems.UPGRADE_RETAINING.asItem());
-        valueLookupBuilder(UPGRADES).add(CompactStorageItems.UPGRADE_VOID_SLOT.asItem());
+        valueLookupBuilder(UPGRADES).add(CompactStorageItems.UPGRADES.values().stream().map(DeferredItem::asItem).toArray(Item[]::new));
     }
 
 }

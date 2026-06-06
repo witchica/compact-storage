@@ -1,6 +1,7 @@
 package com.witchica.compactstorage.block.entity;
 
 import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.api.StorageUpgrade;
 import com.witchica.compactstorage.block.CompactChestBlock;
 import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
 import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
@@ -80,5 +81,10 @@ public class CompactChestBlockEntity extends BaseCompactStorageBlockEntity imple
     @Override
     public int getDefaultHeight() {
         return CompactStorage.config().constrainHeight(CompactStorage.config().compactChestDefaultHeight);
+    }
+
+    @Override
+    public boolean isUpgradeAccepted(StorageUpgrade upgrade) {
+        return true;
     }
 }

@@ -2,9 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    "compact_storage:upgrade_row"
+    "compact_storage:width_upgrade"
   ],
   "result": {
-    "id": "compact_storage:upgrade_column"
+    "id": "compact_storage:height_upgrade"
   }
 }

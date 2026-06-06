@@ -4,6 +4,7 @@ import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.mod.CompactStorageBlocks;
 import com.witchica.compactstorage.mod.CompactStorageItemTags;
 import com.witchica.compactstorage.mod.CompactStorageItems;
+import com.witchica.compactstorage.mod.CompactStorageUpgrades;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.advancements.criterion.ItemPredicate;
@@ -32,32 +33,32 @@ public class ModRecipeProvider extends FabricRecipeProvider {
             public void buildRecipes() {
                 HolderLookup.RegistryLookup<Item> items = registryLookup.lookupOrThrow(Registries.ITEM);
 
-                shaped(RecipeCategory.MISC, CompactStorageItems.UPGRADE_WIDTH)
+                shaped(RecipeCategory.MISC, CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.WIDTH_UPGRADE))
                         .pattern("III").pattern("BIB").pattern("III")
                         .define('I', Items.IRON_NUGGET).define('B', Items.IRON_INGOT)
                         .unlockedBy("has_compact_storage_block", has(CompactStorageItemTags.STORAGE_BLOCKS))
                         .save(output);
 
-                shaped(RecipeCategory.MISC, CompactStorageItems.UPGRADE_HEIGHT)
+                shaped(RecipeCategory.MISC, CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.HEIGHT_UPGRADE))
                         .pattern("IBI").pattern("III").pattern("IBI")
                         .define('I', Items.IRON_NUGGET).define('B', Items.IRON_INGOT)
                         .unlockedBy("has_compact_storage_block", has(CompactStorageItemTags.STORAGE_BLOCKS))
                         .save(output);
 
-                shaped(RecipeCategory.MISC, CompactStorageItems.UPGRADE_RETAINING)
+                shaped(RecipeCategory.MISC, CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.RETAINING_UPGRADE))
                         .pattern("IBI").pattern("IDI").pattern("IBI").define('I', Items.IRON_NUGGET)
                         .define('B', Items.IRON_INGOT).define('D', Items.DIAMOND)
                         .unlockedBy("has_compact_storage_block", has(CompactStorageItemTags.STORAGE_BLOCKS))
                         .save(output);
 
-                shaped(RecipeCategory.MISC, CompactStorageItems.UPGRADE_VOID_SLOT)
+                shaped(RecipeCategory.MISC, CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.VOID_SLOT_UPGRADE))
                         .pattern("IBI").pattern("IDI").pattern("IBI").define('I', Items.IRON_NUGGET)
                         .define('B', Items.IRON_INGOT).define('D', Items.ENDER_PEARL)
                         .unlockedBy("has_compact_storage_block", has(CompactStorageItemTags.STORAGE_BLOCKS))
                         .save(output);
 
-                shapeless(RecipeCategory.MISC, CompactStorageItems.UPGRADE_WIDTH).requires(CompactStorageItems.UPGRADE_HEIGHT).unlockedBy("has_upgrade", has(CompactStorageItemTags.UPGRADES)).save(output, "upgrade_width_swap");
-                shapeless(RecipeCategory.MISC, CompactStorageItems.UPGRADE_HEIGHT).requires(CompactStorageItems.UPGRADE_WIDTH).unlockedBy("has_upgrade", has(CompactStorageItemTags.UPGRADES)).save(output, "upgrade_height_swap");
+                shapeless(RecipeCategory.MISC, CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.WIDTH_UPGRADE)).requires(CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.HEIGHT_UPGRADE)).unlockedBy("has_upgrade", has(CompactStorageItemTags.UPGRADES)).save(output, "upgrade_width_swap");
+                shapeless(RecipeCategory.MISC, CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.HEIGHT_UPGRADE)).requires(CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.WIDTH_UPGRADE)).unlockedBy("has_upgrade", has(CompactStorageItemTags.UPGRADES)).save(output, "upgrade_height_swap");
 
                 for(StorageType storageType : StorageType.values()) {
                     if(storageType.isWooden()) {

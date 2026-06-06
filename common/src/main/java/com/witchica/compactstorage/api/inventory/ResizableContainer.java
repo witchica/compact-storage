@@ -1,7 +1,5 @@
 package com.witchica.compactstorage.api.inventory;
 
-import com.witchica.compactstorage.data.UpgradeType;
-
 public interface ResizableContainer {
     int getWidth();
     int getHeight();

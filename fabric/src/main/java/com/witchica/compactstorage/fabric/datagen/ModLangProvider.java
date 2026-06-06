@@ -4,6 +4,7 @@ import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.mod.CompactStorageBlocks;
 import com.witchica.compactstorage.mod.CompactStorageItemTags;
 import com.witchica.compactstorage.mod.CompactStorageItems;
+import com.witchica.compactstorage.mod.CompactStorageUpgrades;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
@@ -32,10 +33,10 @@ public class ModLangProvider extends FabricLanguageProvider {
             translationBuilder.add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem(), snakeCaseToName(type.getName() + (type.isWooden() ? "_pack_frame" : "_backpack")));
         }
 
-        translationBuilder.add(CompactStorageItems.UPGRADE_WIDTH.asItem(), "Storage Upgrade (Width)");
-        translationBuilder.add(CompactStorageItems.UPGRADE_HEIGHT.asItem(), "Storage Upgrade (Height)");
-        translationBuilder.add(CompactStorageItems.UPGRADE_RETAINING.asItem(), "Storage Upgrade (Retaining)");
-        translationBuilder.add(CompactStorageItems.UPGRADE_VOID_SLOT.asItem(), "Storage Upgrade (Void Slot)");
+        translationBuilder.add(CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.WIDTH_UPGRADE).asItem(), "Storage Upgrade (Width)");
+        translationBuilder.add(CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.HEIGHT_UPGRADE).asItem(), "Storage Upgrade (Height)");
+        translationBuilder.add(CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.RETAINING_UPGRADE).asItem(), "Storage Upgrade (Retaining)");
+        translationBuilder.add(CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.VOID_SLOT_UPGRADE).asItem(), "Storage Upgrade (Void Slot)");
 
         translationBuilder.add(id("general").toLanguageKey("itemGroup"), "CompactStorage (Iron)");
         translationBuilder.add(id("wood").toLanguageKey("itemGroup"), "CompactStorage (Wood)");

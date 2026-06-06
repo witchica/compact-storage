@@ -2,13 +2,14 @@ package com.witchica.compactstorage.item;
 
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.StorageTypeProvider;
-import com.witchica.compactstorage.components.ResizableInventoryComponent;
+import com.witchica.compactstorage.api.StorageUpgrade;
+import com.witchica.compactstorage.api.inventory.ItemWithResizableInventory;
+import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.data.StorageType;
-import com.witchica.compactstorage.data.UpgradeType;
 import com.witchica.compactstorage.menu.CompactStorageMenuData;
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
-import com.witchica.compactstorage.mod.CompactStorageComponents;
 import com.witchica.compactstorage.mod.CompactStorageItems;
+import com.witchica.compactstorage.mod.CompactStorageUpgrades;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.world.BalmMenuProvider;
 import net.minecraft.core.component.DataComponents;
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public class BackpackItem extends Item implements StorageTypeProvider {
+public class BackpackItem extends Item implements StorageTypeProvider, ItemWithResizableInventory, UpgradeCheckProvider {
     public class HeldBackpackMenuProvider implements BalmMenuProvider<@NotNull CompactStorageMenuData> {
 
         private final InteractionHand hand;
@@ -115,52 +116,10 @@ public class BackpackItem extends Item implements StorageTypeProvider {
             ItemStack backpackStack = player.getItemInHand(hand);
             ItemStack oppositeStack = player.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
 
-            if(!oppositeStack.isEmpty() && oppositeStack.getItem() instanceof StorageUpgradeItem storageUpgradeItem) {
-                UpgradeType upgradeType = storageUpgradeItem.getUpgradeType();
-                ResizableInventoryComponent resizableInventoryComponent = backpackStack.has(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value()) ? backpackStack.get(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value()) : new ResizableInventoryComponent(CompactStorage.config().constrainWidth(CompactStorage.config().backpackDefaultWidth), CompactStorage.config().constrainHeight(CompactStorage.config().backpackDefaultHeight));
+            InteractionResult upgradeResult = StorageUpgrade.applyUpgradeToItem(oppositeStack, backpackStack, player, level);
 
-                if(resizableInventoryComponent == null) {
-                    return InteractionResult.FAIL;
-                }
-
-                if(upgradeType == UpgradeType.WIDTH_UPGRADE) {
-                    if(resizableInventoryComponent.inventoryWidth() < CompactStorage.config().constrainWidth(CompactStorage.config().backpackMaxWidth)) {
-                        backpackStack.update(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), resizableInventoryComponent, ResizableInventoryComponent::increaseWidth);
-                        oppositeStack.setCount(oppositeStack.getCount() - 1);
-                        level.playSound(null, player.getOnPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.NEUTRAL, 1f, 1f);
-                        return InteractionResult.CONSUME;
-                    } else {
-                        level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1f, 1f);
-                        player.sendOverlayMessage(upgradeType.upgradeFailMessage());
-                        return InteractionResult.FAIL;
-                    }
-                } else if(upgradeType == UpgradeType.HEIGHT_UPGRADE) {
-                    if(resizableInventoryComponent.inventoryHeight() < CompactStorage.config().constrainHeight(CompactStorage.config().backpackMaxHeight)) {
-                        backpackStack.update(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), resizableInventoryComponent, ResizableInventoryComponent::increaseHeight);
-                        oppositeStack.setCount(oppositeStack.getCount() - 1);
-                        level.playSound(null, player.getOnPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.NEUTRAL, 1f, 1f);
-                        return InteractionResult.CONSUME;
-                    } else {
-                        level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1f, 1f);
-                        player.sendOverlayMessage(upgradeType.upgradeFailMessage());
-                        return InteractionResult.FAIL;
-                    }
-                } else if (upgradeType == UpgradeType.VOID_SLOT_UPGRADE) {
-                    if(!backpackStack.has(CompactStorageComponents.VOID_SLOT.value()) || !backpackStack.get(CompactStorageComponents.VOID_SLOT.value()).booleanValue()) {
-                        backpackStack.set(CompactStorageComponents.VOID_SLOT.value(), true);
-                        oppositeStack.setCount(oppositeStack.getCount() - 1);
-                        level.playSound(null, player.getOnPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.NEUTRAL, 1f, 1f);
-                        return InteractionResult.CONSUME;
-                    } else {
-                        level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1f, 1f);
-                        player.sendOverlayMessage(upgradeType.upgradeFailMessage());
-                        return InteractionResult.FAIL;
-                    }
-                } else {
-                    level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1f, 1f);
-                    player.sendOverlayMessage(upgradeType.upgradeNotCompatibleMessage());
-                    return InteractionResult.FAIL;
-                }
+            if(upgradeResult != InteractionResult.PASS) {
+                return upgradeResult;
             } else if(!oppositeStack.isEmpty() && oppositeStack.getItem() instanceof DyeItem && storageType.canDye()) {
                 DyeColor dyeColor = oppositeStack.get(DataComponents.DYE);
 
@@ -175,5 +134,30 @@ public class BackpackItem extends Item implements StorageTypeProvider {
         }
 
         return super.use(level, player, hand);
+    }
+
+    @Override
+    public int getMaximumWidth() {
+        return CompactStorage.config().constrainWidth(CompactStorage.config().backpackMaxWidth);
+    }
+
+    @Override
+    public int getMaximumHeight() {
+        return CompactStorage.config().constrainHeight(CompactStorage.config().backpackMaxHeight);
+    }
+
+    @Override
+    public int getDefaultWidth() {
+        return CompactStorage.config().constrainWidth(CompactStorage.config().backpackDefaultWidth);
+    }
+
+    @Override
+    public int getDefaultHeight() {
+        return CompactStorage.config().constrainHeight(CompactStorage.config().backpackDefaultHeight);
+    }
+
+    @Override
+    public boolean isUpgradeAccepted(StorageUpgrade upgrade) {
+        return (upgrade == CompactStorageUpgrades.WIDTH_UPGRADE || upgrade == CompactStorageUpgrades.HEIGHT_UPGRADE || upgrade == CompactStorageUpgrades.VOID_SLOT_UPGRADE);
     }
 }

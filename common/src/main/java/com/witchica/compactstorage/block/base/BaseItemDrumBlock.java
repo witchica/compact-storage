@@ -1,14 +1,19 @@
 package com.witchica.compactstorage.block.base;
 
 import com.witchica.compactstorage.api.StorageTypeProvider;
+import com.witchica.compactstorage.api.StorageUpgrade;
+import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
 import com.witchica.compactstorage.block.entity.base.BaseItemDrumBlockEntity;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.inventory.DrumInventory;
 import com.witchica.compactstorage.item.StorageUpgradeItem;
 import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
+import com.witchica.compactstorage.mod.CompactStorageBlocks;
+import com.witchica.compactstorage.mod.CompactStorageUpgrades;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -18,6 +23,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -156,16 +163,24 @@ public abstract class BaseItemDrumBlock extends BaseEntityBlock implements Stora
                     return InteractionResult.CONSUME;
                 }
             } else {
-                if(stack.getItem() instanceof StorageUpgradeItem storageUpgradeItem) {
-                    if(level.getBlockEntity(pos) instanceof BaseItemDrumBlockEntity drumBlockEntity) {
-                        if(drumBlockEntity.canApplyUpgrade(storageUpgradeItem.getUpgradeType())) {
-                            drumBlockEntity.applyUpgrade(storageUpgradeItem.getUpgradeType());
-                            level.playSound(null, pos, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
-                            stack.shrink(1);
-                            return InteractionResult.CONSUME;
-                        }
+                BlockEntity blockEntity = level.getBlockEntity(pos);
+                InteractionResult upgradeResult = StorageUpgrade.applyToBlockEntity(stack, blockEntity, player, level, pos);
+
+                if(upgradeResult != InteractionResult.PASS) {
+                    return upgradeResult;
+                }
+
+                if (storageType.canDye() && stack.getItem() instanceof DyeItem) {
+                    StorageType newType = StorageType.fromDye(stack.get(DataComponents.DYE));
+
+                    if(newType != storageType) {
+                        level.setBlock(pos, getBlockStateOnRedye(state, newType.getDyeColor()), 3);
+                        stack.setCount(stack.getCount() - 1);
+                        level.playSound(null, pos, SoundEvents.SLIME_SQUISH, SoundSource.BLOCKS, 1f, 1f);
+                        return InteractionResult.CONSUME;
                     }
                 }
+
                 if(!insertItem(level, pos, player, hand)) {
                     if(player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && player.getItemInHand(InteractionHand.OFF_HAND).isEmpty()) {
                         return InteractionResult.TRY_WITH_EMPTY_HAND;
@@ -175,6 +190,10 @@ public abstract class BaseItemDrumBlock extends BaseEntityBlock implements Stora
         }
 
         return InteractionResult.SUCCESS;
+    }
+
+    private BlockState getBlockStateOnRedye(BlockState state, DyeColor dyeColor) {
+        return CompactStorageBlocks.compactChests.get(StorageType.fromDye(dyeColor)).defaultBlockState().setValue(RETAINING, state.getValue(RETAINING)).setValue(FACING, state.getValue(FACING));
     }
 
     @Override

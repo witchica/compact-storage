@@ -1,7 +1,7 @@
 package com.witchica.compactstorage.block.entity.base;
 
 import com.mojang.serialization.Codec;
-import com.witchica.compactstorage.api.inventory.UpgradableContainer;
+import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.api.inventory.VoidSlotProvider;
 import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
 import com.witchica.compactstorage.components.ResizableInventoryComponent;
@@ -18,13 +18,11 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -45,13 +43,11 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import com.witchica.compactstorage.api.inventory.ResizableContainer;
-import com.witchica.compactstorage.data.UpgradeType;
 import org.jspecify.annotations.Nullable;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 
-public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEntity implements BalmMenuProvider<@NotNull CompactStorageMenuData>, ResizableContainer, RetainingContainer, UpgradableContainer, VoidSlotProvider {
+public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEntity implements BalmMenuProvider<@NotNull CompactStorageMenuData>, ResizableContainer, RetainingContainer, VoidSlotProvider, UpgradeCheckProvider {
     private NonNullList<ItemStack> items;
 
     private int inventoryWidth ;
@@ -207,44 +203,6 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         this.inventoryWidth = width;
         this.inventoryHeight = height;
         resizeInventory();
-    }
-
-    @Override
-    public boolean canApplyUpgrade(UpgradeType upgradeType) {
-        if(upgradeType == UpgradeType.WIDTH_UPGRADE) {
-            return getWidth() < getMaximumWidth();
-        } else if(upgradeType == UpgradeType.HEIGHT_UPGRADE) {
-            return getHeight() < getMaximumHeight();
-        } else if (upgradeType == UpgradeType.RETAINING_UPGRADE) {
-            return !isRetaining();
-        } else if (upgradeType == UpgradeType.VOID_SLOT_UPGRADE) {
-            return !hasVoidSlot();
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean applyUpgrade(UpgradeType upgradeType) {
-        if(!canApplyUpgrade(upgradeType)) {
-            return false;
-        }
-
-        if(upgradeType == UpgradeType.WIDTH_UPGRADE) {
-            setWidth(Math.min(getWidth() + 1, getMaximumWidth()));
-            return true;
-        } else if(upgradeType == UpgradeType.HEIGHT_UPGRADE) {
-            setHeight(Math.min(getHeight() + 1, getMaximumHeight()));
-            return true;
-        } else if(upgradeType == UpgradeType.RETAINING_UPGRADE) {
-            setRetaining(true);
-            return true;
-        } else if(upgradeType == UpgradeType.VOID_SLOT_UPGRADE) {
-            setHasVoidSlot(true);
-            return true;
-        }
-
-        return false;
     }
 
     @Override

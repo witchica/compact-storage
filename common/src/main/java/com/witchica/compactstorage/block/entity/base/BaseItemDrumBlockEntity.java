@@ -1,12 +1,13 @@
 package com.witchica.compactstorage.block.entity.base;
 
+import com.witchica.compactstorage.api.StorageUpgrade;
 import com.witchica.compactstorage.api.inventory.RetainingContainer;
-import com.witchica.compactstorage.api.inventory.UpgradableContainer;
+import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
-import com.witchica.compactstorage.data.UpgradeType;
 import com.witchica.compactstorage.inventory.DrumInventory;
 import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
 import com.witchica.compactstorage.mod.CompactStorageComponents;
+import com.witchica.compactstorage.mod.CompactStorageUpgrades;
 import com.witchica.compactstorage.util.CompactStorageUtil;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityUtils;
 import net.minecraft.core.BlockPos;
@@ -32,7 +33,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
-public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableContainer, RetainingContainer {
+public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingContainer, UpgradeCheckProvider {
     private DrumInventory drumInventory;
     public Optional<ItemStack> clientItem = Optional.empty();
     public int clientStackSize;
@@ -120,23 +121,6 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
     }
 
     @Override
-    public boolean canApplyUpgrade(UpgradeType upgradeType) {
-        return upgradeType == UpgradeType.RETAINING_UPGRADE && !isRetaining();
-    }
-
-    @Override
-    public boolean applyUpgrade(UpgradeType upgradeType) {
-        if(upgradeType == UpgradeType.RETAINING_UPGRADE) {
-            if(!isRetaining()) {
-                setRetaining(true);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    @Override
     public boolean isRetaining() {
         return getBlockState().getValue(BaseCompactStorageBlock.RETAINING);
     }
@@ -166,5 +150,10 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements UpgradableCo
             Containers.dropContents(level, pos, drumInventory);
             drumInventory.clearContent();
         }
+    }
+
+    @Override
+    public boolean isUpgradeAccepted(StorageUpgrade upgrade) {
+        return upgrade == CompactStorageUpgrades.RETAINING_UPGRADE;
     }
 }

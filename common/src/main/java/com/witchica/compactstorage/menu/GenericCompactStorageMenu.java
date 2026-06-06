@@ -79,9 +79,11 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
         container.startOpen(playerInventory.player);
 
         setupSlots();
-        int containerSlotCount = inventoryWidth * inventoryWidth;
 
-        this.quickMove = QuickMove.create(this, this::moveItemStackTo).slotRange(QuickMove.CONTAINER, 0, containerSlotCount)
+        int containerSlotCount = inventoryWidth * inventoryHeight;
+
+        this.quickMove = QuickMove.create(this::moveItemStackTo)
+                .slotRange(QuickMove.CONTAINER, 0, containerSlotCount)
                 .slotRange(QuickMove.PLAYER, containerSlotCount, containerSlotCount + 36)
                 .slotRange("inventory", containerSlotCount, containerSlotCount + 27)
                 .slotRange("hotbar", containerSlotCount + 27, containerSlotCount + 36)
@@ -109,12 +111,13 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
                 addSlot(new BackpackHolderSlot(playerInventory, 9+(y * 9) + x, offsetX + 8 + (x * 18), playerInvStartY + (y * 18), openSource==CompactStorageOpeningSource.BACKPACK_IN_HAND));
             }
         }
+
         for(int x = 0; x < 9; x++) {
             addSlot(new BackpackHolderSlot(playerInventory, x, offsetX + 8 + (x * 18), playerInvStartY + (3 * 18) + 4, openSource==CompactStorageOpeningSource.BACKPACK_IN_HAND));
         }
 
         if(hasVoidSlot) {
-            addSlot(new Slot(new SimpleContainer(1) {
+            Slot slot = addSlot(new Slot(new SimpleContainer(1) {
                 @Override
                 public void setItem(int slot, ItemStack itemStack) {
                     super.setItem(slot, itemStack);
@@ -122,6 +125,8 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
                     setChanged();
                 }
             }, 0, chestSizeX+4 + 8, 8));
+
+            System.out.println();
         }
     }
 

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "compact_storage:upgrade_column"
+        "recipe": "compact_storage:height_upgrade"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "compact_storage:upgrade_column"
+      "compact_storage:height_upgrade"
     ]
   }
 }

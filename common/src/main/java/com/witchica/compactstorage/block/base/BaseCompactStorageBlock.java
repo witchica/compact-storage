@@ -1,10 +1,10 @@
 package com.witchica.compactstorage.block.base;
 
 import com.witchica.compactstorage.api.StorageTypeProvider;
-import com.witchica.compactstorage.api.inventory.UpgradableContainer;
+import com.witchica.compactstorage.api.StorageUpgrade;
+import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
 import com.witchica.compactstorage.data.StorageType;
-import com.witchica.compactstorage.data.UpgradeType;
 import com.witchica.compactstorage.item.StorageUpgradeItem;
 import net.blay09.mods.balm.Balm;
 import net.minecraft.core.BlockPos;
@@ -21,15 +21,11 @@ import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
-import org.jspecify.annotations.Nullable;
 
 public abstract class BaseCompactStorageBlock extends BaseEntityBlock implements StorageTypeProvider {
     public static final BooleanProperty RETAINING = BooleanProperty.create("retaining");
@@ -58,6 +54,8 @@ public abstract class BaseCompactStorageBlock extends BaseEntityBlock implements
             return InteractionResult.SUCCESS;
         }
 
+
+
         return InteractionResult.CONSUME;
     }
 
@@ -68,22 +66,14 @@ public abstract class BaseCompactStorageBlock extends BaseEntityBlock implements
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if(!level.isClientSide()) {
-            if(stack.getItem() instanceof StorageUpgradeItem upgradeItem) {
-                UpgradeType upgradeType = upgradeItem.getUpgradeType();
-                if(level.getBlockEntity(pos) instanceof UpgradableContainer upgradableContainer) {
-                    boolean applied = upgradableContainer.applyUpgrade(upgradeType);
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            InteractionResult upgradeResult = StorageUpgrade.applyToBlockEntity(stack, blockEntity, player, level, pos);
 
-                    if(applied) {
-                        stack.setCount(stack.getCount() - 1);
-                        level.playSound(null, pos, SoundEvents.PLAYER_LEVELUP, SoundSource.BLOCKS, 1f, 1f);
-                        return InteractionResult.CONSUME;
-                    } else {
-                        level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 1f, 1f);
-                        player.sendOverlayMessage(upgradeItem.getUpgradeType().upgradeFailMessage());
-                        return InteractionResult.FAIL;
-                    }
-                }
-            } else if (storageType.canDye() && stack.getItem() instanceof DyeItem) {
+            if(upgradeResult != InteractionResult.PASS) {
+                return upgradeResult;
+            }
+
+            if (storageType.canDye() && stack.getItem() instanceof DyeItem) {
                 StorageType newType = StorageType.fromDye(stack.get(DataComponents.DYE));
 
                 if(newType != storageType) {

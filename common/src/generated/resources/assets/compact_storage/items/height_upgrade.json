@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "compact_storage:item/upgrade_column"
+    "model": "compact_storage:item/height_upgrade"
   }
 }

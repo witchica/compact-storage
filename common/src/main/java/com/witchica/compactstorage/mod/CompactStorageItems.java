@@ -1,19 +1,19 @@
 package com.witchica.compactstorage.mod;
 
+import com.witchica.compactstorage.api.StorageUpgrade;
 import com.witchica.compactstorage.item.BackpackItem;
 import com.witchica.compactstorage.item.StorageUpgradeItem;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
 import net.blay09.mods.balm.world.item.BalmItemRegistrar;
 import net.blay09.mods.balm.world.item.DeferredItem;
-import net.blay09.mods.balm.world.level.block.DiscriminatedBlocks;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import com.witchica.compactstorage.data.StorageType;
-import com.witchica.compactstorage.data.UpgradeType;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.witchica.compactstorage.CompactStorage.id;
@@ -21,18 +21,15 @@ import static com.witchica.compactstorage.CompactStorage.id;
 public class CompactStorageItems {
     public static Holder<CreativeModeTab> IRON_TAB;
     public static Holder<CreativeModeTab> WOOD_TAB;
-    public static DeferredItem UPGRADE_WIDTH;
-    public static DeferredItem UPGRADE_HEIGHT;
-    public static DeferredItem UPGRADE_RETAINING;
-    public static DeferredItem UPGRADE_VOID_SLOT;
+    public static Map<StorageUpgrade, DeferredItem> UPGRADES = new HashMap<>();
 
     public static Map<StorageType, DeferredItem> BACKPACK_ITEMS = new HashMap<>();
 
     public static void initializeItems(BalmItemRegistrar items) {
-        UPGRADE_WIDTH = items.register(UpgradeType.WIDTH_UPGRADE.name(), (properties) -> new StorageUpgradeItem(properties, UpgradeType.WIDTH_UPGRADE)).asDeferredItem();
-        UPGRADE_HEIGHT = items.register(UpgradeType.HEIGHT_UPGRADE.name(), (properties) -> new StorageUpgradeItem(properties, UpgradeType.HEIGHT_UPGRADE)).asDeferredItem();
-        UPGRADE_RETAINING = items.register(UpgradeType.RETAINING_UPGRADE.name(), (properties) -> new StorageUpgradeItem(properties, UpgradeType.RETAINING_UPGRADE)).asDeferredItem();
-        UPGRADE_VOID_SLOT = items.register(UpgradeType.VOID_SLOT_UPGRADE.name(), (properties -> new StorageUpgradeItem(properties, UpgradeType.VOID_SLOT_UPGRADE))).asDeferredItem();
+
+        for(StorageUpgrade upgrade : CompactStorageUpgrades.UPGRADES) {
+            UPGRADES.put(upgrade, items.register(upgrade.getItemName(), (properties -> new StorageUpgradeItem(properties, upgrade))).asDeferredItem());
+        }
 
         for(StorageType type : StorageType.values()) {
             BACKPACK_ITEMS.put(type, items.register(type.backpackNameFactory(), (properties -> {
@@ -47,6 +44,10 @@ public class CompactStorageItems {
                 items.addAlias("backpack_" + storageType.getName(), storageType.getName() + "_backpack");
             }
         }
+
+        items.addAlias("upgrade_row", "width_upgrade");
+        items.addAlias("upgrade_column", "height_upgrade");
+        items.addAlias("upgrade_retainer", "retainer_upgrade");
     }
 
     public static void initializeCreativeTabs(BalmCreativeModeTabRegistrar creativeModeTabs) {
@@ -63,10 +64,7 @@ public class CompactStorageItems {
                                 }
                             });
 
-                            output.accept(UPGRADE_WIDTH);
-                            output.accept(UPGRADE_HEIGHT);
-                            output.accept(UPGRADE_RETAINING);
-                            output.accept(UPGRADE_VOID_SLOT);
+                            UPGRADES.values().stream().map(DeferredItem::asItem).forEach(output::accept);
                         })
         ).asHolder();
 
@@ -83,10 +81,7 @@ public class CompactStorageItems {
                                 }
                             });
 
-                            output.accept(UPGRADE_WIDTH);
-                            output.accept(UPGRADE_HEIGHT);
-                            output.accept(UPGRADE_RETAINING);
-                            output.accept(UPGRADE_VOID_SLOT);
+                            UPGRADES.values().stream().map(DeferredItem::asItem).forEach(output::accept);
                         })
         ).asHolder();
     }
