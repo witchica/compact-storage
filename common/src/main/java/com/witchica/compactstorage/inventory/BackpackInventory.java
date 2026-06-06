@@ -4,6 +4,7 @@ import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.StorageTypeProvider;
 import com.witchica.compactstorage.api.inventory.ResizableContainer;
 import com.witchica.compactstorage.api.inventory.UpgradableContainer;
+import com.witchica.compactstorage.api.inventory.VoidSlotProvider;
 import com.witchica.compactstorage.components.ResizableInventoryComponent;
 import com.witchica.compactstorage.data.CompactStorageOpeningSource;
 import com.witchica.compactstorage.data.StorageType;
@@ -29,7 +30,7 @@ import net.minecraft.world.level.storage.ValueInput;
 import org.jspecify.annotations.NonNull;
 import java.util.Optional;
 
-public class BackpackInventory implements Container, ResizableContainer {
+public class BackpackInventory implements Container, ResizableContainer, VoidSlotProvider {
     private final Player player;
     private final CompactStorageOpeningSource openingSource;
     private final ItemStack backpackStack;
@@ -39,6 +40,7 @@ public class BackpackInventory implements Container, ResizableContainer {
     private int inventoryWidth;
     private int inventoryHeight;
     private NonNullList<ItemStack> items;
+    private boolean hasVoidSlot;
 
 
     public BackpackInventory(Player player, CompactStorageOpeningSource openingSource, ItemStack backpackStack, Optional<InteractionHand> hand) {
@@ -91,6 +93,10 @@ public class BackpackInventory implements Container, ResizableContainer {
                 contents.copyInto(getItems());
             }
         }
+        
+        if(stack.has(CompactStorageComponents.VOID_SLOT.value())) {
+            this.hasVoidSlot = backpackStack.get(CompactStorageComponents.VOID_SLOT.value()).booleanValue();
+        }
     }
 
     @Override
@@ -121,6 +127,7 @@ public class BackpackInventory implements Container, ResizableContainer {
 
             stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getItems()));
             stack.set(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(inventoryWidth, inventoryHeight));
+            stack.set(CompactStorageComponents.VOID_SLOT.value(), this.hasVoidSlot());
             stack.remove(DataComponents.CUSTOM_DATA);
         }
     }
@@ -221,5 +228,15 @@ public class BackpackInventory implements Container, ResizableContainer {
     @Override
     public void clearContent() {
         this.getItems().clear();
+    }
+
+    @Override
+    public boolean hasVoidSlot() {
+        return hasVoidSlot;
+    }
+
+    @Override
+    public void setHasVoidSlot(boolean hasVoidSlot) {
+        // Not implemented
     }
 }

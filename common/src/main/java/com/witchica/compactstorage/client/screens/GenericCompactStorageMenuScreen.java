@@ -15,6 +15,7 @@ import com.witchica.compactstorage.data.StorageType;
 public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<GenericCompactStorageMenu> {
     public static final Identifier STANDARD_SLOT = Identifier.fromNamespaceAndPath("compact_storage", "textures/gui/slots/normal.png");
     public static final Identifier BACKGROUND_LOCATION = Identifier.fromNamespaceAndPath("compact_storage", "textures/gui/inventory_background.png");
+    public static final Identifier TRASH_ICON = Identifier.fromNamespaceAndPath("compact_storage", "textures/gui/trash_icon.png");
 
     private static final Vector2i DEFAULT_SLOTS = new Vector2i(0,0);
 
@@ -27,6 +28,7 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
     private final StorageType storageType;
     private final Vector2i invCoords;
     private final boolean fancyRendering;
+    private final boolean hasVoidSlot;
 
     private int inventorySizeX = 9;
     private int inventorySizeY = 3;
@@ -52,6 +54,8 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
 
         this.fancyRendering = CompactStorage.config().useFancyInventoryRendering;
         this.invCoords = fancyRendering ? storageType.getInventoryCoords() : DEFAULT_SLOTS;
+
+        this.hasVoidSlot = menu.hasVoidSlot;
     }
 
     @Override
@@ -65,9 +69,23 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
             renderSlots(graphics, leftPos + 7, topPos + 17, inventorySizeX, inventorySizeY);
         }
 
+        if(hasVoidSlot) {
+            extractVoidSlot(graphics, mouseX, mouseY, a);
+        }
+
         renderSlots(graphics, leftPos + 7 + playerInvOffsetX, topPos + chestInvSizeY + 4 + 17, 9, 3);
         renderSlots(graphics, leftPos + 7 + playerInvOffsetX, topPos + chestInvSizeY + 4 + 17 + (3 * 18) + 4, 9, 1);
+
         super.extractRenderState(graphics, mouseX, mouseY, a);
+    }
+
+    private void extractVoidSlot(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        //extractTab(graphics, BACKGROUND_LOCATION, leftPos+imageWidth-3, topPos, 28, 29, invCoords.x * 15, invCoords.y * 15, 7, 128, 128, true);
+
+        blit9slice(graphics, BACKGROUND_LOCATION, leftPos+imageWidth+4, topPos, 32, 32, invCoords.x * 15, invCoords.y * 15, 7, 128, 128);
+        renderSlots(graphics, storageType, leftPos+imageWidth+4 + 7, topPos + 7, 1,1);
+
+        graphics.blit(RenderPipelines.GUI_TEXTURED, TRASH_ICON, leftPos + imageWidth + 4 + 7 + 1, topPos +7+1, 0, 0, 16, 16, 16, 16, 16, 16, fancyRendering ? 0xFF000000 + storageType.getUiTitleColor() : -12566464);
     }
 
     public void renderSlots(GuiGraphicsExtractor guiGraphics, StorageType type, int x, int y, int slotsX, int slotsY) {
@@ -150,6 +168,51 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
                 x+segmentSize, y+segmentSize,
                 textureOffsetX+segmentSize, textureOffsetY+segmentSize,
                 width-(segmentSize*2), height-(segmentSize*2),
+                1, 1,
+                textureSizeX, textureSizeY);
+    }
+
+    public void extractTab(GuiGraphicsExtractor guiGraphics, Identifier texture, int x, int y, int width, int height, int textureOffsetX, int textureOffsetY, int segmentSize, int textureSizeX, int textureSizeY, boolean firstTab) {
+        // Top Middle
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture,
+                x, y,
+                textureOffsetX+segmentSize, textureOffsetY,
+                width-(segmentSize), segmentSize,
+                1, segmentSize,
+                textureSizeX, textureSizeY);
+        // Top Right
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture,
+                x+width-segmentSize, y,
+                textureOffsetX+segmentSize+1, textureOffsetY,
+                segmentSize, segmentSize,
+                segmentSize, segmentSize,
+                textureSizeX, textureSizeY);
+        // Bottom Middle
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture,
+                x+2, y+height-segmentSize,
+                textureOffsetX+segmentSize, textureOffsetY+segmentSize+1,
+                width-(segmentSize)-2, segmentSize,
+                1, segmentSize,
+                textureSizeX, textureSizeY);
+        // Bottom Right
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture,
+                x+width-segmentSize, y+height-segmentSize,
+                textureOffsetX+segmentSize+1, textureOffsetY+segmentSize+1,
+                segmentSize, segmentSize,
+                segmentSize, segmentSize,
+                textureSizeX, textureSizeY);
+        // Right Middle
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture,
+                x+width-segmentSize, y+segmentSize,
+                textureOffsetX+segmentSize+1, textureOffsetY+segmentSize,
+                segmentSize, height-(segmentSize*2),
+                segmentSize, 1,
+                textureSizeX, textureSizeY);
+        // Middle
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture,
+                x, y+segmentSize,
+                textureOffsetX+segmentSize, textureOffsetY+segmentSize,
+                width-(segmentSize), height-(segmentSize)-3,
                 1, 1,
                 textureSizeX, textureSizeY);
     }

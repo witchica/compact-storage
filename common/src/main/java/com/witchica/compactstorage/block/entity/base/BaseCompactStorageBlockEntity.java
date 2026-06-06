@@ -2,6 +2,7 @@ package com.witchica.compactstorage.block.entity.base;
 
 import com.mojang.serialization.Codec;
 import com.witchica.compactstorage.api.inventory.UpgradableContainer;
+import com.witchica.compactstorage.api.inventory.VoidSlotProvider;
 import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
 import com.witchica.compactstorage.components.ResizableInventoryComponent;
 import com.witchica.compactstorage.menu.CompactStorageMenuData;
@@ -50,12 +51,13 @@ import org.jspecify.annotations.Nullable;
 import javax.xml.crypto.Data;
 import java.util.List;
 
-public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEntity implements BalmMenuProvider<@NotNull CompactStorageMenuData>, ResizableContainer, RetainingContainer, UpgradableContainer {
+public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEntity implements BalmMenuProvider<@NotNull CompactStorageMenuData>, ResizableContainer, RetainingContainer, UpgradableContainer, VoidSlotProvider {
     private NonNullList<ItemStack> items;
 
     private int inventoryWidth ;
     private int inventoryHeight;
     private boolean needsToBeRetaining;
+    private boolean hasVoidSlotUpgrade;
     protected final ContainerOpenersCounter containerOpenersCounter;
 
     public BaseCompactStorageBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -129,6 +131,7 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         super.saveAdditional(writer);
         writer.store("InventoryWidth", Codec.INT, inventoryWidth);
         writer.store("InventoryHeight", Codec.INT, inventoryHeight);
+        writer.store("VoidSlotUpgrade", Codec.BOOL, hasVoidSlot());
         writer.store("Version", Codec.INT,21);
 
         recheckRetaining();
@@ -144,6 +147,7 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         // Snake Case is for backwards compatibility with 1.20 etc.
         this.inventoryWidth = reader.getIntOr("InventoryWidth", reader.getIntOr("inventory_width", getDefaultWidth()));
         this.inventoryHeight = reader.getIntOr("InventoryHeight", reader.getIntOr("inventory_height", getDefaultHeight()));
+        this.hasVoidSlotUpgrade = reader.getBooleanOr("VoidSlotUpgrade", false);
 
         // Backwards compatibility for 1.20.1 etc.
         if(reader.getBooleanOr("retaining", reader.getBooleanOr("Retaining", false))) {
@@ -213,6 +217,8 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
             return getHeight() < getMaximumHeight();
         } else if (upgradeType == UpgradeType.RETAINING_UPGRADE) {
             return !isRetaining();
+        } else if (upgradeType == UpgradeType.VOID_SLOT_UPGRADE) {
+            return !hasVoidSlot();
         } else {
             return false;
         }
@@ -232,6 +238,9 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
             return true;
         } else if(upgradeType == UpgradeType.RETAINING_UPGRADE) {
             setRetaining(true);
+            return true;
+        } else if(upgradeType == UpgradeType.VOID_SLOT_UPGRADE) {
+            setHasVoidSlot(true);
             return true;
         }
 
@@ -282,6 +291,8 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         if(resizableInventoryComponent != null) {
             resizableInventoryComponent.apply(this);
         }
+
+        setHasVoidSlot(dataComponentGetter.getOrDefault(CompactStorageComponents.VOID_SLOT.value(), false).booleanValue());
     }
 
     @Override
@@ -289,6 +300,7 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         super.collectImplicitComponents(dataComponentMap);
         dataComponentMap.set(CompactStorageComponents.RETAINING_DATA.value(), this.isRetaining());
         dataComponentMap.set(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(this.getWidth(), this.getHeight()));
+        dataComponentMap.set(CompactStorageComponents.VOID_SLOT.value(), this.hasVoidSlot());
     }
 
     @Override
@@ -304,6 +316,7 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         super.removeComponentsFromTag(tag);
         tag.discard("InventoryWidth");
         tag.discard("InventoryHeight");
+        tag.discard("VoidSlotUpgrade");
     }
 
     public void recheckRetaining() {
@@ -311,5 +324,16 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
             level.setBlock(getBlockPos(), getBlockState().setValue(BaseCompactStorageBlock.RETAINING, true), 2);
             this.needsToBeRetaining = false;
         }
+    }
+
+    @Override
+    public boolean hasVoidSlot() {
+        return this.hasVoidSlotUpgrade;
+    }
+
+    @Override
+    public void setHasVoidSlot(boolean hasVoidSlot) {
+        this.hasVoidSlotUpgrade = hasVoidSlot;
+        setChanged();
     }
 }

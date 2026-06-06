@@ -145,6 +145,17 @@ public class BackpackItem extends Item implements StorageTypeProvider {
                         player.sendOverlayMessage(upgradeType.upgradeFailMessage());
                         return InteractionResult.FAIL;
                     }
+                } else if (upgradeType == UpgradeType.VOID_SLOT_UPGRADE) {
+                    if(!backpackStack.has(CompactStorageComponents.VOID_SLOT.value()) || !backpackStack.get(CompactStorageComponents.VOID_SLOT.value()).booleanValue()) {
+                        backpackStack.set(CompactStorageComponents.VOID_SLOT.value(), true);
+                        oppositeStack.setCount(oppositeStack.getCount() - 1);
+                        level.playSound(null, player.getOnPos(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.NEUTRAL, 1f, 1f);
+                        return InteractionResult.CONSUME;
+                    } else {
+                        level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1f, 1f);
+                        player.sendOverlayMessage(upgradeType.upgradeFailMessage());
+                        return InteractionResult.FAIL;
+                    }
                 } else {
                     level.playSound(null, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1f, 1f);
                     player.sendOverlayMessage(upgradeType.upgradeNotCompatibleMessage());
