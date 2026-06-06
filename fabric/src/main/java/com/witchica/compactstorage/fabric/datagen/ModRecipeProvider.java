@@ -50,6 +50,12 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .unlockedBy("has_compact_storage_block", has(CompactStorageItemTags.STORAGE_BLOCKS))
                         .save(output);
 
+                shaped(RecipeCategory.MISC, CompactStorageItems.UPGRADE_VOID_SLOT)
+                        .pattern("IBI").pattern("IDI").pattern("IBI").define('I', Items.IRON_NUGGET)
+                        .define('B', Items.IRON_INGOT).define('D', Items.ENDER_PEARL)
+                        .unlockedBy("has_compact_storage_block", has(CompactStorageItemTags.STORAGE_BLOCKS))
+                        .save(output);
+
                 shapeless(RecipeCategory.MISC, CompactStorageItems.UPGRADE_WIDTH).requires(CompactStorageItems.UPGRADE_HEIGHT).unlockedBy("has_upgrade", has(CompactStorageItemTags.UPGRADES)).save(output, "upgrade_width_swap");
                 shapeless(RecipeCategory.MISC, CompactStorageItems.UPGRADE_HEIGHT).requires(CompactStorageItems.UPGRADE_WIDTH).unlockedBy("has_upgrade", has(CompactStorageItemTags.UPGRADES)).save(output, "upgrade_height_swap");
 

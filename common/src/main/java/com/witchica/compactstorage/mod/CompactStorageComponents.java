@@ -10,9 +10,11 @@ import net.minecraft.core.component.DataComponentType;
 public class CompactStorageComponents {
     public static Holder<DataComponentType<ResizableInventoryComponent>> RESIZABLE_INVENTORY_DATA;
     public static Holder<DataComponentType<Boolean>> RETAINING_DATA;
+    public static Holder<DataComponentType<Boolean>> VOID_SLOT;
 
     public static void initialize(BalmDataComponentTypeRegistrar registrar) {
         RESIZABLE_INVENTORY_DATA = registrar.register("resizable_inventory_data", ResizableInventoryComponent.CODEC).asHolder();
         RETAINING_DATA = registrar.register("retaining_data", Codec.BOOL).asHolder();
+        VOID_SLOT = registrar.register("void_slot_data", Codec.BOOL).asHolder();
     }
 }

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:iron_ingot",
+    "D": "minecraft:ender_pearl",
+    "I": "minecraft:iron_nugget"
+  },
+  "pattern": [
+    "IBI",
+    "IDI",
+    "IBI"
+  ],
+  "result": {
+    "id": "compact_storage:void_slot_upgrade"
+  }
+}

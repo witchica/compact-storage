@@ -24,6 +24,7 @@ public class CompactStorageItems {
     public static DeferredItem UPGRADE_WIDTH;
     public static DeferredItem UPGRADE_HEIGHT;
     public static DeferredItem UPGRADE_RETAINING;
+    public static DeferredItem UPGRADE_VOID_SLOT;
 
     public static Map<StorageType, DeferredItem> BACKPACK_ITEMS = new HashMap<>();
 
@@ -31,6 +32,7 @@ public class CompactStorageItems {
         UPGRADE_WIDTH = items.register(UpgradeType.WIDTH_UPGRADE.name(), (properties) -> new StorageUpgradeItem(properties, UpgradeType.WIDTH_UPGRADE)).asDeferredItem();
         UPGRADE_HEIGHT = items.register(UpgradeType.HEIGHT_UPGRADE.name(), (properties) -> new StorageUpgradeItem(properties, UpgradeType.HEIGHT_UPGRADE)).asDeferredItem();
         UPGRADE_RETAINING = items.register(UpgradeType.RETAINING_UPGRADE.name(), (properties) -> new StorageUpgradeItem(properties, UpgradeType.RETAINING_UPGRADE)).asDeferredItem();
+        UPGRADE_VOID_SLOT = items.register(UpgradeType.VOID_SLOT_UPGRADE.name(), (properties -> new StorageUpgradeItem(properties, UpgradeType.VOID_SLOT_UPGRADE))).asDeferredItem();
 
         for(StorageType type : StorageType.values()) {
             BACKPACK_ITEMS.put(type, items.register(type.backpackNameFactory(), (properties -> {
@@ -64,6 +66,7 @@ public class CompactStorageItems {
                             output.accept(UPGRADE_WIDTH);
                             output.accept(UPGRADE_HEIGHT);
                             output.accept(UPGRADE_RETAINING);
+                            output.accept(UPGRADE_VOID_SLOT);
                         })
         ).asHolder();
 
@@ -83,6 +86,7 @@ public class CompactStorageItems {
                             output.accept(UPGRADE_WIDTH);
                             output.accept(UPGRADE_HEIGHT);
                             output.accept(UPGRADE_RETAINING);
+                            output.accept(UPGRADE_VOID_SLOT);
                         })
         ).asHolder();
     }

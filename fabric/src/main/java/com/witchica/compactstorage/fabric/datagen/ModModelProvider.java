@@ -43,6 +43,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.generateFlatItem(CompactStorageItems.UPGRADE_WIDTH.asItem(), ModelTemplates.FLAT_ITEM);
         itemModelGenerator.generateFlatItem(CompactStorageItems.UPGRADE_HEIGHT.asItem(), ModelTemplates.FLAT_ITEM);
         itemModelGenerator.generateFlatItem(CompactStorageItems.UPGRADE_RETAINING.asItem(), ModelTemplates.FLAT_ITEM);
+        itemModelGenerator.generateFlatItem(CompactStorageItems.UPGRADE_VOID_SLOT.asItem(), ModelTemplates.FLAT_ITEM);
 
         for(StorageType type : StorageType.values()) {
             if(type.isWooden()) {

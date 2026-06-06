@@ -35,6 +35,7 @@ public class ModLangProvider extends FabricLanguageProvider {
         translationBuilder.add(CompactStorageItems.UPGRADE_WIDTH.asItem(), "Storage Upgrade (Width)");
         translationBuilder.add(CompactStorageItems.UPGRADE_HEIGHT.asItem(), "Storage Upgrade (Height)");
         translationBuilder.add(CompactStorageItems.UPGRADE_RETAINING.asItem(), "Storage Upgrade (Retaining)");
+        translationBuilder.add(CompactStorageItems.UPGRADE_VOID_SLOT.asItem(), "Storage Upgrade (Void Slot)");
 
         translationBuilder.add(id("general").toLanguageKey("itemGroup"), "CompactStorage (Iron)");
         translationBuilder.add(id("wood").toLanguageKey("itemGroup"), "CompactStorage (Wood)");
@@ -48,6 +49,7 @@ public class ModLangProvider extends FabricLanguageProvider {
         translationBuilder.add("message.compact_storage.upgrades.width.fail", "Inventory has already reached the maximum width.");
         translationBuilder.add("message.compact_storage.upgrades.height.fail", "Inventory has already reached the maximum height.");
         translationBuilder.add("message.compact_storage.upgrades.retaining.fail", "Inventory has already got the retaining upgrade.");
+        translationBuilder.add("message.compact_storage.upgrades.void_slot.fail", "Inventory has already got the void slot upgrade.");
 
         translationBuilder.add("message.compact_storage.upgrades.not_allowed", "Inventory cannot accept this upgrade type.");
 

@@ -80,6 +80,7 @@ public class ModItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
         valueLookupBuilder(UPGRADES).add(CompactStorageItems.UPGRADE_WIDTH.asItem());
         valueLookupBuilder(UPGRADES).add(CompactStorageItems.UPGRADE_HEIGHT.asItem());
         valueLookupBuilder(UPGRADES).add(CompactStorageItems.UPGRADE_RETAINING.asItem());
+        valueLookupBuilder(UPGRADES).add(CompactStorageItems.UPGRADE_VOID_SLOT.asItem());
     }
 
 }
