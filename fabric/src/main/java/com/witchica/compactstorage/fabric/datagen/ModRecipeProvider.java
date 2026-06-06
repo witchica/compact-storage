@@ -6,12 +6,15 @@ import com.witchica.compactstorage.mod.CompactStorageItemTags;
 import com.witchica.compactstorage.mod.CompactStorageItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import com.witchica.compactstorage.CompactStorage;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
@@ -27,6 +30,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         return new RecipeProvider(registryLookup, exporter) {
             @Override
             public void buildRecipes() {
+                HolderLookup.RegistryLookup<Item> items = registryLookup.lookupOrThrow(Registries.ITEM);
 
                 shaped(RecipeCategory.MISC, CompactStorageItems.UPGRADE_WIDTH)
                         .pattern("III").pattern("BIB").pattern("III")
@@ -45,6 +49,9 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .define('B', Items.IRON_INGOT).define('D', Items.DIAMOND)
                         .unlockedBy("has_compact_storage_block", has(CompactStorageItemTags.STORAGE_BLOCKS))
                         .save(output);
+
+                shapeless(RecipeCategory.MISC, CompactStorageItems.UPGRADE_WIDTH).requires(CompactStorageItems.UPGRADE_HEIGHT).unlockedBy("has_upgrade", has(CompactStorageItemTags.UPGRADES)).save(output, "upgrade_width_swap");
+                shapeless(RecipeCategory.MISC, CompactStorageItems.UPGRADE_HEIGHT).requires(CompactStorageItems.UPGRADE_WIDTH).unlockedBy("has_upgrade", has(CompactStorageItemTags.UPGRADES)).save(output, "upgrade_height_swap");
 
                 for(StorageType storageType : StorageType.values()) {
                     if(storageType.isWooden()) {

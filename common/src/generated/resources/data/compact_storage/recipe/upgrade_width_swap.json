@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "compact_storage:upgrade_column"
+  ],
+  "result": {
+    "id": "compact_storage:upgrade_row"
+  }
+}
