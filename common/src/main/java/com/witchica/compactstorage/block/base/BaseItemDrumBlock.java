@@ -13,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -150,7 +151,10 @@ public abstract class BaseItemDrumBlock extends BaseEntityBlock implements Stora
     @Override
     protected void attack(BlockState state, Level level, BlockPos pos, Player player) {
         if(!level.isClientSide()) {
-            extractItem(level, pos, player, 1);
+            // Check if is an axe or pickaxe and do not extract, stops drops when mining it.
+            if(!player.getItemInHand(InteractionHand.MAIN_HAND).is(storageType.isWooden() ? ItemTags.AXES : ItemTags.PICKAXES)) {
+                extractItem(level, pos, player, 1);
+            }
         }
         super.attack(state, level, pos, player);
     }
@@ -158,19 +162,26 @@ public abstract class BaseItemDrumBlock extends BaseEntityBlock implements Stora
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if(!level.isClientSide()) {
+            // Extract whole stacks on shift
             if(player.isShiftKeyDown()) {
                 if(extractItem(level, pos, player)) {
                     return InteractionResult.CONSUME;
                 }
             } else {
+                // Upgrades and dyeing
                 InteractionResult result = CompactStorageUtil.onUseWithItem(stack, level, pos, state, player, getStorageType(), this);
 
                 if(result != InteractionResult.PASS) {
                     return result;
                 }
 
+                // If not upgrade or dye, try and do an insert
                 if(!insertItem(level, pos, player, hand)) {
-                    if(player.getItemInHand(InteractionHand.MAIN_HAND).isEmpty() && player.getItemInHand(InteractionHand.OFF_HAND).isEmpty()) {
+                    // If both hands are NOT the stored item, try extract via the use function
+                    BaseItemDrumBlockEntity drumBlockEntity = (BaseItemDrumBlockEntity) level.getBlockEntity(pos);
+                    DrumInventory inventory = drumBlockEntity.getDrumInventory();
+
+                    if(!player.getItemInHand(InteractionHand.MAIN_HAND).is(inventory.getItemType().getItem()) && !player.getItemInHand(InteractionHand.OFF_HAND).is(inventory.getItemType().getItem())) {
                         return InteractionResult.TRY_WITH_EMPTY_HAND;
                     }
                 }
