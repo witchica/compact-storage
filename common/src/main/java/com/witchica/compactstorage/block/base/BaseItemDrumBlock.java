@@ -83,12 +83,13 @@ public abstract class BaseItemDrumBlock extends BaseEntityBlock implements Stora
     protected boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
-    
-    public boolean extractItem(Level world, BlockPos pos, Player player) {
-        BaseItemDrumBlockEntity drumBlockEntity = (BaseItemDrumBlockEntity) world.getBlockEntity(pos);
-        DrumInventory inventory = drumBlockEntity.getDrumInventory();
 
-        ItemStack extracted = inventory.removeItemNoUpdate(0);
+
+    public boolean extractItem(Level world, BlockPos pos, Player player, int count) {
+        BaseItemDrumBlockEntity drumBlockEntity = (BaseItemDrumBlockEntity) world.getBlockEntity(pos);
+
+        DrumInventory inventory = drumBlockEntity.getDrumInventory();
+        ItemStack extracted = inventory.removeItem(0, count);
 
         if(!extracted.isEmpty()) {
             world.addFreshEntity(new ItemEntity(world, player.getBlockX(), player.getBlockY(), player.getBlockZ(), extracted));
@@ -97,6 +98,12 @@ public abstract class BaseItemDrumBlock extends BaseEntityBlock implements Stora
         }
 
         return false;
+    }
+    
+    public boolean extractItem(Level world, BlockPos pos, Player player) {
+        BaseItemDrumBlockEntity drumBlockEntity = (BaseItemDrumBlockEntity) world.getBlockEntity(pos);
+        DrumInventory inventory = drumBlockEntity.getDrumInventory();
+        return extractItem(world, pos, player, inventory.getMaxStackSize());
     }
 
     public boolean insertItem(Level world, BlockPos pos, Player player, InteractionHand hand) {
@@ -143,7 +150,7 @@ public abstract class BaseItemDrumBlock extends BaseEntityBlock implements Stora
     @Override
     protected void attack(BlockState state, Level level, BlockPos pos, Player player) {
         if(!level.isClientSide()) {
-            extractItem(level, pos, player);
+            extractItem(level, pos, player, 1);
         }
         super.attack(state, level, pos, player);
     }
