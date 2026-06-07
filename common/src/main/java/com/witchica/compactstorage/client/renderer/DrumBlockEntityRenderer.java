@@ -35,6 +35,7 @@ public class DrumBlockEntityRenderer implements BlockEntityRenderer<BaseItemDrum
         public int itemCount;
         public Direction facing;
         public ItemStackRenderState itemStackRenderState;
+        public int drumSize;
     }
 
     public DrumBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
@@ -58,6 +59,7 @@ public class DrumBlockEntityRenderer implements BlockEntityRenderer<BaseItemDrum
         }
         renderState.itemCount = blockEntity.clientStoredItems;
         renderState.facing = blockEntity.getBlockState().getValue(BaseItemDrumBlock.FACING);
+        renderState.drumSize = blockEntity.getSize();
 
         if(renderState.item.isPresent()) {
             renderState.itemStackRenderState = new ItemStackRenderState();
@@ -128,7 +130,7 @@ public class DrumBlockEntityRenderer implements BlockEntityRenderer<BaseItemDrum
             int clientStoredItems = drumBlockEntityRenderState.itemCount;
 
             if(crouched) {
-                int maxStored = (clientStackSize == 0 ? 64 : clientStackSize) * 64;
+                int maxStored = (clientStackSize == 0 ? 64 : clientStackSize) * drumBlockEntityRenderState.drumSize;
                 return "%d / %d".formatted(clientStoredItems, maxStored);
             }
 

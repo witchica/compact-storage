@@ -8,8 +8,13 @@ import com.witchica.compactstorage.mod.CompactStorageComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
+import java.util.function.Consumer;
 
 public class ResizableUpgrade extends StorageUpgrade {
     private final ResizeType type;
@@ -87,5 +92,11 @@ public class ResizableUpgrade extends StorageUpgrade {
     @Override
     public Component getFailedUpgradeMessage() {
         return Component.translatable("message.compact_storage.upgrades.width.fail").withStyle(ChatFormatting.RED);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
+        tooltipAdder.accept(Component.translatable(type == ResizeType.WIDTH ? "tooltip.compact_storage.upgrade_width" : "tooltip.compact_storage.upgrade_height").withStyle(ChatFormatting.GRAY));
     }
 }

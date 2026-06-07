@@ -1,7 +1,9 @@
 package com.witchica.compactstorage.upgrades;
 
+import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.CompactStorageConfig;
+import com.witchica.compactstorage.api.inventory.ResizableItemDrum;
 import com.witchica.compactstorage.data.StorageUpgrade;
-import com.witchica.compactstorage.api.inventory.RetainingContainer;
 import com.witchica.compactstorage.mod.CompactStorageComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
@@ -14,20 +16,29 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.function.Consumer;
 
-public class RetainingUpgrade extends StorageUpgrade {
-    public RetainingUpgrade(String name) {
+public class ItemDrumUpgrade extends StorageUpgrade {
+    public ItemDrumUpgrade(String name) {
         super(name);
     }
 
     @Override
-    public DataComponentType<Boolean> getDataComponent() {
-        return CompactStorageComponents.RETAINING_DATA.value();
+    public DataComponentType<?> getDataComponent() {
+        return CompactStorageComponents.ITEM_DRUM_SIZE.value();
+    }
+
+    public int upgradeAmount() {
+        return Math.clamp(CompactStorage.config().itemDrumUpgradeAmount, 1, 16);
     }
 
     @Override
     public boolean applyToItemStack(ItemStack stack) {
-        if(!stack.getOrDefault(getDataComponent(), false)) {
-            stack.set(getDataComponent(), true);
+        return false;
+    }
+
+    @Override
+    public boolean applyToBlockEntity(BlockEntity blockEntity) {
+        if(blockEntity instanceof ResizableItemDrum resizableItemDrum && resizableItemDrum.getSize() < resizableItemDrum.getMaximumSize()) {
+            resizableItemDrum.setSize(Math.min(resizableItemDrum.getSize() + upgradeAmount(), resizableItemDrum.getMaximumSize()));
             return true;
         }
 
@@ -35,40 +46,26 @@ public class RetainingUpgrade extends StorageUpgrade {
     }
 
     @Override
-    public boolean applyToBlockEntity(BlockEntity blockEntity) {
-        if(blockEntity instanceof RetainingContainer retainingContainer) {
-            if(!retainingContainer.isRetaining()) {
-                retainingContainer.setRetaining(true);
-                return true;
-            }
-        }
-
+    public boolean isUpgradeValidForItemStack(ItemStack stack) {
         return false;
     }
 
     @Override
-    public boolean isUpgradeValidForItemStack(ItemStack stack) {
-        return !stack.getOrDefault(getDataComponent(), false);
-    }
-
-    @Override
     public boolean isUpgradeValidForBlockEntity(BlockEntity blockEntity) {
-        if(blockEntity instanceof RetainingContainer retainingContainer) {
-            return !retainingContainer.isRetaining();
+        if(blockEntity instanceof ResizableItemDrum resizableItemDrum) {
+            return resizableItemDrum.getSize() < resizableItemDrum.getMaximumSize();
         }
-
         return false;
     }
 
     @Override
     public Component getFailedUpgradeMessage() {
-        return Component.translatable("message.compact_storage.upgrades.retaining.fail").withStyle(ChatFormatting.RED);
+        return Component.translatable("message.compact_storage.upgrades.item_drum.fail").withStyle(ChatFormatting.RED);
     }
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
         super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
-        tooltipAdder.accept(Component.translatable("tooltip.compact_storage.upgrade_retaining").withStyle(ChatFormatting.GRAY));
-
+        tooltipAdder.accept(Component.translatable("tooltip.compact_storage.upgrade_item_drum").withStyle(ChatFormatting.GRAY));
     }
 }

@@ -153,7 +153,11 @@ public abstract class BaseItemDrumBlock extends BaseEntityBlock implements Stora
         if(!level.isClientSide()) {
             // Check if is an axe or pickaxe and do not extract, stops drops when mining it.
             if(!player.getItemInHand(InteractionHand.MAIN_HAND).is(storageType.isWooden() ? ItemTags.AXES : ItemTags.PICKAXES)) {
-                extractItem(level, pos, player, 1);
+                if(player.isShiftKeyDown()) {
+                    extractItem(level, pos, player);
+                } else {
+                    extractItem(level, pos, player, 1);
+                }
             }
         }
         super.attack(state, level, pos, player);

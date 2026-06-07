@@ -37,6 +37,7 @@ public class ModLangProvider extends FabricLanguageProvider {
         translationBuilder.add(CompactStorageUpgrades.HEIGHT_UPGRADE.getItem().asItem(), "Storage Upgrade (Height)");
         translationBuilder.add(CompactStorageUpgrades.RETAINING_UPGRADE.getItem().asItem(), "Storage Upgrade (Retaining)");
         translationBuilder.add(CompactStorageUpgrades.VOID_SLOT_UPGRADE.getItem().asItem(), "Storage Upgrade (Void Slot)");
+        translationBuilder.add(CompactStorageUpgrades.ITEM_DRUM_UPGRADE.getItem().asItem(), "Storage Upgrade (Item Drum)");
 
         translationBuilder.add(id("general").toLanguageKey("itemGroup"), "CompactStorage (Iron)");
         translationBuilder.add(id("wood").toLanguageKey("itemGroup"), "CompactStorage (Wood)");
@@ -46,6 +47,9 @@ public class ModLangProvider extends FabricLanguageProvider {
         translationBuilder.add(createTooltipDescriptorId("upgrade_height"), "Can be applied to CompactStorage inventories to increase their height");
         translationBuilder.add(createTooltipDescriptorId("upgrade_height_limit"), "Height is limited to a maximum of %d");
         translationBuilder.add(createTooltipDescriptorId("upgrade_retaining"), "Allows CompactStorage inventories to keep their contents when broken");
+        translationBuilder.add(createTooltipDescriptorId("upgrade_item_drum"), "Can be applied to Item Drums to increase their size");
+        translationBuilder.add(createTooltipDescriptorId("upgrade_item_drum_limit"), "Size is limited to %d");
+        translationBuilder.add(createTooltipDescriptorId("upgrade_void_slot"), "Can be applied to CompactStorage inventories to add a void slot");
 
         translationBuilder.add("message.compact_storage.upgrades.width.fail", "Inventory has already reached the maximum width.");
         translationBuilder.add("message.compact_storage.upgrades.height.fail", "Inventory has already reached the maximum height.");
@@ -53,6 +57,7 @@ public class ModLangProvider extends FabricLanguageProvider {
         translationBuilder.add("message.compact_storage.upgrades.void_slot.fail", "Inventory has already got the void slot upgrade.");
 
         translationBuilder.add("message.compact_storage.upgrades.not_allowed", "Inventory cannot accept this upgrade type.");
+        translationBuilder.add("message.compact_storage.upgrades.item_drum.fail", "Item Drum has reached the maximum size.");
 
         translationBuilder.add("advancement.compact_storage.compacting_your_storage.title", "Compacting your storage!");
         translationBuilder.add("advancement.compact_storage.compacting_your_storage.description", "Get your first Compact Chest");
@@ -71,6 +76,8 @@ public class ModLangProvider extends FabricLanguageProvider {
 
         translationBuilder.add(createTooltipDescriptorId("upgrades.resizable"), "Size: %d x %d");
         translationBuilder.add(createTooltipDescriptorId("upgrades.retaining"), "Retaining");
+        translationBuilder.add(createTooltipDescriptorId("upgrades.item_drum"), "Size: %d");
+        translationBuilder.add(createTooltipDescriptorId("upgrades.void_slot"), "Void Slot");
 
         addForTag(CompactStorageItemTags.COLORFUL_COMPACT_BARRELS, translationBuilder);
         addForTag(CompactStorageItemTags.COLORFUL_COMPACT_CHESTS, translationBuilder);

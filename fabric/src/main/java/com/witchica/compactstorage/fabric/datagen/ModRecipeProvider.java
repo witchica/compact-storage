@@ -61,7 +61,19 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .pattern("III").pattern("BDB").pattern("III").define('I', Items.IRON_NUGGET)
                         .define('B', Items.IRON_INGOT).define('D', Items.ENDER_PEARL)
                         .unlockedBy("has_compact_storage_block", has(CompactStorageItemTags.STORAGE_BLOCKS))
-                        .save(output, "void_slot2");
+                        .save(output, "void_slot_upgrade2");
+
+                shaped(RecipeCategory.MISC, CompactStorageUpgrades.ITEM_DRUM_UPGRADE.getItem())
+                        .pattern("NNN").pattern("IBI").pattern("NNN").define('N', Items.IRON_NUGGET)
+                        .define('I', Items.IRON_INGOT).define('B', Blocks.BARREL)
+                        .unlockedBy("has_item_drum", has(CompactStorageItemTags.ITEM_DRUMS))
+                        .save(output);
+
+                shaped(RecipeCategory.MISC, CompactStorageUpgrades.ITEM_DRUM_UPGRADE.getItem())
+                        .pattern("NIN").pattern("NBN").pattern("NIN").define('N', Items.IRON_NUGGET)
+                        .define('I', Items.IRON_INGOT).define('B', Blocks.BARREL)
+                        .unlockedBy("has_item_drum", has(CompactStorageItemTags.ITEM_DRUMS))
+                        .save(output, "item_drum_upgrade2");
 
                 shapeless(RecipeCategory.MISC, CompactStorageUpgrades.WIDTH_UPGRADE.getItem()).requires(CompactStorageUpgrades.HEIGHT_UPGRADE.getItem()).unlockedBy("has_upgrade", has(CompactStorageItemTags.UPGRADES)).save(output, "upgrade_width_swap");
                 shapeless(RecipeCategory.MISC, CompactStorageUpgrades.HEIGHT_UPGRADE.getItem()).requires(CompactStorageUpgrades.WIDTH_UPGRADE.getItem()).unlockedBy("has_upgrade", has(CompactStorageItemTags.UPGRADES)).save(output, "upgrade_height_swap");

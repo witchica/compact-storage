@@ -8,8 +8,13 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.block.entity.BlockEntity;
+
+import java.util.function.Consumer;
 
 public class VoidSlotUpgrade extends StorageUpgrade {
     public VoidSlotUpgrade(String name) {
@@ -65,5 +70,11 @@ public class VoidSlotUpgrade extends StorageUpgrade {
     @Override
     public SoundEvent getAppliedUpgradeSoundEvent() {
         return SoundEvents.ENDERMAN_TELEPORT;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipAdder, flag);
+        tooltipAdder.accept(Component.translatable("tooltip.compact_storage.upgrade_void_slot").withStyle(ChatFormatting.GRAY));
     }
 }

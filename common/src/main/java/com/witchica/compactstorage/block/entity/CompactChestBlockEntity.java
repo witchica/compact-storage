@@ -5,6 +5,7 @@ import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.block.CompactChestBlock;
 import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
 import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
+import com.witchica.compactstorage.mod.CompactStorageUpgrades;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
@@ -91,6 +92,6 @@ public class CompactChestBlockEntity extends BaseCompactStorageBlockEntity imple
 
     @Override
     public boolean isUpgradeAccepted(StorageUpgrade upgrade) {
-        return true;
+        return upgrade != CompactStorageUpgrades.ITEM_DRUM_UPGRADE;
     }
 }

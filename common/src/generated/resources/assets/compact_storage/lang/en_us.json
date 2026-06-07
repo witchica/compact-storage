@@ -104,6 +104,7 @@
   "item.compact_storage.gray_backpack": "Gray Backpack",
   "item.compact_storage.green_backpack": "Green Backpack",
   "item.compact_storage.height_upgrade": "Storage Upgrade (Height)",
+  "item.compact_storage.item_drum_upgrade": "Storage Upgrade (Item Drum)",
   "item.compact_storage.jungle_pack_frame": "Jungle Pack Frame",
   "item.compact_storage.light_blue_backpack": "Light Blue Backpack",
   "item.compact_storage.light_gray_backpack": "Light Gray Backpack",
@@ -128,6 +129,7 @@
   "key.category.compact_storage.default": "CompactStorage",
   "key.compact_storage.backpack_open": "Open Backpack (Curios / Trinkets)",
   "message.compact_storage.upgrades.height.fail": "Inventory has already reached the maximum height.",
+  "message.compact_storage.upgrades.item_drum.fail": "Item Drum has reached the maximum size.",
   "message.compact_storage.upgrades.not_allowed": "Inventory cannot accept this upgrade type.",
   "message.compact_storage.upgrades.retaining.fail": "Inventory has already got the retaining upgrade.",
   "message.compact_storage.upgrades.void_slot.fail": "Inventory has already got the void slot upgrade.",
@@ -148,9 +150,14 @@
   "tag.item.compact_storage.wooden_item_drums": "Wooden Item Drums",
   "tooltip.compact_storage.upgrade_height": "Can be applied to CompactStorage inventories to increase their height",
   "tooltip.compact_storage.upgrade_height_limit": "Height is limited to a maximum of %d",
+  "tooltip.compact_storage.upgrade_item_drum": "Can be applied to Item Drums to increase their size",
+  "tooltip.compact_storage.upgrade_item_drum_limit": "Size is limited to %d",
   "tooltip.compact_storage.upgrade_retaining": "Allows CompactStorage inventories to keep their contents when broken",
+  "tooltip.compact_storage.upgrade_void_slot": "Can be applied to CompactStorage inventories to add a void slot",
   "tooltip.compact_storage.upgrade_width": "Can be applied to CompactStorage inventories to increase their width",
   "tooltip.compact_storage.upgrade_width_limit": "Width is limited to a maximum of %d",
+  "tooltip.compact_storage.upgrades.item_drum": "Size: %d",
   "tooltip.compact_storage.upgrades.resizable": "Size: %d x %d",
-  "tooltip.compact_storage.upgrades.retaining": "Retaining"
+  "tooltip.compact_storage.upgrades.retaining": "Retaining",
+  "tooltip.compact_storage.upgrades.void_slot": "Void Slot"
 }

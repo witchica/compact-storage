@@ -3,6 +3,7 @@
     "compact_storage:width_upgrade",
     "compact_storage:height_upgrade",
     "compact_storage:retainer_upgrade",
+    "compact_storage:item_drum_upgrade",
     "compact_storage:void_slot_upgrade"
   ]
 }

@@ -46,6 +46,15 @@ public class CompactStorageConfig {
     @Comment("Maximum inventory width of Backpacks (Default Value: 12, Range 3 - 12)")
     public int backpackMaxHeight = 12;
 
+    @Comment("Size increased by using item drum upgrade (Default Value: 8, Range: 1 - 16)")
+    public int itemDrumUpgradeAmount = 8;
+
+    @Comment("Default size of item drums (Default: 64, Range: 1 - 256)")
+    public int itemDrumDefaultSize = 64;
+
+    @Comment("Maximum size of item drums (Default: 256, Range: default size - 256)")
+    public int itemDrumMaximumSize = 256;
+
     public int constrainWidth(int value) {
         return Math.clamp(value, 9, 21);
     }

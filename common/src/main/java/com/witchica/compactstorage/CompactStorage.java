@@ -50,19 +50,17 @@ public class CompactStorage {
                 }
             }
 
-            if(itemStack.has(CompactStorageComponents.RETAINING_DATA.value()) && itemStack.getOrDefault(CompactStorageComponents.RETAINING_DATA.value(), false)) {
+            if(itemStack.getOrDefault(CompactStorageComponents.RETAINING_DATA.value(), false)) {
                 tooltip.add(Component.translatable("tooltip.compact_storage.upgrades.retaining").withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD));
             }
 
-//            if(itemStack.getItem() == CompactStorageItems.UPGRADE_RETAINING.asItem()) {
-//                tooltip.add(Component.translatable("tooltip.compact_storage.upgrade_retaining").withStyle(ChatFormatting.GRAY));
-//            }
-//            if(itemStack.getItem() == CompactStorageItems.UPGRADE_WIDTH.asItem()) {
-//                tooltip.add(Component.translatable("tooltip.compact_storage.upgrade_width").withStyle(ChatFormatting.GRAY));
-//            }
-//            if(itemStack.getItem() == CompactStorageItems.UPGRADE_HEIGHT.asItem()) {
-//                tooltip.add(Component.translatable("tooltip.compact_storage.upgrade_height").withStyle(ChatFormatting.GRAY));
-//            }
+            if(itemStack.getOrDefault(CompactStorageComponents.VOID_SLOT.value(), false)) {
+                tooltip.add(Component.translatable("tooltip.compact_storage.upgrades.void_slot").withStyle(ChatFormatting.DARK_GREEN, ChatFormatting.BOLD));
+            }
+
+            if(itemStack.has(CompactStorageComponents.ITEM_DRUM_SIZE.value())) {
+                tooltip.add(Component.translatable("tooltip.compact_storage.upgrades.item_drum", itemStack.get(CompactStorageComponents.ITEM_DRUM_SIZE.value()).intValue()).withStyle(ChatFormatting.AQUA));
+            }
         });
 
         Balm.networking().registerServerboundPacket(ServerboundBackpackHotkeyPacket.TYPE, ServerboundBackpackHotkeyPacket.class, ServerboundBackpackHotkeyPacket.STREAM_CODEC, ServerboundBackpackHotkeyPacket::handle);

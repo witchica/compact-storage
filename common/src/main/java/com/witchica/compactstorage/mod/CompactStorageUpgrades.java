@@ -1,6 +1,7 @@
 package com.witchica.compactstorage.mod;
 
 import com.witchica.compactstorage.data.StorageUpgrade;
+import com.witchica.compactstorage.upgrades.ItemDrumUpgrade;
 import com.witchica.compactstorage.upgrades.ResizableUpgrade;
 import com.witchica.compactstorage.upgrades.RetainingUpgrade;
 import com.witchica.compactstorage.upgrades.VoidSlotUpgrade;
@@ -12,6 +13,7 @@ public class CompactStorageUpgrades {
     public static ResizableUpgrade WIDTH_UPGRADE = new ResizableUpgrade("width", ResizableUpgrade.ResizeType.WIDTH);
     public static ResizableUpgrade HEIGHT_UPGRADE = new ResizableUpgrade("height", ResizableUpgrade.ResizeType.HEIGHT);
     public static RetainingUpgrade RETAINING_UPGRADE = new RetainingUpgrade("retainer");
+    public static ItemDrumUpgrade ITEM_DRUM_UPGRADE = new ItemDrumUpgrade("item_drum");
     public static VoidSlotUpgrade VOID_SLOT_UPGRADE = new VoidSlotUpgrade("void_slot");
 
     public static final ArrayList<StorageUpgrade> UPGRADES = new ArrayList<>();
@@ -20,6 +22,7 @@ public class CompactStorageUpgrades {
         register(WIDTH_UPGRADE);
         register(HEIGHT_UPGRADE);
         register(RETAINING_UPGRADE);
+        register(ITEM_DRUM_UPGRADE);
         register(VOID_SLOT_UPGRADE);
     }
 

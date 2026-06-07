@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": "minecraft:barrel",
+    "I": "minecraft:iron_ingot",
+    "N": "minecraft:iron_nugget"
+  },
+  "pattern": [
+    "NNN",
+    "IBI",
+    "NNN"
+  ],
+  "result": {
+    "id": "compact_storage:item_drum_upgrade"
+  }
+}

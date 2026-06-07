@@ -1,5 +1,7 @@
 package com.witchica.compactstorage.block.entity.base;
 
+import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.api.inventory.ResizableItemDrum;
 import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.api.inventory.RetainingContainer;
 import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
@@ -12,6 +14,7 @@ import com.witchica.compactstorage.util.CompactStorageUtil;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentGetter;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
@@ -33,7 +36,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
-public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingContainer, UpgradeCheckProvider {
+public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingContainer, UpgradeCheckProvider, ResizableItemDrum {
     private DrumInventory drumInventory;
     public Optional<ItemStack> clientItem = Optional.empty();
     public int clientStackSize;
@@ -42,7 +45,7 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
 
     public BaseItemDrumBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(CompactStorageBlockEntities.DRUM_BLOCK_ENTITY.value(), blockPos, blockState);
-        drumInventory = new DrumInventory(64, this);
+        drumInventory = new DrumInventory(getDefaultSize(), this);
     }
 
     public void inventoryChanged() {
@@ -72,6 +75,7 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
             output.store("ClientItem", ItemStack.CODEC, new ItemStack(getStoredType(), 1));
         }
 
+        output.putInt("ItemDrumSize", getSize());
         output.putInt("ClientStackSize", drumInventory.getMaxStackSize());
         output.putInt("ClientStoredItems", getTotalItemCount());
         output.putInt("Version", 21);
@@ -82,6 +86,8 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
         super.loadAdditional(input);
 
         int version = input.getIntOr("Version", -1);
+
+        this.drumInventory = new DrumInventory(input.getIntOr("ItemDrumSize", getDefaultSize()), this);
 
         if(version < 21) {
             // Backwards Compatibility
@@ -94,6 +100,16 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
         this.clientItem = input.read("ClientItem", ItemStack.CODEC);
         this.clientStackSize = input.getIntOr("ClientStackSize", 0);
         this.clientStoredItems = input.getIntOr("ClientStoredItems", 0);
+    }
+
+    @Override
+    public void removeComponentsFromTag(ValueOutput output) {
+        super.removeComponentsFromTag(output);
+        output.discard("ItemDrumSize");
+        output.discard("Items");
+        output.discard("ClientItem");
+        output.discard("ClientStackSize");
+        output.discard("ClientStoredItems");
     }
 
     @Override
@@ -135,12 +151,14 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
         super.collectImplicitComponents(components);
         components.set(CompactStorageComponents.RETAINING_DATA.value(), isRetaining());
         components.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getDrumInventory().getItems()));
+        components.set(CompactStorageComponents.ITEM_DRUM_SIZE.value(), getSize());
     }
 
     @Override
     protected void applyImplicitComponents(DataComponentGetter componentGetter) {
         super.applyImplicitComponents(componentGetter);
         setRetaining(componentGetter.getOrDefault(CompactStorageComponents.RETAINING_DATA.value(), false));
+        setSize(componentGetter.getOrDefault(CompactStorageComponents.ITEM_DRUM_SIZE.value(), getDefaultSize()));
         componentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(getDrumInventory().getItems());
     }
 
@@ -154,6 +172,33 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
 
     @Override
     public boolean isUpgradeAccepted(StorageUpgrade upgrade) {
-        return upgrade == CompactStorageUpgrades.RETAINING_UPGRADE;
+        return upgrade == CompactStorageUpgrades.RETAINING_UPGRADE || upgrade == CompactStorageUpgrades.ITEM_DRUM_UPGRADE;
+    }
+
+    @Override
+    public int getDefaultSize() {
+        return Math.clamp(CompactStorage.config().itemDrumDefaultSize, 1, CompactStorage.config().itemDrumMaximumSize);
+    }
+
+    @Override
+    public int getMaximumSize() {
+        return Math.clamp(CompactStorage.config().itemDrumMaximumSize, CompactStorage.config().itemDrumDefaultSize, 256);
+    }
+
+    @Override
+    public int getSize() {
+        return drumInventory.getItems().size();
+    }
+
+    @Override
+    public void setSize(int size) {
+        NonNullList<ItemStack> items = drumInventory.getItems();
+        this.drumInventory = new DrumInventory(size, this);
+
+        for(int i = 0; i < items.size(); i++) {
+            this.drumInventory.setItem(i, items.get(i));
+        }
+
+        setChanged();
     }
 }
