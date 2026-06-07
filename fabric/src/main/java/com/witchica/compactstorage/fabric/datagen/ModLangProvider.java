@@ -33,10 +33,10 @@ public class ModLangProvider extends FabricLanguageProvider {
             translationBuilder.add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem(), snakeCaseToName(type.getName() + (type.isWooden() ? "_pack_frame" : "_backpack")));
         }
 
-        translationBuilder.add(CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.WIDTH_UPGRADE).asItem(), "Storage Upgrade (Width)");
-        translationBuilder.add(CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.HEIGHT_UPGRADE).asItem(), "Storage Upgrade (Height)");
-        translationBuilder.add(CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.RETAINING_UPGRADE).asItem(), "Storage Upgrade (Retaining)");
-        translationBuilder.add(CompactStorageItems.UPGRADES.get(CompactStorageUpgrades.VOID_SLOT_UPGRADE).asItem(), "Storage Upgrade (Void Slot)");
+        translationBuilder.add(CompactStorageUpgrades.WIDTH_UPGRADE.getItem().asItem(), "Storage Upgrade (Width)");
+        translationBuilder.add(CompactStorageUpgrades.HEIGHT_UPGRADE.getItem().asItem(), "Storage Upgrade (Height)");
+        translationBuilder.add(CompactStorageUpgrades.RETAINING_UPGRADE.getItem().asItem(), "Storage Upgrade (Retaining)");
+        translationBuilder.add(CompactStorageUpgrades.VOID_SLOT_UPGRADE.getItem().asItem(), "Storage Upgrade (Void Slot)");
 
         translationBuilder.add(id("general").toLanguageKey("itemGroup"), "CompactStorage (Iron)");
         translationBuilder.add(id("wood").toLanguageKey("itemGroup"), "CompactStorage (Wood)");

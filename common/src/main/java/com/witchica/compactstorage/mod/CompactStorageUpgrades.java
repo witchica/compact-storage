@@ -6,6 +6,7 @@ import com.witchica.compactstorage.upgrades.RetainingUpgrade;
 import com.witchica.compactstorage.upgrades.VoidSlotUpgrade;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CompactStorageUpgrades {
     public static ResizableUpgrade WIDTH_UPGRADE = new ResizableUpgrade("width", ResizableUpgrade.ResizeType.WIDTH);
@@ -16,9 +17,17 @@ public class CompactStorageUpgrades {
     public static final ArrayList<StorageUpgrade> UPGRADES = new ArrayList<>();
 
     static {
-        UPGRADES.add(WIDTH_UPGRADE);
-        UPGRADES.add(HEIGHT_UPGRADE);
-        UPGRADES.add(RETAINING_UPGRADE);
-        UPGRADES.add(VOID_SLOT_UPGRADE);
+        register(WIDTH_UPGRADE);
+        register(HEIGHT_UPGRADE);
+        register(RETAINING_UPGRADE);
+        register(VOID_SLOT_UPGRADE);
+    }
+
+    private static void register(StorageUpgrade upgrade) {
+        UPGRADES.add(upgrade);
+    }
+
+    public static List<StorageUpgrade> values() {
+        return UPGRADES;
     }
 }

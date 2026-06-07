@@ -2,6 +2,7 @@ package com.witchica.compactstorage.fabric.datagen;
 
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.data.StorageType;
+import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.mod.CompactStorageBlocks;
 import com.witchica.compactstorage.mod.CompactStorageItems;
 import com.witchica.compactstorage.mod.CompactStorageUpgrades;
@@ -79,7 +80,7 @@ public class ModItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
             valueLookupBuilder(TRINKETS_BACK_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem());
         }
 
-        valueLookupBuilder(UPGRADES).add(CompactStorageItems.UPGRADES.values().stream().map(DeferredItem::asItem).toArray(Item[]::new));
+        valueLookupBuilder(UPGRADES).add(CompactStorageUpgrades.values().stream().map(StorageUpgrade::getItem).map(DeferredItem::asItem).toArray(Item[]::new));
     }
 
 }

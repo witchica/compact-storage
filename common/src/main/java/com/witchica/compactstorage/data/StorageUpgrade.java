@@ -2,6 +2,7 @@ package com.witchica.compactstorage.data;
 
 import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.item.StorageUpgradeItem;
+import net.blay09.mods.balm.world.item.DeferredItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
@@ -21,6 +22,7 @@ import java.util.function.Consumer;
 
 public abstract class StorageUpgrade {
     private String name;
+    private DeferredItem deferredItem;
 
     public StorageUpgrade(String name) {
         this.name = name;
@@ -116,5 +118,13 @@ public abstract class StorageUpgrade {
         }
 
         return InteractionResult.PASS;
+    }
+
+    public void setItem(DeferredItem deferredItem) {
+        this.deferredItem = deferredItem;
+    }
+
+    public DeferredItem getItem() {
+        return deferredItem;
     }
 }

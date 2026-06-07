@@ -19,14 +19,12 @@ import static com.witchica.compactstorage.CompactStorage.id;
 public class CompactStorageItems {
     public static Holder<CreativeModeTab> IRON_TAB;
     public static Holder<CreativeModeTab> WOOD_TAB;
-    public static Map<StorageUpgrade, DeferredItem> UPGRADES = new HashMap<>();
 
     public static Map<StorageType, DeferredItem> BACKPACK_ITEMS = new HashMap<>();
 
     public static void initializeItems(BalmItemRegistrar items) {
-
         for(StorageUpgrade upgrade : CompactStorageUpgrades.UPGRADES) {
-            UPGRADES.put(upgrade, items.register(upgrade.getItemName(), (properties -> new StorageUpgradeItem(properties, upgrade))).asDeferredItem());
+            upgrade.setItem(items.register(upgrade.getItemName(), (properties -> new StorageUpgradeItem(properties, upgrade))).asDeferredItem());
         }
 
         for(StorageType type : StorageType.values()) {
@@ -62,7 +60,9 @@ public class CompactStorageItems {
                                 }
                             });
 
-                            UPGRADES.values().stream().map(DeferredItem::asItem).forEach(output::accept);
+                            CompactStorageUpgrades.values().forEach(value -> {
+                                output.accept(value.getItem().asItem());
+                            });
                         })
         ).asHolder();
 
@@ -79,7 +79,9 @@ public class CompactStorageItems {
                                 }
                             });
 
-                            UPGRADES.values().stream().map(DeferredItem::asItem).forEach(output::accept);
+                            CompactStorageUpgrades.values().forEach(value -> {
+                                output.accept(value.getItem().asItem());
+                            });
                         })
         ).asHolder();
     }

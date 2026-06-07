@@ -3,6 +3,7 @@ package com.witchica.compactstorage.fabric.datagen;
 import com.witchica.compactstorage.fabric.datagen.providers.BackpackPackFrameModelProvider;
 import com.witchica.compactstorage.fabric.datagen.providers.BarrelModelProvider;
 import com.witchica.compactstorage.mod.CompactStorageItems;
+import com.witchica.compactstorage.mod.CompactStorageUpgrades;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.data.models.BlockModelGenerators;
@@ -40,8 +41,8 @@ public class ModModelProvider extends FabricModelProvider {
 
     @Override
     public void generateItemModels(ItemModelGenerators itemModelGenerator) {
-        CompactStorageItems.UPGRADES.forEach((upgrade, deferredItem) -> {
-            itemModelGenerator.generateFlatItem(deferredItem.asItem(), ModelTemplates.FLAT_ITEM);
+        CompactStorageUpgrades.values().forEach(( deferredItem) -> {
+            itemModelGenerator.generateFlatItem(deferredItem.getItem().asItem(), ModelTemplates.FLAT_ITEM);
         });
 
 
