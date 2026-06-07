@@ -18,8 +18,8 @@ public class CompactChestBlockEntity extends BaseCompactStorageBlockEntity imple
 
     public CompactChestBlockEntity(BlockPos pos, BlockState blockState) {
         super(CompactStorageBlockEntities.COMPACT_CHEST_ENTITY.value(), pos, blockState);
-        defaultName = blockState.getBlock().getName();
         this.chestLidController = new ChestLidController();
+        this.defaultName = blockState.getBlock().getName();
     }
 
     @Override
@@ -36,6 +36,12 @@ public class CompactChestBlockEntity extends BaseCompactStorageBlockEntity imple
         if(blockState.getBlock() instanceof CompactChestBlock chestBlock) {
             playSound(level, blockPos, chestBlock.getStorageType().chestCloseSound);
         }
+    }
+
+    @Override
+    public void setBlockState(BlockState blockState) {
+        super.setBlockState(blockState);
+        this.defaultName = blockState.getBlock().getName();
     }
 
     @Override

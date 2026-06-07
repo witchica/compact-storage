@@ -33,7 +33,7 @@ public class CompactBarrelBlock extends BaseCompactStorageBlock {
     }
 
     @Override
-    protected BlockState getBlockStateOnRedye(BlockState state, DyeColor dyeColor) {
+    public BlockState getBlockStateOnRedye(BlockState state, DyeColor dyeColor) {
         return CompactStorageBlocks.compactBarrels.get(StorageType.fromDye(dyeColor)).defaultBlockState().setValue(FACING, state.getValue(FACING)).setValue(OPEN, state.getValue(OPEN)).setValue(RETAINING, state.getValue(RETAINING));
     }
 

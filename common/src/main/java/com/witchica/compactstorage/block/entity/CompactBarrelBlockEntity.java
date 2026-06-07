@@ -15,7 +15,13 @@ public class CompactBarrelBlockEntity extends BaseCompactStorageBlockEntity {
 
     public CompactBarrelBlockEntity(BlockPos pos, BlockState blockState) {
         super(CompactStorageBlockEntities.COMPACT_BARREL_ENTITY.value(), pos, blockState);
-        defaultName = blockState.getBlock().getName();
+        this.defaultName = blockState.getBlock().getName();
+    }
+
+    @Override
+    public void setBlockState(BlockState blockState) {
+        super.setBlockState(blockState);
+        this.defaultName = blockState.getBlock().getName();
     }
 
     @Override

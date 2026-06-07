@@ -1,9 +1,11 @@
 package com.witchica.compactstorage.block.base;
 
+import com.witchica.compactstorage.api.RedyeableBlock;
 import com.witchica.compactstorage.api.StorageTypeProvider;
 import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
 import com.witchica.compactstorage.data.StorageType;
+import com.witchica.compactstorage.util.CompactStorageUtil;
 import net.blay09.mods.balm.Balm;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -25,7 +27,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class BaseCompactStorageBlock extends BaseEntityBlock implements StorageTypeProvider {
+public abstract class BaseCompactStorageBlock extends BaseEntityBlock implements StorageTypeProvider, RedyeableBlock {
     public static final BooleanProperty RETAINING = BooleanProperty.create("retaining");
 
     private final StorageType storageType;
@@ -43,16 +45,9 @@ public abstract class BaseCompactStorageBlock extends BaseEntityBlock implements
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if(!level.isClientSide() && canOpenContainer(state, level, pos, player)) {
-            // Backwards compatibility with 1.20.1
-            if(level.getBlockEntity(pos) instanceof BaseCompactStorageBlockEntity baseCompactStorageBlockEntity) {
-                baseCompactStorageBlockEntity.recheckRetaining();
-            }
-
             Balm.networking().openMenu(player, getMenuProvider(state, level, pos));
             return InteractionResult.SUCCESS;
         }
-
-
 
         return InteractionResult.CONSUME;
     }
@@ -64,29 +59,15 @@ public abstract class BaseCompactStorageBlock extends BaseEntityBlock implements
     @Override
     protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if(!level.isClientSide()) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
-            InteractionResult upgradeResult = StorageUpgrade.applyToBlockEntity(stack, blockEntity, player, level);
+            InteractionResult result = CompactStorageUtil.onUseWithItem(stack, level, pos, state, player, getStorageType(), this);
 
-            if(upgradeResult != InteractionResult.PASS) {
-                return upgradeResult;
-            }
-
-            if (storageType.canDye() && stack.getItem() instanceof DyeItem) {
-                StorageType newType = StorageType.fromDye(stack.get(DataComponents.DYE));
-
-                if(newType != storageType) {
-                    level.setBlock(pos, getBlockStateOnRedye(state, newType.getDyeColor()), 3);
-                    stack.setCount(stack.getCount() - 1);
-                    level.playSound(null, pos, SoundEvents.SLIME_SQUISH, SoundSource.BLOCKS, 1f, 1f);
-                    return InteractionResult.CONSUME;
-                }
+            if(result != InteractionResult.PASS) {
+                return result;
             }
         }
 
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
-
-    protected abstract BlockState getBlockStateOnRedye(BlockState state, DyeColor dyeColor);
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
