@@ -1,9 +1,8 @@
-package com.witchica.compactstorage.api;
+package com.witchica.compactstorage.data;
 
 import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.item.StorageUpgradeItem;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
@@ -16,9 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.function.Consumer;
 
@@ -93,7 +90,7 @@ public abstract class StorageUpgrade {
         return InteractionResult.PASS;
     }
 
-    public static InteractionResult applyToBlockEntity(ItemStack upgradeStack, BlockEntity blockEntity, Player player, Level level, BlockPos pos) {
+    public static InteractionResult applyToBlockEntity(ItemStack upgradeStack, BlockEntity blockEntity, Player player, Level level) {
         if(upgradeStack.getItem() instanceof StorageUpgradeItem upgradeItem) {
             StorageUpgrade upgrade = upgradeItem.getUpgradeType();
 
@@ -102,16 +99,16 @@ public abstract class StorageUpgrade {
                     if(upgrade.isUpgradeValidForBlockEntity(blockEntity)) {
                         if(upgrade.applyToBlockEntity(blockEntity)) {
                             upgradeStack.setCount(upgradeStack.getCount() - 1);
-                            level.playSound(null, pos, upgrade.getAppliedUpgradeSoundEvent(), SoundSource.BLOCKS, 1f, 1f);
+                            level.playSound(null, player.getOnPos().above(1), upgrade.getAppliedUpgradeSoundEvent(), SoundSource.BLOCKS, 1f, 1f);
                             return InteractionResult.CONSUME;
                         }
                     }
 
-                    level.playSound(null, pos, upgrade.getFailedUpgradeSoundEvent(), SoundSource.BLOCKS, 1f, 1f);
+                    level.playSound(null, player.getOnPos().above(1), upgrade.getFailedUpgradeSoundEvent(), SoundSource.BLOCKS, 1f, 1f);
                     player.sendOverlayMessage(upgrade.getFailedUpgradeMessage());
                     return InteractionResult.FAIL;
                 } else {
-                    level.playSound(null, pos, upgrade.getIncompatibleUpgradeSound(), SoundSource.BLOCKS, 1f, 1f);
+                    level.playSound(null, player.getOnPos().above(1), upgrade.getIncompatibleUpgradeSound(), SoundSource.BLOCKS, 1f, 1f);
                     player.sendOverlayMessage(upgrade.getIncompatibleUpgradeMessage());
                     return InteractionResult.FAIL;
                 }

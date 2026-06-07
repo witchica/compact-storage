@@ -250,8 +250,12 @@ public class StorageType implements Comparable<StorageType> {
         } else
             baseBlockProperties = baseBlockProperties.mapColor(MapColor.WOOD);
 
+        if(isWooden()) {
+            baseBlockProperties = baseBlockProperties.ignitedByLava();
+        }
 
-        return baseBlockProperties.explosionResistance(resistance).destroyTime(destroyTime).sound(getSoundType()).pushReaction(PushReaction.IGNORE).ignitedByLava().noOcclusion();
+
+        return baseBlockProperties.explosionResistance(resistance).destroyTime(destroyTime).sound(getSoundType()).pushReaction(PushReaction.IGNORE).noOcclusion();
     }
 
     public BlockBehaviour.Properties barrelPropertiesFactory(BlockBehaviour.Properties baseBlockProperties) {
@@ -263,8 +267,11 @@ public class StorageType implements Comparable<StorageType> {
         } else
             baseBlockProperties = baseBlockProperties.mapColor(MapColor.WOOD);
 
+        if(isWooden()) {
+            baseBlockProperties = baseBlockProperties.ignitedByLava();
+        }
 
-        return baseBlockProperties.explosionResistance(resistance).destroyTime(destroyTime).sound(getSoundType()).pushReaction(PushReaction.IGNORE).ignitedByLava().noOcclusion();
+        return baseBlockProperties.explosionResistance(resistance).destroyTime(destroyTime).sound(getSoundType()).pushReaction(PushReaction.IGNORE).noOcclusion();
     }
 
     public StorageType setBackpackModelInfo(BackpackModelInfo backpackModelInfo) {

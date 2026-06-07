@@ -1,6 +1,6 @@
 package com.witchica.compactstorage.mod;
 
-import com.witchica.compactstorage.api.StorageUpgrade;
+import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.upgrades.ResizableUpgrade;
 import com.witchica.compactstorage.upgrades.RetainingUpgrade;
 import com.witchica.compactstorage.upgrades.VoidSlotUpgrade;

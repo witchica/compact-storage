@@ -1,6 +1,6 @@
 package com.witchica.compactstorage.upgrades;
 
-import com.witchica.compactstorage.api.StorageUpgrade;
+import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.api.inventory.ItemWithResizableInventory;
 import com.witchica.compactstorage.api.inventory.ResizableContainer;
 import com.witchica.compactstorage.components.ResizableInventoryComponent;

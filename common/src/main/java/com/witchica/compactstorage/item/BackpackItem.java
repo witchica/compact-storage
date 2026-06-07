@@ -2,7 +2,7 @@ package com.witchica.compactstorage.item;
 
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.StorageTypeProvider;
-import com.witchica.compactstorage.api.StorageUpgrade;
+import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.api.inventory.ItemWithResizableInventory;
 import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.data.StorageType;

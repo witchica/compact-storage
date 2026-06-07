@@ -1,6 +1,6 @@
 package com.witchica.compactstorage.block.entity.base;
 
-import com.witchica.compactstorage.api.StorageUpgrade;
+import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.api.inventory.RetainingContainer;
 import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;

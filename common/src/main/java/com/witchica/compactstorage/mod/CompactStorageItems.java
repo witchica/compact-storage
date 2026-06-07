@@ -1,6 +1,6 @@
 package com.witchica.compactstorage.mod;
 
-import com.witchica.compactstorage.api.StorageUpgrade;
+import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.item.BackpackItem;
 import com.witchica.compactstorage.item.StorageUpgradeItem;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
@@ -11,9 +11,7 @@ import net.minecraft.network.chat.Component;
 import com.witchica.compactstorage.data.StorageType;
 import net.minecraft.world.item.CreativeModeTab;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.witchica.compactstorage.CompactStorage.id;

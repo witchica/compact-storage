@@ -1,21 +1,14 @@
 package com.witchica.compactstorage.block.base;
 
 import com.witchica.compactstorage.api.StorageTypeProvider;
-import com.witchica.compactstorage.api.StorageUpgrade;
-import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
-import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
+import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.block.entity.base.BaseItemDrumBlockEntity;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.inventory.DrumInventory;
-import com.witchica.compactstorage.item.StorageUpgradeItem;
-import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
 import com.witchica.compactstorage.mod.CompactStorageBlocks;
-import com.witchica.compactstorage.mod.CompactStorageUpgrades;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
@@ -33,8 +26,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -164,7 +155,7 @@ public abstract class BaseItemDrumBlock extends BaseEntityBlock implements Stora
                 }
             } else {
                 BlockEntity blockEntity = level.getBlockEntity(pos);
-                InteractionResult upgradeResult = StorageUpgrade.applyToBlockEntity(stack, blockEntity, player, level, pos);
+                InteractionResult upgradeResult = StorageUpgrade.applyToBlockEntity(stack, blockEntity, player, level);
 
                 if(upgradeResult != InteractionResult.PASS) {
                     return upgradeResult;

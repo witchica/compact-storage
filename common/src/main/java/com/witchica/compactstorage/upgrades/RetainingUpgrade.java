@@ -1,14 +1,12 @@
 package com.witchica.compactstorage.upgrades;
 
-import com.witchica.compactstorage.CompactStorage;
-import com.witchica.compactstorage.api.StorageUpgrade;
+import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.api.inventory.RetainingContainer;
 import com.witchica.compactstorage.mod.CompactStorageComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class RetainingUpgrade extends StorageUpgrade {

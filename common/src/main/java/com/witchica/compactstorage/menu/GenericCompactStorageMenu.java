@@ -7,6 +7,7 @@ import com.witchica.compactstorage.api.inventory.VoidSlotProvider;
 import com.witchica.compactstorage.data.CompactStorageOpeningSource;
 import com.witchica.compactstorage.inventory.BackpackInventory;
 import com.witchica.compactstorage.menu.slot.BackpackHolderSlot;
+import com.witchica.compactstorage.menu.slot.VoidSlot;
 import com.witchica.compactstorage.mod.CompactStorageMenuTypes;
 import net.blay09.mods.balm.world.inventory.QuickMove;
 import net.minecraft.world.Container;
@@ -117,16 +118,16 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
         }
 
         if(hasVoidSlot) {
-            Slot slot = addSlot(new Slot(new SimpleContainer(1) {
+            Slot slot = addSlot(new VoidSlot(new SimpleContainer(1) {
                 @Override
                 public void setItem(int slot, ItemStack itemStack) {
                     super.setItem(slot, itemStack);
                     this.getItems().set(0, ItemStack.EMPTY);
                     setChanged();
                 }
-            }, 0, chestSizeX+4 + 8, 8));
+            }, 0, chestSizeX+4 + 8, 8, playerInventory.player) {
 
-            System.out.println();
+            });
         }
     }
 

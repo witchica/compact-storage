@@ -1,7 +1,7 @@
 package com.witchica.compactstorage.block.entity;
 
 import com.witchica.compactstorage.CompactStorage;
-import com.witchica.compactstorage.api.StorageUpgrade;
+import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.block.CompactChestBlock;
 import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
 import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
