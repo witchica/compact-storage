@@ -1,10 +1,10 @@
 {
   "criteria": {
-    "got_chest": {
+    "got_storage": {
       "conditions": {
         "items": [
           {
-            "items": "#compact_storage:compact_chests"
+            "items": "#compact_storage:storage_blocks"
           }
         ]
       },
@@ -25,7 +25,7 @@
   },
   "requirements": [
     [
-      "got_chest"
+      "got_storage"
     ]
   ],
   "sends_telemetry_event": true

@@ -1,6 +1,7 @@
 package com.witchica.compactstorage.fabric.datagen;
 
 import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.mod.CompactStorageBlocks;
 import com.witchica.compactstorage.mod.CompactStorageItemTags;
 import com.witchica.compactstorage.mod.CompactStorageItems;
@@ -60,7 +61,7 @@ public class ModLangProvider extends FabricLanguageProvider {
         translationBuilder.add("message.compact_storage.upgrades.item_drum.fail", "Item Drum has reached the maximum size.");
 
         translationBuilder.add("advancement.compact_storage.compacting_your_storage.title", "Compacting your storage!");
-        translationBuilder.add("advancement.compact_storage.compacting_your_storage.description", "Get your first Compact Chest");
+        translationBuilder.add("advancement.compact_storage.compacting_your_storage.description", "Get your first Compact Storage block");
 
         translationBuilder.add("advancement.compact_storage.got_barrel.title", "Barrels, now even cooler");
         translationBuilder.add("advancement.compact_storage.got_barrel.description", "On your way to becoming a master of CompactStorage!");
@@ -70,6 +71,21 @@ public class ModLangProvider extends FabricLanguageProvider {
 
         translationBuilder.add("advancement.compact_storage.got_backpack.title", "Storing things on the move? No problem.");
         translationBuilder.add("advancement.compact_storage.got_backpack.description", "Now you can take lots of things with you, how cool is that?");
+
+        translationBuilder.add("advancement.compact_storage.width_upgrade.title", "Expanding width ways!");
+        translationBuilder.add("advancement.compact_storage.width_upgrade.description", "Even more storage? Awesome.");
+
+        translationBuilder.add("advancement.compact_storage.height_upgrade.title", "Expanding upwards!");
+        translationBuilder.add("advancement.compact_storage.height_upgrade.description", "Even more storage? Vertically? Cool beans.");
+
+        translationBuilder.add("advancement.compact_storage.item_drum_upgrade.title", "Drums, now bigger!");
+        translationBuilder.add("advancement.compact_storage.item_drum_upgrade.description", "We aren't in 4096 item town anymore, are we?");
+
+        translationBuilder.add("advancement.compact_storage.void_slot_upgrade.title", "Bye bye unwanted items!");
+        translationBuilder.add("advancement.compact_storage.void_slot_upgrade.description", "Efficiently disposing of items since, well now... I guess?");
+
+        translationBuilder.add("advancement.compact_storage.retainer_upgrade.title", "My chest grew legs!");
+        translationBuilder.add("advancement.compact_storage.retainer_upgrade.description", "Now you can take your items with you, in block format!");
 
         translationBuilder.add("key.category.compact_storage.default", "CompactStorage");
         translationBuilder.add("key.compact_storage.backpack_open", "Open Backpack (Curios / Trinkets)");
@@ -93,6 +109,10 @@ public class ModLangProvider extends FabricLanguageProvider {
         addForTag(CompactStorageItemTags.PACK_FRAMES, translationBuilder);
         addForTag(CompactStorageItemTags.STORAGE_ITEMS, translationBuilder);
         addForTag(CompactStorageItemTags.UPGRADES, translationBuilder);
+
+        for(StorageUpgrade storageUpgrade : CompactStorageUpgrades.values()) {
+            translationBuilder.add("stat.compact_storage." + storageUpgrade.getStatisticName(), snakeCaseToName(storageUpgrade.getName()) + " Upgrades Applied");
+        }
     }
 
     public void addForTag(TagKey tagKey, TranslationBuilder translationBuilder) {

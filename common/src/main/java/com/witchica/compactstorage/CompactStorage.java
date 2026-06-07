@@ -41,6 +41,7 @@ public class CompactStorage {
         registrars.creativeModeTabs(CompactStorageItems::initializeCreativeTabs);
         registrars.blockEntityTypes(CompactStorageBlockEntities::initialize);
         registrars.menuTypes(CompactStorageMenuTypes::initialize);
+        registrars.customStats(CompactStorageStatistics::initialize);
 
         ItemCallback.Tooltip.EVENT.register((itemStack, tooltip, flags) -> {
             if(itemStack.has(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value())) {

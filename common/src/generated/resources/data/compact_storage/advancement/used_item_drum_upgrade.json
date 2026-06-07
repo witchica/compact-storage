@@ -1,0 +1,48 @@
+{
+  "parent": "compact_storage:got_drum",
+  "criteria": {
+    "stat_updated": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type_specific": {
+                "type": "minecraft:player",
+                "stats": [
+                  {
+                    "type": "minecraft:custom",
+                    "stat": "compact_storage:use_item_drum_upgrade",
+                    "value": {
+                      "min": 1
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:location"
+    }
+  },
+  "display": {
+    "background": "minecraft:gui/advancements/backgrounds/adventure",
+    "description": {
+      "translate": "advancement.compact_storage.item_drum_upgrade.description"
+    },
+    "icon": {
+      "id": "compact_storage:item_drum_upgrade"
+    },
+    "title": {
+      "translate": "advancement.compact_storage.item_drum_upgrade.title"
+    }
+  },
+  "requirements": [
+    [
+      "stat_updated"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

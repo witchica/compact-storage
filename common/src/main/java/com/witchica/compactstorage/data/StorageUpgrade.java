@@ -1,11 +1,13 @@
 package com.witchica.compactstorage.data;
 
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.item.StorageUpgradeItem;
 import net.blay09.mods.balm.world.item.DeferredItem;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -21,11 +23,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import java.util.function.Consumer;
 
 public abstract class StorageUpgrade {
+    private final String statisticName;
     private String name;
     private DeferredItem deferredItem;
+    private Identifier statisticIdentifier;
 
     public StorageUpgrade(String name) {
         this.name = name;
+        this.statisticName = "use_" + name + "_upgrade";
     }
 
     public abstract DataComponentType<?> getDataComponent();
@@ -74,6 +79,7 @@ public abstract class StorageUpgrade {
                         if(upgrade.applyToItemStack(stackToUpgrade)) {
                             upgradeStack.setCount(upgradeStack.getCount() - 1);
                             level.playSound(null, player.getOnPos(), upgrade.getAppliedUpgradeSoundEvent(), SoundSource.NEUTRAL, 1f, 1f);
+                            player.awardStat(upgrade.statisticIdentifier, 1);
                             return InteractionResult.CONSUME;
                         }
                     }
@@ -102,6 +108,7 @@ public abstract class StorageUpgrade {
                         if(upgrade.applyToBlockEntity(blockEntity)) {
                             upgradeStack.setCount(upgradeStack.getCount() - 1);
                             level.playSound(null, player.getOnPos().above(1), upgrade.getAppliedUpgradeSoundEvent(), SoundSource.BLOCKS, 1f, 1f);
+                            player.awardStat(upgrade.statisticIdentifier, 1);
                             return InteractionResult.CONSUME;
                         }
                     }
@@ -126,5 +133,17 @@ public abstract class StorageUpgrade {
 
     public DeferredItem getItem() {
         return deferredItem;
+    }
+
+    public Identifier getStatisticIdentifier() {
+        return statisticIdentifier;
+    }
+
+    public String getStatisticName() {
+        return statisticName;
+    }
+
+    public void setStatisticIdentifier(Identifier register) {
+        this.statisticIdentifier = register;
     }
 }
