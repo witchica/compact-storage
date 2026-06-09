@@ -109,8 +109,7 @@ public class BackpackItem extends Item implements StorageTypeProvider, ItemWithR
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if(!level.isClientSide()) {
             if(player.containerMenu instanceof GenericCompactStorageMenu) {
-                ((ServerPlayer) player).closeContainer();
-                return super.use(level, player, hand);
+                return InteractionResult.FAIL;
             }
 
             ItemStack backpackStack = player.getItemInHand(hand);
@@ -130,7 +129,7 @@ public class BackpackItem extends Item implements StorageTypeProvider, ItemWithR
             }
 
             Balm.networking().openMenu(player, new HeldBackpackMenuProvider(hand, backpackStack));
-            return InteractionResult.CONSUME;
+            return InteractionResult.SUCCESS;
         }
 
         return super.use(level, player, hand);
