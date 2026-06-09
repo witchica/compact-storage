@@ -65,6 +65,8 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     if (projectId) {
         def mainFile = upload(findProperty("curseforge_project_id"), jar.archiveFile.get().asFile)
         mainFile.changelog = rootProject.file('CHANGELOG.md').text
+        mainFile.changelogType = "markdown"
+        mainFile.displayName = project.version + "+forge-" + libs.minecraft.get().version
         mainFile.addRequirement("balm")
         mainFile.addGameVersion(libs.minecraft.get().version)
         mainFile.releaseType = "release"

@@ -66,8 +66,11 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     if (projectId) {
         def mainFile = upload(findProperty("curseforge_project_id"), jar.archiveFile.get().asFile)
         mainFile.changelog = rootProject.file('CHANGELOG.md').text
+        mainFile.changelogType = "markdown"
+        mainFile.displayName = project.version + "+fabric-" + libs.minecraft.get().version
         mainFile.addRequirement("fabric-api")
         mainFile.addRequirement("balm")
+        mainFile.addOptional("trinkets-updated")
         mainFile.addGameVersion(libs.minecraft.get().version)
         mainFile.releaseType = "release"
         project.findProperty("curseforge_environments")?.split(",")?.toList()?.each { mainFile.addEnvironment(it) }
@@ -89,5 +92,6 @@ modrinth {
     dependencies {
         required.project "fabric-api"
         required.project "balm"
+        optional.project "trinkets-updated"
     }
 }

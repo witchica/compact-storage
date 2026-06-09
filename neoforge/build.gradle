@@ -58,7 +58,10 @@ tasks.register('curseforge', TaskPublishCurseForge) {
     if (projectId) {
         def mainFile = upload(findProperty("curseforge_project_id"), jar.archiveFile.get().asFile)
         mainFile.changelog = rootProject.file('CHANGELOG.md').text
+        mainFile.changelogType = "markdown"
+        mainFile.displayName = project.version + "+neoforge-" + libs.minecraft.get().version
         mainFile.addRequirement("balm")
+        mainFile.addOptional("curios")
         mainFile.addGameVersion(libs.minecraft.get().version)
         mainFile.releaseType = "release"
         project.findProperty("curseforge_environments")?.split(",")?.toList()?.each { mainFile.addEnvironment(it) }
@@ -80,6 +83,7 @@ modrinth {
     loaders = ['neoforge']
     dependencies {
         required.project "balm"
+        optional.project "curios"
     }
 }
 
