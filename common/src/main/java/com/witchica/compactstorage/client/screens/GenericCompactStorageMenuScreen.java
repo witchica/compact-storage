@@ -85,7 +85,12 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
         //extractTab(graphics, BACKGROUND_LOCATION, leftPos+imageWidth-3, topPos, 28, 29, invCoords.x * 15, invCoords.y * 15, 7, 128, 128, true);
 
         blit9slice(graphics, BACKGROUND_LOCATION, leftPos+imageWidth+4, topPos, 32, 32, invCoords.x * 15, invCoords.y * 15, 7, 128, 128);
-        renderSlots(graphics, storageType, leftPos+imageWidth+4 + 7, topPos + 7, 1,1);
+
+        if(fancyRendering) {
+            renderSlots(graphics, storageType, leftPos+imageWidth+4 + 7, topPos + 7, 1,1);
+        } else {
+            renderSlots(graphics, leftPos+imageWidth+4 + 7, topPos + 7, 1,1);
+        }
 
         graphics.blit(RenderPipelines.GUI_TEXTURED, TRASH_ICON, leftPos + imageWidth + 4 + 7 + 1, topPos +7+1, 0, 0, 16, 16, 16, 16, 16, 16, fancyRendering ? 0xFF000000 + storageType.getUiTitleColor() : -12566464);
     }

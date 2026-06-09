@@ -1,6 +1,7 @@
 package com.witchica.compactstorage.fabric.datagen;
 
 import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.CompactStorageConfig;
 import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.mod.CompactStorageBlocks;
 import com.witchica.compactstorage.mod.CompactStorageItemTags;
@@ -12,6 +13,7 @@ import net.minecraft.core.HolderLookup;
 import com.witchica.compactstorage.data.StorageType;
 import net.minecraft.tags.TagKey;
 
+import java.lang.reflect.Field;
 import java.util.concurrent.CompletableFuture;
 
 import static com.witchica.compactstorage.CompactStorage.id;
@@ -110,9 +112,24 @@ public class ModLangProvider extends FabricLanguageProvider {
         addForTag(CompactStorageItemTags.STORAGE_ITEMS, translationBuilder);
         addForTag(CompactStorageItemTags.UPGRADES, translationBuilder);
 
+        for(Field field : CompactStorageConfig.class.getFields()) {
+            translationBuilder.add("compact_storage.configuration." + field.getName(), camelCaseToName(field.getName()));
+        }
+
         for(StorageUpgrade storageUpgrade : CompactStorageUpgrades.values()) {
             translationBuilder.add("stat.compact_storage." + storageUpgrade.getStatisticName(), snakeCaseToName(storageUpgrade.getName()) + " Upgrades Applied");
         }
+    }
+
+    public String camelCaseToName(String s) {
+        return (s.substring(0,1).toUpperCase() + s.substring(1)).replaceAll(
+                String.format("%s|%s|%s",
+                        "(?<=[A-Z])(?=[A-Z][a-z])",
+                        "(?<=[^A-Z])(?=[A-Z])",
+                        "(?<=[A-Za-z])(?=[^A-Za-z])"
+                ),
+                " "
+        );
     }
 
     public void addForTag(TagKey tagKey, TranslationBuilder translationBuilder) {
