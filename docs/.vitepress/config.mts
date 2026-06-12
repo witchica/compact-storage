@@ -1,9 +1,16 @@
-import { defineConfig } from 'vitepress'
+import { defineVersionedConfig } from '@viteplus/versions';
 
 // https://vitepress.dev/reference/site-config
-export default defineConfig({
+export default defineVersionedConfig({
   title: "CompactStorage",
-  description: "Expandable storage for Minecraft 1.20+",
+  description: "Expandable storage for Minecraft 26.1",
+  versionsConfig: {
+    current: "26.1.x",
+    versionSwitcher: {
+      text: "Version",
+      includeCurrentVersion: true
+    }
+  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [

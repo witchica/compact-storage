@@ -4,8 +4,8 @@ layout: home
 
 hero:
   name: "CompactStorage"
-  text: "Expandable storage for Minecraft 1.20+"
-  tagline: My great project tagline
+  text: "Expandable storage for Minecraft 26.1"
+  tagline: Now with upgradable Item Drums
   actions:
     - theme: brand
       text: Markdown Examples
@@ -14,7 +14,7 @@ hero:
       text: API Examples
       link: /api-examples
   image:
-    src: https://vitepress.dev/vitepress-logo-large.svg
+    src: icon.webp
 
 features:
   - title: Feature A
