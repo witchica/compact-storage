@@ -7,6 +7,10 @@ plugins {
     alias libs.plugins.modrinthMinotaur
 }
 
+dependencies {
+    implementation "maven.modrinth:curios:68gxflop"
+}
+
 neoForge {
     version = libs.neoForge.get().version
     // Automatically enable neoforge AccessTransformers if the file exists

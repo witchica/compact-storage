@@ -64,10 +64,10 @@ public class BackpackFeatureRenderer extends RenderLayer<AvatarRenderState, Play
                         }
 
                         if(type.isWooden()) {
-                            poseStack.translate(0f, -0.3f, -0.19f);
-                            poseStack.scale(0.45f, 0.45f, 0.45f);
+                            poseStack.translate(0f, -0.275f, -0.15f);
+                            poseStack.scale(0.5f, 0.5f, 0.5f);
                         } else {
-                            poseStack.translate(0f, -0.3f, -0.15f);
+                            poseStack.translate(0f, -0.325f, -0.165f);
                             poseStack.scale(0.9f, 0.9f, 0.9f);
                         }
 
