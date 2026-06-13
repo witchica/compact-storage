@@ -83,7 +83,7 @@ public class ResizableUpgrade extends StorageUpgrade {
     public boolean isUpgradeValidForItemStack(ItemStack stack) {
         if(stack.getItem() instanceof ItemWithResizableInventory item) {
             ResizableInventoryComponent component = stack.getOrDefault(getDataComponent(), new ResizableInventoryComponent(item.getDefaultWidth(), item.getDefaultHeight()));
-            return (type == ResizeType.WIDTH && component.inventoryWidth() < item.getMaximumWidth()) || (type == ResizeType.HEIGHT && component.inventoryHeight() < item.getDefaultHeight());
+            return (type == ResizeType.WIDTH && component.inventoryWidth() < item.getMaximumWidth()) || (type == ResizeType.HEIGHT && component.inventoryHeight() < item.getMaximumHeight());
         }
 
         return false;
@@ -91,7 +91,7 @@ public class ResizableUpgrade extends StorageUpgrade {
 
     @Override
     public Component getFailedUpgradeMessage() {
-        return Component.translatable("message.compact_storage.upgrades.width.fail").withStyle(ChatFormatting.RED);
+        return Component.translatable(type == ResizeType.WIDTH ? "message.compact_storage.upgrades.width.fail" : "message.compact_storage.upgrades.height.fail").withStyle(ChatFormatting.RED);
     }
 
     @Override
