@@ -28,15 +28,6 @@ public class CompactStorageBlocks {
         itemDrums = blocks.registerDiscriminated(
                 StorageType.values(),
                 StorageType::itemDrumNameFactory, ItemDrumBlock::new, StorageType::barrelPropertiesFactory).withDefaultItems((Item.Properties::useBlockDescriptionPrefix)).asDiscriminatedBlocks();
-
-
-        // Backwards Compatibility
-        for(StorageType storageType : StorageType.values()) {
-            if(!storageType.isWooden()) {
-                blocks.addAlias("compact_chest_" + storageType.getName(), storageType.getName() + "_compact_chest");
-                blocks.addAlias("compact_barrel_" + storageType.getName(), storageType.getName() + "_compact_barrel");
-            }
-        }
     }
 
 }

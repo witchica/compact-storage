@@ -17,8 +17,7 @@ import java.util.Map;
 import static com.witchica.compactstorage.CompactStorage.id;
 
 public class CompactStorageItems {
-    public static Holder<CreativeModeTab> IRON_TAB;
-    public static Holder<CreativeModeTab> WOOD_TAB;
+    public static Holder<CreativeModeTab> TAB;
 
     public static Map<StorageType, DeferredItem> BACKPACK_ITEMS = new HashMap<>();
 
@@ -34,49 +33,30 @@ public class CompactStorageItems {
             })).asDeferredItem());
         }
 
-        // Backwards Compatibility
-        for(StorageType storageType : StorageType.values()) {
-            if(!storageType.isWooden()) {
-                items.addAlias("backpack_" + storageType.getName(), storageType.getName() + "_backpack");
-            }
-        }
-
         items.addAlias("upgrade_row", "width_upgrade");
         items.addAlias("upgrade_column", "height_upgrade");
         items.addAlias("upgrade_retainer", "retainer_upgrade");
     }
 
     public static void initializeCreativeTabs(BalmCreativeModeTabRegistrar creativeModeTabs) {
-        IRON_TAB = creativeModeTabs.register("metal", builder ->
+        TAB = creativeModeTabs.register("general", builder ->
                 builder.title(Component.translatable(id("general").toLanguageKey("itemGroup")))
                         .icon(() -> CompactStorageBlocks.compactChests.get(StorageType.RED).createStack())
                         .displayItems((displayParameters, output) -> {
                             StorageType.stream().forEach(storageType -> {
-                                if(!storageType.isWooden()) {
-                                    output.accept(CompactStorageBlocks.compactChests.get(storageType));
-                                    output.accept(CompactStorageBlocks.compactBarrels.get(storageType));
-                                    output.accept(CompactStorageBlocks.itemDrums.get(storageType));
-                                    output.accept(CompactStorageItems.BACKPACK_ITEMS.get(storageType));
-                                }
+                                output.accept(CompactStorageBlocks.compactChests.get(storageType));
                             });
 
-                            CompactStorageUpgrades.values().forEach(value -> {
-                                output.accept(value.getItem().asItem());
-                            });
-                        })
-        ).asHolder();
-
-        WOOD_TAB = creativeModeTabs.register("wood", builder ->
-                builder.title(Component.translatable(id("wood").toLanguageKey("itemGroup")))
-                        .icon(() -> CompactStorageBlocks.compactChests.get(StorageType.PALE_OAK).createStack())
-                        .displayItems((displayParameters, output) -> {
                             StorageType.stream().forEach(storageType -> {
-                                if(storageType.isWooden()) {
-                                    output.accept(CompactStorageBlocks.compactChests.get(storageType));
-                                    output.accept(CompactStorageBlocks.compactBarrels.get(storageType));
-                                    output.accept(CompactStorageBlocks.itemDrums.get(storageType));
-                                    output.accept(CompactStorageItems.BACKPACK_ITEMS.get(storageType));
-                                }
+                                output.accept(CompactStorageBlocks.compactBarrels.get(storageType));
+                            });
+
+                            StorageType.stream().forEach(storageType -> {
+                                output.accept(CompactStorageBlocks.itemDrums.get(storageType));
+                            });
+
+                            StorageType.stream().forEach(storageType -> {
+                                output.accept(CompactStorageItems.BACKPACK_ITEMS.get(storageType));
                             });
 
                             CompactStorageUpgrades.values().forEach(value -> {

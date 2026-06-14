@@ -50,7 +50,7 @@ public class StorageType implements Comparable<StorageType> {
         METAL;
     }
 
-    private static final Map<String, StorageType> VALUES = new TreeMap<>();
+    private static final Map<String, StorageType> VALUES = new LinkedHashMap<>();
     private static final Map<DyeColor, StorageType> DYE_TO_TYPE_MAP = new HashMap<DyeColor, StorageType>();
     private static final Map<WoodType, StorageType> WOOD_TO_TYPE_MAP = new HashMap<WoodType, StorageType>();
 
@@ -98,7 +98,7 @@ public class StorageType implements Comparable<StorageType> {
     }
 
     public static Set<StorageType> values() {
-        return new TreeSet<>(VALUES.values());
+        return new LinkedHashSet<>(VALUES.values());
     }
 
     private String name = "";

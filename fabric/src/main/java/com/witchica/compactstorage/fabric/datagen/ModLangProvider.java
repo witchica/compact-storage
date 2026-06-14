@@ -42,8 +42,7 @@ public class ModLangProvider extends FabricLanguageProvider {
         translationBuilder.add(CompactStorageUpgrades.VOID_SLOT_UPGRADE.getItem().asItem(), "Storage Upgrade (Void Slot)");
         translationBuilder.add(CompactStorageUpgrades.ITEM_DRUM_UPGRADE.getItem().asItem(), "Storage Upgrade (Item Drum)");
 
-        translationBuilder.add(id("general").toLanguageKey("itemGroup"), "CompactStorage (Iron)");
-        translationBuilder.add(id("wood").toLanguageKey("itemGroup"), "CompactStorage (Wood)");
+        translationBuilder.add(id("general").toLanguageKey("itemGroup"), "CompactStorage");
 
         translationBuilder.add(createTooltipDescriptorId("upgrade_width"), "Can be applied to CompactStorage inventories to increase their width");
         translationBuilder.add(createTooltipDescriptorId("upgrade_width_limit"), "Width is limited to a maximum of %d");
