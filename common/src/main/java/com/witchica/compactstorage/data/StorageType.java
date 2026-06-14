@@ -1,13 +1,10 @@
 package com.witchica.compactstorage.data;
 
 import com.mojang.serialization.Codec;
-import com.sun.source.tree.Tree;
 import com.witchica.compactstorage.CompactStorage;
-import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;

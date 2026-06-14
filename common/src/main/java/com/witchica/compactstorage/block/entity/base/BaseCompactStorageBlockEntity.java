@@ -11,6 +11,7 @@ import com.witchica.compactstorage.api.inventory.RetainingContainer;
 import com.witchica.compactstorage.mod.CompactStorageComponents;
 import com.witchica.compactstorage.util.CompactStorageContainerOpenerCounter;
 import com.witchica.compactstorage.util.CompactStorageUtil;
+import net.blay09.mods.balm.world.BalmContainerProvider;
 import net.blay09.mods.balm.world.BalmMenuProvider;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityUtils;
 import net.minecraft.core.BlockPos;
@@ -26,6 +27,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.ContainerUser;
@@ -47,7 +49,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEntity implements BalmMenuProvider<@NotNull CompactStorageMenuData>, ResizableContainer, RetainingContainer, VoidSlotProvider, UpgradeCheckProvider {
+public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEntity implements BalmMenuProvider<@NotNull CompactStorageMenuData>, ResizableContainer, RetainingContainer, VoidSlotProvider, UpgradeCheckProvider, BalmContainerProvider {
     private NonNullList<ItemStack> items;
 
     private int inventoryWidth ;
@@ -272,5 +274,10 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
     public void setHasVoidSlot(boolean hasVoidSlot) {
         this.hasVoidSlotUpgrade = hasVoidSlot;
         setChanged();
+    }
+
+    @Override
+    public @Nullable Container getContainer() {
+        return this;
     }
 }

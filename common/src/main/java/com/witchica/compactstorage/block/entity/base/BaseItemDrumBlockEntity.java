@@ -11,6 +11,7 @@ import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
 import com.witchica.compactstorage.mod.CompactStorageComponents;
 import com.witchica.compactstorage.mod.CompactStorageUpgrades;
 import com.witchica.compactstorage.util.CompactStorageUtil;
+import net.blay09.mods.balm.world.BalmContainerProvider;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -21,6 +22,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.item.Item;
@@ -36,7 +38,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
-public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingContainer, UpgradeCheckProvider, ResizableItemDrum {
+public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingContainer, UpgradeCheckProvider, ResizableItemDrum, BalmContainerProvider {
     private DrumInventory drumInventory;
     public Optional<ItemStack> clientItem = Optional.empty();
     public int clientStackSize;
@@ -194,5 +196,10 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
         }
 
         setChanged();
+    }
+
+    @Override
+    public @Nullable Container getContainer() {
+        return drumInventory;
     }
 }
