@@ -60,25 +60,6 @@ public class BackpackInventory implements Container, ResizableContainer, VoidSlo
             if(resizableInventoryComponent != null) {
                 resizableInventoryComponent.apply(this);
             }
-        } else if(stack.has(DataComponents.CUSTOM_DATA)) {
-            // Backwards Compatibility
-            CustomData data = stack.get(DataComponents.CUSTOM_DATA);
-
-            if(data != null) {
-                // Backwards Compatibility Only
-                CompoundTag tag = data.copyTag().getCompoundOrEmpty("Backpack");
-                ValueInput valueInput = TagValueInput.create(ProblemReporter.DISCARDING, registryAccess, tag);
-
-                this.inventoryWidth = valueInput.getIntOr("inventory_width", valueInput.getIntOr("InventoryWidth", getDefaultWidth()));
-                this.inventoryHeight = valueInput.getIntOr("inventory_height", valueInput.getIntOr("InventoryHeight", getDefaultHeight()));
-
-                this.items = NonNullList.withSize(this.inventoryWidth * this.inventoryHeight, ItemStack.EMPTY);
-                CompactStorageUtil.loadItemsFromOldVersionIfPresent(valueInput, items);
-
-                // Exit Early
-                return;
-            }
-
         }
 
         this.items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
@@ -125,7 +106,6 @@ public class BackpackInventory implements Container, ResizableContainer, VoidSlo
             stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getItems()));
             stack.set(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(inventoryWidth, inventoryHeight));
             stack.set(CompactStorageComponents.VOID_SLOT.value(), this.hasVoidSlot());
-            stack.remove(DataComponents.CUSTOM_DATA);
         }
     }
 

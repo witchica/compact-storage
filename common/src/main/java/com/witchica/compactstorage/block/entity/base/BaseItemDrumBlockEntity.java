@@ -85,17 +85,11 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
 
+        // -1 for anything before 26.1, 21 for 26.1, useful for any data changes
         int version = input.getIntOr("Version", -1);
 
         this.drumInventory = new DrumInventory(input.getIntOr("ItemDrumSize", getDefaultSize()), this);
-
-        if(version < 21) {
-            // Backwards Compatibility
-            CompactStorageUtil.loadItemsFromOldVersionIfPresent(input, drumInventory.getItems());
-        } else {
-            // New way
-            ContainerHelper.loadAllItems(input, drumInventory.getItems());
-        }
+        ContainerHelper.loadAllItems(input, drumInventory.getItems());
 
         this.clientItem = input.read("ClientItem", ItemStack.CODEC);
         this.clientStackSize = input.getIntOr("ClientStackSize", 0);

@@ -129,8 +129,6 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         writer.store("InventoryHeight", Codec.INT, inventoryHeight);
         writer.store("VoidSlotUpgrade", Codec.BOOL, hasVoidSlot());
         writer.store("Version", Codec.INT,21);
-
-        recheckRetaining();
         ContainerHelper.saveAllItems(writer, items);
     }
 
@@ -138,26 +136,14 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
     protected void loadAdditional(ValueInput reader) {
         super.loadAdditional(reader);
 
+        // -1 for anything before 26.1, 21 for 26.1, useful for any data changes
         int version = reader.getIntOr("Version", -1);
 
-        // Snake Case is for backwards compatibility with 1.20 etc.
-        this.inventoryWidth = reader.getIntOr("InventoryWidth", reader.getIntOr("inventory_width", getDefaultWidth()));
-        this.inventoryHeight = reader.getIntOr("InventoryHeight", reader.getIntOr("inventory_height", getDefaultHeight()));
+        this.inventoryWidth = reader.getIntOr("InventoryWidth", getDefaultWidth());
+        this.inventoryHeight = reader.getIntOr("InventoryHeight", getDefaultHeight());
         this.hasVoidSlotUpgrade = reader.getBooleanOr("VoidSlotUpgrade", false);
-
-        // Backwards compatibility for 1.20.1 etc.
-        if(reader.getBooleanOr("retaining", reader.getBooleanOr("Retaining", false))) {
-            needsToBeRetaining = true;
-        }
-
         this.items = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
-
-        // Backwards compatibility for 1.20.1 etc.
-        if(version < 21) {
-            CompactStorageUtil.loadItemsFromOldVersionIfPresent(reader, items);
-        } else {
-            ContainerHelper.loadAllItems(reader, items);
-        }
+        ContainerHelper.loadAllItems(reader, items);
     }
 
     public void resizeInventory() {
@@ -275,13 +261,6 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         tag.discard("InventoryWidth");
         tag.discard("InventoryHeight");
         tag.discard("VoidSlotUpgrade");
-    }
-
-    public void recheckRetaining() {
-        if(needsToBeRetaining && level != null && !level.isClientSide()) {
-            level.setBlock(getBlockPos(), getBlockState().setValue(BaseCompactStorageBlock.RETAINING, true), 2);
-            this.needsToBeRetaining = false;
-        }
     }
 
     @Override
