@@ -47,10 +47,46 @@ public class StorageType implements Comparable<StorageType> {
         }
     }
 
-    private static final Map<String, StorageType> VALUES = new TreeMap<>();
+    public enum StorageTypeMaterial {
+        COLORFUL,
+        WOODEN,
+        METAL;
+    }
 
+    private static final Map<String, StorageType> VALUES = new TreeMap<>();
     private static final Map<DyeColor, StorageType> DYE_TO_TYPE_MAP = new HashMap<DyeColor, StorageType>();
     private static final Map<WoodType, StorageType> WOOD_TO_TYPE_MAP = new HashMap<WoodType, StorageType>();
+
+    public static Codec<StorageType> CODEC = Codec.stringResolver(StorageType::getName, VALUES::get);
+
+    public static StorageType WHITE;
+    public static StorageType ORANGE;
+    public static StorageType MAGENTA;
+    public static StorageType LIGHT_BLUE;
+    public static StorageType YELLOW;
+    public static StorageType LIME;
+    public static StorageType PINK;
+    public static StorageType GRAY;
+    public static StorageType LIGHT_GRAY;
+    public static StorageType CYAN;
+    public static StorageType PURPLE;
+    public static StorageType BLUE;
+    public static StorageType BROWN;
+    public static StorageType GREEN;
+    public static StorageType RED;
+    public static StorageType BLACK;
+    public static StorageType OAK;
+    public static StorageType SPRUCE;
+    public static StorageType BIRCH;
+    public static StorageType ACACIA;
+    public static StorageType CHERRY;
+    public static StorageType JUNGLE;
+    public static StorageType DARK_OAK;
+    public static StorageType PALE_OAK;
+    public static StorageType CRIMSON;
+    public static StorageType WARPED;
+    public static StorageType MANGROVE;
+    public static StorageType BAMBOO;
 
     public static StorageType fromDye(DyeColor dyeColor) {
         return DYE_TO_TYPE_MAP.get(dyeColor);
@@ -60,6 +96,27 @@ public class StorageType implements Comparable<StorageType> {
         return WOOD_TO_TYPE_MAP.get(woodType);
     }
 
+    public static Stream<StorageType> stream() {
+        return VALUES.values().stream();
+    }
+
+    public static Set<StorageType> values() {
+        return new TreeSet<>(VALUES.values());
+    }
+
+    private String name = "";
+    private RecipeData recipeData;
+    private Identifier slotsTexture;
+
+    @Nullable
+    private DyeColor dyeColor;
+
+    @Nullable
+    private WoodType woodType;
+
+    private Vector2i uiCoords;
+    private int uiTitleColor;
+
     public SoundEvent chestOpenSound = SoundEvents.CHEST_OPEN;
     public SoundEvent chestCloseSound = SoundEvents.CHEST_CLOSE;
     public SoundEvent barrelOpenSound = SoundEvents.BARREL_OPEN;
@@ -68,21 +125,8 @@ public class StorageType implements Comparable<StorageType> {
     public SoundEvent backpackOpenSound = SoundEvents.WOOL_PLACE;
     public SoundEvent backpackCloseSound = SoundEvents.WOOL_BREAK;
 
-    private boolean isWooden = false;
-    private boolean isNetherWood = false;
-    private String name = "";
-    private RecipeData recipeData;
-
-    private Identifier slotsTexture;
-
-    private boolean canDye = false;
-    @Nullable
-    private DyeColor dyeColor;
-    @Nullable
-    private WoodType woodType;
-    private Vector2i uiCoords;
-    private int uiTitleColor;
     private BackpackModelInfo backpackModelInfo;
+    private StorageTypeMaterial material;
 
     public StorageType name(String name) {
         this.name = name;
@@ -126,12 +170,6 @@ public class StorageType implements Comparable<StorageType> {
         this.barrelCloseSound = barrelClose;
         return this;
     }
-
-    public StorageType soundType(SoundType soundType) {
-        this.soundType = soundType;
-        return this;
-    }
-
     public StorageType backpackOpen(SoundEvent backpackOpen) {
         this.backpackOpenSound = backpackOpen;
         return this;
@@ -142,21 +180,24 @@ public class StorageType implements Comparable<StorageType> {
         return this;
     }
 
+    public StorageType soundType(SoundType soundType) {
+        this.soundType = soundType;
+        return this;
+    }
+
     public StorageType setMetal() {
-        return this;
-    }
+        this.material = StorageTypeMaterial.METAL;
+        this.soundType = SoundType.METAL;
+        this.chestOpenSound = SoundEvents.COPPER_CHEST_OPEN;
+        this.chestCloseSound = SoundEvents.COPPER_CHEST_CLOSE;
+        this.barrelOpenSound = SoundEvents.IRON_TRAPDOOR_OPEN;
+        this.barrelCloseSound = SoundEvents.IRON_TRAPDOOR_CLOSE;
 
-    public StorageType inventoryBackground(int x, int y) {
-        this.uiCoords = new Vector2i(x, y);
         return this;
-    }
-
-    public Vector2i getInventoryCoords() {
-        return this.uiCoords;
     }
 
     public StorageType setWooden(WoodType woodType) {
-        this.isWooden = true;
+        this.material = StorageTypeMaterial.WOODEN;
         this.woodType = woodType;
         StorageType.WOOD_TO_TYPE_MAP.put(woodType, this);
 
@@ -168,8 +209,6 @@ public class StorageType implements Comparable<StorageType> {
     }
 
     public StorageType setNetherWood() {
-        this.isNetherWood = true;
-
         this.soundType = SoundType.NETHER_WOOD;
         this.backpackOpenSound = SoundEvents.NETHER_WOOD_TRAPDOOR_OPEN;
         this.backpackCloseSound = SoundEvents.NETHER_WOOD_TRAPDOOR_CLOSE;
@@ -177,16 +216,27 @@ public class StorageType implements Comparable<StorageType> {
         return this;
     }
 
-    public boolean isNetherWood() {
-        return this.isNetherWood;
+    public StorageType setDyeable(DyeColor dyeColor) {
+        this.material = StorageTypeMaterial.COLORFUL;
+        this.dyeColor = dyeColor;
+        StorageType.DYE_TO_TYPE_MAP.put(dyeColor, this);
+        return this;
     }
 
+    public StorageType inventoryBackground(int x, int y) {
+        this.uiCoords = new Vector2i(x, y);
+        return this;
+    }
+
+    public Vector2i getInventoryCoords() {
+        return this.uiCoords;
+    }
     public boolean isWooden() {
-        return isWooden;
+        return material == StorageTypeMaterial.WOODEN;
     }
 
     public boolean canDye() {
-        return canDye;
+        return material == StorageTypeMaterial.COLORFUL;
     }
 
     public StorageType setUiTitleColor(int color) {
@@ -201,13 +251,6 @@ public class StorageType implements Comparable<StorageType> {
     @Nullable
     public DyeColor getDyeColor() {
         return dyeColor;
-    }
-
-    public StorageType setDyeable(DyeColor dyeColor) {
-        this.canDye = true;
-        this.dyeColor = dyeColor;
-        StorageType.DYE_TO_TYPE_MAP.put(dyeColor, this);
-        return this;
     }
 
     public SoundType getSoundType() {
@@ -242,10 +285,10 @@ public class StorageType implements Comparable<StorageType> {
 
 
     public BlockBehaviour.Properties chestProeprtiesFactory(BlockBehaviour.Properties baseBlockProperties) {
-        float resistance = isWooden ? Blocks.CHEST.getExplosionResistance() : Blocks.IRON_BLOCK.getExplosionResistance();
-        float destroyTime = isWooden ? Blocks.CHEST.defaultDestroyTime() : Blocks.IRON_BLOCK.defaultDestroyTime();
+        float resistance = isWooden() ? Blocks.CHEST.getExplosionResistance() : Blocks.IRON_BLOCK.getExplosionResistance();
+        float destroyTime = isWooden() ? Blocks.CHEST.defaultDestroyTime() : Blocks.IRON_BLOCK.defaultDestroyTime();
 
-        if(canDye) {
+        if(canDye()) {
             baseBlockProperties = baseBlockProperties.mapColor(getDyeColor());
         } else
             baseBlockProperties = baseBlockProperties.mapColor(MapColor.WOOD);
@@ -259,10 +302,10 @@ public class StorageType implements Comparable<StorageType> {
     }
 
     public BlockBehaviour.Properties barrelPropertiesFactory(BlockBehaviour.Properties baseBlockProperties) {
-        float resistance = isWooden ? Blocks.BARREL.getExplosionResistance() : Blocks.IRON_BLOCK.getExplosionResistance();
-        float destroyTime = isWooden ? Blocks.BARREL.defaultDestroyTime() : Blocks.IRON_BLOCK.defaultDestroyTime();
+        float resistance = isWooden() ? Blocks.BARREL.getExplosionResistance() : Blocks.IRON_BLOCK.getExplosionResistance();
+        float destroyTime = isWooden() ? Blocks.BARREL.defaultDestroyTime() : Blocks.IRON_BLOCK.defaultDestroyTime();
 
-        if(canDye) {
+        if(canDye()) {
             baseBlockProperties = baseBlockProperties.mapColor(getDyeColor());
         } else
             baseBlockProperties = baseBlockProperties.mapColor(MapColor.WOOD);
@@ -283,53 +326,19 @@ public class StorageType implements Comparable<StorageType> {
         return backpackModelInfo;
     }
 
+    @Override
+    public int compareTo(@NonNull StorageType o) {
+        return name.compareTo(o.name);
+    }
+
     private static StorageType register(StorageType storageType) {
         VALUES.put(storageType.name, storageType);
         return storageType;
     }
 
-    public static Stream<StorageType> stream() {
-        return VALUES.values().stream();
-    }
-
-    public static Set<StorageType> values() {
-        return new TreeSet<>(VALUES.values());
-    }
-
-    public static Codec<StorageType> CODEC = Codec.stringResolver(StorageType::getName, VALUES::get);
-
-    public static StorageType WHITE;
-    public static StorageType ORANGE;
-    public static StorageType MAGENTA;
-    public static StorageType LIGHT_BLUE;
-    public static StorageType YELLOW;
-    public static StorageType LIME;
-    public static StorageType PINK;
-    public static StorageType GRAY;
-    public static StorageType LIGHT_GRAY;
-    public static StorageType CYAN;
-    public static StorageType PURPLE;
-    public static StorageType BLUE;
-    public static StorageType BROWN;
-    public static StorageType GREEN;
-    public static StorageType RED;
-    public static StorageType BLACK;
-    public static StorageType OAK;
-    public static StorageType SPRUCE;
-    public static StorageType BIRCH;
-    public static StorageType ACACIA;
-    public static StorageType CHERRY;
-    public static StorageType JUNGLE;
-    public static StorageType DARK_OAK;
-    public static StorageType PALE_OAK;
-    public static StorageType CRIMSON;
-    public static StorageType WARPED;
-    public static StorageType MANGROVE;
-    public static StorageType BAMBOO;
-
     static {
-        WHITE = register(new StorageType().name("white").recipe(new RecipeData(Blocks.WHITE_WOOL, Items.WHITE_DYE, Blocks.WHITE_CONCRETE)).setMetal().setDyeable(DyeColor.WHITE)).inventoryBackground(2, 3).setUiTitleColor(0x1b1b1e).setBackpackModelInfo(new BackpackModelInfo(Blocks.WHITE_WOOL, Blocks.LIGHT_GRAY_WOOL));
-        ORANGE = register(new StorageType().name("orange").recipe(new RecipeData(Blocks.ORANGE_WOOL, Items.ORANGE_DYE, Blocks.ORANGE_CONCRETE)).setMetal().setDyeable(DyeColor.ORANGE)).inventoryBackground(6, 2).setUiTitleColor(0x8e2818).setBackpackModelInfo(new BackpackModelInfo(Blocks.ORANGE_WOOL, Blocks.RED_WOOL));
+        WHITE = register(new StorageType().name("white").recipe(new RecipeData(Blocks.WHITE_WOOL, Items.WHITE_DYE, Blocks.WHITE_CONCRETE)).setDyeable(DyeColor.WHITE)).inventoryBackground(2, 3).setUiTitleColor(0x1b1b1e).setBackpackModelInfo(new BackpackModelInfo(Blocks.WHITE_WOOL, Blocks.LIGHT_GRAY_WOOL));
+        ORANGE = register(new StorageType().name("orange").recipe(new RecipeData(Blocks.ORANGE_WOOL, Items.ORANGE_DYE, Blocks.ORANGE_CONCRETE)).setDyeable(DyeColor.ORANGE)).inventoryBackground(6, 2).setUiTitleColor(0x8e2818).setBackpackModelInfo(new BackpackModelInfo(Blocks.ORANGE_WOOL, Blocks.RED_WOOL));
         MAGENTA = register(new StorageType().name("magenta").recipe(new RecipeData(Blocks.MAGENTA_WOOL, Items.MAGENTA_DYE, Blocks.MAGENTA_CONCRETE)).setDyeable(DyeColor.MAGENTA)).inventoryBackground(5, 2).setUiTitleColor(0x64185c).setBackpackModelInfo(new BackpackModelInfo(Blocks.MAGENTA_WOOL, Blocks.PINK_WOOL));
         LIGHT_BLUE = register(new StorageType().name("light_blue").recipe(new RecipeData(Blocks.LIGHT_BLUE_WOOL, Items.LIGHT_BLUE_DYE, Blocks.LIGHT_BLUE_CONCRETE)).setDyeable(DyeColor.LIGHT_BLUE)).inventoryBackground(2, 2).setUiTitleColor(0x185374).setBackpackModelInfo(new BackpackModelInfo(Blocks.LIGHT_BLUE_WOOL, Blocks.BLUE_WOOL));
         YELLOW = register(new StorageType().name("yellow").recipe(new RecipeData(Blocks.YELLOW_WOOL, Items.YELLOW_DYE, Blocks.YELLOW_CONCRETE)).setDyeable(DyeColor.YELLOW)).inventoryBackground(3, 3).setUiTitleColor(0x927218).setBackpackModelInfo(new BackpackModelInfo(Blocks.YELLOW_WOOL, Blocks.WHITE_WOOL));
@@ -358,10 +367,5 @@ public class StorageType implements Comparable<StorageType> {
         MANGROVE = register(new StorageType().setWooden(WoodType.MANGROVE).name("mangrove").recipe(new RecipeData(Blocks.MANGROVE_PLANKS, ItemTags.MANGROVE_LOGS, Blocks.MANGROVE_SLAB))).inventoryBackground(7, 0).setUiTitleColor(0x3c2f23).setBackpackModelInfo(new BackpackModelInfo(Blocks.MANGROVE_PLANKS, Blocks.MANGROVE_LOG, Blocks.WHITE_WOOL));
         BAMBOO = register(new StorageType().setWooden(WoodType.BAMBOO).name("bamboo").recipe(new RecipeData(Blocks.BAMBOO_PLANKS, ItemTags.BAMBOO_BLOCKS, Blocks.BAMBOO_SLAB))
                 .soundType(SoundType.BAMBOO_WOOD).backpackOpen(SoundEvents.BAMBOO_WOOD_TRAPDOOR_OPEN).backpackClose(SoundEvents.BAMBOO_WOOD_TRAPDOOR_CLOSE)).inventoryBackground(3, 1).setUiTitleColor(0x907e3a).setBackpackModelInfo(new BackpackModelInfo(Blocks.BAMBOO_PLANKS, Blocks.BAMBOO_BLOCK, Blocks.WHITE_WOOL));
-    }
-
-    @Override
-    public int compareTo(@NonNull StorageType o) {
-        return name.compareTo(o.name);
     }
 }
