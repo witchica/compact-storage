@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "compact_barrels",
   "key": {
     "I": "minecraft:iron_ingot",

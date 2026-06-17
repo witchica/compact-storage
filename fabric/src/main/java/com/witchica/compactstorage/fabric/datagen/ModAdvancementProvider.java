@@ -10,7 +10,12 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
-import net.minecraft.advancements.criterion.*;
+import net.minecraft.advancements.predicates.ItemPredicate;
+import net.minecraft.advancements.predicates.MinMaxBounds;
+import net.minecraft.advancements.predicates.entity.EntityPredicate;
+import net.minecraft.advancements.predicates.entity.PlayerPredicate;
+import net.minecraft.advancements.triggers.InventoryChangeTrigger;
+import net.minecraft.advancements.triggers.PlayerTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -81,7 +86,7 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("stat_updated",
                         PlayerTrigger.TriggerInstance.located(
                                 EntityPredicate.Builder.entity()
-                                        .subPredicate(PlayerPredicate.Builder.player()
+                                        .player(PlayerPredicate.Builder.player()
                                                 .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, CompactStorageUpgrades.WIDTH_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_width_upgrade");
 
         AdvancementHolder usedHeightUpgrade = Advancement.Builder.advancement()
@@ -97,7 +102,7 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("stat_updated",
                         PlayerTrigger.TriggerInstance.located(
                                 EntityPredicate.Builder.entity()
-                                        .subPredicate(PlayerPredicate.Builder.player()
+                                        .player(PlayerPredicate.Builder.player()
                                                 .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, CompactStorageUpgrades.HEIGHT_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_height_upgrade");
 
         AdvancementHolder usedItemDrumUpgrade = Advancement.Builder.advancement()
@@ -113,7 +118,7 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("stat_updated",
                         PlayerTrigger.TriggerInstance.located(
                                 EntityPredicate.Builder.entity()
-                                        .subPredicate(PlayerPredicate.Builder.player()
+                                        .player(PlayerPredicate.Builder.player()
                                                 .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, CompactStorageUpgrades.ITEM_DRUM_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_item_drum_upgrade");
 
         AdvancementHolder usedVoidSlotUpgrade = Advancement.Builder.advancement()
@@ -129,7 +134,7 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("stat_updated",
                         PlayerTrigger.TriggerInstance.located(
                                 EntityPredicate.Builder.entity()
-                                        .subPredicate(PlayerPredicate.Builder.player()
+                                        .player(PlayerPredicate.Builder.player()
                                                 .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, CompactStorageUpgrades.VOID_SLOT_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_void_slot_upgrade");
 
         AdvancementHolder usedRetainingUpgrade = Advancement.Builder.advancement()
@@ -145,7 +150,7 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                 .addCriterion("stat_updated",
                         PlayerTrigger.TriggerInstance.located(
                                 EntityPredicate.Builder.entity()
-                                        .subPredicate(PlayerPredicate.Builder.player()
+                                        .player(PlayerPredicate.Builder.player()
                                                 .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, CompactStorageUpgrades.RETAINING_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_retainer_upgrade");
     }
 }

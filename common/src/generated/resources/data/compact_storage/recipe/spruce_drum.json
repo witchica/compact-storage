@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "misc",
   "group": "item_drums",
   "key": {
     "C": "minecraft:chest",

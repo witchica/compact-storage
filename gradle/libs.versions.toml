@@ -1,17 +1,16 @@
 [versions]
 # See https://maven.twelveiterations.com/service/rest/repository/browse/maven-public/net/blay09/mods/balm-common/
-balm = "26.1.2.6"
-minecraft = "26.1.2"
+balm = "26.2.0.1"
+minecraft = "26.2"
 # See https://projects.neoforged.net/neoforged/neoform
-neoForm = "26.1.2-1"
+neoForm = "26.2-1"
 # See https://projects.neoforged.net/neoforged/neoforge
-neoForge = "26.1.2.73"
+neoForge = "26.2.0.0-beta"
 # See https://files.minecraftforge.net
-forge = "64.0.8"
+forge = "64.0.0"
 # See https://fabricmc.net/develop/
-fabricApi = "0.150.0+26.1.2"
+fabricApi = "0.152.1+26.2"
 fabricLoader = "0.19.3"
-kuma = "26.1.2.2"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -22,11 +21,6 @@ balmCommon = { module = "net.blay09.mods:balm-common", version.ref = "balm" }
 balmNeoForge = { module = "net.blay09.mods:balm-neoforge", version.ref = "balm" }
 balmForge = { module = "net.blay09.mods:balm-forge", version.ref = "balm" }
 balmFabric = { module = "net.blay09.mods:balm-fabric", version.ref = "balm" }
-
-kumaCommon = { module = "net.blay09.mods:kuma-api-common", version.ref = "kuma" }
-kumaNeoForge = { module = "net.blay09.mods:kuma-api-neoforge", version.ref = "kuma" }
-kumaForge = { module = "net.blay09.mods:kuma-api-forge", version.ref = "kuma" }
-kumaFabric = { module = "net.blay09.mods:kuma-api-fabric", version.ref = "kuma" }
 
 neoForm = { module = "net.neoforged:neoform", version.ref = "neoForm" }
 neoForge = { module = "net.neoforged:neoforge", version.ref = "neoForge" }

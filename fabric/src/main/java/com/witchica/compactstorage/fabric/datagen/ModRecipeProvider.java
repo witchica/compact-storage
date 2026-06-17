@@ -7,7 +7,6 @@ import com.witchica.compactstorage.mod.CompactStorageItems;
 import com.witchica.compactstorage.mod.CompactStorageUpgrades;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -148,7 +147,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                                 .pattern("WSW")
                                 .define('I', Items.IRON_INGOT)
                                 .define('W', ItemTags.PLANKS)
-                                .define('S', ItemTags.SLABS)
+                                .define('S', ItemTags.WOODEN_SLABS)
                                 .define('D', storageType.getRecipeData().dye().get())
                                 .unlockedBy(getHasName(Items.BARREL), has(Items.BARREL))
                                 .group("compact_barrels")

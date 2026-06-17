@@ -44,34 +44,34 @@ public class ModBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider arg) {
         for(StorageType type : StorageType.values()) {
-            valueLookupBuilder(COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asBlock());
-            valueLookupBuilder(COMPACT_BARRELS).add(CompactStorageBlocks.compactBarrels.get(type).asBlock());
-            valueLookupBuilder(ITEM_DRUMS).add(CompactStorageBlocks.itemDrums.get(type).asBlock());
+            tag(COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asResourceKey());
+            tag(COMPACT_BARRELS).add(CompactStorageBlocks.compactBarrels.get(type).asResourceKey());
+            tag(ITEM_DRUMS).add(CompactStorageBlocks.itemDrums.get(type).asResourceKey());
 
-            valueLookupBuilder(GUARDED_BY_PIGLINS).add(CompactStorageBlocks.compactChests.get(type).asBlock());
-            valueLookupBuilder(GUARDED_BY_PIGLINS).add(CompactStorageBlocks.compactBarrels.get(type).asBlock());
-            valueLookupBuilder(GUARDED_BY_PIGLINS).add(CompactStorageBlocks.itemDrums.get(type).asBlock());
+            tag(GUARDED_BY_PIGLINS).add(CompactStorageBlocks.compactChests.get(type).asResourceKey());
+            tag(GUARDED_BY_PIGLINS).add(CompactStorageBlocks.compactBarrels.get(type).asResourceKey());
+            tag(GUARDED_BY_PIGLINS).add(CompactStorageBlocks.itemDrums.get(type).asResourceKey());
 
-            valueLookupBuilder(STORAGE_BLOCKS).add(CompactStorageBlocks.compactChests.get(type).asBlock());
-            valueLookupBuilder(STORAGE_BLOCKS).add(CompactStorageBlocks.compactBarrels.get(type).asBlock());
-            valueLookupBuilder(STORAGE_BLOCKS).add(CompactStorageBlocks.itemDrums.get(type).asBlock());
+            tag(STORAGE_BLOCKS).add(CompactStorageBlocks.compactChests.get(type).asResourceKey());
+            tag(STORAGE_BLOCKS).add(CompactStorageBlocks.compactBarrels.get(type).asResourceKey());
+            tag(STORAGE_BLOCKS).add(CompactStorageBlocks.itemDrums.get(type).asResourceKey());
 
             if(type.isWooden()) {
-                valueLookupBuilder(WOODEN_COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asBlock());
-                valueLookupBuilder(WOODEN_COMPACT_BARRELS).add(CompactStorageBlocks.compactBarrels.get(type).asBlock());
-                valueLookupBuilder(WOODEN_ITEM_DRUMS).add(CompactStorageBlocks.itemDrums.get(type).asBlock());
+                tag(WOODEN_COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asResourceKey());
+                tag(WOODEN_COMPACT_BARRELS).add(CompactStorageBlocks.compactBarrels.get(type).asResourceKey());
+                tag(WOODEN_ITEM_DRUMS).add(CompactStorageBlocks.itemDrums.get(type).asResourceKey());
 
-                valueLookupBuilder(MINEABLE_AXE).add(CompactStorageBlocks.compactChests.get(type).asBlock());
-                valueLookupBuilder(MINEABLE_AXE).add(CompactStorageBlocks.compactBarrels.get(type).asBlock());
-                valueLookupBuilder(MINEABLE_AXE).add(CompactStorageBlocks.itemDrums.get(type).asBlock());
+                tag(MINEABLE_AXE).add(CompactStorageBlocks.compactChests.get(type).asResourceKey());
+                tag(MINEABLE_AXE).add(CompactStorageBlocks.compactBarrels.get(type).asResourceKey());
+                tag(MINEABLE_AXE).add(CompactStorageBlocks.itemDrums.get(type).asResourceKey());
             } else {
-                valueLookupBuilder(COLORFUL_COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asBlock());
-                valueLookupBuilder(COLORFUL_COMPACT_BARRELS).add(CompactStorageBlocks.compactBarrels.get(type).asBlock());
-                valueLookupBuilder(COLORFUL_ITEM_DRUMS).add(CompactStorageBlocks.itemDrums.get(type).asBlock());
+                tag(COLORFUL_COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asResourceKey());
+                tag(COLORFUL_COMPACT_BARRELS).add(CompactStorageBlocks.compactBarrels.get(type).asResourceKey());
+                tag(COLORFUL_ITEM_DRUMS).add(CompactStorageBlocks.itemDrums.get(type).asResourceKey());
 
-                valueLookupBuilder(MINEABLE_PICKAXE).add(CompactStorageBlocks.compactChests.get(type).asBlock());
-                valueLookupBuilder(MINEABLE_PICKAXE).add(CompactStorageBlocks.compactBarrels.get(type).asBlock());
-                valueLookupBuilder(MINEABLE_PICKAXE).add(CompactStorageBlocks.itemDrums.get(type).asBlock());
+                tag(MINEABLE_PICKAXE).add(CompactStorageBlocks.compactChests.get(type).asResourceKey());
+                tag(MINEABLE_PICKAXE).add(CompactStorageBlocks.compactBarrels.get(type).asResourceKey());
+                tag(MINEABLE_PICKAXE).add(CompactStorageBlocks.itemDrums.get(type).asResourceKey());
             }
         }
     }

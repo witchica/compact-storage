@@ -13,6 +13,7 @@ import net.fabricmc.fabric.impl.resource.pack.FabricPack;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -51,36 +52,36 @@ public class ModItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
     protected void addTags(HolderLookup.Provider lookup) {
         for(StorageType type : StorageType.values()) {
             if(type.isWooden()) {
-                valueLookupBuilder(PACK_FRAME_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem());
+                tag(PACK_FRAME_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asResourceKey());
             } else {
-                valueLookupBuilder(BACKPACK_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem());
+                tag(BACKPACK_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asResourceKey());
             }
 
-            valueLookupBuilder(COMPACT_STORAGE_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem());
+            tag(COMPACT_STORAGE_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asResourceKey());
 
-            valueLookupBuilder(COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asItem());
-            valueLookupBuilder(COMPACT_BARRELS).add(CompactStorageBlocks.compactBarrels.get(type).asItem());
-            valueLookupBuilder(ITEM_DRUMS).add(CompactStorageBlocks.itemDrums.get(type).asItem());
+            tag(COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asBlockItemId().item());
+            tag(COMPACT_BARRELS).add(CompactStorageBlocks.compactBarrels.get(type).asBlockItemId().item());
+            tag(ITEM_DRUMS).add(CompactStorageBlocks.itemDrums.get(type).asBlockItemId().item());
 
-            valueLookupBuilder(COMPACT_STORAGE_BLOCKS).add(CompactStorageBlocks.compactChests.get(type).asItem());
-            valueLookupBuilder(COMPACT_STORAGE_BLOCKS).add(CompactStorageBlocks.compactBarrels.get(type).asItem());
-            valueLookupBuilder(COMPACT_STORAGE_BLOCKS).add(CompactStorageBlocks.itemDrums.get(type).asItem());
+            tag(COMPACT_STORAGE_BLOCKS).add(CompactStorageBlocks.compactChests.get(type).asBlockItemId().item());
+            tag(COMPACT_STORAGE_BLOCKS).add(CompactStorageBlocks.compactBarrels.get(type).asBlockItemId().item());
+            tag(COMPACT_STORAGE_BLOCKS).add(CompactStorageBlocks.itemDrums.get(type).asBlockItemId().item());
 
             if(type.isWooden()) {
-                valueLookupBuilder(WOODEN_COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asItem());
-                valueLookupBuilder(WOODEN_COMPACT_BARRELS).add(CompactStorageBlocks.compactBarrels.get(type).asItem());
-                valueLookupBuilder(WOODEN_ITEM_DRUMS).add(CompactStorageBlocks.itemDrums.get(type).asItem());
+                tag(WOODEN_COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asBlockItemId().item());
+                tag(WOODEN_COMPACT_BARRELS).add(CompactStorageBlocks.compactBarrels.get(type).asBlockItemId().item());
+                tag(WOODEN_ITEM_DRUMS).add(CompactStorageBlocks.itemDrums.get(type).asBlockItemId().item());
             } else {
-                valueLookupBuilder(COLORFUL_COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asItem());
-                valueLookupBuilder(COLORFUL_COMPACT_BARRELS).add(CompactStorageBlocks.compactBarrels.get(type).asItem());
-                valueLookupBuilder(COLORFUL_ITEM_DRUMS).add(CompactStorageBlocks.itemDrums.get(type).asItem());
+                tag(COLORFUL_COMPACT_CHESTS).add(CompactStorageBlocks.compactChests.get(type).asBlockItemId().item());
+                tag(COLORFUL_COMPACT_BARRELS).add(CompactStorageBlocks.compactBarrels.get(type).asBlockItemId().item());
+                tag(COLORFUL_ITEM_DRUMS).add(CompactStorageBlocks.itemDrums.get(type).asBlockItemId().item());
             }
 
-            valueLookupBuilder(CURIOS_BACK_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem());
-            valueLookupBuilder(TRINKETS_BACK_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem());
+            tag(CURIOS_BACK_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asResourceKey());
+            tag(TRINKETS_BACK_ITEMS).add(CompactStorageItems.BACKPACK_ITEMS.get(type).asResourceKey());
         }
 
-        valueLookupBuilder(UPGRADES).add(CompactStorageUpgrades.values().stream().map(StorageUpgrade::getItem).map(DeferredItem::asItem).toArray(Item[]::new));
+        tag(UPGRADES).add(CompactStorageUpgrades.values().stream().map(StorageUpgrade::getItem).map(DeferredItem::asResourceKey).toArray(ResourceKey[]::new));
     }
 
 }
