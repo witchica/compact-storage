@@ -275,13 +275,14 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
 
     @Override
     protected void applyImplicitComponents(DataComponentGetter dataComponentGetter) {
-        super.applyImplicitComponents(dataComponentGetter);
         setRetaining(dataComponentGetter.getOrDefault(CompactStorageComponents.RETAINING_DATA.value(), false).booleanValue());
 
         ResizableInventoryComponent resizableInventoryComponent = dataComponentGetter.get(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value());
         if(resizableInventoryComponent != null) {
             resizableInventoryComponent.apply(this);
         }
+
+        super.applyImplicitComponents(dataComponentGetter);
     }
 
     @Override
