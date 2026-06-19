@@ -152,10 +152,10 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
 
     @Override
     protected void applyImplicitComponents(DataComponentGetter componentGetter) {
+        super.applyImplicitComponents(componentGetter);
         setRetaining(componentGetter.getOrDefault(CompactStorageComponents.RETAINING_DATA.value(), false));
         setSize(componentGetter.getOrDefault(CompactStorageComponents.ITEM_DRUM_SIZE.value(), getDefaultSize()));
         componentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(getDrumInventory().getItems());
-        super.applyImplicitComponents(componentGetter);
     }
 
     @Override
