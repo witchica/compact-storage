@@ -8,6 +8,7 @@ import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.menu.CompactStorageMenuData;
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
+import com.witchica.compactstorage.mod.CompactStorageItemTags;
 import com.witchica.compactstorage.mod.CompactStorageItems;
 import com.witchica.compactstorage.mod.CompactStorageUpgrades;
 import net.blay09.mods.balm.Balm;
@@ -24,10 +25,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
@@ -69,7 +67,7 @@ public class BackpackItem extends Item implements StorageTypeProvider, ItemWithR
         private final ItemStack item;
 
         public CuriosBackpackMenuProvider(Player player) {
-            this.item = CompactStorage.findCuriosBackpack(player);
+            this.item = CompactStorage.getEquippedBackpackStack(player);
         }
 
         @Override
@@ -112,14 +110,15 @@ public class BackpackItem extends Item implements StorageTypeProvider, ItemWithR
                 return InteractionResult.FAIL;
             }
 
-            ItemStack backpackStack = player.getItemInHand(hand);
             ItemStack oppositeStack = player.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
+            ItemStack backpackStack = player.getItemInHand(hand);
 
-            InteractionResult upgradeResult = StorageUpgrade.applyUpgradeToItem(oppositeStack, backpackStack, player, level);
+            if(oppositeStack.is(CompactStorageItemTags.UPGRADES)) {
+                // use other hand
+                return InteractionResult.TRY_WITH_EMPTY_HAND;
+            }
 
-            if(upgradeResult != InteractionResult.PASS) {
-                return upgradeResult;
-            } else if(!oppositeStack.isEmpty() && oppositeStack.getItem() instanceof DyeItem && storageType.canDye()) {
+            if(!oppositeStack.isEmpty() && oppositeStack.getItem() instanceof DyeItem && storageType.canDye()) {
                 DyeColor dyeColor = oppositeStack.get(DataComponents.DYE);
 
                 player.setItemInHand(hand, backpackStack.transmuteCopy(CompactStorageItems.BACKPACK_ITEMS.get(StorageType.fromDye(dyeColor))));
@@ -132,7 +131,7 @@ public class BackpackItem extends Item implements StorageTypeProvider, ItemWithR
             return InteractionResult.SUCCESS;
         }
 
-        return super.use(level, player, hand);
+        return InteractionResult.PASS;
     }
 
     @Override

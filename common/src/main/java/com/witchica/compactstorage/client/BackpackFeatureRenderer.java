@@ -5,15 +5,12 @@ import com.mojang.math.Axis;
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.StorageTypeProvider;
 import com.witchica.compactstorage.data.StorageType;
-import com.witchica.compactstorage.mod.CompactStorageItems;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
-import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -47,7 +44,12 @@ public class BackpackFeatureRenderer extends RenderLayer<AvatarRenderState, Play
                 Entity entity = Minecraft.getInstance().level.getEntity(avatarRenderState.id);
 
                 if(entity instanceof Player player) {
-                    ItemStack backpack = CompactStorage.findCuriosBackpack(player);
+                    ItemStack backpack = CompactStorage.getEquippedBackpackStack(player);
+
+                    if(backpack.isEmpty()) {
+                        return;
+                    }
+
                     StorageType type = StorageType.RED;
 
                     if(backpack.getItem() instanceof StorageTypeProvider provider) {

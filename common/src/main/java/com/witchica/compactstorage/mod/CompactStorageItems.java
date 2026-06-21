@@ -9,6 +9,7 @@ import net.blay09.mods.balm.world.item.DeferredItem;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import com.witchica.compactstorage.data.StorageType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.CreativeModeTab;
 
 import java.util.HashMap;
@@ -29,7 +30,7 @@ public class CompactStorageItems {
         for(StorageType type : StorageType.values()) {
             BACKPACK_ITEMS.put(type, items.register(type.backpackNameFactory(), (properties -> {
                 final StorageType storageType = type;
-                return new BackpackItem(properties.stacksTo(1), storageType);
+                return new BackpackItem(properties.stacksTo(1).equippable(EquipmentSlot.CHEST), storageType);
             })).asDeferredItem());
         }
 

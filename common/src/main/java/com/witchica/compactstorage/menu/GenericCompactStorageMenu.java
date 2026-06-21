@@ -55,7 +55,7 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
                 break;
             }
             case BACKPACK_HOT_KEY: {
-                ItemStack backpack = CompactStorage.findCuriosBackpack(this.playerInventory.player);
+                ItemStack backpack = CompactStorage.getEquippedBackpackStack(this.playerInventory.player);
                 this.storageType = ((StorageTypeProvider) backpack.getItem()).getStorageType();
                 this.container = new BackpackInventory(playerInventory.player, data.source(), backpack, Optional.empty());
                 break;

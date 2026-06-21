@@ -8,22 +8,16 @@ import com.witchica.compactstorage.components.ResizableInventoryComponent;
 import com.witchica.compactstorage.data.CompactStorageOpeningSource;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.mod.CompactStorageComponents;
-import com.witchica.compactstorage.util.CompactStorageUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.component.ItemContainerContents;
-import net.minecraft.world.level.storage.TagValueInput;
-import net.minecraft.world.level.storage.ValueInput;
 import org.jspecify.annotations.NonNull;
 import java.util.Optional;
 
@@ -97,7 +91,7 @@ public class BackpackInventory implements Container, ResizableContainer, VoidSlo
         if(openingSource == CompactStorageOpeningSource.BACKPACK_IN_HAND && hand.isPresent()) {
             stackToSave = Optional.of(player.getItemInHand(hand.get()));
         } else if(openingSource == CompactStorageOpeningSource.BACKPACK_HOT_KEY) {
-            stackToSave = Optional.of(CompactStorage.findCuriosBackpack(this.player));
+            stackToSave = Optional.of(CompactStorage.getEquippedBackpackStack(this.player));
         }
 
         if(stackToSave.isPresent()) {

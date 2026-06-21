@@ -3,6 +3,7 @@ dependencies {
         changing = libs.versions.balm.get().contains("SNAPSHOT")
     }
 
+    implementation "maven.modrinth:inventory-essentials:KEbliJ73"
     // You can add other dependencies here as well.
     // Note that CurseMaven and Modrinth Maven, while convenient, does not include transitive dependencies.
     // If you are getting errors about missing classes in dependencies, try using their respective Maven repositories directly instead.

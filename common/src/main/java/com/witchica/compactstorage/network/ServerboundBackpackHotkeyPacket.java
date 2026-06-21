@@ -7,6 +7,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 
 public class ServerboundBackpackHotkeyPacket implements CustomPacketPayload {
     public static final ServerboundBackpackHotkeyPacket INSTANCE = new ServerboundBackpackHotkeyPacket();
@@ -19,11 +20,9 @@ public class ServerboundBackpackHotkeyPacket implements CustomPacketPayload {
     }
 
     public static void handle(ServerPlayer serverPlayer, ServerboundBackpackHotkeyPacket serverboundBackpackHotkeyPacket) {
-        boolean hasBackpack = Balm.modSupport().trinkets().isEquipped(serverPlayer, itemStack -> {
-            return itemStack.getItem() instanceof BackpackItem;
-        });
+        ItemStack backpackStack = CompactStorage.getEquippedBackpackStack(serverPlayer);
 
-        if(hasBackpack && !serverPlayer.hasContainerOpen()) {
+        if(!backpackStack.isEmpty() && !serverPlayer.hasContainerOpen()) {
             Balm.networking().openMenu(serverPlayer, new BackpackItem.CuriosBackpackMenuProvider(serverPlayer));
         }
     }

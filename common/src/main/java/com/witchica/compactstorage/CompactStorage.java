@@ -1,6 +1,5 @@
 package com.witchica.compactstorage;
 
-import com.mojang.datafixers.DataFixerBuilder;
 import com.witchica.compactstorage.components.ResizableInventoryComponent;
 import com.witchica.compactstorage.item.BackpackItem;
 import com.witchica.compactstorage.mod.*;
@@ -11,8 +10,7 @@ import net.blay09.mods.balm.platform.event.callback.ItemCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.datafix.DataFixers;
-import net.minecraft.util.datafix.fixes.BlockRenameFix;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
@@ -67,11 +65,19 @@ public class CompactStorage {
         Balm.networking().registerServerboundPacket(ServerboundBackpackHotkeyPacket.TYPE, ServerboundBackpackHotkeyPacket.class, ServerboundBackpackHotkeyPacket.STREAM_CODEC, ServerboundBackpackHotkeyPacket::handle);
     }
 
-    public static ItemStack findCuriosBackpack(Player player) {
-        return Balm.modSupport().trinkets().findEquipped(player, itemStack -> itemStack.getItem() instanceof BackpackItem);
-    }
+    public static ItemStack getEquippedBackpackStack(Player player) {
+        ItemStack curiosStack = Balm.modSupport().trinkets().findEquipped(player, itemStack -> itemStack.getItem() instanceof BackpackItem);
 
-    public static boolean isCuriosBackpackEquipped(Player player) {
-        return Balm.modSupport().trinkets().isEquipped(player, itemStack -> itemStack.getItem() instanceof BackpackItem);
+        if(!curiosStack.isEmpty()) {
+            return curiosStack;
+        }
+
+        ItemStack vanillaEquipped = player.getItemBySlot(EquipmentSlot.CHEST);
+
+        if(vanillaEquipped.getItem() instanceof BackpackItem) {
+            return vanillaEquipped;
+        }
+
+        return ItemStack.EMPTY;
     }
 }
