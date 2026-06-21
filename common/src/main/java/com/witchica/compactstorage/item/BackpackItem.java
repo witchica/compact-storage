@@ -8,9 +8,8 @@ import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.menu.CompactStorageMenuData;
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
-import com.witchica.compactstorage.mod.CompactStorageItemTags;
-import com.witchica.compactstorage.mod.CompactStorageItems;
-import com.witchica.compactstorage.mod.CompactStorageUpgrades;
+import com.witchica.compactstorage.tag.ModItemTags;
+import com.witchica.compactstorage.upgrades.ModUpgrades;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.world.BalmMenuProvider;
 import net.minecraft.core.component.DataComponents;
@@ -113,7 +112,7 @@ public class BackpackItem extends Item implements StorageTypeProvider, ItemWithR
             ItemStack oppositeStack = player.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND);
             ItemStack backpackStack = player.getItemInHand(hand);
 
-            if(oppositeStack.is(CompactStorageItemTags.UPGRADES)) {
+            if(oppositeStack.is(ModItemTags.UPGRADES)) {
                 // use other hand
                 return InteractionResult.TRY_WITH_EMPTY_HAND;
             }
@@ -121,7 +120,7 @@ public class BackpackItem extends Item implements StorageTypeProvider, ItemWithR
             if(!oppositeStack.isEmpty() && oppositeStack.getItem() instanceof DyeItem && storageType.canDye()) {
                 DyeColor dyeColor = oppositeStack.get(DataComponents.DYE);
 
-                player.setItemInHand(hand, backpackStack.transmuteCopy(CompactStorageItems.BACKPACK_ITEMS.get(StorageType.fromDye(dyeColor))));
+                player.setItemInHand(hand, backpackStack.transmuteCopy(ModItems.BACKPACK_ITEMS.get(StorageType.fromDye(dyeColor))));
                 oppositeStack.setCount(oppositeStack.getCount() - 1);
                 level.playSound(null, player.getOnPos(), SoundEvents.SLIME_SQUISH, SoundSource.BLOCKS, 1f, 1f);
                 return InteractionResult.CONSUME;
@@ -156,6 +155,6 @@ public class BackpackItem extends Item implements StorageTypeProvider, ItemWithR
 
     @Override
     public boolean isUpgradeAccepted(StorageUpgrade upgrade) {
-        return (upgrade == CompactStorageUpgrades.WIDTH_UPGRADE || upgrade == CompactStorageUpgrades.HEIGHT_UPGRADE || upgrade == CompactStorageUpgrades.VOID_SLOT_UPGRADE);
+        return (upgrade == ModUpgrades.WIDTH_UPGRADE || upgrade == ModUpgrades.HEIGHT_UPGRADE || upgrade == ModUpgrades.VOID_SLOT_UPGRADE);
     }
 }

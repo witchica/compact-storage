@@ -1,10 +1,9 @@
 package com.witchica.compactstorage.upgrades;
 
 import com.witchica.compactstorage.CompactStorage;
-import com.witchica.compactstorage.CompactStorageConfig;
 import com.witchica.compactstorage.api.inventory.ResizableItemDrum;
 import com.witchica.compactstorage.data.StorageUpgrade;
-import com.witchica.compactstorage.mod.CompactStorageComponents;
+import com.witchica.compactstorage.components.ModComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
@@ -23,7 +22,7 @@ public class ItemDrumUpgrade extends StorageUpgrade {
 
     @Override
     public DataComponentType<?> getDataComponent() {
-        return CompactStorageComponents.ITEM_DRUM_SIZE.value();
+        return ModComponents.ITEM_DRUM_SIZE.value();
     }
 
     public int upgradeAmount() {

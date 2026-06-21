@@ -1,16 +1,12 @@
-package com.witchica.compactstorage.mod;
+package com.witchica.compactstorage.block;
 
-import com.witchica.compactstorage.block.CompactBarrelBlock;
-import com.witchica.compactstorage.block.CompactChestBlock;
-import com.witchica.compactstorage.block.ItemDrumBlock;
 import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
 import net.blay09.mods.balm.world.level.block.DiscriminatedBlocks;
-import net.blay09.mods.balm.world.level.block.internal.BalmBlockRegistrarImpl;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 import com.witchica.compactstorage.data.StorageType;
 
-public class CompactStorageBlocks {
+public class ModBlocks {
 
     public static DiscriminatedBlocks<@NotNull StorageType> compactChests;
     public static DiscriminatedBlocks<@NotNull StorageType> compactBarrels;

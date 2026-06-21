@@ -1,9 +1,14 @@
 package com.witchica.compactstorage;
 
+import com.witchica.compactstorage.block.ModBlocks;
+import com.witchica.compactstorage.block.entity.ModBlockEntities;
+import com.witchica.compactstorage.components.ModComponents;
 import com.witchica.compactstorage.components.ResizableInventoryComponent;
 import com.witchica.compactstorage.item.BackpackItem;
-import com.witchica.compactstorage.mod.*;
+import com.witchica.compactstorage.item.ModItems;
+import com.witchica.compactstorage.menu.ModMenuTypes;
 import com.witchica.compactstorage.network.ServerboundBackpackHotkeyPacket;
+import com.witchica.compactstorage.stat.ModStatistics;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.core.BalmRegistrars;
 import net.blay09.mods.balm.platform.event.callback.ItemCallback;
@@ -33,32 +38,32 @@ public class CompactStorage {
     public static void initialize(BalmRegistrars registrars) {
         Balm.config().registerConfig(CompactStorageConfig.class);
 
-        registrars.dataComponentTypes(CompactStorageComponents::initialize);
-        registrars.blocks(CompactStorageBlocks::initialize);
-        registrars.items(CompactStorageItems::initializeItems);
-        registrars.creativeModeTabs(CompactStorageItems::initializeCreativeTabs);
-        registrars.blockEntityTypes(CompactStorageBlockEntities::initialize);
-        registrars.menuTypes(CompactStorageMenuTypes::initialize);
-        registrars.customStats(CompactStorageStatistics::initialize);
+        registrars.dataComponentTypes(ModComponents::initialize);
+        registrars.blocks(ModBlocks::initialize);
+        registrars.items(ModItems::initializeItems);
+        registrars.creativeModeTabs(ModItems::initializeCreativeTabs);
+        registrars.blockEntityTypes(ModBlockEntities::initialize);
+        registrars.menuTypes(ModMenuTypes::initialize);
+        registrars.customStats(ModStatistics::initialize);
 
         ItemCallback.Tooltip.EVENT.register((itemStack, tooltip, flags) -> {
-            if(itemStack.has(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value())) {
-                ResizableInventoryComponent component = itemStack.get(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value());
+            if(itemStack.has(ModComponents.RESIZABLE_INVENTORY_DATA.value())) {
+                ResizableInventoryComponent component = itemStack.get(ModComponents.RESIZABLE_INVENTORY_DATA.value());
                 if(component != null) {
                     tooltip.add(Component.translatable("tooltip.compact_storage.upgrades.resizable", component.inventoryWidth(), component.inventoryHeight()).withStyle(ChatFormatting.AQUA));
                 }
             }
 
-            if(itemStack.getOrDefault(CompactStorageComponents.RETAINING_DATA.value(), false)) {
+            if(itemStack.getOrDefault(ModComponents.RETAINING_DATA.value(), false)) {
                 tooltip.add(Component.translatable("tooltip.compact_storage.upgrades.retaining").withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD));
             }
 
-            if(itemStack.getOrDefault(CompactStorageComponents.VOID_SLOT.value(), false)) {
+            if(itemStack.getOrDefault(ModComponents.VOID_SLOT.value(), false)) {
                 tooltip.add(Component.translatable("tooltip.compact_storage.upgrades.void_slot").withStyle(ChatFormatting.DARK_GREEN, ChatFormatting.BOLD));
             }
 
-            if(itemStack.has(CompactStorageComponents.ITEM_DRUM_SIZE.value())) {
-                tooltip.add(Component.translatable("tooltip.compact_storage.upgrades.item_drum", itemStack.get(CompactStorageComponents.ITEM_DRUM_SIZE.value()).intValue()).withStyle(ChatFormatting.AQUA));
+            if(itemStack.has(ModComponents.ITEM_DRUM_SIZE.value())) {
+                tooltip.add(Component.translatable("tooltip.compact_storage.upgrades.item_drum", itemStack.get(ModComponents.ITEM_DRUM_SIZE.value()).intValue()).withStyle(ChatFormatting.AQUA));
             }
         });
 

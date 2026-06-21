@@ -2,11 +2,11 @@ package com.witchica.compactstorage.fabric.datagen;
 
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.CompactStorageConfig;
+import com.witchica.compactstorage.block.ModBlocks;
 import com.witchica.compactstorage.data.StorageUpgrade;
-import com.witchica.compactstorage.mod.CompactStorageBlocks;
-import com.witchica.compactstorage.mod.CompactStorageItemTags;
-import com.witchica.compactstorage.mod.CompactStorageItems;
-import com.witchica.compactstorage.mod.CompactStorageUpgrades;
+import com.witchica.compactstorage.item.ModItems;
+import com.witchica.compactstorage.tag.ModItemTags;
+import com.witchica.compactstorage.upgrades.ModUpgrades;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
@@ -30,17 +30,17 @@ public class ModLangProvider extends FabricLanguageProvider {
     @Override
     public void generateTranslations(HolderLookup.Provider provider, TranslationBuilder translationBuilder) {
         for(StorageType type : StorageType.values()) {
-            translationBuilder.add(CompactStorageBlocks.compactChests.get(type).asBlock(), snakeCaseToName(type.getName()+"_chest"));
-            translationBuilder.add(CompactStorageBlocks.compactBarrels.get(type).asBlock(), snakeCaseToName(type.getName()+"_barrel"));
-            translationBuilder.add(CompactStorageBlocks.itemDrums.get(type).asBlock(), snakeCaseToName(type.getName()+"_item_drum"));
-            translationBuilder.add(CompactStorageItems.BACKPACK_ITEMS.get(type).asItem(), snakeCaseToName(type.getName() + (type.isWooden() ? "_pack_frame" : "_backpack")));
+            translationBuilder.add(ModBlocks.compactChests.get(type).asBlock(), snakeCaseToName(type.getName()+"_chest"));
+            translationBuilder.add(ModBlocks.compactBarrels.get(type).asBlock(), snakeCaseToName(type.getName()+"_barrel"));
+            translationBuilder.add(ModBlocks.itemDrums.get(type).asBlock(), snakeCaseToName(type.getName()+"_item_drum"));
+            translationBuilder.add(ModItems.BACKPACK_ITEMS.get(type).asItem(), snakeCaseToName(type.getName() + (type.isWooden() ? "_pack_frame" : "_backpack")));
         }
 
-        translationBuilder.add(CompactStorageUpgrades.WIDTH_UPGRADE.getItem().asItem(), "Storage Upgrade (Width)");
-        translationBuilder.add(CompactStorageUpgrades.HEIGHT_UPGRADE.getItem().asItem(), "Storage Upgrade (Height)");
-        translationBuilder.add(CompactStorageUpgrades.RETAINING_UPGRADE.getItem().asItem(), "Storage Upgrade (Retaining)");
-        translationBuilder.add(CompactStorageUpgrades.VOID_SLOT_UPGRADE.getItem().asItem(), "Storage Upgrade (Void Slot)");
-        translationBuilder.add(CompactStorageUpgrades.ITEM_DRUM_UPGRADE.getItem().asItem(), "Storage Upgrade (Item Drum)");
+        translationBuilder.add(ModUpgrades.WIDTH_UPGRADE.getItem().asItem(), "Storage Upgrade (Width)");
+        translationBuilder.add(ModUpgrades.HEIGHT_UPGRADE.getItem().asItem(), "Storage Upgrade (Height)");
+        translationBuilder.add(ModUpgrades.RETAINING_UPGRADE.getItem().asItem(), "Storage Upgrade (Retaining)");
+        translationBuilder.add(ModUpgrades.VOID_SLOT_UPGRADE.getItem().asItem(), "Storage Upgrade (Void Slot)");
+        translationBuilder.add(ModUpgrades.ITEM_DRUM_UPGRADE.getItem().asItem(), "Storage Upgrade (Item Drum)");
 
         translationBuilder.add(id("general").toLanguageKey("itemGroup"), "CompactStorage");
 
@@ -96,26 +96,26 @@ public class ModLangProvider extends FabricLanguageProvider {
         translationBuilder.add(createTooltipDescriptorId("upgrades.item_drum"), "Size: %d");
         translationBuilder.add(createTooltipDescriptorId("upgrades.void_slot"), "Void Slot");
 
-        addForTag(CompactStorageItemTags.COLORFUL_COMPACT_BARRELS, translationBuilder);
-        addForTag(CompactStorageItemTags.COLORFUL_COMPACT_CHESTS, translationBuilder);
-        addForTag(CompactStorageItemTags.COLORFUL_ITEM_DRUMS, translationBuilder);
-        addForTag(CompactStorageItemTags.COMPACT_BARRELS, translationBuilder);
-        addForTag(CompactStorageItemTags.COMPACT_CHESTS, translationBuilder);
-        addForTag(CompactStorageItemTags.ITEM_DRUMS, translationBuilder);
-        addForTag(CompactStorageItemTags.WOODEN_COMPACT_BARRELS, translationBuilder);
-        addForTag(CompactStorageItemTags.WOODEN_COMPACT_CHESTS, translationBuilder);
-        addForTag(CompactStorageItemTags.WOODEN_ITEM_DRUMS, translationBuilder);
-        addForTag(CompactStorageItemTags.STORAGE_BLOCKS, translationBuilder);
-        addForTag(CompactStorageItemTags.BACKPACKS, translationBuilder);
-        addForTag(CompactStorageItemTags.PACK_FRAMES, translationBuilder);
-        addForTag(CompactStorageItemTags.STORAGE_ITEMS, translationBuilder);
-        addForTag(CompactStorageItemTags.UPGRADES, translationBuilder);
+        addForTag(ModItemTags.COLORFUL_COMPACT_BARRELS, translationBuilder);
+        addForTag(ModItemTags.COLORFUL_COMPACT_CHESTS, translationBuilder);
+        addForTag(ModItemTags.COLORFUL_ITEM_DRUMS, translationBuilder);
+        addForTag(ModItemTags.COMPACT_BARRELS, translationBuilder);
+        addForTag(ModItemTags.COMPACT_CHESTS, translationBuilder);
+        addForTag(ModItemTags.ITEM_DRUMS, translationBuilder);
+        addForTag(ModItemTags.WOODEN_COMPACT_BARRELS, translationBuilder);
+        addForTag(ModItemTags.WOODEN_COMPACT_CHESTS, translationBuilder);
+        addForTag(ModItemTags.WOODEN_ITEM_DRUMS, translationBuilder);
+        addForTag(ModItemTags.STORAGE_BLOCKS, translationBuilder);
+        addForTag(ModItemTags.BACKPACKS, translationBuilder);
+        addForTag(ModItemTags.PACK_FRAMES, translationBuilder);
+        addForTag(ModItemTags.STORAGE_ITEMS, translationBuilder);
+        addForTag(ModItemTags.UPGRADES, translationBuilder);
 
         for(Field field : CompactStorageConfig.class.getFields()) {
             translationBuilder.add("compact_storage.configuration." + field.getName(), camelCaseToName(field.getName()));
         }
 
-        for(StorageUpgrade storageUpgrade : CompactStorageUpgrades.values()) {
+        for(StorageUpgrade storageUpgrade : ModUpgrades.values()) {
             translationBuilder.add("stat.compact_storage." + storageUpgrade.getStatisticName(), snakeCaseToName(storageUpgrade.getName()) + " Upgrades Applied");
         }
     }

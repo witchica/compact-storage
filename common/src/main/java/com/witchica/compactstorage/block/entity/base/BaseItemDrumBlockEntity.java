@@ -7,10 +7,9 @@ import com.witchica.compactstorage.api.inventory.RetainingContainer;
 import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
 import com.witchica.compactstorage.inventory.DrumInventory;
-import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
-import com.witchica.compactstorage.mod.CompactStorageComponents;
-import com.witchica.compactstorage.mod.CompactStorageUpgrades;
-import com.witchica.compactstorage.util.CompactStorageUtil;
+import com.witchica.compactstorage.block.entity.ModBlockEntities;
+import com.witchica.compactstorage.components.ModComponents;
+import com.witchica.compactstorage.upgrades.ModUpgrades;
 import net.blay09.mods.balm.world.BalmContainerProvider;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityUtils;
 import net.minecraft.core.BlockPos;
@@ -46,7 +45,7 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
     private boolean needsToBeRetaining;
 
     public BaseItemDrumBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(CompactStorageBlockEntities.DRUM_BLOCK_ENTITY.value(), blockPos, blockState);
+        super(ModBlockEntities.DRUM_BLOCK_ENTITY.value(), blockPos, blockState);
         drumInventory = new DrumInventory(getDefaultSize(), this);
     }
 
@@ -145,16 +144,16 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
-        components.set(CompactStorageComponents.RETAINING_DATA.value(), isRetaining());
+        components.set(ModComponents.RETAINING_DATA.value(), isRetaining());
         components.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getDrumInventory().getItems()));
-        components.set(CompactStorageComponents.ITEM_DRUM_SIZE.value(), getSize());
+        components.set(ModComponents.ITEM_DRUM_SIZE.value(), getSize());
     }
 
     @Override
     protected void applyImplicitComponents(DataComponentGetter componentGetter) {
         super.applyImplicitComponents(componentGetter);
-        setRetaining(componentGetter.getOrDefault(CompactStorageComponents.RETAINING_DATA.value(), false));
-        setSize(componentGetter.getOrDefault(CompactStorageComponents.ITEM_DRUM_SIZE.value(), getDefaultSize()));
+        setRetaining(componentGetter.getOrDefault(ModComponents.RETAINING_DATA.value(), false));
+        setSize(componentGetter.getOrDefault(ModComponents.ITEM_DRUM_SIZE.value(), getDefaultSize()));
         componentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(getDrumInventory().getItems());
     }
 
@@ -168,7 +167,7 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
 
     @Override
     public boolean isUpgradeAccepted(StorageUpgrade upgrade) {
-        return upgrade == CompactStorageUpgrades.RETAINING_UPGRADE || upgrade == CompactStorageUpgrades.ITEM_DRUM_UPGRADE;
+        return upgrade == ModUpgrades.RETAINING_UPGRADE || upgrade == ModUpgrades.ITEM_DRUM_UPGRADE;
     }
 
     @Override

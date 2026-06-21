@@ -1,11 +1,11 @@
-package com.witchica.compactstorage.mod;
+package com.witchica.compactstorage.tag;
 
 import com.witchica.compactstorage.CompactStorage;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
-public class CompactStorageBlockTags {
+public class ModBlockTags {
     public static final TagKey<Block> COLORFUL_COMPACT_BARRELS = TagKey.create(Registries.BLOCK, CompactStorage.id("colorful_compact_barrels"));
     public static final TagKey<Block> COLORFUL_COMPACT_CHESTS = TagKey.create(Registries.BLOCK, CompactStorage.id("colorful_compact_chests"));
     public static final TagKey<Block> COLORFUL_ITEM_DRUMS = TagKey.create(Registries.BLOCK, CompactStorage.id("colorful_item_drums"));

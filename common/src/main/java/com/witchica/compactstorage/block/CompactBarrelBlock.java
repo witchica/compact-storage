@@ -5,12 +5,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
 import com.witchica.compactstorage.block.entity.CompactBarrelBlockEntity;
 import com.witchica.compactstorage.data.StorageType;
-import com.witchica.compactstorage.mod.CompactStorageBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -34,7 +32,7 @@ public class CompactBarrelBlock extends BaseCompactStorageBlock {
 
     @Override
     public BlockState getBlockStateOnRedye(BlockState state, DyeColor dyeColor) {
-        return CompactStorageBlocks.compactBarrels.get(StorageType.fromDye(dyeColor)).defaultBlockState().setValue(FACING, state.getValue(FACING)).setValue(OPEN, state.getValue(OPEN)).setValue(RETAINING, state.getValue(RETAINING));
+        return ModBlocks.compactBarrels.get(StorageType.fromDye(dyeColor)).defaultBlockState().setValue(FACING, state.getValue(FACING)).setValue(OPEN, state.getValue(OPEN)).setValue(RETAINING, state.getValue(RETAINING));
     }
 
     @Override
