@@ -4,8 +4,7 @@ import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.block.CompactBarrelBlock;
 import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
-import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
-import com.witchica.compactstorage.mod.CompactStorageUpgrades;
+import com.witchica.compactstorage.upgrades.ModUpgrades;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
@@ -15,7 +14,7 @@ public class CompactBarrelBlockEntity extends BaseCompactStorageBlockEntity {
     private Component defaultName = Component.translatable("block.compact_storage.compact_barrel");
 
     public CompactBarrelBlockEntity(BlockPos pos, BlockState blockState) {
-        super(CompactStorageBlockEntities.COMPACT_BARREL_ENTITY.value(), pos, blockState);
+        super(ModBlockEntities.COMPACT_BARREL_ENTITY.value(), pos, blockState);
         this.defaultName = blockState.getBlock().getName();
     }
 
@@ -85,6 +84,6 @@ public class CompactBarrelBlockEntity extends BaseCompactStorageBlockEntity {
 
     @Override
     public boolean isUpgradeAccepted(StorageUpgrade upgrade) {
-        return upgrade != CompactStorageUpgrades.ITEM_DRUM_UPGRADE;
+        return upgrade != ModUpgrades.ITEM_DRUM_UPGRADE;
     }
 }

@@ -2,15 +2,13 @@ package com.witchica.compactstorage.block.base;
 
 import com.witchica.compactstorage.api.RedyeableBlock;
 import com.witchica.compactstorage.api.StorageTypeProvider;
-import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.block.entity.base.BaseItemDrumBlockEntity;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.inventory.DrumInventory;
-import com.witchica.compactstorage.mod.CompactStorageBlocks;
+import com.witchica.compactstorage.block.ModBlocks;
 import com.witchica.compactstorage.util.CompactStorageUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
@@ -20,7 +18,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -197,7 +194,7 @@ public abstract class BaseItemDrumBlock extends BaseEntityBlock implements Stora
 
     @Override
     public BlockState getBlockStateOnRedye(BlockState state, DyeColor dyeColor) {
-        return CompactStorageBlocks.compactChests.get(StorageType.fromDye(dyeColor)).defaultBlockState().setValue(RETAINING, state.getValue(RETAINING)).setValue(FACING, state.getValue(FACING));
+        return ModBlocks.compactChests.get(StorageType.fromDye(dyeColor)).defaultBlockState().setValue(RETAINING, state.getValue(RETAINING)).setValue(FACING, state.getValue(FACING));
     }
 
     @Override

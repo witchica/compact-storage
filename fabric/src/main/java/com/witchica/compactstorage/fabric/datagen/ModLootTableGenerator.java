@@ -1,7 +1,7 @@
 package com.witchica.compactstorage.fabric.datagen;
 
 import com.witchica.compactstorage.data.StorageType;
-import com.witchica.compactstorage.mod.CompactStorageBlocks;
+import com.witchica.compactstorage.block.ModBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootSubProvider;
 import net.minecraft.core.HolderLookup;
@@ -25,9 +25,9 @@ public class ModLootTableGenerator extends FabricBlockLootSubProvider {
     public void generate() {
 
         for(StorageType storageType : StorageType.values()) {
-            createStorageDrop(CompactStorageBlocks.compactChests.get(storageType).asBlock());
-            createStorageDrop(CompactStorageBlocks.compactBarrels.get(storageType).asBlock());
-            createStorageDrop(CompactStorageBlocks.itemDrums.get(storageType).asBlock());
+            createStorageDrop(ModBlocks.compactChests.get(storageType).asBlock());
+            createStorageDrop(ModBlocks.compactBarrels.get(storageType).asBlock());
+            createStorageDrop(ModBlocks.itemDrums.get(storageType).asBlock());
         }
     }
 

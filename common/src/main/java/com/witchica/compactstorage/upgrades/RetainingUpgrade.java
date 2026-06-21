@@ -2,7 +2,7 @@ package com.witchica.compactstorage.upgrades;
 
 import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.api.inventory.RetainingContainer;
-import com.witchica.compactstorage.mod.CompactStorageComponents;
+import com.witchica.compactstorage.components.ModComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
@@ -21,7 +21,7 @@ public class RetainingUpgrade extends StorageUpgrade {
 
     @Override
     public DataComponentType<Boolean> getDataComponent() {
-        return CompactStorageComponents.RETAINING_DATA.value();
+        return ModComponents.RETAINING_DATA.value();
     }
 
     @Override

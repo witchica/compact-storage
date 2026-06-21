@@ -5,16 +5,14 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
 import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
 import com.witchica.compactstorage.block.entity.CompactChestBlockEntity;
-import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
+import com.witchica.compactstorage.block.entity.ModBlockEntities;
 import com.witchica.compactstorage.api.StorageTypeProvider;
-import com.witchica.compactstorage.mod.CompactStorageBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.animal.feline.Cat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
@@ -52,7 +50,7 @@ public class CompactChestBlock extends BaseCompactStorageBlock implements Simple
 
     @Override
     public BlockState getBlockStateOnRedye(BlockState state, DyeColor dyeColor) {
-        return CompactStorageBlocks.compactChests.get(StorageType.fromDye(dyeColor)).defaultBlockState().setValue(FACING, state.getValue(FACING)).setValue(WATERLOGGED, state.getValue(WATERLOGGED)).setValue(RETAINING, state.getValue(RETAINING));
+        return ModBlocks.compactChests.get(StorageType.fromDye(dyeColor)).defaultBlockState().setValue(FACING, state.getValue(FACING)).setValue(WATERLOGGED, state.getValue(WATERLOGGED)).setValue(RETAINING, state.getValue(RETAINING));
     }
 
     @Override
@@ -93,7 +91,7 @@ public class CompactChestBlock extends BaseCompactStorageBlock implements Simple
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide() ? createTickerHelper(blockEntityType, CompactStorageBlockEntities.COMPACT_CHEST_ENTITY.value(), BaseCompactStorageBlockEntity::ticker) : null;
+        return level.isClientSide() ? createTickerHelper(blockEntityType, ModBlockEntities.COMPACT_CHEST_ENTITY.value(), BaseCompactStorageBlockEntity::ticker) : null;
     }
 
     @Override

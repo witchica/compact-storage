@@ -2,7 +2,7 @@ package com.witchica.compactstorage.upgrades;
 
 import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.api.inventory.VoidSlotProvider;
-import com.witchica.compactstorage.mod.CompactStorageComponents;
+import com.witchica.compactstorage.components.ModComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
@@ -23,7 +23,7 @@ public class VoidSlotUpgrade extends StorageUpgrade {
 
     @Override
     public DataComponentType<Boolean> getDataComponent() {
-        return CompactStorageComponents.VOID_SLOT.value();
+        return ModComponents.VOID_SLOT.value();
     }
 
     @Override

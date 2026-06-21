@@ -7,7 +7,7 @@ import com.witchica.compactstorage.api.inventory.VoidSlotProvider;
 import com.witchica.compactstorage.components.ResizableInventoryComponent;
 import com.witchica.compactstorage.data.CompactStorageOpeningSource;
 import com.witchica.compactstorage.data.StorageType;
-import com.witchica.compactstorage.mod.CompactStorageComponents;
+import com.witchica.compactstorage.components.ModComponents;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponents;
@@ -48,8 +48,8 @@ public class BackpackInventory implements Container, ResizableContainer, VoidSlo
     }
 
     public void fromItemStack(ItemStack stack, RegistryAccess registryAccess) {
-        if(stack.has(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value())) {
-            ResizableInventoryComponent resizableInventoryComponent = stack.get(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value());
+        if(stack.has(ModComponents.RESIZABLE_INVENTORY_DATA.value())) {
+            ResizableInventoryComponent resizableInventoryComponent = stack.get(ModComponents.RESIZABLE_INVENTORY_DATA.value());
 
             if(resizableInventoryComponent != null) {
                 resizableInventoryComponent.apply(this);
@@ -66,8 +66,8 @@ public class BackpackInventory implements Container, ResizableContainer, VoidSlo
             }
         }
         
-        if(stack.has(CompactStorageComponents.VOID_SLOT.value())) {
-            this.hasVoidSlot = backpackStack.get(CompactStorageComponents.VOID_SLOT.value()).booleanValue();
+        if(stack.has(ModComponents.VOID_SLOT.value())) {
+            this.hasVoidSlot = backpackStack.get(ModComponents.VOID_SLOT.value()).booleanValue();
         }
     }
 
@@ -98,8 +98,8 @@ public class BackpackInventory implements Container, ResizableContainer, VoidSlo
             ItemStack stack = stackToSave.get();
 
             stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getItems()));
-            stack.set(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(inventoryWidth, inventoryHeight));
-            stack.set(CompactStorageComponents.VOID_SLOT.value(), this.hasVoidSlot());
+            stack.set(ModComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(inventoryWidth, inventoryHeight));
+            stack.set(ModComponents.VOID_SLOT.value(), this.hasVoidSlot());
         }
     }
 

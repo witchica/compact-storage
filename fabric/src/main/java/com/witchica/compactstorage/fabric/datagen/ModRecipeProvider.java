@@ -1,10 +1,10 @@
 package com.witchica.compactstorage.fabric.datagen;
 
+import com.witchica.compactstorage.block.ModBlocks;
 import com.witchica.compactstorage.data.StorageType;
-import com.witchica.compactstorage.mod.CompactStorageBlocks;
-import com.witchica.compactstorage.mod.CompactStorageItemTags;
-import com.witchica.compactstorage.mod.CompactStorageItems;
-import com.witchica.compactstorage.mod.CompactStorageUpgrades;
+import com.witchica.compactstorage.item.ModItems;
+import com.witchica.compactstorage.tag.ModItemTags;
+import com.witchica.compactstorage.upgrades.ModUpgrades;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.core.HolderLookup;
@@ -32,55 +32,55 @@ public class ModRecipeProvider extends FabricRecipeProvider {
             public void buildRecipes() {
                 HolderLookup.RegistryLookup<Item> items = registryLookup.lookupOrThrow(Registries.ITEM);
 
-                shaped(RecipeCategory.MISC, CompactStorageUpgrades.WIDTH_UPGRADE.getItem())
+                shaped(RecipeCategory.MISC, ModUpgrades.WIDTH_UPGRADE.getItem())
                         .pattern("III").pattern("BIB").pattern("III")
                         .define('I', Items.IRON_NUGGET).define('B', Items.IRON_INGOT)
-                        .unlockedBy("has_compact_storage_block", has(CompactStorageItemTags.STORAGE_BLOCKS))
+                        .unlockedBy("has_compact_storage_block", has(ModItemTags.STORAGE_BLOCKS))
                         .save(output);
 
-                shaped(RecipeCategory.MISC, CompactStorageUpgrades.HEIGHT_UPGRADE.getItem())
+                shaped(RecipeCategory.MISC, ModUpgrades.HEIGHT_UPGRADE.getItem())
                         .pattern("IBI").pattern("III").pattern("IBI")
                         .define('I', Items.IRON_NUGGET).define('B', Items.IRON_INGOT)
-                        .unlockedBy("has_compact_storage_block", has(CompactStorageItemTags.STORAGE_BLOCKS))
+                        .unlockedBy("has_compact_storage_block", has(ModItemTags.STORAGE_BLOCKS))
                         .save(output);
 
-                shaped(RecipeCategory.MISC, CompactStorageUpgrades.RETAINING_UPGRADE.getItem())
+                shaped(RecipeCategory.MISC, ModUpgrades.RETAINING_UPGRADE.getItem())
                         .pattern("IBI").pattern("IDI").pattern("IBI").define('I', Items.IRON_NUGGET)
                         .define('B', Items.IRON_INGOT).define('D', Items.DIAMOND)
-                        .unlockedBy("has_compact_storage_block", has(CompactStorageItemTags.STORAGE_BLOCKS))
+                        .unlockedBy("has_compact_storage_block", has(ModItemTags.STORAGE_BLOCKS))
                         .save(output);
 
-                shaped(RecipeCategory.MISC, CompactStorageUpgrades.VOID_SLOT_UPGRADE.getItem())
+                shaped(RecipeCategory.MISC, ModUpgrades.VOID_SLOT_UPGRADE.getItem())
                         .pattern("IBI").pattern("IDI").pattern("IBI").define('I', Items.IRON_NUGGET)
                         .define('B', Items.IRON_INGOT).define('D', Items.ENDER_PEARL)
-                        .unlockedBy("has_compact_storage_block", has(CompactStorageItemTags.STORAGE_BLOCKS))
+                        .unlockedBy("has_compact_storage_block", has(ModItemTags.STORAGE_BLOCKS))
                         .save(output);
 
-                shaped(RecipeCategory.MISC, CompactStorageUpgrades.VOID_SLOT_UPGRADE.getItem())
+                shaped(RecipeCategory.MISC, ModUpgrades.VOID_SLOT_UPGRADE.getItem())
                         .pattern("III").pattern("BDB").pattern("III").define('I', Items.IRON_NUGGET)
                         .define('B', Items.IRON_INGOT).define('D', Items.ENDER_PEARL)
-                        .unlockedBy("has_compact_storage_block", has(CompactStorageItemTags.STORAGE_BLOCKS))
+                        .unlockedBy("has_compact_storage_block", has(ModItemTags.STORAGE_BLOCKS))
                         .save(output, "void_slot_upgrade2");
 
-                shaped(RecipeCategory.MISC, CompactStorageUpgrades.ITEM_DRUM_UPGRADE.getItem())
+                shaped(RecipeCategory.MISC, ModUpgrades.ITEM_DRUM_UPGRADE.getItem())
                         .pattern("NNN").pattern("IBI").pattern("NNN").define('N', Items.IRON_NUGGET)
                         .define('I', Items.IRON_INGOT).define('B', Blocks.BARREL)
-                        .unlockedBy("has_item_drum", has(CompactStorageItemTags.ITEM_DRUMS))
+                        .unlockedBy("has_item_drum", has(ModItemTags.ITEM_DRUMS))
                         .save(output);
 
-                shaped(RecipeCategory.MISC, CompactStorageUpgrades.ITEM_DRUM_UPGRADE.getItem())
+                shaped(RecipeCategory.MISC, ModUpgrades.ITEM_DRUM_UPGRADE.getItem())
                         .pattern("NIN").pattern("NBN").pattern("NIN").define('N', Items.IRON_NUGGET)
                         .define('I', Items.IRON_INGOT).define('B', Blocks.BARREL)
-                        .unlockedBy("has_item_drum", has(CompactStorageItemTags.ITEM_DRUMS))
+                        .unlockedBy("has_item_drum", has(ModItemTags.ITEM_DRUMS))
                         .save(output, "item_drum_upgrade2");
 
-                shapeless(RecipeCategory.MISC, CompactStorageUpgrades.WIDTH_UPGRADE.getItem()).requires(CompactStorageUpgrades.HEIGHT_UPGRADE.getItem()).unlockedBy("has_upgrade", has(CompactStorageItemTags.UPGRADES)).save(output, "upgrade_width_swap");
-                shapeless(RecipeCategory.MISC, CompactStorageUpgrades.HEIGHT_UPGRADE.getItem()).requires(CompactStorageUpgrades.WIDTH_UPGRADE.getItem()).unlockedBy("has_upgrade", has(CompactStorageItemTags.UPGRADES)).save(output, "upgrade_height_swap");
+                shapeless(RecipeCategory.MISC, ModUpgrades.WIDTH_UPGRADE.getItem()).requires(ModUpgrades.HEIGHT_UPGRADE.getItem()).unlockedBy("has_upgrade", has(ModItemTags.UPGRADES)).save(output, "upgrade_width_swap");
+                shapeless(RecipeCategory.MISC, ModUpgrades.HEIGHT_UPGRADE.getItem()).requires(ModUpgrades.WIDTH_UPGRADE.getItem()).unlockedBy("has_upgrade", has(ModItemTags.UPGRADES)).save(output, "upgrade_height_swap");
 
                 for(StorageType storageType : StorageType.values()) {
                     if(storageType.isWooden()) {
                         // Wooden Chest Recipe
-                        shaped(RecipeCategory.DECORATIONS, CompactStorageBlocks.compactChests.get(storageType).asBlock())
+                        shaped(RecipeCategory.DECORATIONS, ModBlocks.compactChests.get(storageType).asBlock())
                                 .pattern("IWI")
                                 .pattern("WCW")
                                 .pattern("IWI")
@@ -92,7 +92,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                                 .save(output);
 
                         // Wooden Barrel Recipe
-                        shaped(RecipeCategory.DECORATIONS, CompactStorageBlocks.compactBarrels.get(storageType).asBlock())
+                        shaped(RecipeCategory.DECORATIONS, ModBlocks.compactBarrels.get(storageType).asBlock())
                                 .pattern("SIS")
                                 .pattern("W W")
                                 .pattern("SIS")
@@ -104,7 +104,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                                 .save(output);
 
                         // Wooden Drum Recipe
-                        shaped(RecipeCategory.DECORATIONS, CompactStorageBlocks.itemDrums.get(storageType).asBlock())
+                        shaped(RecipeCategory.DECORATIONS, ModBlocks.itemDrums.get(storageType).asBlock())
                                 .pattern("PLP")
                                 .pattern("PCP")
                                 .pattern("PLP")
@@ -116,7 +116,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                                 .save(output);
 
                         // Wooden Pack Frame Recipe
-                        shaped(RecipeCategory.TOOLS, CompactStorageItems.BACKPACK_ITEMS.get(storageType).asItem())
+                        shaped(RecipeCategory.TOOLS, ModItems.BACKPACK_ITEMS.get(storageType).asItem())
                                 .pattern("TST")
                                 .pattern("TCT")
                                 .pattern("TLT")
@@ -129,7 +129,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                                 .save(output);
                     } else {
                         // Colorful Chest Recipe
-                        shaped(RecipeCategory.DECORATIONS, CompactStorageBlocks.compactChests.get(storageType).asBlock())
+                        shaped(RecipeCategory.DECORATIONS, ModBlocks.compactChests.get(storageType).asBlock())
                                 .pattern("IWI")
                                 .pattern("ICI")
                                 .pattern("III")
@@ -141,7 +141,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                                 .save(output);
 
                         // Colorful Barrel Recipe
-                        shaped(RecipeCategory.DECORATIONS, CompactStorageBlocks.compactBarrels.get(storageType).asBlock())
+                        shaped(RecipeCategory.DECORATIONS, ModBlocks.compactBarrels.get(storageType).asBlock())
                                 .pattern("WSW")
                                 .pattern("IDI")
                                 .pattern("WSW")
@@ -154,7 +154,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                                 .save(output);
 
                         // Colorful Drum Recipe
-                        shaped(RecipeCategory.DECORATIONS, CompactStorageBlocks.itemDrums.get(storageType).asBlock())
+                        shaped(RecipeCategory.DECORATIONS, ModBlocks.itemDrums.get(storageType).asBlock())
                                 .pattern("PDP")
                                 .pattern("PCP")
                                 .pattern("PLP")
@@ -167,7 +167,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                                 .save(output);
 
                         // Wooden Pack Frame Recipe
-                        shaped(RecipeCategory.TOOLS, CompactStorageItems.BACKPACK_ITEMS.get(storageType).asItem())
+                        shaped(RecipeCategory.TOOLS, ModItems.BACKPACK_ITEMS.get(storageType).asItem())
                                 .pattern("IWI")
                                 .pattern("ICI")
                                 .pattern("IWI")

@@ -8,7 +8,6 @@ import com.witchica.compactstorage.data.CompactStorageOpeningSource;
 import com.witchica.compactstorage.inventory.BackpackInventory;
 import com.witchica.compactstorage.menu.slot.BackpackHolderSlot;
 import com.witchica.compactstorage.menu.slot.VoidSlot;
-import com.witchica.compactstorage.mod.CompactStorageMenuTypes;
 import net.blay09.mods.balm.world.inventory.QuickMove;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -36,7 +35,7 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
     public boolean hasVoidSlot;
 
     public GenericCompactStorageMenu(int containerId, Inventory playerInventory, CompactStorageMenuData data) {
-        super(CompactStorageMenuTypes.COMPACT_STORAGE_MENU.value(), containerId);
+        super(ModMenuTypes.COMPACT_STORAGE_MENU.value(), containerId);
         this.playerInventory = playerInventory;
         this.openSource = data.source();
 

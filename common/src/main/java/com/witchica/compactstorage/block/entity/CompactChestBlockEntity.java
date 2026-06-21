@@ -4,8 +4,7 @@ import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.block.CompactChestBlock;
 import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
-import com.witchica.compactstorage.mod.CompactStorageBlockEntities;
-import com.witchica.compactstorage.mod.CompactStorageUpgrades;
+import com.witchica.compactstorage.upgrades.ModUpgrades;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
@@ -18,7 +17,7 @@ public class CompactChestBlockEntity extends BaseCompactStorageBlockEntity imple
     private ChestLidController chestLidController;
 
     public CompactChestBlockEntity(BlockPos pos, BlockState blockState) {
-        super(CompactStorageBlockEntities.COMPACT_CHEST_ENTITY.value(), pos, blockState);
+        super(ModBlockEntities.COMPACT_CHEST_ENTITY.value(), pos, blockState);
         this.chestLidController = new ChestLidController();
         this.defaultName = blockState.getBlock().getName();
     }
@@ -92,6 +91,6 @@ public class CompactChestBlockEntity extends BaseCompactStorageBlockEntity imple
 
     @Override
     public boolean isUpgradeAccepted(StorageUpgrade upgrade) {
-        return upgrade != CompactStorageUpgrades.ITEM_DRUM_UPGRADE;
+        return upgrade != ModUpgrades.ITEM_DRUM_UPGRADE;
     }
 }

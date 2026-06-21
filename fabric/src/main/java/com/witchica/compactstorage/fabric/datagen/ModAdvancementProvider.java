@@ -1,10 +1,10 @@
 package com.witchica.compactstorage.fabric.datagen;
 
+import com.witchica.compactstorage.block.ModBlocks;
 import com.witchica.compactstorage.data.StorageType;
-import com.witchica.compactstorage.mod.CompactStorageBlocks;
-import com.witchica.compactstorage.mod.CompactStorageItemTags;
-import com.witchica.compactstorage.mod.CompactStorageItems;
-import com.witchica.compactstorage.mod.CompactStorageUpgrades;
+import com.witchica.compactstorage.item.ModItems;
+import com.witchica.compactstorage.tag.ModItemTags;
+import com.witchica.compactstorage.upgrades.ModUpgrades;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
@@ -16,7 +16,6 @@ import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.predicates.entity.PlayerPredicate;
 import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.advancements.triggers.PlayerTrigger;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -37,7 +36,7 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
     public void generateAdvancement(HolderLookup.Provider registryLookup, Consumer<AdvancementHolder> consumer) {
         HolderLookup.RegistryLookup<Item> items = registryLookup.lookupOrThrow(Registries.ITEM);
         AdvancementHolder compactingYourStorage = Advancement.Builder.advancement()
-                .display(CompactStorageBlocks.compactChests.get(StorageType.ACACIA),
+                .display(ModBlocks.compactChests.get(StorageType.ACACIA),
                         Component.translatable("advancement.compact_storage.compacting_your_storage.title"),
                         Component.translatable("advancement.compact_storage.compacting_your_storage.description"),
                         Identifier.withDefaultNamespace("gui/advancements/backgrounds/adventure"),
@@ -45,10 +44,10 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         true,
                         false)
-                .addCriterion("got_storage", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(items, CompactStorageItemTags.STORAGE_BLOCKS))).save(consumer, "compact_storage:compacting_your_storage");
+                .addCriterion("got_storage", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(items, ModItemTags.STORAGE_BLOCKS))).save(consumer, "compact_storage:compacting_your_storage");
 
         AdvancementHolder gotDrum = Advancement.Builder.advancement()
-                .display(CompactStorageBlocks.itemDrums.get(StorageType.PALE_OAK),
+                .display(ModBlocks.itemDrums.get(StorageType.PALE_OAK),
                         Component.translatable("advancement.compact_storage.got_drum.title"),
                         Component.translatable("advancement.compact_storage.got_drum.description"),
                         Identifier.withDefaultNamespace("gui/advancements/backgrounds/adventure"),
@@ -57,10 +56,10 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         false)
                 .parent(compactingYourStorage)
-                .addCriterion("got_drum", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(items, CompactStorageItemTags.ITEM_DRUMS))).save(consumer, "compact_storage:got_drum");
+                .addCriterion("got_drum", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(items, ModItemTags.ITEM_DRUMS))).save(consumer, "compact_storage:got_drum");
 
         AdvancementHolder gotBackpack = Advancement.Builder.advancement()
-                .display(CompactStorageItems.BACKPACK_ITEMS.get(StorageType.PURPLE),
+                .display(ModItems.BACKPACK_ITEMS.get(StorageType.PURPLE),
                         Component.translatable("advancement.compact_storage.got_backpack.title"),
                         Component.translatable("advancement.compact_storage.got_backpack.description"),
                         Identifier.withDefaultNamespace("gui/advancements/backgrounds/adventure"),
@@ -69,12 +68,12 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                         true,
                         false)
                 .parent(compactingYourStorage)
-                .addCriterion("got_backpack", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(items, CompactStorageItemTags.STORAGE_ITEMS))).save(consumer, "compact_storage:got_backpack");
+                .addCriterion("got_backpack", InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(items, ModItemTags.STORAGE_ITEMS))).save(consumer, "compact_storage:got_backpack");
 
         HolderLookup.RegistryLookup<Identifier> statLookup = registryLookup.lookupOrThrow(Registries.CUSTOM_STAT);
 
         AdvancementHolder usedWidthUpgrade = Advancement.Builder.advancement()
-                .display(CompactStorageUpgrades.WIDTH_UPGRADE.getItem(),
+                .display(ModUpgrades.WIDTH_UPGRADE.getItem(),
                         Component.translatable("advancement.compact_storage.width_upgrade.title"),
                         Component.translatable("advancement.compact_storage.width_upgrade.description"),
                         Identifier.withDefaultNamespace("gui/advancements/backgrounds/adventure"),
@@ -87,10 +86,10 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                         PlayerTrigger.TriggerInstance.located(
                                 EntityPredicate.Builder.entity()
                                         .player(PlayerPredicate.Builder.player()
-                                                .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, CompactStorageUpgrades.WIDTH_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_width_upgrade");
+                                                .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, ModUpgrades.WIDTH_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_width_upgrade");
 
         AdvancementHolder usedHeightUpgrade = Advancement.Builder.advancement()
-                .display(CompactStorageUpgrades.HEIGHT_UPGRADE.getItem(),
+                .display(ModUpgrades.HEIGHT_UPGRADE.getItem(),
                         Component.translatable("advancement.compact_storage.height_upgrade.title"),
                         Component.translatable("advancement.compact_storage.height_upgrade.description"),
                         Identifier.withDefaultNamespace("gui/advancements/backgrounds/adventure"),
@@ -103,10 +102,10 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                         PlayerTrigger.TriggerInstance.located(
                                 EntityPredicate.Builder.entity()
                                         .player(PlayerPredicate.Builder.player()
-                                                .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, CompactStorageUpgrades.HEIGHT_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_height_upgrade");
+                                                .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, ModUpgrades.HEIGHT_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_height_upgrade");
 
         AdvancementHolder usedItemDrumUpgrade = Advancement.Builder.advancement()
-                .display(CompactStorageUpgrades.ITEM_DRUM_UPGRADE.getItem(),
+                .display(ModUpgrades.ITEM_DRUM_UPGRADE.getItem(),
                         Component.translatable("advancement.compact_storage.item_drum_upgrade.title"),
                         Component.translatable("advancement.compact_storage.item_drum_upgrade.description"),
                         Identifier.withDefaultNamespace("gui/advancements/backgrounds/adventure"),
@@ -119,10 +118,10 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                         PlayerTrigger.TriggerInstance.located(
                                 EntityPredicate.Builder.entity()
                                         .player(PlayerPredicate.Builder.player()
-                                                .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, CompactStorageUpgrades.ITEM_DRUM_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_item_drum_upgrade");
+                                                .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, ModUpgrades.ITEM_DRUM_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_item_drum_upgrade");
 
         AdvancementHolder usedVoidSlotUpgrade = Advancement.Builder.advancement()
-                .display(CompactStorageUpgrades.VOID_SLOT_UPGRADE.getItem(),
+                .display(ModUpgrades.VOID_SLOT_UPGRADE.getItem(),
                         Component.translatable("advancement.compact_storage.void_slot_upgrade.title"),
                         Component.translatable("advancement.compact_storage.void_slot_upgrade.description"),
                         Identifier.withDefaultNamespace("gui/advancements/backgrounds/adventure"),
@@ -135,10 +134,10 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                         PlayerTrigger.TriggerInstance.located(
                                 EntityPredicate.Builder.entity()
                                         .player(PlayerPredicate.Builder.player()
-                                                .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, CompactStorageUpgrades.VOID_SLOT_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_void_slot_upgrade");
+                                                .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, ModUpgrades.VOID_SLOT_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_void_slot_upgrade");
 
         AdvancementHolder usedRetainingUpgrade = Advancement.Builder.advancement()
-                .display(CompactStorageUpgrades.RETAINING_UPGRADE.getItem(),
+                .display(ModUpgrades.RETAINING_UPGRADE.getItem(),
                         Component.translatable("advancement.compact_storage.retainer_upgrade.title"),
                         Component.translatable("advancement.compact_storage.retainer_upgrade.description"),
                         Identifier.withDefaultNamespace("gui/advancements/backgrounds/adventure"),
@@ -151,6 +150,6 @@ public class ModAdvancementProvider extends FabricAdvancementProvider {
                         PlayerTrigger.TriggerInstance.located(
                                 EntityPredicate.Builder.entity()
                                         .player(PlayerPredicate.Builder.player()
-                                                .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, CompactStorageUpgrades.RETAINING_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_retainer_upgrade");
+                                                .addStat(Stats.CUSTOM, statLookup.getOrThrow(ResourceKey.create(Registries.CUSTOM_STAT, ModUpgrades.RETAINING_UPGRADE.getStatisticIdentifier())), MinMaxBounds.Ints.atLeast(1)).build()))).save(consumer, "compact_storage:used_retainer_upgrade");
     }
 }

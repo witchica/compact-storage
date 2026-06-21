@@ -8,9 +8,8 @@ import com.witchica.compactstorage.components.ResizableInventoryComponent;
 import com.witchica.compactstorage.menu.CompactStorageMenuData;
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
 import com.witchica.compactstorage.api.inventory.RetainingContainer;
-import com.witchica.compactstorage.mod.CompactStorageComponents;
+import com.witchica.compactstorage.components.ModComponents;
 import com.witchica.compactstorage.util.CompactStorageContainerOpenerCounter;
-import com.witchica.compactstorage.util.CompactStorageUtil;
 import net.blay09.mods.balm.world.BalmContainerProvider;
 import net.blay09.mods.balm.world.BalmMenuProvider;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityUtils;
@@ -230,14 +229,14 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
 
     @Override
     protected void applyImplicitComponents(DataComponentGetter dataComponentGetter) {
-        setRetaining(dataComponentGetter.getOrDefault(CompactStorageComponents.RETAINING_DATA.value(), false).booleanValue());
+        setRetaining(dataComponentGetter.getOrDefault(ModComponents.RETAINING_DATA.value(), false).booleanValue());
 
-        ResizableInventoryComponent resizableInventoryComponent = dataComponentGetter.get(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value());
+        ResizableInventoryComponent resizableInventoryComponent = dataComponentGetter.get(ModComponents.RESIZABLE_INVENTORY_DATA.value());
         if(resizableInventoryComponent != null) {
             resizableInventoryComponent.apply(this);
         }
 
-        setHasVoidSlot(dataComponentGetter.getOrDefault(CompactStorageComponents.VOID_SLOT.value(), false).booleanValue());
+        setHasVoidSlot(dataComponentGetter.getOrDefault(ModComponents.VOID_SLOT.value(), false).booleanValue());
 
         super.applyImplicitComponents(dataComponentGetter);
     }
@@ -245,9 +244,9 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder dataComponentMap) {
         super.collectImplicitComponents(dataComponentMap);
-        dataComponentMap.set(CompactStorageComponents.RETAINING_DATA.value(), this.isRetaining());
-        dataComponentMap.set(CompactStorageComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(this.getWidth(), this.getHeight()));
-        dataComponentMap.set(CompactStorageComponents.VOID_SLOT.value(), this.hasVoidSlot());
+        dataComponentMap.set(ModComponents.RETAINING_DATA.value(), this.isRetaining());
+        dataComponentMap.set(ModComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(this.getWidth(), this.getHeight()));
+        dataComponentMap.set(ModComponents.VOID_SLOT.value(), this.hasVoidSlot());
     }
 
     @Override
