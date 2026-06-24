@@ -36,17 +36,15 @@ public class ResizableUpgrade extends StorageUpgrade {
 
     @Override
     public boolean applyToItemStack(ItemStack stack) {
-        if(stack.has(getDataComponent()) && stack.getItem() instanceof ItemWithResizableInventory item) {
-            ResizableInventoryComponent component = stack.get(getDataComponent());
+        if(stack.getItem() instanceof ItemWithResizableInventory item) {
+            ResizableInventoryComponent component = stack.getOrDefault(getDataComponent(), new ResizableInventoryComponent(item.getDefaultWidth(), item.getDefaultHeight()));
 
-            if(component != null) {
-                if(type == ResizeType.WIDTH && component.inventoryWidth() < item.getMaximumWidth()) {
-                    stack.update(getDataComponent(), component, ResizableInventoryComponent::increaseWidth);
-                    return true;
-                } else if(type == ResizeType.HEIGHT && component.inventoryHeight() < item.getMaximumHeight()) {
-                    stack.update(getDataComponent(), component, ResizableInventoryComponent::increaseHeight);
-                    return true;
-                }
+            if(type == ResizeType.WIDTH && component.inventoryWidth() < item.getMaximumWidth()) {
+                stack.update(getDataComponent(), component, ResizableInventoryComponent::increaseWidth);
+                return true;
+            } else if(type == ResizeType.HEIGHT && component.inventoryHeight() < item.getMaximumHeight()) {
+                stack.update(getDataComponent(), component, ResizableInventoryComponent::increaseHeight);
+                return true;
             }
         }
 
