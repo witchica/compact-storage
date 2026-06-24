@@ -4,7 +4,8 @@ import com.witchica.compactstorage.block.ModBlocks;
 import com.witchica.compactstorage.block.entity.ModBlockEntities;
 import com.witchica.compactstorage.components.ModComponents;
 import com.witchica.compactstorage.components.ResizableInventoryComponent;
-import com.witchica.compactstorage.item.BackpackItem;
+import com.witchica.compactstorage.integration.BaseBalmIntegration;
+import com.witchica.compactstorage.integration.CompactStorageTrinketsSupport;
 import com.witchica.compactstorage.item.ModItems;
 import com.witchica.compactstorage.menu.ModMenuTypes;
 import com.witchica.compactstorage.network.ServerboundBackpackHotkeyPacket;
@@ -15,17 +16,17 @@ import net.blay09.mods.balm.platform.event.callback.ItemCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.function.Supplier;
+
 public class CompactStorage {
-
     public static final Logger logger = LoggerFactory.getLogger(CompactStorage.class);
-
     public static final String MOD_ID = "compact_storage";
+    private static Supplier<CompactStorageTrinketsSupport> trinkets;
 
     public static Identifier id(String path) {
         return Identifier.fromNamespaceAndPath(MOD_ID, path);
@@ -68,21 +69,18 @@ public class CompactStorage {
         });
 
         Balm.networking().registerServerboundPacket(ServerboundBackpackHotkeyPacket.TYPE, ServerboundBackpackHotkeyPacket.class, ServerboundBackpackHotkeyPacket.STREAM_CODEC, ServerboundBackpackHotkeyPacket::handle);
+
+        trinkets = Balm.getRuntime().<CompactStorageTrinketsSupport>modProxy()
+                .with("trinkets_updated", "com.witchica.compactstorage.integration.TrinketsUpdatedModSupport")
+                .withFallback(new BaseBalmIntegration())
+                .buildLazily();
+    }
+
+    public static CompactStorageTrinketsSupport getTrinkets() {
+        return trinkets.get();
     }
 
     public static ItemStack getEquippedBackpackStack(Player player) {
-        ItemStack curiosStack = Balm.modSupport().trinkets().findEquipped(player, itemStack -> itemStack.getItem() instanceof BackpackItem);
-
-        if(!curiosStack.isEmpty()) {
-            return curiosStack;
-        }
-
-        ItemStack vanillaEquipped = player.getItemBySlot(EquipmentSlot.CHEST);
-
-        if(vanillaEquipped.getItem() instanceof BackpackItem) {
-            return vanillaEquipped;
-        }
-
-        return ItemStack.EMPTY;
+        return getTrinkets().getEquippedBackpackStack(player);
     }
 }

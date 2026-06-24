@@ -4,7 +4,7 @@ dependencies {
     }
 
     implementation "maven.modrinth:inventory-essentials:KEbliJ73"
-    implementation "maven.modrinth:trinkets-updated:kOeE0jtC"
+    implementation(libs.trinketsUpdated)
     // You can add other dependencies here as well.
     // Note that CurseMaven and Modrinth Maven, while convenient, does not include transitive dependencies.
     // If you are getting errors about missing classes in dependencies, try using their respective Maven repositories directly instead.

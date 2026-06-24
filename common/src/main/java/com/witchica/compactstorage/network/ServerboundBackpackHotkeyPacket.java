@@ -22,7 +22,7 @@ public class ServerboundBackpackHotkeyPacket implements CustomPacketPayload {
     public static void handle(ServerPlayer serverPlayer, ServerboundBackpackHotkeyPacket serverboundBackpackHotkeyPacket) {
         ItemStack backpackStack = CompactStorage.getEquippedBackpackStack(serverPlayer);
 
-        if(!backpackStack.isEmpty() && !serverPlayer.hasContainerOpen()) {
+        if(!backpackStack.isEmpty() && backpackStack.getItem() instanceof BackpackItem && !serverPlayer.hasContainerOpen()) {
             Balm.networking().openMenu(serverPlayer, new BackpackItem.CuriosBackpackMenuProvider(serverPlayer));
         }
     }

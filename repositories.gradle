@@ -27,6 +27,10 @@ repositories {
             includeGroup "mezz.jei"
         }
     }
+    maven {
+        name = "Nucleoid"
+        url = 'https://maven.nucleoid.xyz/releases'
+    }
 
     exclusiveContent {
         forRepository {
