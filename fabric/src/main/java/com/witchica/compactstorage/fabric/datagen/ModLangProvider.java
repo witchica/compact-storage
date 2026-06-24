@@ -91,6 +91,7 @@ public class ModLangProvider extends FabricLanguageProvider {
         translationBuilder.add("key.category.compact_storage.default", "CompactStorage");
         translationBuilder.add("key.compact_storage.backpack_open", "Open Backpack (Curios / Trinkets)");
 
+
         translationBuilder.add(createTooltipDescriptorId("upgrades.resizable"), "Size: %d x %d");
         translationBuilder.add(createTooltipDescriptorId("upgrades.retaining"), "Retaining");
         translationBuilder.add(createTooltipDescriptorId("upgrades.item_drum"), "Size: %d");

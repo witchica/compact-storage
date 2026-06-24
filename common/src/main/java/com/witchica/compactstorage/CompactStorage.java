@@ -1,7 +1,14 @@
 package com.witchica.compactstorage;
 
+import com.witchica.compactstorage.api.inventory.ResizableContainer;
+import com.witchica.compactstorage.api.inventory.ResizableItemDrum;
+import com.witchica.compactstorage.api.inventory.RetainingContainer;
+import com.witchica.compactstorage.api.inventory.VoidSlotProvider;
 import com.witchica.compactstorage.block.ModBlocks;
+import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
 import com.witchica.compactstorage.block.entity.ModBlockEntities;
+import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
+import com.witchica.compactstorage.block.entity.base.BaseItemDrumBlockEntity;
 import com.witchica.compactstorage.components.ModComponents;
 import com.witchica.compactstorage.components.ResizableInventoryComponent;
 import com.witchica.compactstorage.integration.BaseBalmIntegration;
@@ -12,12 +19,14 @@ import com.witchica.compactstorage.network.ServerboundBackpackHotkeyPacket;
 import com.witchica.compactstorage.stat.ModStatistics;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.core.BalmRegistrars;
+import net.blay09.mods.balm.platform.compatibility.hudinfo.BlockInfoProvider;
 import net.blay09.mods.balm.platform.event.callback.ItemCallback;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,6 +83,23 @@ public class CompactStorage {
                 .with("trinkets_updated", "com.witchica.compactstorage.integration.TrinketsUpdatedModSupport")
                 .withFallback(new BaseBalmIntegration())
                 .buildLazily();
+
+        Balm.modSupport().hudInfo().registerGlobalBlockInfo(id("chest_barrel_info"), (context, output) -> {
+            if(context.blockEntity() instanceof ResizableContainer resizableContainer) {
+                output.text(Component.translatable("tooltip.compact_storage.upgrades.resizable", resizableContainer.getWidth(), resizableContainer.getHeight()).withStyle(ChatFormatting.AQUA));
+            }
+
+            if(context.blockEntity() instanceof BaseItemDrumBlockEntity itemDrum) {
+                output.progress((float) itemDrum.clientStoredItems / (itemDrum.clientStackSize * itemDrum.getSize()));
+            }
+
+            if(context.blockEntity() instanceof RetainingContainer retainingContainer && retainingContainer.isRetaining()) {
+                output.text(Component.translatable("tooltip.compact_storage.upgrades.retaining").withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD));
+            }
+            if(context.blockEntity() instanceof VoidSlotProvider voidSlotProvider && voidSlotProvider.hasVoidSlot()) {
+                output.text(Component.translatable("tooltip.compact_storage.upgrades.void_slot").withStyle(ChatFormatting.DARK_GREEN, ChatFormatting.BOLD));
+            }
+        });
     }
 
     public static CompactStorageTrinketsSupport getTrinkets() {
