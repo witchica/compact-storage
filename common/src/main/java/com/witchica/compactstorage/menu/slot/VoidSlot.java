@@ -1,6 +1,5 @@
 package com.witchica.compactstorage.menu.slot;
 
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
@@ -18,9 +17,6 @@ public class VoidSlot extends Slot {
     @Override
     public void setByPlayer(ItemStack itemStack, ItemStack previous) {
         super.setByPlayer(itemStack, previous);
-
-        if(player instanceof AbstractClientPlayer a) {
-            a.playSound(SoundEvents.ENDERMAN_TELEPORT, 1f, 1f);
-        }
+        player.playSound(SoundEvents.ENDERMAN_TELEPORT, 1f, 1f);
     }
 }
