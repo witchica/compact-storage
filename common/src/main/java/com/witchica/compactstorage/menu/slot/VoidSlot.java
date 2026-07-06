@@ -18,9 +18,6 @@ public class VoidSlot extends Slot {
     @Override
     public void setByPlayer(ItemStack itemStack, ItemStack previous) {
         super.setByPlayer(itemStack, previous);
-
-        if(player instanceof AbstractClientPlayer a) {
-            a.playSound(SoundEvents.ENDERMAN_TELEPORT, 1f, 1f);
-        }
+        player.playSound(SoundEvents.ENDERMAN_TELEPORT, 1f, 1f);
     }
 }
