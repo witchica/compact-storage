@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemContainerContents;
 import org.jspecify.annotations.NonNull;
+import java.util.List;
 import java.util.Optional;
 
 public class BackpackInventory implements Container, ResizableContainer, VoidSlotProvider {
@@ -58,14 +59,24 @@ public class BackpackInventory implements Container, ResizableContainer, VoidSlo
 
         this.items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
 
-        if(stack.has(DataComponents.CONTAINER)) {
+        // Vanilla's DataComponents.CONTAINER/ItemContainerContents throws past 256 entries, which
+        // this mod's backpacks can now exceed - use our own unbounded component instead (see
+        // IndexedItemStack). Still read the vanilla one as a one-time migration for backpacks
+        // saved before this fix; saveBackpackData always writes the new component from here on.
+        if(stack.has(ModComponents.UNBOUNDED_CONTAINER_DATA.value())) {
+            List<IndexedItemStack> contents = stack.get(ModComponents.UNBOUNDED_CONTAINER_DATA.value());
+
+            if(contents != null) {
+                IndexedItemStackHelper.copyFromComponentList(contents, getItems());
+            }
+        } else if(stack.has(DataComponents.CONTAINER)) {
             ItemContainerContents contents = stack.get(DataComponents.CONTAINER);
 
             if(contents != null) {
                 contents.copyInto(getItems());
             }
         }
-        
+
         if(stack.has(ModComponents.VOID_SLOT.value())) {
             this.hasVoidSlot = backpackStack.get(ModComponents.VOID_SLOT.value()).booleanValue();
         }
@@ -97,7 +108,8 @@ public class BackpackInventory implements Container, ResizableContainer, VoidSlo
         if(stackToSave.isPresent()) {
             ItemStack stack = stackToSave.get();
 
-            stack.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getItems()));
+            stack.remove(DataComponents.CONTAINER);
+            stack.set(ModComponents.UNBOUNDED_CONTAINER_DATA.value(), IndexedItemStackHelper.toComponentList(getItems()));
             stack.set(ModComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(inventoryWidth, inventoryHeight));
             stack.set(ModComponents.VOID_SLOT.value(), this.hasVoidSlot());
         }
