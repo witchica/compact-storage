@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.fabric.datagen;
 
+import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.block.ModBlocks;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.item.ModItems;
@@ -12,7 +13,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
-import com.witchica.compactstorage.CompactStorage;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;

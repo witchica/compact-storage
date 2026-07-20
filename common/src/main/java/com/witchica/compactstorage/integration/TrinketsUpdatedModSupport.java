@@ -3,7 +3,6 @@ package com.witchica.compactstorage.integration;
 import com.witchica.compactstorage.item.BackpackItem;
 import eu.pb4.trinkets.api.TrinketSlotAccess;
 import eu.pb4.trinkets.api.TrinketsApi;
-import eu.pb4.trinkets.impl.TrinketSlot;
 import net.blay09.mods.balm.Balm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

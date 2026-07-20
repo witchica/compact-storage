@@ -1,7 +1,7 @@
 package com.witchica.compactstorage.fabric.datagen;
 
-import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.block.ModBlocks;
+import com.witchica.compactstorage.data.StorageType;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootSubProvider;
 import net.minecraft.core.HolderLookup;

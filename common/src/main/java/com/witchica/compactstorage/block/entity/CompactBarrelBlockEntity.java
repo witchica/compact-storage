@@ -1,9 +1,9 @@
 package com.witchica.compactstorage.block.entity;
 
 import com.witchica.compactstorage.CompactStorage;
-import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.block.CompactBarrelBlock;
 import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
+import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.upgrades.ModUpgrades;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

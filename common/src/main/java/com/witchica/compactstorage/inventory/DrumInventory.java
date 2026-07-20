@@ -1,6 +1,5 @@
 package com.witchica.compactstorage.inventory;
 
-import com.witchica.compactstorage.block.base.BaseItemDrumBlock;
 import com.witchica.compactstorage.block.entity.base.BaseItemDrumBlockEntity;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;

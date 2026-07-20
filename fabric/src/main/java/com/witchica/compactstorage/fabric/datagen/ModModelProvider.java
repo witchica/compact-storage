@@ -1,5 +1,7 @@
 package com.witchica.compactstorage.fabric.datagen;
 
+import com.witchica.compactstorage.block.ModBlocks;
+import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.fabric.datagen.providers.BackpackPackFrameModelProvider;
 import com.witchica.compactstorage.fabric.datagen.providers.BarrelModelProvider;
 import com.witchica.compactstorage.item.ModItems;
@@ -8,14 +10,12 @@ import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
-import com.witchica.compactstorage.block.ModBlocks;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
-import com.witchica.compactstorage.data.StorageType;
 
 public class ModModelProvider extends FabricModelProvider {
     public ModModelProvider(FabricPackOutput output) {

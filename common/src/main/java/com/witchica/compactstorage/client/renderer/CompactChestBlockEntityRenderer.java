@@ -6,6 +6,7 @@ import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.block.CompactChestBlock;
 import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
 import com.witchica.compactstorage.block.entity.CompactChestBlockEntity;
+import com.witchica.compactstorage.data.StorageType;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.object.chest.ChestModel;
@@ -25,7 +26,6 @@ import net.minecraft.client.resources.model.sprite.SpriteId;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
-import com.witchica.compactstorage.data.StorageType;
 
 import java.util.HashMap;
 import java.util.Map;

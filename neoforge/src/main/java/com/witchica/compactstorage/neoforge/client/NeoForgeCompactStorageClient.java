@@ -2,6 +2,7 @@ package com.witchica.compactstorage.neoforge.client;
 
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.client.BackpackFeatureRenderer;
+import com.witchica.compactstorage.client.CompactStorageClient;
 import net.blay09.mods.balm.client.BalmClient;
 import net.blay09.mods.balm.neoforge.platform.runtime.NeoForgeLoadContext;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -13,7 +14,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import com.witchica.compactstorage.client.CompactStorageClient;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 @Mod(value = CompactStorage.MOD_ID, dist = Dist.CLIENT)

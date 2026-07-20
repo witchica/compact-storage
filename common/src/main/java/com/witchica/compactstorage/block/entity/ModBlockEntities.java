@@ -1,7 +1,7 @@
 package com.witchica.compactstorage.block.entity;
 
-import com.witchica.compactstorage.block.entity.base.BaseItemDrumBlockEntity;
 import com.witchica.compactstorage.block.ModBlocks;
+import com.witchica.compactstorage.block.entity.base.BaseItemDrumBlockEntity;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityTypeRegistrar;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.block.entity.BlockEntityType;

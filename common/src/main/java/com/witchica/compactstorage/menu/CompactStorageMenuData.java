@@ -1,9 +1,9 @@
 package com.witchica.compactstorage.menu;
 
+import com.witchica.compactstorage.data.CompactStorageOpeningSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import com.witchica.compactstorage.data.CompactStorageOpeningSource;
 
 import java.util.Optional;
 

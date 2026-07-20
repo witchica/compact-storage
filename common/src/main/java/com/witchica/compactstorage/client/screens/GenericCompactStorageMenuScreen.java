@@ -1,22 +1,19 @@
 package com.witchica.compactstorage.client.screens;
 
 import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.inventory.ScrollingContainerView;
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
 import com.witchica.compactstorage.network.ServerboundScrollStoragePacket;
 import net.blay09.mods.balm.Balm;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ContainerInput;
-import net.minecraft.world.inventory.Slot;
 import org.joml.Vector2i;
-import com.witchica.compactstorage.data.StorageType;
 
 public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<GenericCompactStorageMenu> {
     public static final Identifier STANDARD_SLOT = Identifier.fromNamespaceAndPath("compact_storage", "textures/gui/slots/normal.png");

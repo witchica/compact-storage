@@ -2,14 +2,16 @@ package com.witchica.compactstorage.block.entity.base;
 
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.inventory.ResizableItemDrum;
-import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.api.inventory.RetainingContainer;
 import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
-import com.witchica.compactstorage.inventory.DrumInventory;
 import com.witchica.compactstorage.block.entity.ModBlockEntities;
 import com.witchica.compactstorage.components.ModComponents;
+import com.witchica.compactstorage.data.StorageUpgrade;
+import com.witchica.compactstorage.inventory.DrumInventory;
 import com.witchica.compactstorage.upgrades.ModUpgrades;
+import com.witchica.compactstorage.util.IndexedItemStack;
+import com.witchica.compactstorage.util.IndexedItemStackHelper;
 import net.blay09.mods.balm.world.BalmContainerProvider;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityUtils;
 import net.minecraft.core.BlockPos;
@@ -35,9 +37,15 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 
 public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingContainer, UpgradeCheckProvider, ResizableItemDrum, BalmContainerProvider {
+    // Bumped when the "Items" NBT format changed from vanilla ContainerHelper (unsigned-byte slot
+    // index, silently drops items past slot 255 - a real risk once a drum gets upgraded past
+    // vanilla's original 256-stack ceiling) to IndexedItemStackHelper (full-int slot index).
+    private static final int DATA_VERSION = 22;
+
     private DrumInventory drumInventory;
     public Optional<ItemStack> clientItem = Optional.empty();
     public int clientStackSize;
@@ -70,7 +78,7 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
 
-        ContainerHelper.saveAllItems(output, drumInventory.getItems());
+        IndexedItemStackHelper.saveAllItems(output, drumInventory.getItems());
 
         if(getStoredType() != Items.AIR) {
             output.store("ClientItem", ItemStack.CODEC, new ItemStack(getStoredType(), 1));
@@ -79,18 +87,25 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
         output.putInt("ItemDrumSize", getSize());
         output.putInt("ClientStackSize", drumInventory.getMaxStackSize());
         output.putInt("ClientStoredItems", getTotalItemCount());
-        output.putInt("Version", 21);
+        output.putInt("Version", DATA_VERSION);
     }
 
     @Override
     protected void loadAdditional(ValueInput input) {
         super.loadAdditional(input);
 
-        // -1 for anything before 26.1, 21 for 26.1, useful for any data changes
+        // -1 for anything before 26.1, 21 for 26.1
         int version = input.getIntOr("Version", -1);
 
         this.drumInventory = new DrumInventory(input.getIntOr("ItemDrumSize", getDefaultSize()), this);
-        ContainerHelper.loadAllItems(input, drumInventory.getItems());
+
+        // 21 was the data change
+        if(version > 21) {
+            IndexedItemStackHelper.loadAllItems(input, drumInventory.getItems());
+        } else {
+            // Only ever needed to read old data; new saves always go through IndexedItemStackHelper.
+            ContainerHelper.loadAllItems(input, drumInventory.getItems());
+        }
 
         this.clientItem = input.read("ClientItem", ItemStack.CODEC);
         this.clientStackSize = input.getIntOr("ClientStackSize", 0);
@@ -145,7 +160,9 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         super.collectImplicitComponents(components);
         components.set(ModComponents.RETAINING_DATA.value(), isRetaining());
-        components.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(getDrumInventory().getItems()));
+        // Not vanilla's DataComponents.CONTAINER/ItemContainerContents: that throws past 256
+        // entries, and drums can hold many times that once upgraded - see IndexedItemStack.
+        components.set(ModComponents.UNBOUNDED_CONTAINER_DATA.value(), IndexedItemStackHelper.toComponentList(getDrumInventory().getItems()));
         components.set(ModComponents.ITEM_DRUM_SIZE.value(), getSize());
     }
 
@@ -154,7 +171,15 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
         super.applyImplicitComponents(componentGetter);
         setRetaining(componentGetter.getOrDefault(ModComponents.RETAINING_DATA.value(), false));
         setSize(componentGetter.getOrDefault(ModComponents.ITEM_DRUM_SIZE.value(), getDefaultSize()));
-        componentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(getDrumInventory().getItems());
+
+        List<IndexedItemStack> contents = componentGetter.get(ModComponents.UNBOUNDED_CONTAINER_DATA.value());
+        if(contents != null) {
+            IndexedItemStackHelper.copyFromComponentList(contents, getDrumInventory().getItems());
+        } else {
+            // Migration: a drum item created before this fix carried its contents via vanilla
+            // DataComponents.CONTAINER instead - only ever needed for one-time reads of old items.
+            componentGetter.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(getDrumInventory().getItems());
+        }
     }
 
     @Override

@@ -2,13 +2,6 @@ package com.witchica.compactstorage;
 
 import net.blay09.mods.balm.platform.config.reflection.Comment;
 import net.blay09.mods.balm.platform.config.reflection.Config;
-import net.blay09.mods.balm.platform.config.reflection.NestedType;
-import net.blay09.mods.balm.platform.config.schema.BalmConfigSchema;
-import net.blay09.mods.balm.platform.config.schema.ConfigSchemaBuilder;
-import net.blay09.mods.balm.platform.config.schema.ConfiguredInt;
-import net.minecraft.resources.Identifier;
-
-import java.util.List;
 
 @Config(CompactStorage.MOD_ID)
 public class CompactStorageConfig {
