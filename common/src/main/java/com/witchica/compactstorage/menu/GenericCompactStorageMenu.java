@@ -82,13 +82,20 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
 
         int containerSlotCount = inventoryWidth * inventoryHeight;
 
+        // Balm's QuickMove special-cases a target range literally named "player": it tries the
+        // hotbar sub-range alone first, and only falls back to the inventory sub-range if NOTHING
+        // moved in the hotbar at all. An empty hotbar slot alone counts as "moved", so an item
+        // never gets the chance to top off an existing stack in the main inventory first - it just
+        // goes straight to an empty hotbar slot. Vanilla's real behavior is one merge-then-fill pass
+        // across the whole combined range with no hotbar priority. Registering the container->player
+        // target under any other name sidesteps that special case entirely (the player->container
+        // reverse route is unaffected - the special case only triggers on the TARGET name).
         this.quickMove = QuickMove.create(this::moveItemStackTo)
                 .slotRange(QuickMove.CONTAINER, 0, containerSlotCount)
                 .slotRange(QuickMove.PLAYER, containerSlotCount, containerSlotCount + 36)
-                .slotRange("inventory", containerSlotCount, containerSlotCount + 27)
-                .slotRange("hotbar", containerSlotCount + 27, containerSlotCount + 36)
+                .slotRange("playerCombined", containerSlotCount, containerSlotCount + 36)
                 .disableDefaultRoutes()
-                .route(QuickMove.CONTAINER, QuickMove.PLAYER)
+                .route(QuickMove.CONTAINER, "playerCombined")
                 .route(QuickMove.PLAYER, QuickMove.CONTAINER).build();
     }
 
