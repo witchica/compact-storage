@@ -1,8 +1,8 @@
 package com.witchica.compactstorage.client;
 
-import com.witchica.compactstorage.client.renderer.DrumBlockEntityRenderer;
 import com.witchica.compactstorage.block.entity.ModBlockEntities;
 import com.witchica.compactstorage.client.renderer.CompactChestBlockEntityRenderer;
+import com.witchica.compactstorage.client.renderer.DrumBlockEntityRenderer;
 import com.witchica.compactstorage.client.screens.GenericCompactStorageMenuScreen;
 import com.witchica.compactstorage.menu.ModMenuTypes;
 import net.blay09.mods.balm.client.BalmClientRegistrars;

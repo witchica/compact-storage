@@ -1,4 +1,4 @@
-package com.witchica.compactstorage.inventory;
+package com.witchica.compactstorage.util;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

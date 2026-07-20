@@ -2,16 +2,16 @@ package com.witchica.compactstorage.block.entity.base;
 
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.inventory.ResizableItemDrum;
-import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.api.inventory.RetainingContainer;
 import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
-import com.witchica.compactstorage.inventory.DrumInventory;
 import com.witchica.compactstorage.block.entity.ModBlockEntities;
 import com.witchica.compactstorage.components.ModComponents;
-import com.witchica.compactstorage.inventory.IndexedItemStack;
-import com.witchica.compactstorage.inventory.IndexedItemStackHelper;
+import com.witchica.compactstorage.data.StorageUpgrade;
+import com.witchica.compactstorage.inventory.DrumInventory;
 import com.witchica.compactstorage.upgrades.ModUpgrades;
+import com.witchica.compactstorage.util.IndexedItemStack;
+import com.witchica.compactstorage.util.IndexedItemStackHelper;
 import net.blay09.mods.balm.world.BalmContainerProvider;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityUtils;
 import net.minecraft.core.BlockPos;
@@ -99,7 +99,8 @@ public class BaseItemDrumBlockEntity extends BlockEntity implements RetainingCon
 
         this.drumInventory = new DrumInventory(input.getIntOr("ItemDrumSize", getDefaultSize()), this);
 
-        if(version >= DATA_VERSION) {
+        // 21 was the data change
+        if(version > 21) {
             IndexedItemStackHelper.loadAllItems(input, drumInventory.getItems());
         } else {
             // Only ever needed to read old data; new saves always go through IndexedItemStackHelper.

@@ -1,7 +1,7 @@
 package com.witchica.compactstorage.components;
 
 import com.mojang.serialization.Codec;
-import com.witchica.compactstorage.inventory.IndexedItemStack;
+import com.witchica.compactstorage.util.IndexedItemStack;
 import net.blay09.mods.balm.core.component.BalmDataComponentTypeRegistrar;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;

@@ -1,4 +1,4 @@
-package com.witchica.compactstorage.inventory;
+package com.witchica.compactstorage.util;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;

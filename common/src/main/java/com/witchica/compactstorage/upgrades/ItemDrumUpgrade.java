@@ -2,8 +2,8 @@ package com.witchica.compactstorage.upgrades;
 
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.inventory.ResizableItemDrum;
-import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.components.ModComponents;
+import com.witchica.compactstorage.data.StorageUpgrade;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;

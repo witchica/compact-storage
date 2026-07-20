@@ -1,6 +1,5 @@
 package com.witchica.compactstorage.data;
 
-import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.item.StorageUpgradeItem;
 import net.blay09.mods.balm.world.item.DeferredItem;

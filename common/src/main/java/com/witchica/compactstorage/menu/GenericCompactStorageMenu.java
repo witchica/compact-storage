@@ -1,10 +1,11 @@
 package com.witchica.compactstorage.menu;
 
 import com.witchica.compactstorage.CompactStorage;
-import com.witchica.compactstorage.api.inventory.ResizableContainer;
 import com.witchica.compactstorage.api.StorageTypeProvider;
+import com.witchica.compactstorage.api.inventory.ResizableContainer;
 import com.witchica.compactstorage.api.inventory.VoidSlotProvider;
 import com.witchica.compactstorage.data.CompactStorageOpeningSource;
+import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.inventory.BackpackInventory;
 import com.witchica.compactstorage.menu.slot.BackpackHolderSlot;
 import com.witchica.compactstorage.menu.slot.VoidSlot;
@@ -18,7 +19,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import com.witchica.compactstorage.data.StorageType;
 
 import java.util.Optional;
 

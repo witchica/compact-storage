@@ -2,11 +2,12 @@ package com.witchica.compactstorage.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.witchica.compactstorage.api.StorageTypeProvider;
 import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
-import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
 import com.witchica.compactstorage.block.entity.CompactChestBlockEntity;
 import com.witchica.compactstorage.block.entity.ModBlockEntities;
-import com.witchica.compactstorage.api.StorageTypeProvider;
+import com.witchica.compactstorage.block.entity.base.BaseCompactStorageBlockEntity;
+import com.witchica.compactstorage.data.StorageType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -32,7 +33,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
-import com.witchica.compactstorage.data.StorageType;
 
 import java.util.List;
 

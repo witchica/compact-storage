@@ -2,10 +2,10 @@ package com.witchica.compactstorage.block.base;
 
 import com.witchica.compactstorage.api.RedyeableBlock;
 import com.witchica.compactstorage.api.StorageTypeProvider;
+import com.witchica.compactstorage.block.ModBlocks;
 import com.witchica.compactstorage.block.entity.base.BaseItemDrumBlockEntity;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.inventory.DrumInventory;
-import com.witchica.compactstorage.block.ModBlocks;
 import com.witchica.compactstorage.util.CompactStorageUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

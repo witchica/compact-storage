@@ -1,6 +1,7 @@
 package com.witchica.compactstorage.item;
 
 import com.witchica.compactstorage.block.ModBlocks;
+import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.upgrades.ModUpgrades;
 import net.blay09.mods.balm.world.item.BalmCreativeModeTabRegistrar;
@@ -8,7 +9,6 @@ import net.blay09.mods.balm.world.item.BalmItemRegistrar;
 import net.blay09.mods.balm.world.item.DeferredItem;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import com.witchica.compactstorage.data.StorageType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.CreativeModeTab;
 

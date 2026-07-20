@@ -1,17 +1,18 @@
 package com.witchica.compactstorage.block.entity.base;
 
 import com.mojang.serialization.Codec;
+import com.witchica.compactstorage.api.inventory.ResizableContainer;
+import com.witchica.compactstorage.api.inventory.RetainingContainer;
 import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.api.inventory.VoidSlotProvider;
 import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
+import com.witchica.compactstorage.components.ModComponents;
 import com.witchica.compactstorage.components.ResizableInventoryComponent;
 import com.witchica.compactstorage.menu.CompactStorageMenuData;
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
-import com.witchica.compactstorage.api.inventory.RetainingContainer;
-import com.witchica.compactstorage.components.ModComponents;
-import com.witchica.compactstorage.inventory.IndexedItemStack;
-import com.witchica.compactstorage.inventory.IndexedItemStackHelper;
 import com.witchica.compactstorage.util.CompactStorageContainerOpenerCounter;
+import com.witchica.compactstorage.util.IndexedItemStack;
+import com.witchica.compactstorage.util.IndexedItemStackHelper;
 import net.blay09.mods.balm.world.BalmContainerProvider;
 import net.blay09.mods.balm.world.BalmMenuProvider;
 import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityUtils;
@@ -46,7 +47,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
-import com.witchica.compactstorage.api.inventory.ResizableContainer;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -157,7 +157,8 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         this.hasVoidSlotUpgrade = reader.getBooleanOr("VoidSlotUpgrade", false);
         this.items = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
 
-        if(version >= DATA_VERSION) {
+        // 21 was data version pre this change
+        if(version > 21) {
             IndexedItemStackHelper.loadAllItems(reader, items);
         } else {
             // Only ever needed to read old data; new saves always go through IndexedItemStackHelper.
@@ -268,19 +269,7 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
 
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder dataComponentMap) {
-        if(getContainerSize() <= VANILLA_CONTAINER_COMPONENT_LIMIT) {
-            // Under vanilla's own ItemContainerContents cap - let the vanilla behaviour (name,
-            // lock, and the vanilla CONTAINER component) run as normal.
-            super.collectImplicitComponents(dataComponentMap);
-        } else {
-            // BaseContainerBlockEntity's super call unconditionally builds a vanilla
-            // ItemContainerContents from getItems(), which throws IllegalArgumentException past
-            // 256 entries - this mod's storages can have thousands. Preserve the custom name (the
-            // only one of the two exposed by a public getter) and skip the lock component - the
-            // placed block's own lock always round-trips separately via saveAdditional/loadAdditional.
-            dataComponentMap.set(DataComponents.CUSTOM_NAME, getCustomName());
-        }
-
+        dataComponentMap.set(DataComponents.CUSTOM_NAME, getCustomName());
         dataComponentMap.set(ModComponents.UNBOUNDED_CONTAINER_DATA.value(), IndexedItemStackHelper.toComponentList(getItems()));
         dataComponentMap.set(ModComponents.RETAINING_DATA.value(), this.isRetaining());
         dataComponentMap.set(ModComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(this.getWidth(), this.getHeight()));

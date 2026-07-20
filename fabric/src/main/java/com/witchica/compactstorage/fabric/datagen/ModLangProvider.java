@@ -3,6 +3,7 @@ package com.witchica.compactstorage.fabric.datagen;
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.CompactStorageConfig;
 import com.witchica.compactstorage.block.ModBlocks;
+import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.data.StorageUpgrade;
 import com.witchica.compactstorage.item.ModItems;
 import com.witchica.compactstorage.tag.ModItemTags;
@@ -10,7 +11,6 @@ import com.witchica.compactstorage.upgrades.ModUpgrades;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
-import com.witchica.compactstorage.data.StorageType;
 import net.minecraft.tags.TagKey;
 
 import java.lang.reflect.Field;

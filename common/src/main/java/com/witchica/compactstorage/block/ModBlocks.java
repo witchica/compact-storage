@@ -1,10 +1,10 @@
 package com.witchica.compactstorage.block;
 
+import com.witchica.compactstorage.data.StorageType;
 import net.blay09.mods.balm.world.level.block.BalmBlockRegistrar;
 import net.blay09.mods.balm.world.level.block.DiscriminatedBlocks;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
-import com.witchica.compactstorage.data.StorageType;
 
 public class ModBlocks {
 

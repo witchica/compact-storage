@@ -3,7 +3,6 @@ package com.witchica.compactstorage.block;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.witchica.compactstorage.block.base.BaseItemDrumBlock;
-import com.witchica.compactstorage.block.entity.base.BaseItemDrumBlockEntity;
 import com.witchica.compactstorage.data.StorageType;
 import net.minecraft.world.level.block.BaseEntityBlock;
 

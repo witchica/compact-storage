@@ -1,9 +1,9 @@
 package com.witchica.compactstorage.fabric.datagen;
 
 import com.witchica.compactstorage.CompactStorage;
+import com.witchica.compactstorage.block.ModBlocks;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.data.StorageUpgrade;
-import com.witchica.compactstorage.block.ModBlocks;
 import com.witchica.compactstorage.item.ModItems;
 import com.witchica.compactstorage.upgrades.ModUpgrades;
 import net.blay09.mods.balm.world.item.DeferredItem;
