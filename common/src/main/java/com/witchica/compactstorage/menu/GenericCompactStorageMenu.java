@@ -133,6 +133,19 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
         }
     }
 
+    // Filtering re-flows which real slots the viewport represents exactly like scrolling does
+    // (ScrollingContainerView.realIndex packs matching slots into the viewport while filtering) -
+    // same reasoning as setScroll above applies here too.
+    public void setFilter(String filter) {
+        storageView.setFilter(filter);
+
+        if(container instanceof BlockEntity) {
+            for(int i = 0; i < storageView.getContainerSize(); i++) {
+                setRemoteSlot(i, this.slots.get(i).getItem());
+            }
+        }
+    }
+
     public void setPreservesArrangement(boolean preservesArrangement) {
         if(container instanceof ArrangementPreservingContainer arrangementPreservingContainer) {
             arrangementPreservingContainer.setPreservesArrangement(preservesArrangement);
@@ -252,6 +265,7 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
 
         if(changed) {
             container.setChanged();
+            storageView.invalidateFilterCache();
         }
     }
 
@@ -283,6 +297,7 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
         if(changed) {
             container.setChanged();
             playerInventory.setChanged();
+            storageView.invalidateFilterCache();
         }
     }
 
@@ -386,6 +401,7 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
         boolean moved = stack.getCount() != originalCount;
         if(moved) {
             container.setChanged();
+            storageView.invalidateFilterCache();
         }
 
         return moved;

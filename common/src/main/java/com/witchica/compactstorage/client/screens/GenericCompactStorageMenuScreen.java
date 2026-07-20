@@ -5,10 +5,12 @@ import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.inventory.ScrollingContainerView;
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
 import com.witchica.compactstorage.network.ServerboundCollectMatchingPacket;
+import com.witchica.compactstorage.network.ServerboundFilterStoragePacket;
 import com.witchica.compactstorage.network.ServerboundScrollStoragePacket;
 import net.blay09.mods.balm.Balm;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -31,6 +33,10 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
     private static final int SCROLLBAR_PADDING = 2;
     private static final int SCROLLBAR_SIZE = SCROLLBAR_MARGIN - (SCROLLBAR_PADDING * 2);
 
+    private static final int CORNER_SIDE_PADDING = 2;
+    private static final int SEARCH_HEIGHT = 12;
+    private static final int SEARCH_MAX_WIDTH = 90;
+
     private final int chestInvSizeX;
     private final int chestInvSizeY;
     private final int playerInvSizeX;
@@ -47,6 +53,8 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
 
     private boolean draggingVerticalScrollbar;
     private boolean draggingHorizontalScrollbar;
+
+    private EditBox searchBox;
 
     public GenericCompactStorageMenuScreen(GenericCompactStorageMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title, 7 + 7 + (menu.storageView.getVisibleWidth() * 18), 17 + (menu.storageView.getVisibleHeight() * 18) + 7 + 17+(3 * 18) + 4 + 18 + 7);
@@ -71,6 +79,36 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
         this.invCoords = fancyRendering ? storageType.getInventoryCoords() : DEFAULT_SLOTS;
 
         this.hasVoidSlot = menu.hasVoidSlot;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+
+        // Text baseline matches the title: EditBox draws its text at boxY + (height-8)/2 (see
+        // vanilla EditBox#renderWidget), so solving for boxY against the title's own known Y lines
+        // the two up exactly instead of guessing an offset. Width fills whatever's actually left
+        // between the title and the box's right edge - skipped entirely if that's under a usable
+        // minimum (a very narrow, eg. default 9-wide, storage).
+        int titleEnd = leftPos + titleLabelX + font.width(this.title) + 6;
+        int searchY = topPos + titleLabelY - (SEARCH_HEIGHT - 8) / 2;
+        int rightEdge = leftPos + chestInvSizeX - 7 - CORNER_SIDE_PADDING;
+        int searchWidth = Math.min(SEARCH_MAX_WIDTH, rightEdge - titleEnd);
+
+        if(searchWidth >= 20) {
+            searchBox = new EditBox(this.font, titleEnd, searchY, searchWidth, SEARCH_HEIGHT,
+                    Component.translatable("gui.compact_storage.search_hint"));
+            searchBox.setMaxLength(64);
+            searchBox.setHint(Component.translatable("gui.compact_storage.search_hint"));
+            searchBox.setValue(menu.storageView.getFilter());
+            searchBox.setResponder(this::onSearchChanged);
+            addRenderableWidget(searchBox);
+        }
+    }
+
+    private void onSearchChanged(String text) {
+        menu.setFilter(text);
+        Balm.networking().sendToServer(new ServerboundFilterStoragePacket(menu.containerId, text));
     }
 
     @Override
@@ -240,6 +278,18 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        // Item slots aren't part of the widget focus chain vanilla EditBox relies on to unfocus
+        // itself, so clicking a slot (or anywhere else that isn't the search box) left it focused
+        // and still eating keyboard input - eg. blocking WASD movement. Clear it explicitly first -
+        // via the Screen's own clearFocus(), not searchBox.setFocused(false) directly: that only
+        // flips the widget's own local flag without telling the Screen's separate focused-child
+        // tracking (used to route keyboard input) that focus moved, leaving the two desynced -
+        // clicking the search box again could re-select text (mouse-driven) but never actually
+        // type, since key events kept routing through the stale reference.
+        if(searchBox != null && searchBox.isFocused() && !searchBox.isMouseOver(event.x(), event.y())) {
+            this.clearFocus();
+        }
+
         if(event.button() == 0) {
             if(menu.storageView.needsVerticalScroll() && isOverVerticalScrollbar(event.x(), event.y())) {
                 draggingVerticalScrollbar = true;
