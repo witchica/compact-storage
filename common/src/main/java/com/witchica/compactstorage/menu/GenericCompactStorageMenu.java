@@ -114,8 +114,22 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
         return storageType;
     }
 
+    // broadcastChanges() runs every server tick and diffs every visible Slot against what it last
+    // told the client - since the viewport Slots all share this one storageView, moving its
+    // scroll offset alone (no real data changed) still looks like every visible slot changed, and
+    // gets resent in full. For BlockEntity-backed storages the client already has the storage's
+    // complete, accurate contents via block-entity NBT sync, entirely independent of this Slot
+    // path - so there's nothing to actually send. setRemoteSlot tells broadcastChanges "the client
+    // already has this value" without sending anything, which makes scroll updates free (see
+    // setItem below for the client-side half of this).
     public void setScroll(int x, int y) {
         storageView.setScroll(x, y);
+
+        if(container instanceof BlockEntity) {
+            for(int i = 0; i < storageView.getContainerSize(); i++) {
+                setRemoteSlot(i, this.slots.get(i).getItem());
+            }
+        }
     }
 
     public void setupSlots() {
@@ -159,6 +173,29 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
     public void removed(Player player) {
         super.removed(player);
         container.stopOpen(playerInventory.player);
+    }
+
+    /**
+     * Applies a server-pushed slot correction (from the client's normal AbstractContainerMenu
+     * networking). For storage viewport slots backed by a BlockEntity, the client's real container
+     * is already accurate via block-entity NBT sync, entirely independent of this per-slot path -
+     * broadcastChanges() still fires every tick and pushes "corrections" for the whole viewport
+     * whenever the server's own scroll offset changes, purely because its view shifted, not
+     * because any real data did. If the player scrolls again before one of those arrives, applying
+     * it through the CLIENT's now-different offset writes that item into the wrong real slot -
+     * duplicating/ghosting it. Since the client doesn't need this path for correctness here, feed
+     * the correction back its own already-correct value instead of dropping it outright, so the
+     * state-id reconciliation above still runs normally and the server never has a reason to
+     * suspect desync.
+     */
+    @Override
+    public void setItem(int slotId, int stateId, ItemStack stack) {
+        if(slotId >= 0 && slotId < storageView.getContainerSize() && container instanceof BlockEntity) {
+            super.setItem(slotId, stateId, this.slots.get(slotId).getItem());
+            return;
+        }
+
+        super.setItem(slotId, stateId, stack);
     }
 
     /**
