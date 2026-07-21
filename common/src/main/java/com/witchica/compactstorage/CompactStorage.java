@@ -15,6 +15,7 @@ import com.witchica.compactstorage.menu.ModMenuTypes;
 import com.witchica.compactstorage.network.ServerboundBackpackHotkeyPacket;
 import com.witchica.compactstorage.network.ServerboundCollectMatchingPacket;
 import com.witchica.compactstorage.network.ServerboundFilterStoragePacket;
+import com.witchica.compactstorage.network.ServerboundMoveStoragePacket;
 import com.witchica.compactstorage.network.ServerboundScrollStoragePacket;
 import com.witchica.compactstorage.network.ServerboundSetArrangementPreservingPacket;
 import com.witchica.compactstorage.network.ServerboundSortStoragePacket;
@@ -83,6 +84,7 @@ public class CompactStorage {
         Balm.networking().registerServerboundPacket(ServerboundSetArrangementPreservingPacket.TYPE, ServerboundSetArrangementPreservingPacket.class, ServerboundSetArrangementPreservingPacket.STREAM_CODEC, ServerboundSetArrangementPreservingPacket::handle);
         Balm.networking().registerServerboundPacket(ServerboundFilterStoragePacket.TYPE, ServerboundFilterStoragePacket.class, ServerboundFilterStoragePacket.STREAM_CODEC, ServerboundFilterStoragePacket::handle);
         Balm.networking().registerServerboundPacket(ServerboundSortStoragePacket.TYPE, ServerboundSortStoragePacket.class, ServerboundSortStoragePacket.STREAM_CODEC, ServerboundSortStoragePacket::handle);
+        Balm.networking().registerServerboundPacket(ServerboundMoveStoragePacket.TYPE, ServerboundMoveStoragePacket.class, ServerboundMoveStoragePacket.STREAM_CODEC, ServerboundMoveStoragePacket::handle);
 
         trinkets = Balm.getRuntime().<CompactStorageTrinketsSupport>modProxy()
                 .with("trinkets_updated", "com.witchica.compactstorage.integration.TrinketsUpdatedModSupport")

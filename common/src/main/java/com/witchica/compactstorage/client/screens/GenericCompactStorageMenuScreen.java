@@ -6,8 +6,10 @@ import com.witchica.compactstorage.inventory.ScrollingContainerView;
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
 import com.witchica.compactstorage.network.ServerboundCollectMatchingPacket;
 import com.witchica.compactstorage.network.ServerboundFilterStoragePacket;
+import com.witchica.compactstorage.network.ServerboundMoveStoragePacket;
 import com.witchica.compactstorage.network.ServerboundScrollStoragePacket;
 import com.witchica.compactstorage.network.ServerboundSortStoragePacket;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.Balm;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -44,6 +46,8 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
     private static final int SORT_KEY_BUTTON_WIDTH = 20;
     private static final int SORT_ARRANGEMENT_BUTTON_WIDTH = 20;
     private static final int SORT_GO_BUTTON_WIDTH = 16;
+    private static final int MOVE_BUTTON_HEIGHT = 12;
+    private static final int MOVE_BUTTON_WIDTH = 30;
 
     private final int chestInvSizeX;
     private final int chestInvSizeY;
@@ -105,7 +109,17 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
         int y = topPos + titleLabelY - (SORT_BUTTON_HEIGHT - 8) / 2;
         int x = leftPos + chestInvSizeX - 7 - CORNER_SIDE_PADDING;
 
-        x -= SORT_GO_BUTTON_WIDTH;
+        // The storage box sits above the player inventory box on screen, so items leaving storage
+        // for the player travel downward (moveOutButton here) and items leaving the player travel
+        // upward (moveInButton in initPlayerCorner).
+        x -= MOVE_BUTTON_WIDTH;
+        Button moveOutButton = Button.builder(Component.literal("Out"),
+                b -> sendMove(Minecraft.getInstance().hasShiftDown(), GenericCompactStorageMenu.MoveDirection.OUT_OF_STORAGE))
+                .bounds(x, y, MOVE_BUTTON_WIDTH, MOVE_BUTTON_HEIGHT).build();
+        moveOutButton.setTooltip(Tooltip.create(Component.translatable("gui.compact_storage.move_out")));
+        addRenderableWidget(moveOutButton);
+
+        x -= SORT_GO_BUTTON_WIDTH + CORNER_GAP;
         Button sortGoButton = Button.builder(Component.literal("S"), b -> sendSort())
                 .bounds(x, y, SORT_GO_BUTTON_WIDTH, SORT_BUTTON_HEIGHT).build();
         sortGoButton.setTooltip(Tooltip.create(Component.translatable("gui.compact_storage.sort_go")));
@@ -144,6 +158,26 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
             searchBox.setResponder(this::onSearchChanged);
             addRenderableWidget(searchBox);
         }
+
+        initPlayerCorner();
+    }
+
+    /** Items leaving the player's inventory for storage travel upward to the box above. */
+    private void initPlayerCorner() {
+        int y = topPos + inventoryLabelY - (MOVE_BUTTON_HEIGHT - 8) / 2;
+        int x = leftPos + playerInvOffsetX + playerInvSizeX - 7 - CORNER_SIDE_PADDING - MOVE_BUTTON_WIDTH;
+
+        Button moveInButton = Button.builder(Component.literal("In"),
+                b -> sendMove(Minecraft.getInstance().hasShiftDown(), GenericCompactStorageMenu.MoveDirection.INTO_STORAGE))
+                .bounds(x, y, MOVE_BUTTON_WIDTH, MOVE_BUTTON_HEIGHT).build();
+        moveInButton.setTooltip(Tooltip.create(Component.translatable("gui.compact_storage.move_in")));
+        addRenderableWidget(moveInButton);
+    }
+
+    private void sendMove(boolean matchingOnly, GenericCompactStorageMenu.MoveDirection direction) {
+        boolean includeHotbar = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_LALT);
+        boolean topOffOnly = InputConstants.isKeyDown(Minecraft.getInstance().getWindow(), InputConstants.KEY_LCONTROL);
+        Balm.networking().sendToServer(new ServerboundMoveStoragePacket(menu.containerId, matchingOnly, direction.ordinal(), includeHotbar, topOffOnly));
     }
 
     private void onSearchChanged(String text) {

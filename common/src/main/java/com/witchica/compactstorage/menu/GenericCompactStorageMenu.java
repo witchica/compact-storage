@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class GenericCompactStorageMenu extends AbstractContainerMenu {
     // Slot.x/y and the Slot's target Container are both final in vanilla, so a storage bigger than
@@ -379,13 +380,32 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
      * mutating stack's count down as progress is made. Returns whether anything moved.
      */
     private boolean insertIntoContainer(ItemStack stack) {
-        int originalCount = stack.getCount();
-        int size = container.getContainerSize();
+        boolean moved = insertInto(container, fullRange(container.getContainerSize()), stack, false);
 
-        for(int i = 0; i < size && !stack.isEmpty(); i++) {
-            ItemStack existing = container.getItem(i);
-            if(!existing.isEmpty() && ItemStack.isSameItemSameComponents(existing, stack) && container.canPlaceItem(i, stack)) {
-                int room = container.getMaxStackSize(existing) - existing.getCount();
+        if(moved) {
+            container.setChanged();
+            storageView.invalidateFilterCache();
+        }
+
+        return moved;
+    }
+
+    /**
+     * Merges/inserts as much of stack as fits into destination, restricted to destinationIndices,
+     * mutating stack's count down as progress is made. If topOffOnly, only merges into slots that
+     * already hold a matching stack - never occupies an empty slot. Returns whether anything moved.
+     */
+    private boolean insertInto(Container destination, int[] destinationIndices, ItemStack stack, boolean topOffOnly) {
+        int originalCount = stack.getCount();
+
+        for(int i : destinationIndices) {
+            if(stack.isEmpty()) {
+                break;
+            }
+
+            ItemStack existing = destination.getItem(i);
+            if(!existing.isEmpty() && ItemStack.isSameItemSameComponents(existing, stack) && destination.canPlaceItem(i, stack)) {
+                int room = destination.getMaxStackSize(existing) - existing.getCount();
                 if(room > 0) {
                     int moved = Math.min(room, stack.getCount());
                     existing.grow(moved);
@@ -394,23 +414,106 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
             }
         }
 
-        for(int i = 0; i < size && !stack.isEmpty(); i++) {
-            if(container.getItem(i).isEmpty() && container.canPlaceItem(i, stack)) {
-                int moved = Math.min(container.getMaxStackSize(stack), stack.getCount());
-                ItemStack placed = stack.copy();
-                placed.setCount(moved);
-                container.setItem(i, placed);
-                stack.shrink(moved);
+        if(!topOffOnly) {
+            for(int i : destinationIndices) {
+                if(stack.isEmpty()) {
+                    break;
+                }
+
+                if(destination.getItem(i).isEmpty() && destination.canPlaceItem(i, stack)) {
+                    int moved = Math.min(destination.getMaxStackSize(stack), stack.getCount());
+                    ItemStack placed = stack.copy();
+                    placed.setCount(moved);
+                    destination.setItem(i, placed);
+                    stack.shrink(moved);
+                }
             }
         }
 
-        boolean moved = stack.getCount() != originalCount;
-        if(moved) {
-            container.setChanged();
-            storageView.invalidateFilterCache();
+        return stack.getCount() != originalCount;
+    }
+
+    private static int[] fullRange(int size) {
+        int[] range = new int[size];
+        for(int i = 0; i < size; i++) {
+            range[i] = i;
+        }
+        return range;
+    }
+
+    public enum MoveDirection { INTO_STORAGE, OUT_OF_STORAGE }
+
+    /** Moves only items that already have a matching stack on the other side (storage or player), not just anything. */
+    public void moveMatching(MoveDirection direction, boolean includeHotbar, boolean topOffOnly) {
+        Predicate<ItemStack> matches = direction == MoveDirection.INTO_STORAGE
+                ? stack -> containsMatchingItem(container, fullRange(container.getContainerSize()), stack)
+                : stack -> containsMatchingItem(playerInventory, playerRange(includeHotbar), stack);
+
+        move(matches, direction, includeHotbar, topOffOnly);
+    }
+
+    /** Moves everything between the real storage and the player's inventory. */
+    public void moveAll(MoveDirection direction, boolean includeHotbar, boolean topOffOnly) {
+        move(stack -> true, direction, includeHotbar, topOffOnly);
+    }
+
+    private boolean containsMatchingItem(Container source, int[] indices, ItemStack stack) {
+        for(int i : indices) {
+            ItemStack existing = source.getItem(i);
+            if(!existing.isEmpty() && ItemStack.isSameItemSameComponents(existing, stack)) {
+                return true;
+            }
         }
 
-        return moved;
+        return false;
+    }
+
+    // Inventory.getContainerSize() (43) also covers armor/offhand/body/saddle equipment slots
+    // (indices 36-42, see Inventory.EQUIPMENT_SLOT_MAPPING) - only the 36 main+hotbar slots should
+    // ever be touched by a generic move action.
+    private int[] playerRange(boolean includeHotbar) {
+        List<Integer> playerRangeList = new ArrayList<>();
+        for(int i = 0; i < Inventory.INVENTORY_SIZE; i++) {
+            if(includeHotbar || !Inventory.isHotbarSlot(i)) {
+                playerRangeList.add(i);
+            }
+        }
+        return playerRangeList.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    private void move(Predicate<ItemStack> matches, MoveDirection direction, boolean includeHotbar, boolean topOffOnly) {
+        int[] playerRange = playerRange(includeHotbar);
+        int[] storageRange = fullRange(container.getContainerSize());
+
+        boolean changed = false;
+
+        if(direction == MoveDirection.INTO_STORAGE) {
+            for(int i : playerRange) {
+                ItemStack stack = playerInventory.getItem(i);
+                if(!stack.isEmpty() && matches.test(stack) && insertInto(container, storageRange, stack, topOffOnly)) {
+                    changed = true;
+                    if(stack.isEmpty()) {
+                        playerInventory.setItem(i, ItemStack.EMPTY);
+                    }
+                }
+            }
+        } else {
+            for(int i : storageRange) {
+                ItemStack stack = container.getItem(i);
+                if(!stack.isEmpty() && matches.test(stack) && insertInto(playerInventory, playerRange, stack, topOffOnly)) {
+                    changed = true;
+                    if(stack.isEmpty()) {
+                        container.setItem(i, ItemStack.EMPTY);
+                    }
+                }
+            }
+        }
+
+        if(changed) {
+            container.setChanged();
+            playerInventory.setChanged();
+            storageView.invalidateFilterCache();
+        }
     }
 
     public enum SortKey { ITEM_ID, CATEGORY, NAME, SOURCE, COUNT }
