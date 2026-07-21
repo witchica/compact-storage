@@ -13,6 +13,7 @@ import com.witchica.compactstorage.integration.CompactStorageTrinketsSupport;
 import com.witchica.compactstorage.item.ModItems;
 import com.witchica.compactstorage.menu.ModMenuTypes;
 import com.witchica.compactstorage.network.ServerboundBackpackHotkeyPacket;
+import com.witchica.compactstorage.network.ServerboundCollectMatchingPacket;
 import com.witchica.compactstorage.network.ServerboundScrollStoragePacket;
 import com.witchica.compactstorage.stat.ModStatistics;
 import net.blay09.mods.balm.Balm;
@@ -75,6 +76,7 @@ public class CompactStorage {
 
         Balm.networking().registerServerboundPacket(ServerboundBackpackHotkeyPacket.TYPE, ServerboundBackpackHotkeyPacket.class, ServerboundBackpackHotkeyPacket.STREAM_CODEC, ServerboundBackpackHotkeyPacket::handle);
         Balm.networking().registerServerboundPacket(ServerboundScrollStoragePacket.TYPE, ServerboundScrollStoragePacket.class, ServerboundScrollStoragePacket.STREAM_CODEC, ServerboundScrollStoragePacket::handle);
+        Balm.networking().registerServerboundPacket(ServerboundCollectMatchingPacket.TYPE, ServerboundCollectMatchingPacket.class, ServerboundCollectMatchingPacket.STREAM_CODEC, ServerboundCollectMatchingPacket::handle);
 
         trinkets = Balm.getRuntime().<CompactStorageTrinketsSupport>modProxy()
                 .with("trinkets_updated", "com.witchica.compactstorage.integration.TrinketsUpdatedModSupport")

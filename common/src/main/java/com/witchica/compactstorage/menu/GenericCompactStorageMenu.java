@@ -17,6 +17,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -158,6 +159,122 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
     public void removed(Player player) {
         super.removed(player);
         container.stopOpen(playerInventory.player);
+    }
+
+    /**
+     * Double-click ("collect all") is handled by vanilla's private doClick, which only scans
+     * this.slots - our fixed viewport Slot list - so it can never reach real storage slots
+     * currently scrolled out of view. Let vanilla run its normal collection first (covers the
+     * visible viewport and the whole player inventory correctly), then top off whatever it
+     * couldn't reach from the rest of the real container.
+     */
+    @Override
+    public void clicked(int slotIndex, int buttonNum, ContainerInput containerInput, Player player) {
+        super.clicked(slotIndex, buttonNum, containerInput, player);
+
+        if(containerInput == ContainerInput.PICKUP_ALL) {
+            collectRemainingFromStorage();
+        }
+    }
+
+    private void collectRemainingFromStorage() {
+        ItemStack carried = getCarried();
+        if(carried.isEmpty() || carried.getCount() >= carried.getMaxStackSize()) {
+            return;
+        }
+
+        int size = container.getContainerSize();
+        boolean changed = false;
+
+        for(int i = 0; i < size && carried.getCount() < carried.getMaxStackSize(); i++) {
+            ItemStack stack = container.getItem(i);
+            if(stack.isEmpty() || !ItemStack.isSameItemSameComponents(stack, carried)) {
+                continue;
+            }
+
+            int moved = Math.min(carried.getMaxStackSize() - carried.getCount(), stack.getCount());
+            if(moved <= 0) {
+                continue;
+            }
+
+            stack.shrink(moved);
+            carried.grow(moved);
+            changed = true;
+
+            if(stack.isEmpty()) {
+                container.setItem(i, ItemStack.EMPTY);
+            }
+        }
+
+        if(changed) {
+            container.setChanged();
+        }
+    }
+
+    /**
+     * Shift+double-click is vanilla's own "move every matching stack" gesture, resolved entirely
+     * client-side (AbstractContainerScreen#mouseReleased) by looping this.menu.slots - our fixed
+     * viewport list - so it has the same off-screen blind spot as plain double-click. This sweeps
+     * the real container's full range for the same item type into the player's main inventory and
+     * hotbar, the same destination vanilla's own sweep uses.
+     */
+    public void collectMatchingIntoPlayer(ItemStack itemType) {
+        int size = container.getContainerSize();
+        boolean changed = false;
+
+        for(int i = 0; i < size; i++) {
+            ItemStack stack = container.getItem(i);
+            if(stack.isEmpty() || !ItemStack.isSameItemSameComponents(stack, itemType)) {
+                continue;
+            }
+
+            if(insertIntoPlayer(stack)) {
+                changed = true;
+                if(stack.isEmpty()) {
+                    container.setItem(i, ItemStack.EMPTY);
+                }
+            }
+        }
+
+        if(changed) {
+            container.setChanged();
+            playerInventory.setChanged();
+        }
+    }
+
+    /**
+     * Merges/inserts as much of stack as fits into the player's main inventory and hotbar,
+     * mutating stack's count down as progress is made. Returns whether anything moved.
+     * Inventory.getContainerSize() (43) also covers armor/offhand/body/saddle equipment slots
+     * (indices 36-42) - Inventory.INVENTORY_SIZE (36) is just the main+hotbar range this should
+     * touch.
+     */
+    private boolean insertIntoPlayer(ItemStack stack) {
+        int originalCount = stack.getCount();
+
+        for(int i = 0; i < Inventory.INVENTORY_SIZE && !stack.isEmpty(); i++) {
+            ItemStack existing = playerInventory.getItem(i);
+            if(!existing.isEmpty() && ItemStack.isSameItemSameComponents(existing, stack)) {
+                int room = playerInventory.getMaxStackSize(existing) - existing.getCount();
+                if(room > 0) {
+                    int moved = Math.min(room, stack.getCount());
+                    existing.grow(moved);
+                    stack.shrink(moved);
+                }
+            }
+        }
+
+        for(int i = 0; i < Inventory.INVENTORY_SIZE && !stack.isEmpty(); i++) {
+            if(playerInventory.getItem(i).isEmpty()) {
+                int moved = Math.min(playerInventory.getMaxStackSize(stack), stack.getCount());
+                ItemStack placed = stack.copy();
+                placed.setCount(moved);
+                playerInventory.setItem(i, placed);
+                stack.shrink(moved);
+            }
+        }
+
+        return stack.getCount() != originalCount;
     }
 
     @Override

@@ -4,8 +4,10 @@ import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.data.StorageType;
 import com.witchica.compactstorage.inventory.ScrollingContainerView;
 import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
+import com.witchica.compactstorage.network.ServerboundCollectMatchingPacket;
 import com.witchica.compactstorage.network.ServerboundScrollStoragePacket;
 import net.blay09.mods.balm.Balm;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -13,6 +15,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import org.joml.Vector2i;
 
 public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<GenericCompactStorageMenu> {
@@ -224,6 +227,17 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
         return true;
     }
 
+    // Shift+double-click is vanilla's own "move every matching stack" gesture (distinct from plain
+    // double-click's cursor-collect) - it's resolved entirely client-side in
+    // AbstractContainerScreen#mouseReleased by looping this.menu.slots (our fixed viewport list)
+    // for the item type captured from the shift-click on the FIRST of the two clicks. Captured
+    // here the same way (only overwritten while the hovered slot still has an item, so the second
+    // click - which already emptied it via its own shift-click - doesn't clobber the capture with
+    // empty), then swept server-side in mouseReleased once vanilla's own visible-viewport handling
+    // has run.
+    private ItemStack pendingShiftCollectItem = ItemStack.EMPTY;
+    private boolean pendingDoubleClick;
+
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
         if(event.button() == 0) {
@@ -238,6 +252,12 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
                 dragHorizontalScrollbar(event.x());
                 return true;
             }
+
+            if(Minecraft.getInstance().hasShiftDown() && this.hoveredSlot != null && this.hoveredSlot.hasItem()
+                    && this.hoveredSlot.index < menu.storageView.getContainerSize()) {
+                pendingShiftCollectItem = this.hoveredSlot.getItem().copy();
+            }
+            pendingDoubleClick = doubleClick;
         }
 
         return super.mouseClicked(event, doubleClick);
@@ -263,7 +283,14 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
         draggingVerticalScrollbar = false;
         draggingHorizontalScrollbar = false;
 
-        return super.mouseReleased(event);
+        boolean handled = super.mouseReleased(event);
+
+        if(event.button() == 0 && pendingDoubleClick && !pendingShiftCollectItem.isEmpty()) {
+            Balm.networking().sendToServer(new ServerboundCollectMatchingPacket(menu.containerId, pendingShiftCollectItem));
+            pendingShiftCollectItem = ItemStack.EMPTY;
+        }
+
+        return handled;
     }
 
     private void extractVoidSlot(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
