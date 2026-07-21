@@ -1,5 +1,6 @@
 package com.witchica.compactstorage.client.screens;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.inventory.ArrangementPreservingContainer;
 import com.witchica.compactstorage.client.widget.IconButton;
@@ -12,7 +13,6 @@ import com.witchica.compactstorage.network.ServerboundMoveStoragePacket;
 import com.witchica.compactstorage.network.ServerboundScrollStoragePacket;
 import com.witchica.compactstorage.network.ServerboundSetArrangementPreservingPacket;
 import com.witchica.compactstorage.network.ServerboundSortStoragePacket;
-import com.mojang.blaze3d.platform.InputConstants;
 import net.blay09.mods.balm.Balm;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
