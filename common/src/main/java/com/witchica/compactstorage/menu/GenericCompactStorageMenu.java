@@ -2,6 +2,7 @@ package com.witchica.compactstorage.menu;
 
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.StorageTypeProvider;
+import com.witchica.compactstorage.api.inventory.ArrangementPreservingContainer;
 import com.witchica.compactstorage.api.inventory.ResizableContainer;
 import com.witchica.compactstorage.api.inventory.VoidSlotProvider;
 import com.witchica.compactstorage.data.CompactStorageOpeningSource;
@@ -129,6 +130,12 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
             for(int i = 0; i < storageView.getContainerSize(); i++) {
                 setRemoteSlot(i, this.slots.get(i).getItem());
             }
+        }
+    }
+
+    public void setPreservesArrangement(boolean preservesArrangement) {
+        if(container instanceof ArrangementPreservingContainer arrangementPreservingContainer) {
+            arrangementPreservingContainer.setPreservesArrangement(preservesArrangement);
         }
     }
 

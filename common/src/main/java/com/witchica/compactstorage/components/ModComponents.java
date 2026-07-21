@@ -17,6 +17,7 @@ public class ModComponents {
     // int slot index instead of vanilla DataComponents.CONTAINER's hard 256-entry cap - see
     // IndexedItemStack/IndexedItemStackHelper.
     public static Holder<DataComponentType<List<IndexedItemStack>>> UNBOUNDED_CONTAINER_DATA;
+    public static Holder<DataComponentType<Boolean>> PRESERVES_ARRANGEMENT;
 
     public static void initialize(BalmDataComponentTypeRegistrar registrar) {
         RESIZABLE_INVENTORY_DATA = registrar.register("resizable_inventory_data", ResizableInventoryComponent.CODEC).asHolder();
@@ -24,5 +25,6 @@ public class ModComponents {
         VOID_SLOT = registrar.register("void_slot_data", Codec.BOOL).asHolder();
         ITEM_DRUM_SIZE = registrar.register("item_drum_data", Codec.INT).asHolder();
         UNBOUNDED_CONTAINER_DATA = registrar.register("unbounded_container_data", IndexedItemStack.CODEC.listOf()).asHolder();
+        PRESERVES_ARRANGEMENT = registrar.register("preserves_arrangement_data", Codec.BOOL).asHolder();
     }
 }
