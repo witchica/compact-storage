@@ -18,6 +18,7 @@ public class ModComponents {
     // IndexedItemStack/IndexedItemStackHelper.
     public static Holder<DataComponentType<List<IndexedItemStack>>> UNBOUNDED_CONTAINER_DATA;
     public static Holder<DataComponentType<Boolean>> PRESERVES_ARRANGEMENT;
+    public static Holder<DataComponentType<Integer>> SORT_PREFERENCE;
 
     public static void initialize(BalmDataComponentTypeRegistrar registrar) {
         RESIZABLE_INVENTORY_DATA = registrar.register("resizable_inventory_data", ResizableInventoryComponent.CODEC).asHolder();
@@ -26,5 +27,6 @@ public class ModComponents {
         ITEM_DRUM_SIZE = registrar.register("item_drum_data", Codec.INT).asHolder();
         UNBOUNDED_CONTAINER_DATA = registrar.register("unbounded_container_data", IndexedItemStack.CODEC.listOf()).asHolder();
         PRESERVES_ARRANGEMENT = registrar.register("preserves_arrangement_data", Codec.BOOL).asHolder();
+        SORT_PREFERENCE = registrar.register("sort_preference_data", Codec.INT).asHolder();
     }
 }

@@ -4,6 +4,7 @@ import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.StorageTypeProvider;
 import com.witchica.compactstorage.api.inventory.ArrangementPreservingContainer;
 import com.witchica.compactstorage.api.inventory.ResizableContainer;
+import com.witchica.compactstorage.api.inventory.SortPreferenceContainer;
 import com.witchica.compactstorage.api.inventory.VoidSlotProvider;
 import com.witchica.compactstorage.data.CompactStorageOpeningSource;
 import com.witchica.compactstorage.data.StorageType;
@@ -12,6 +13,7 @@ import com.witchica.compactstorage.inventory.ScrollingContainerView;
 import com.witchica.compactstorage.menu.slot.BackpackHolderSlot;
 import com.witchica.compactstorage.menu.slot.VoidSlot;
 import net.blay09.mods.balm.world.inventory.QuickMove;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleContainer;
@@ -23,6 +25,10 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 public class GenericCompactStorageMenu extends AbstractContainerMenu {
@@ -405,6 +411,227 @@ public class GenericCompactStorageMenu extends AbstractContainerMenu {
         }
 
         return moved;
+    }
+
+    public enum SortKey { ITEM_ID, CATEGORY, NAME, SOURCE, COUNT }
+    public enum SortArrangement { CLASSIC, ROWS, COLUMNS }
+
+    /** The last sort key/arrangement this storage was actually sorted by, or (ITEM_ID, CLASSIC) if never. */
+    public int getSortPreference() {
+        if(container instanceof SortPreferenceContainer sortPreferenceContainer) {
+            return sortPreferenceContainer.getSortPreference();
+        }
+
+        return 0;
+    }
+
+    public void sort(SortKey key, SortArrangement arrangement) {
+        List<ItemStack> merged = collectMergedStacks();
+        merged.sort(comparatorFor(key));
+
+        applySortedStacks(merged, arrangement);
+
+        if(container instanceof SortPreferenceContainer sortPreferenceContainer) {
+            sortPreferenceContainer.setSortPreference((key.ordinal() * SortArrangement.values().length) + arrangement.ordinal());
+        }
+    }
+
+    /**
+     * Finds the smallest subdivision factor (1, 2, 4, ...) that lets every distinct item get a
+     * fully dedicated line (or several, for an item too big for one), never sharing a line with
+     * another item. Subdivision 1 is the plain "one row/column per item" case. Subdivision N
+     * splits the container into N vertical (ROWS) or horizontal (COLUMNS) bands, each
+     * independently behaving as its own complete set of lines but only 1/N as wide/tall - trading
+     * line width for more of them, so Rows/Columns stays visually distinct from Sequential on a
+     * full, high-diversity storage instead of collapsing into one continuous packed fill. At
+     * subdivision equal to the arrangement's own span (eg. inventoryWidth for ROWS), every item
+     * gets a minimum 1-wide dedicated line, which by definition always fits (every piece already
+     * came from this same container) - so this always terminates with a fit.
+     */
+    private int findSubdivision(List<ItemStack> mergedStacks, SortArrangement arrangement) {
+        int maxSpan = arrangement == SortArrangement.ROWS ? inventoryWidth : inventoryHeight;
+        int otherSpan = arrangement == SortArrangement.ROWS ? inventoryHeight : inventoryWidth;
+
+        for(int subdivision = 1; subdivision <= maxSpan; subdivision *= 2) {
+            int bandSpan = maxSpan / subdivision;
+            if(bandSpan < 1) {
+                break;
+            }
+
+            int linesNeeded = 0;
+            for(ItemStack merged : mergedStacks) {
+                int max = container.getMaxStackSize(merged);
+                int pieceCount = (merged.getCount() + max - 1) / max;
+                linesNeeded += (pieceCount + bandSpan - 1) / bandSpan;
+            }
+
+            if(linesNeeded <= subdivision * otherSpan) {
+                return subdivision;
+            }
+        }
+
+        return maxSpan;
+    }
+
+    private List<ItemStack> collectMergedStacks() {
+        List<ItemStack> merged = new ArrayList<>();
+        int size = container.getContainerSize();
+
+        for(int i = 0; i < size; i++) {
+            ItemStack stack = container.getItem(i);
+            if(stack.isEmpty()) {
+                continue;
+            }
+
+            ItemStack match = null;
+            for(ItemStack candidate : merged) {
+                if(ItemStack.isSameItemSameComponents(candidate, stack)) {
+                    match = candidate;
+                    break;
+                }
+            }
+
+            if(match != null) {
+                match.grow(stack.getCount());
+            } else {
+                merged.add(stack.copy());
+            }
+        }
+
+        return merged;
+    }
+
+    private Comparator<ItemStack> comparatorFor(SortKey key) {
+        return switch(key) {
+            case ITEM_ID -> Comparator.comparing(stack -> BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
+            case NAME -> Comparator.comparing(stack -> stack.getHoverName().getString());
+            case SOURCE -> Comparator.comparing((ItemStack stack) -> BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace())
+                    .thenComparing(stack -> BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
+            // Registry id order roughly tracks vanilla's own thematic item groupings, without
+            // depending on creative-tab contents being populated (unreliable server-side).
+            case CATEGORY -> Comparator.comparingInt(stack -> BuiltInRegistries.ITEM.getId(stack.getItem()));
+            case COUNT -> Comparator.<ItemStack>comparingInt(ItemStack::getCount).reversed();
+        };
+    }
+
+    private List<ItemStack> splitStack(ItemStack merged) {
+        List<ItemStack> pieces = new ArrayList<>();
+        int max = container.getMaxStackSize(merged);
+        int remaining = merged.getCount();
+
+        while(remaining > 0) {
+            int amount = Math.min(max, remaining);
+            pieces.add(merged.copyWithCount(amount));
+            remaining -= amount;
+        }
+
+        return pieces;
+    }
+
+    private void applySortedStacks(List<ItemStack> mergedStacks, SortArrangement arrangement) {
+        int size = container.getContainerSize();
+
+        // Computed into a staging array first - the real container is only touched in the final
+        // commit loop below, so an interruption during computation (a crash, a server restart mid-
+        // sort) leaves the container's real contents completely untouched instead of half-rebuilt.
+        ItemStack[] result = new ItemStack[size];
+        Arrays.fill(result, ItemStack.EMPTY);
+        boolean[] used = new boolean[size];
+
+        int fallbackFrom = 0;
+
+        if(arrangement == SortArrangement.CLASSIC) {
+            int index = 0;
+            for(ItemStack merged : mergedStacks) {
+                for(ItemStack piece : splitStack(merged)) {
+                    int target = index < size && !used[index] ? index : -1;
+
+                    if(target < 0) {
+                        // Shouldn't happen (every piece originated from this same container, so
+                        // there's always a free slot somewhere) - never drop the item.
+                        while(fallbackFrom < size) {
+                            if(!used[fallbackFrom]) {
+                                target = fallbackFrom;
+                                break;
+                            }
+                            fallbackFrom++;
+                        }
+                    }
+
+                    if(target < 0) {
+                        break;
+                    }
+
+                    result[target] = piece;
+                    used[target] = true;
+                    index++;
+                }
+            }
+        } else {
+            // Split the container into `subdivision` bands along its own axis (vertical strips
+            // for ROWS, horizontal strips for COLUMNS), each acting as an independent, complete
+            // set of lines but only 1/subdivision as wide/tall. A band boundary is just another
+            // line boundary from the placement loop's point of view, so one continuous "line"
+            // counter walks through band 0's lines, then band 1's, etc; only the coordinate math
+            // differs between ROWS and COLUMNS (COLUMNS is the same thing transposed).
+            boolean rows = arrangement == SortArrangement.ROWS;
+            int subdivision = findSubdivision(mergedStacks, arrangement);
+            int maxSpan = rows ? inventoryWidth : inventoryHeight;
+            int otherSpan = rows ? inventoryHeight : inventoryWidth;
+            int bandSpan = Math.max(1, maxSpan / subdivision);
+
+            int line = 0;
+            int pos = 0;
+
+            for(ItemStack merged : mergedStacks) {
+                if(pos != 0) {
+                    pos = 0;
+                    line++;
+                }
+
+                for(ItemStack piece : splitStack(merged)) {
+                    int band = line / otherSpan;
+                    int lineInBand = line % otherSpan;
+                    int target = band < subdivision
+                            ? (rows
+                                    ? (lineInBand * inventoryWidth) + (band * bandSpan) + pos
+                                    : ((band * bandSpan) + pos) * inventoryWidth + lineInBand)
+                            : -1;
+
+                    if(target < 0 || target >= size || used[target]) {
+                        // Shouldn't happen - findSubdivision guarantees a fit - never drop the item.
+                        target = -1;
+                        while(fallbackFrom < size) {
+                            if(!used[fallbackFrom]) {
+                                target = fallbackFrom;
+                                break;
+                            }
+                            fallbackFrom++;
+                        }
+                    }
+
+                    if(target < 0) {
+                        break;
+                    }
+
+                    result[target] = piece;
+                    used[target] = true;
+
+                    pos++;
+                    if(pos >= bandSpan) {
+                        pos = 0;
+                        line++;
+                    }
+                }
+            }
+        }
+
+        for(int i = 0; i < size; i++) {
+            container.setItem(i, result[i]);
+        }
+
+        container.setChanged();
+        storageView.invalidateFilterCache();
     }
 
     @Override

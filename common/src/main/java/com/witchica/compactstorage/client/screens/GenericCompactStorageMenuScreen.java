@@ -7,10 +7,13 @@ import com.witchica.compactstorage.menu.GenericCompactStorageMenu;
 import com.witchica.compactstorage.network.ServerboundCollectMatchingPacket;
 import com.witchica.compactstorage.network.ServerboundFilterStoragePacket;
 import com.witchica.compactstorage.network.ServerboundScrollStoragePacket;
+import com.witchica.compactstorage.network.ServerboundSortStoragePacket;
 import net.blay09.mods.balm.Balm;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -34,8 +37,13 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
     private static final int SCROLLBAR_SIZE = SCROLLBAR_MARGIN - (SCROLLBAR_PADDING * 2);
 
     private static final int CORNER_SIDE_PADDING = 2;
+    private static final int CORNER_GAP = 2;
     private static final int SEARCH_HEIGHT = 12;
     private static final int SEARCH_MAX_WIDTH = 90;
+    private static final int SORT_BUTTON_HEIGHT = 12;
+    private static final int SORT_KEY_BUTTON_WIDTH = 20;
+    private static final int SORT_ARRANGEMENT_BUTTON_WIDTH = 20;
+    private static final int SORT_GO_BUTTON_WIDTH = 16;
 
     private final int chestInvSizeX;
     private final int chestInvSizeY;
@@ -55,6 +63,10 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
     private boolean draggingHorizontalScrollbar;
 
     private EditBox searchBox;
+    private GenericCompactStorageMenu.SortKey sortKey;
+    private GenericCompactStorageMenu.SortArrangement sortArrangement;
+    private Button sortKeyButton;
+    private Button sortArrangementButton;
 
     public GenericCompactStorageMenuScreen(GenericCompactStorageMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title, 7 + 7 + (menu.storageView.getVisibleWidth() * 18), 17 + (menu.storageView.getVisibleHeight() * 18) + 7 + 17+(3 * 18) + 4 + 18 + 7);
@@ -79,21 +91,49 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
         this.invCoords = fancyRendering ? storageType.getInventoryCoords() : DEFAULT_SLOTS;
 
         this.hasVoidSlot = menu.hasVoidSlot;
+
+        int sortPreference = menu.getSortPreference();
+        int arrangementCount = GenericCompactStorageMenu.SortArrangement.values().length;
+        this.sortKey = GenericCompactStorageMenu.SortKey.values()[sortPreference / arrangementCount];
+        this.sortArrangement = GenericCompactStorageMenu.SortArrangement.values()[sortPreference % arrangementCount];
     }
 
     @Override
     protected void init() {
         super.init();
 
+        int y = topPos + titleLabelY - (SORT_BUTTON_HEIGHT - 8) / 2;
+        int x = leftPos + chestInvSizeX - 7 - CORNER_SIDE_PADDING;
+
+        x -= SORT_GO_BUTTON_WIDTH;
+        Button sortGoButton = Button.builder(Component.literal("S"), b -> sendSort())
+                .bounds(x, y, SORT_GO_BUTTON_WIDTH, SORT_BUTTON_HEIGHT).build();
+        sortGoButton.setTooltip(Tooltip.create(Component.translatable("gui.compact_storage.sort_go")));
+        addRenderableWidget(sortGoButton);
+
+        // Cycling only changes the local selection - it does NOT re-sort by itself, so a combo can
+        // be picked without firing early, and the same combo re-run later without cycling away and
+        // back. Sorting needs an explicit click on "Go".
+        x -= SORT_ARRANGEMENT_BUTTON_WIDTH + CORNER_GAP;
+        sortArrangementButton = Button.builder(Component.literal(sortArrangementShortLabel()), b -> cycleSortArrangement())
+                .bounds(x, y, SORT_ARRANGEMENT_BUTTON_WIDTH, SORT_BUTTON_HEIGHT).build();
+        sortArrangementButton.setTooltip(Tooltip.create(sortArrangementFullLabel()));
+        addRenderableWidget(sortArrangementButton);
+
+        x -= SORT_KEY_BUTTON_WIDTH + CORNER_GAP;
+        sortKeyButton = Button.builder(Component.literal(sortKeyShortLabel()), b -> cycleSortKey())
+                .bounds(x, y, SORT_KEY_BUTTON_WIDTH, SORT_BUTTON_HEIGHT).build();
+        sortKeyButton.setTooltip(Tooltip.create(sortKeyFullLabel()));
+        addRenderableWidget(sortKeyButton);
+
         // Text baseline matches the title: EditBox draws its text at boxY + (height-8)/2 (see
         // vanilla EditBox#renderWidget), so solving for boxY against the title's own known Y lines
         // the two up exactly instead of guessing an offset. Width fills whatever's actually left
-        // between the title and the box's right edge - skipped entirely if that's under a usable
+        // between the title and the button cluster - skipped entirely if that's under a usable
         // minimum (a very narrow, eg. default 9-wide, storage).
         int titleEnd = leftPos + titleLabelX + font.width(this.title) + 6;
         int searchY = topPos + titleLabelY - (SEARCH_HEIGHT - 8) / 2;
-        int rightEdge = leftPos + chestInvSizeX - 7 - CORNER_SIDE_PADDING;
-        int searchWidth = Math.min(SEARCH_MAX_WIDTH, rightEdge - titleEnd);
+        int searchWidth = Math.min(SEARCH_MAX_WIDTH, (x - CORNER_GAP) - titleEnd);
 
         if(searchWidth >= 20) {
             searchBox = new EditBox(this.font, titleEnd, searchY, searchWidth, SEARCH_HEIGHT,
@@ -109,6 +149,63 @@ public class GenericCompactStorageMenuScreen extends AbstractContainerScreen<Gen
     private void onSearchChanged(String text) {
         menu.setFilter(text);
         Balm.networking().sendToServer(new ServerboundFilterStoragePacket(menu.containerId, text));
+    }
+
+    private String sortKeyShortLabel() {
+        return switch(sortKey) {
+            case ITEM_ID -> "ID";
+            case CATEGORY -> "Ca";
+            case NAME -> "Na";
+            case SOURCE -> "Mo";
+            case COUNT -> "Ct";
+        };
+    }
+
+    private String sortArrangementShortLabel() {
+        return switch(sortArrangement) {
+            case CLASSIC -> "Sq";
+            case ROWS -> "Rw";
+            case COLUMNS -> "Cl";
+        };
+    }
+
+    private Component sortKeyFullLabel() {
+        return Component.translatable("gui.compact_storage.sort_key." + switch(sortKey) {
+            case ITEM_ID -> "item_id";
+            case CATEGORY -> "category";
+            case NAME -> "name";
+            case SOURCE -> "source";
+            case COUNT -> "count";
+        });
+    }
+
+    private Component sortArrangementFullLabel() {
+        return Component.translatable("gui.compact_storage.sort_arrangement." + switch(sortArrangement) {
+            case CLASSIC -> "classic";
+            case ROWS -> "rows";
+            case COLUMNS -> "columns";
+        });
+    }
+
+    // Left-click only for now (cycles forward); right-click-to-cycle-backward needs a custom
+    // widget, since vanilla Button doesn't distinguish mouse buttons on its own - that lands
+    // alongside the icon toolbar restyle.
+    private void cycleSortKey() {
+        GenericCompactStorageMenu.SortKey[] values = GenericCompactStorageMenu.SortKey.values();
+        sortKey = values[(sortKey.ordinal() + 1) % values.length];
+        sortKeyButton.setMessage(Component.literal(sortKeyShortLabel()));
+        sortKeyButton.setTooltip(Tooltip.create(sortKeyFullLabel()));
+    }
+
+    private void cycleSortArrangement() {
+        GenericCompactStorageMenu.SortArrangement[] values = GenericCompactStorageMenu.SortArrangement.values();
+        sortArrangement = values[(sortArrangement.ordinal() + 1) % values.length];
+        sortArrangementButton.setMessage(Component.literal(sortArrangementShortLabel()));
+        sortArrangementButton.setTooltip(Tooltip.create(sortArrangementFullLabel()));
+    }
+
+    private void sendSort() {
+        Balm.networking().sendToServer(new ServerboundSortStoragePacket(menu.containerId, sortKey.ordinal(), sortArrangement.ordinal()));
     }
 
     @Override

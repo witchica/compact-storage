@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.witchica.compactstorage.api.inventory.ArrangementPreservingContainer;
 import com.witchica.compactstorage.api.inventory.ResizableContainer;
 import com.witchica.compactstorage.api.inventory.RetainingContainer;
+import com.witchica.compactstorage.api.inventory.SortPreferenceContainer;
 import com.witchica.compactstorage.api.inventory.UpgradeCheckProvider;
 import com.witchica.compactstorage.api.inventory.VoidSlotProvider;
 import com.witchica.compactstorage.block.base.BaseCompactStorageBlock;
@@ -52,7 +53,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEntity implements BalmMenuProvider<@NotNull CompactStorageMenuData>, ResizableContainer, RetainingContainer, VoidSlotProvider, UpgradeCheckProvider, BalmContainerProvider, ArrangementPreservingContainer {
+public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEntity implements BalmMenuProvider<@NotNull CompactStorageMenuData>, ResizableContainer, RetainingContainer, VoidSlotProvider, UpgradeCheckProvider, BalmContainerProvider, ArrangementPreservingContainer, SortPreferenceContainer {
     // Bumped when the "Items" NBT format changed from vanilla ContainerHelper (unsigned-byte slot
     // index, silently drops items past slot 255) to IndexedItemStackHelper (full-int slot index).
     private static final int DATA_VERSION = 22;
@@ -69,6 +70,7 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
     private boolean needsToBeRetaining;
     private boolean hasVoidSlotUpgrade;
     private boolean preservesArrangement;
+    private int sortPreference;
     protected final ContainerOpenersCounter containerOpenersCounter;
 
     public BaseCompactStorageBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -144,6 +146,7 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         writer.store("InventoryHeight", Codec.INT, inventoryHeight);
         writer.store("VoidSlotUpgrade", Codec.BOOL, hasVoidSlot());
         writer.store("PreservesArrangement", Codec.BOOL, preservesArrangement);
+        writer.store("SortPreference", Codec.INT, sortPreference);
         writer.store("Version", Codec.INT, DATA_VERSION);
         IndexedItemStackHelper.saveAllItems(writer, items);
     }
@@ -159,6 +162,7 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         this.inventoryHeight = reader.getIntOr("InventoryHeight", getDefaultHeight());
         this.hasVoidSlotUpgrade = reader.getBooleanOr("VoidSlotUpgrade", false);
         this.preservesArrangement = reader.getBooleanOr("PreservesArrangement", false);
+        this.sortPreference = reader.getIntOr("SortPreference", 0);
         this.items = NonNullList.withSize(inventoryWidth * inventoryHeight, ItemStack.EMPTY);
 
         // 21 was data version pre this change
@@ -244,6 +248,17 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
     }
 
     @Override
+    public int getSortPreference() {
+        return sortPreference;
+    }
+
+    @Override
+    public void setSortPreference(int sortPreference) {
+        this.sortPreference = sortPreference;
+        setChanged();
+    }
+
+    @Override
     public void setRetaining(boolean retaining) {
         level.setBlock(getBlockPos(), getBlockState().setValue(BaseCompactStorageBlock.RETAINING, retaining), 2);
     }
@@ -289,6 +304,7 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
 
         setHasVoidSlot(dataComponentGetter.getOrDefault(ModComponents.VOID_SLOT.value(), false).booleanValue());
         setPreservesArrangement(dataComponentGetter.getOrDefault(ModComponents.PRESERVES_ARRANGEMENT.value(), false).booleanValue());
+        setSortPreference(dataComponentGetter.getOrDefault(ModComponents.SORT_PREFERENCE.value(), 0).intValue());
 
         // Safe to call unconditionally regardless of size: it only reads vanilla
         // DataComponents.CONTAINER with a safe (empty) default, never builds one.
@@ -308,6 +324,7 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         dataComponentMap.set(ModComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(this.getWidth(), this.getHeight()));
         dataComponentMap.set(ModComponents.VOID_SLOT.value(), this.hasVoidSlot());
         dataComponentMap.set(ModComponents.PRESERVES_ARRANGEMENT.value(), this.preservesArrangement());
+        dataComponentMap.set(ModComponents.SORT_PREFERENCE.value(), this.getSortPreference());
     }
 
     @Override
@@ -325,6 +342,7 @@ public abstract class BaseCompactStorageBlockEntity extends BaseContainerBlockEn
         tag.discard("InventoryHeight");
         tag.discard("VoidSlotUpgrade");
         tag.discard("PreservesArrangement");
+        tag.discard("SortPreference");
     }
 
     @Override

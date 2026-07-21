@@ -3,6 +3,7 @@ package com.witchica.compactstorage.inventory;
 import com.witchica.compactstorage.CompactStorage;
 import com.witchica.compactstorage.api.StorageTypeProvider;
 import com.witchica.compactstorage.api.inventory.ResizableContainer;
+import com.witchica.compactstorage.api.inventory.SortPreferenceContainer;
 import com.witchica.compactstorage.api.inventory.VoidSlotProvider;
 import com.witchica.compactstorage.components.ModComponents;
 import com.witchica.compactstorage.components.ResizableInventoryComponent;
@@ -25,7 +26,7 @@ import org.jspecify.annotations.NonNull;
 import java.util.List;
 import java.util.Optional;
 
-public class BackpackInventory implements Container, ResizableContainer, VoidSlotProvider {
+public class BackpackInventory implements Container, ResizableContainer, VoidSlotProvider, SortPreferenceContainer {
     private final Player player;
     private final CompactStorageOpeningSource openingSource;
     private final ItemStack backpackStack;
@@ -36,6 +37,7 @@ public class BackpackInventory implements Container, ResizableContainer, VoidSlo
     private int inventoryHeight;
     private NonNullList<ItemStack> items;
     private boolean hasVoidSlot;
+    private int sortPreference;
 
 
     public BackpackInventory(Player player, CompactStorageOpeningSource openingSource, ItemStack backpackStack, Optional<InteractionHand> hand) {
@@ -83,6 +85,10 @@ public class BackpackInventory implements Container, ResizableContainer, VoidSlo
         if(stack.has(ModComponents.VOID_SLOT.value())) {
             this.hasVoidSlot = backpackStack.get(ModComponents.VOID_SLOT.value()).booleanValue();
         }
+
+        if(stack.has(ModComponents.SORT_PREFERENCE.value())) {
+            this.sortPreference = stack.get(ModComponents.SORT_PREFERENCE.value()).intValue();
+        }
     }
 
     @Override
@@ -115,6 +121,7 @@ public class BackpackInventory implements Container, ResizableContainer, VoidSlo
             stack.set(ModComponents.UNBOUNDED_CONTAINER_DATA.value(), IndexedItemStackHelper.toComponentList(getItems()));
             stack.set(ModComponents.RESIZABLE_INVENTORY_DATA.value(), new ResizableInventoryComponent(inventoryWidth, inventoryHeight));
             stack.set(ModComponents.VOID_SLOT.value(), this.hasVoidSlot());
+            stack.set(ModComponents.SORT_PREFERENCE.value(), this.sortPreference);
         }
     }
 
@@ -224,5 +231,16 @@ public class BackpackInventory implements Container, ResizableContainer, VoidSlo
     @Override
     public void setHasVoidSlot(boolean hasVoidSlot) {
         // Not implemented
+    }
+
+    @Override
+    public int getSortPreference() {
+        return sortPreference;
+    }
+
+    @Override
+    public void setSortPreference(int sortPreference) {
+        this.sortPreference = sortPreference;
+        setChanged();
     }
 }
